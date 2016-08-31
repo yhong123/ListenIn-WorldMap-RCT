@@ -1,0 +1,140 @@
+fileFormatVersion: 2
+guid: 7456e2ee1ddb81b4fa8f0efc0acbcee3
+timeCreated: 1461054109
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Coin Brakes Sprite_0
+    21300002: Coin Brakes Sprite_1
+    21300004: Coin Brakes Sprite_2
+    21300006: Coin Brakes Sprite_3
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Coin Brakes Sprite_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 101
+        width: 57
+        height: 107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -9.5, y: 53.5}
+        - {x: -28.5, y: 30.5}
+        - {x: -28.5, y: -23.5}
+        - {x: -27.5, y: -26.5}
+        - {x: -24.5, y: -33.5}
+        - {x: -19.5, y: -40.5}
+        - {x: -6.5, y: -53.5}
+        - {x: 12.5, y: -53.5}
+        - {x: 28.5, y: -30.5}
+        - {x: 28.5, y: 44.5}
+        - {x: 26.5, y: 53.5}
+    - name: Coin Brakes Sprite_1
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 133
+        width: 72
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -36, y: 39}
+        - {x: -36, y: 15}
+        - {x: -7, y: -39}
+        - {x: 36, y: -39}
+        - {x: 36, y: 9}
+        - {x: 24, y: 39}
+    - name: Coin Brakes Sprite_2
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 84
+        width: 63
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 2.5, y: 22.5}
+        - {x: -15.5, y: 22.5}
+        - {x: -31.5, y: 19.5}
+        - {x: -31.5, y: 2.5}
+        - {x: -25.5, y: -14.5}
+        - {x: -18.5, y: -22.5}
+        - {x: 8.5, y: -22.5}
+        - {x: 31.5, y: -12.5}
+        - {x: 31.5, y: 10.5}
+        - {x: 16.5, y: 16.5}
+    - name: Coin Brakes Sprite_3
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 8
+        width: 82
+        height: 55
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 27, y: 27.5}
+        - {x: -8, y: 27.5}
+        - {x: -41, y: -13.5}
+        - {x: -41, y: -27.5}
+        - {x: 24, y: -27.5}
+        - {x: 31, y: -24.5}
+        - {x: 41, y: -4.5}
+        - {x: 41, y: 18.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

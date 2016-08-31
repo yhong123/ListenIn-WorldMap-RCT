@@ -1,0 +1,152 @@
+fileFormatVersion: 2
+guid: 45c85a45edacb504f870bf293a3de954
+timeCreated: 1444233996
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: joint1
+    100002: joint10
+    100004: joint2
+    100006: joint3
+    100008: joint4
+    100010: joint5
+    100012: joint6
+    100014: joint9
+    100016: //RootNode
+    100018: pPlane1
+    100020: pPlane2
+    100022: pPlane3
+    100024: TreeMArgin
+    400000: joint1
+    400002: joint10
+    400004: joint2
+    400006: joint3
+    400008: joint4
+    400010: joint5
+    400012: joint6
+    400014: joint9
+    400016: //RootNode
+    400018: pPlane1
+    400020: pPlane2
+    400022: pPlane3
+    400024: TreeMArgin
+    2300000: pPlane1
+    3300000: pPlane1
+    4300000: pPlane1
+    4300002: pPlane3
+    4300004: pPlane2
+    7400000: TreeAnim
+    9500000: //RootNode
+    13700000: pPlane2
+    13700002: pPlane3
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: TreeAnim
+      takeName: TreeAnim
+      firstFrame: 1
+      lastFrame: 200
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: joint1
+        weight: 1
+      - path: joint1/joint2
+        weight: 1
+      - path: joint1/joint2/joint3
+        weight: 1
+      - path: joint1/joint2/joint3/joint4
+        weight: 1
+      - path: joint1/joint2/joint3/joint4/joint5
+        weight: 1
+      - path: joint1/joint2/joint3/joint4/joint5/joint6
+        weight: 1
+      - path: joint1/joint2/joint3/joint4/joint5/joint9
+        weight: 1
+      - path: joint1/joint2/joint3/joint4/joint10
+        weight: 1
+      - path: TreeMArgin
+        weight: 1
+      - path: TreeMArgin/pPlane1
+        weight: 1
+      - path: TreeMArgin/pPlane2
+        weight: 1
+      - path: TreeMArgin/pPlane3
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
