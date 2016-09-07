@@ -465,37 +465,45 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
     void OnApplicationQuit()
     {
-        //if the patient played the game, then update the daily therapy - last level played, if not then don't update
-        if(QueriesOnTheXML() != 0)
+        try
         {
-            Dictionary<string, string> query_therapyDailyUpdate = new Dictionary<string, string>();
-            query_therapyDailyUpdate.Add("patient", PatientId.ToString());
-            query_therapyDailyUpdate.Add("level_end", StateJigsawPuzzle.Instance.currLevelPinball.ToString());
-            //query_therapyDailyUpdate.Add("total_therapy_time", CUserTherapy.Instance.getTotalTherapyTimeMin().ToString());
+            //if the patient played the game, then update the daily therapy - last level played, if not then don't update
+            if (QueriesOnTheXML() != 0)
+            {
+                Dictionary<string, string> query_therapyDailyUpdate = new Dictionary<string, string>();
+                query_therapyDailyUpdate.Add("patient", PatientId.ToString());
+                query_therapyDailyUpdate.Add("level_end", StateJigsawPuzzle.Instance.currLevelPinball.ToString());
+                //query_therapyDailyUpdate.Add("total_therapy_time", CUserTherapy.Instance.getTotalTherapyTimeMin().ToString());
 
-            WriteDatabaseXML(query_therapyDailyUpdate, therapy_daily_update);
+                WriteDatabaseXML(query_therapyDailyUpdate, therapy_daily_update);
 
-            //add patient progress to the xml when app close
-            Dictionary<string, string> query_patient_game_progress = new Dictionary<string, string>();
-            query_patient_game_progress.Add("patient", PatientId.ToString());
-            query_patient_game_progress.Add("progress", MadLevelProfile.SaveProfileToString());
+                //add patient progress to the xml when app close
+                Dictionary<string, string> query_patient_game_progress = new Dictionary<string, string>();
+                query_patient_game_progress.Add("patient", PatientId.ToString());
+                query_patient_game_progress.Add("progress", MadLevelProfile.SaveProfileToString());
 
-            WriteDatabaseXML(query_patient_game_progress, insert_patient_progress);
+                WriteDatabaseXML(query_patient_game_progress, insert_patient_progress);
+            }
+
+
+            Dictionary<string, string> sessionUpdate = new Dictionary<string, string>();
+
+            int patient = PatientId;
+
+            sessionUpdate.Add("patient", patient.ToString());
+            sessionUpdate.Add("therapy_time", therapy_time.ToString());
+            sessionUpdate.Add("therapy_game_pinball", therapy_pinball_time.ToString());
+            sessionUpdate.Add("therapy_game_world", therapy_worldmap_time.ToString());
+            sessionUpdate.Add("exit_reason", reasonToExit.ToString());
+
+            WriteDatabaseXML(sessionUpdate, therapy_session_update);
         }
-        
+        catch (System.Exception ex)
+        {
+            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+        }
 
-        Dictionary<string, string> sessionUpdate = new Dictionary<string, string>();
-
-        int patient = PatientId;
-
-        sessionUpdate.Add("patient", patient.ToString());
-        sessionUpdate.Add("therapy_time", therapy_time.ToString());
-        sessionUpdate.Add("therapy_game_pinball", therapy_pinball_time.ToString());
-        sessionUpdate.Add("therapy_game_world", therapy_worldmap_time.ToString());
-        sessionUpdate.Add("exit_reason", reasonToExit.ToString());
-
-        WriteDatabaseXML(sessionUpdate, therapy_session_update);
-
+        ListenIn.Logger.EmptyBuffer();
 
     }
 

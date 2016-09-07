@@ -99,7 +99,8 @@ public class StatePinball : State
 			for (int i = 0; i < count; i++)
 			{
 				int iToRemove = UnityEngine.Random.Range(0, BucketIs.Count);
-				Debug.Log("Removed : [" + iToRemove + "|"+BucketIs[iToRemove]+"];");
+                ListenIn.Logger.Log(String.Format("Jigsaw Removed : [ {0}  |  {1} ]", iToRemove, BucketIs[iToRemove]), LoggerMessageType.Info);
+                //Debug.Log("Jigsae Removed : [" + iToRemove + "|"+BucketIs[iToRemove]+"];");
 				BucketsShuffled[i] = BucketIs[iToRemove];
 				BucketIs.RemoveAt(iToRemove);
 			}
@@ -115,8 +116,9 @@ public class StatePinball : State
 			int div = intList[i] / 4;
 			int mod = intList[i] % 4;
 			string prefabstring = "Prefabs/JigsawPieces/" + mod + "_" + div;
-			
-			Debug.Log(i + "| Shuffle : [" + BucketsShuffled[i] + "]; Piece : [" + intList[i] + "]; Jigsaw Prefab Path : [" + prefabstring + "];");
+
+            ListenIn.Logger.Log(String.Format(" {0} | Shuffle: [ {1} ]; Piece : [ {2} ]; Jigsaw Prefab Path : [ {3} ] ", i, BucketsShuffled[i], intList[i], prefabstring), LoggerMessageType.Info);
+            //Debug.Log(i + "| Shuffle : [" + BucketsShuffled[i] + "]; Piece : [" + intList[i] + "]; Jigsaw Prefab Path : [" + prefabstring + "];");
 			
 			GameObject jigsawPieceGO = GameObject.Instantiate(Resources.Load(prefabstring)) as GameObject;
 			RectTransform jigsawPieceTransform = jigsawPieceGO.GetComponent<RectTransform>();
@@ -146,7 +148,8 @@ public class StatePinball : State
 	// Use this for initialization
 	public override void Init()
 	{
-        Debug.Log("Enteering Pinball state");
+        ListenIn.Logger.Log("Entering Pinball state", LoggerMessageType.Info);
+        //Debug.Log("Enteering Pinball state");
         if (go == null)
         {
             go = GameObject.FindGameObjectWithTag("PinballPrefab");
@@ -154,7 +157,8 @@ public class StatePinball : State
 
         if (go == null)
         {
-            Debug.LogError("Pinball state not found");
+            ListenIn.Logger.Log("Pinball gameobject not found", LoggerMessageType.Error);
+            //Debug.LogError("Pinball state not found");
         }
 
         //Avoid this being called twice
@@ -177,7 +181,8 @@ public class StatePinball : State
             //Should never be zero since tutorialis being removed
             if (ID == 0)
             {
-                Debug.LogError("ID zero as tutorial level is deprecated");
+                ListenIn.Logger.Log("ID zero as tutorial level is deprecated", LoggerMessageType.Error);
+                //Debug.LogError("ID zero as tutorial level is deprecated");
                 //SetBucketPositions();
             }
             else
@@ -230,7 +235,8 @@ public class StatePinball : State
 
 	public void InitLevelPinball()
 	{
-        Debug.Log("Init level");
+        ListenIn.Logger.Log("Init Pinball level", LoggerMessageType.Info);
+        //Debug.Log("");
         m_PinballMono.UIHolder.SetActive(true);
         //m_PinballMono.FireButton.SetActive(true);
         m_PinballMono.Frame.SetActive(true);
@@ -253,7 +259,8 @@ public class StatePinball : State
 		}
 		else
 		{
-			Debug.LogWarning("Missing level manager");
+            ListenIn.Logger.Log("Missing level manager", LoggerMessageType.Warning);
+            //Debug.LogWarning("Missing level manager");
 		}
 		startGame = endGame = DateTime.UtcNow;
 	}
@@ -266,7 +273,8 @@ public class StatePinball : State
 
     public override void Exit()
     {
-        Debug.Log("Exiting Pinball state");
+        ListenIn.Logger.Log("Exiting pinball level", LoggerMessageType.Info);
+        //Debug.Log("Exiting Pinball state");
 
 		//preparing the scene by removing elements that will create problems.
 		ExitLevelPinball();
@@ -274,10 +282,11 @@ public class StatePinball : State
 		m_PinballMono.DuplicateEarnedJigsaw();
 		m_PinballMono.DisableOriginals();
         m_PinballMono.SetToAlphaFading(1.0f, true, false);
-		//m_PinballMono.SetFade();
+        //m_PinballMono.SetFade();
 
-		//UnityEngine.Object.Destroy(m_PinballMono.gameObject);
-        Debug.Log("Mono : [" + m_PinballMono + "]; Name : [" + m_PinballMono.name + "];");
+        //UnityEngine.Object.Destroy(m_PinballMono.gameObject);
+        ListenIn.Logger.Log(String.Format("Mono : [ {0} ]; Name : [ {1} ]" ,m_PinballMono, m_PinballMono.name), LoggerMessageType.Info);
+        //Debug.Log("Mono : [" + m_PinballMono + "]; Name : [" + m_PinballMono.name + "];");
 		
 		StateChallenge.Instance.ResetCoins();
         StateChallenge.Instance.ResetCorrectAnswers();

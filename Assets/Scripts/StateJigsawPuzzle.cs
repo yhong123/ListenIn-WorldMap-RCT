@@ -132,18 +132,18 @@ public class StateJigsawPuzzle : State
         }
     }
 
-    private void LoadSavedJigsaw()
-    {
-        try
-        {
-            GameStateSaver.Instance.Load();
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError(ex.Message);
-            GameStateSaver.Instance.ResetListenIn();
-        }
-    }
+    //private void LoadSavedJigsaw()
+    //{
+    //    try
+    //    {
+    //        GameStateSaver.Instance.Load();
+    //    }
+    //    catch (System.Exception ex)
+    //    {
+    //        Debug.LogError(ex.Message);
+    //        GameStateSaver.Instance.ResetListenIn();
+    //    }
+    //}
 
     /// <summary>
     /// This is called once and for after the game is loaded

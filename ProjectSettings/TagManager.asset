@@ -58,6 +58,7 @@ TagManager:
   - VolcanoSmoke
   - Cover
   - JigsawPuzzle
+  - DebugUI
   layers:
   - Default
   - TransparentFX

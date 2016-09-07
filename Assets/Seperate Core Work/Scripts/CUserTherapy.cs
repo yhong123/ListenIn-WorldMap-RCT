@@ -407,23 +407,29 @@ class CUserTherapy : Singleton<CUserTherapy>
         {
             if (!bIsAdminMode)
             {
-                // save data
-                List<int> lsResponse = new List<int>();
-                for (int i = 0; i < m_lsResponse.Count; i++)
-                {
-                    lsResponse.Add(m_lsResponse[i].m_intScore);                     
+                try
+                { 
+                    // save data
+                    List<int> lsResponse = new List<int>();
+                    for (int i = 0; i < m_lsResponse.Count; i++)
+                    {
+                        lsResponse.Add(m_lsResponse[i].m_intScore);                     
+                    }
+                    m_recommender.updateUserHistory(lsResponse);
+                    //m_recommender.updateUserHistory(m_lsTrial, m_lsResponse);
+
+                    //AddCompletedLevel();
+                    //UpdateStatisticDay();
+                    SaveTrials();
+                    //SaveUserProfile();
+
+                    // save total therapy time to db
+                    SaveTherapyTimeToDB();
                 }
-                m_recommender.updateUserHistory(lsResponse);
-                //m_recommender.updateUserHistory(m_lsTrial, m_lsResponse);
-
-                //AddCompletedLevel();
-                //UpdateStatisticDay();
-                SaveTrials();
-                //SaveUserProfile();
-
-                // save total therapy time to db
-                SaveTherapyTimeToDB();
-                
+                catch (System.Exception ex)
+                {
+                    ListenIn.Logger.Log("CUserTherapy-IsEndOfLevel-" + ex.Message, ListenIn.LoggerMessageType.Info);
+                }
             }
             return true;
         }
@@ -435,20 +441,27 @@ class CUserTherapy : Singleton<CUserTherapy>
     //----------------------------------------------------------------------------------------------------
     private void SaveTherapyTimeToDB()
     {
-        // insert db entry
-        Dictionary<string, string> time_insert = new Dictionary<string, string>();
+        try
+        { 
+            // insert db entry
+            Dictionary<string, string> time_insert = new Dictionary<string, string>();
 
-        time_insert.Add("patientid", DatabaseXML.Instance.PatientId.ToString());
-        time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-        time_insert.Add("totaltime", getTotalTherapyTimeMin().ToString());
+            time_insert.Add("patientid", DatabaseXML.Instance.PatientId.ToString());
+            time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            time_insert.Add("totaltime", getTotalTherapyTimeMin().ToString());
         
-        DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.therapy_time_insert);
+            DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.therapy_time_insert);
 
-        if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+            if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+            {
+                //read the xml
+                //DatabaseXML.Instance.ReadDatabaseXML();
+                DatabaseXML.Instance.uploadHistoryXml();
+            }
+        }
+        catch (System.Exception ex)
         {
-            //read the xml
-            //DatabaseXML.Instance.ReadDatabaseXML();
-            DatabaseXML.Instance.uploadHistoryXml();
+            ListenIn.Logger.Log("CUserTherapy-SaveTherapyTimeToDB-" + ex.Message, ListenIn.LoggerMessageType.Info);
         }
     }
 
@@ -456,111 +469,118 @@ class CUserTherapy : Singleton<CUserTherapy>
     // SaveTrials
     //----------------------------------------------------------------------------------------------------
     private void SaveTrials()
-    {                
-        // Save the document to a file. White space is preserved (no white space).
-        string strXmlFile = Application.persistentDataPath + "/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all.xml";
+    {
+        try
+        {            
+            // Save the document to a file. White space is preserved (no white space).
+            string strXmlFile = Application.persistentDataPath + "/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all.xml";
 
-        XmlDocument doc = new XmlDocument();
-        if (!System.IO.File.Exists(strXmlFile))
-        {
-            doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
-            "<root>" +
-            "</root>");
-        }
-        else
-            doc.Load(strXmlFile);
-
-        /*
-        <block idx="0">
-            <trial idx="0" ciIdx="12" cifIdx="22" >
-                <stim idx="0" type="target" ptype="target" />
-                <stim idx="1" type="P1" ptype="assoc" />
-            </trial>
-            <res idx="0" score="" rt="" replay="">
-                <selected>0</selected>
-                <selected>2</selected>
-            </res>                
-        </block> 
-        */
-
-        XmlElement xmlNode = doc.CreateElement("block");
-        XmlAttribute attr = doc.CreateAttribute("idx");
-        attr.Value = m_recommender.getLastTherapyBlockIdx().ToString();
-        xmlNode.SetAttributeNode(attr);
-
-        for (int i = 0; i < m_lsTrial.Count; i++)
-        {                
-            // add trials
-            XmlElement xmlChild2 = doc.CreateElement("trial");
-            XmlAttribute attr2 = doc.CreateAttribute("idx");
-            attr2.Value = i.ToString();
-            xmlChild2.SetAttributeNode(attr2);
-
-            attr2 = doc.CreateAttribute("ciIdx");
-            attr2.Value = m_lsTrial[i].m_intChallengeItemIdx.ToString();
-            xmlChild2.SetAttributeNode(attr2);
-
-            attr2 = doc.CreateAttribute("cifIdx");
-            attr2.Value = m_lsTrial[i].m_intChallengeItemFeaturesIdx.ToString();
-            xmlChild2.SetAttributeNode(attr2);
-
-            for (var j = 0; j < m_lsTrial[i].m_lsStimulus.Count; j++)
+            XmlDocument doc = new XmlDocument();
+            if (!System.IO.File.Exists(strXmlFile))
             {
-                XmlElement xmlChild3 = doc.CreateElement("stim");
-                attr2 = doc.CreateAttribute("idx");
-                attr2.Value = j.ToString();
-                xmlChild3.SetAttributeNode(attr2);
-
-                attr2 = doc.CreateAttribute("oriIdx");
-                attr2.Value = m_lsTrial[i].m_lsStimulus[j].intOriginalIdx.ToString();
-                xmlChild3.SetAttributeNode(attr2);
-
-                attr2 = doc.CreateAttribute("t");
-                attr2.Value = m_lsTrial[i].m_lsStimulus[j].m_strType;
-                xmlChild3.SetAttributeNode(attr2);
-
-                attr2 = doc.CreateAttribute("pt");
-                attr2.Value = m_lsTrial[i].m_lsStimulus[j].m_strPType;
-                xmlChild3.SetAttributeNode(attr2);
-
-                xmlChild2.AppendChild(xmlChild3);
+                doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
+                "<root>" +
+                "</root>");
             }
-            xmlNode.AppendChild(xmlChild2);           
-        }
+            else
+                doc.Load(strXmlFile);
 
-        for (int i = 0; i < m_lsResponse.Count; i++)
-        {
-            // add trials
-            XmlElement xmlChild2 = doc.CreateElement("res");
-            XmlAttribute attr2 = doc.CreateAttribute("idx");
-            attr2.Value = i.ToString();
-            xmlChild2.SetAttributeNode(attr2);
+            /*
+            <block idx="0">
+                <trial idx="0" ciIdx="12" cifIdx="22" >
+                    <stim idx="0" type="target" ptype="target" />
+                    <stim idx="1" type="P1" ptype="assoc" />
+                </trial>
+                <res idx="0" score="" rt="" replay="">
+                    <selected>0</selected>
+                    <selected>2</selected>
+                </res>                
+            </block> 
+            */
 
-            attr2 = doc.CreateAttribute("score");
-            attr2.Value = m_lsResponse[i].m_intScore.ToString();
-            xmlChild2.SetAttributeNode(attr2);
+            XmlElement xmlNode = doc.CreateElement("block");
+            XmlAttribute attr = doc.CreateAttribute("idx");
+            attr.Value = m_recommender.getLastTherapyBlockIdx().ToString();
+            xmlNode.SetAttributeNode(attr);
 
-            attr2 = doc.CreateAttribute("rt");
-            attr2.Value = m_lsResponse[i].m_fRTSec.ToString();
-            xmlChild2.SetAttributeNode(attr2);
+            for (int i = 0; i < m_lsTrial.Count; i++)
+            {                
+                // add trials
+                XmlElement xmlChild2 = doc.CreateElement("trial");
+                XmlAttribute attr2 = doc.CreateAttribute("idx");
+                attr2.Value = i.ToString();
+                xmlChild2.SetAttributeNode(attr2);
 
-            attr2 = doc.CreateAttribute("replay");
-            attr2.Value = m_lsResponse[i].m_intReplayBtnCtr.ToString();
-            xmlChild2.SetAttributeNode(attr2);
+                attr2 = doc.CreateAttribute("ciIdx");
+                attr2.Value = m_lsTrial[i].m_intChallengeItemIdx.ToString();
+                xmlChild2.SetAttributeNode(attr2);
 
-            for (var j = 0; j < m_lsResponse[i].m_lsSelectedStimulusIdx.Count; j++)
+                attr2 = doc.CreateAttribute("cifIdx");
+                attr2.Value = m_lsTrial[i].m_intChallengeItemFeaturesIdx.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                for (var j = 0; j < m_lsTrial[i].m_lsStimulus.Count; j++)
+                {
+                    XmlElement xmlChild3 = doc.CreateElement("stim");
+                    attr2 = doc.CreateAttribute("idx");
+                    attr2.Value = j.ToString();
+                    xmlChild3.SetAttributeNode(attr2);
+
+                    attr2 = doc.CreateAttribute("oriIdx");
+                    attr2.Value = m_lsTrial[i].m_lsStimulus[j].intOriginalIdx.ToString();
+                    xmlChild3.SetAttributeNode(attr2);
+
+                    attr2 = doc.CreateAttribute("t");
+                    attr2.Value = m_lsTrial[i].m_lsStimulus[j].m_strType;
+                    xmlChild3.SetAttributeNode(attr2);
+
+                    attr2 = doc.CreateAttribute("pt");
+                    attr2.Value = m_lsTrial[i].m_lsStimulus[j].m_strPType;
+                    xmlChild3.SetAttributeNode(attr2);
+
+                    xmlChild2.AppendChild(xmlChild3);
+                }
+                xmlNode.AppendChild(xmlChild2);           
+            }
+
+            for (int i = 0; i < m_lsResponse.Count; i++)
             {
-                XmlElement xmlChild3 = doc.CreateElement("stim");
-                xmlChild3.InnerText = m_lsResponse[i].m_lsSelectedStimulusIdx[j].ToString();            
-                xmlChild2.AppendChild(xmlChild3);
+                // add trials
+                XmlElement xmlChild2 = doc.CreateElement("res");
+                XmlAttribute attr2 = doc.CreateAttribute("idx");
+                attr2.Value = i.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                attr2 = doc.CreateAttribute("score");
+                attr2.Value = m_lsResponse[i].m_intScore.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                attr2 = doc.CreateAttribute("rt");
+                attr2.Value = m_lsResponse[i].m_fRTSec.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                attr2 = doc.CreateAttribute("replay");
+                attr2.Value = m_lsResponse[i].m_intReplayBtnCtr.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                for (var j = 0; j < m_lsResponse[i].m_lsSelectedStimulusIdx.Count; j++)
+                {
+                    XmlElement xmlChild3 = doc.CreateElement("stim");
+                    xmlChild3.InnerText = m_lsResponse[i].m_lsSelectedStimulusIdx[j].ToString();            
+                    xmlChild2.AppendChild(xmlChild3);
+                }
+                xmlNode.AppendChild(xmlChild2);
             }
-            xmlNode.AppendChild(xmlChild2);
+
+            doc.DocumentElement.AppendChild(xmlNode);
+
+            //doc.PreserveWhitespace = true;
+            doc.Save(strXmlFile);
         }
-
-        doc.DocumentElement.AppendChild(xmlNode);
-
-        //doc.PreserveWhitespace = true;
-        doc.Save(strXmlFile);
+        catch (System.Exception ex)
+        {
+            ListenIn.Logger.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+        }
     }
 
     //----------------------------------------------------------------------------------------------------

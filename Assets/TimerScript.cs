@@ -11,13 +11,19 @@ public class TimerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        if (_textToday != null && _textToday != null)
+        try
         {
-            string time = StateChallenge.Instance.GetTotalTherapyTime();
-            _textTotal.text = time;
-            time = StateChallenge.Instance.GetTodayTherapyTime();
-            _textToday.text = time;
+            if (_textToday != null && _textToday != null)
+            {
+                string time = StateChallenge.Instance.GetTotalTherapyTime();
+                _textTotal.text = time;
+                time = StateChallenge.Instance.GetTodayTherapyTime();
+                _textToday.text = time;
+            }
         }
-        else { Debug.LogError("Please assign therapy texts to the inspector"); }
+        catch (Exception ex)
+        {
+            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+        }
     }
 }

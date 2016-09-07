@@ -81,7 +81,8 @@ public class GameStateSaver : MonoBehaviour {
 		}
 		else
 		{
-			throw new Exception("Need to Initialize game");
+            ListenIn.Logger.Log("First initialization", ListenIn.LoggerMessageType.Info);
+            GameStateSaver.Instance.ResetListenIn();
 		}
 
 	}
@@ -122,75 +123,74 @@ public class GameStateSaver : MonoBehaviour {
 			writer.Close();
 
 		}
-
-		Debug.Log("Save game state");
+        ListenIn.Logger.Log("Save game state", ListenIn.LoggerMessageType.Info);
+        //Debug.Log("Save game state");
 	}
 
 	public void ResetListenIn()
 	{
-		Debug.Log("Initializing ListenIn");
-		Reset();
+        //Debug.Log("Initializing ListenIn");
+        ListenIn.Logger.Log("Resetting Listen In", ListenIn.LoggerMessageType.Info);
+        Reset();
 		Load ();
 	}
 
 	public void Reset()
 	{
 
-        if (File.Exists(FilePath()))
+        try
         {
-            File.Delete(FilePath());
-        }
-
-        //THIS WAS TO ELIMINATE ALSO YEAN STUFF
-		//List<string> files = Directory. GetFiles(Application.persistentDataPath, "*.xml").ToList();
-
-		//if(files != null && files.Count != 0)
-		//{
-		//	foreach (string file in files) {
-		//		File.Delete(file);
-		//	}
-		//}
-
-		//Unlocking partially tutorial level
-		XmlSerializer serializer = 	new XmlSerializer(typeof(GameSaveState));
-		using(TextWriter writer = new StreamWriter(GameStateSaver.FilePath()))
-		{			
-			GameSaveState gss = new GameSaveState();
-
-            List<String> levelKeys = new List<string>(StateJigsawPuzzle.Instance.Chapters.Keys);
-
-            for (int i = 0; i < levelKeys.Count; i++)
+            if (File.Exists(FilePath()))
             {
-                ChapterSaveState resetChapter = new ChapterSaveState();
-                resetChapter.LevelName = levelKeys[i];
-
-                Chapter currChapter;
-                StateJigsawPuzzle.Instance.Chapters.TryGetValue(levelKeys[i],out currChapter);
-                if (currChapter != null)
-                {
-                    resetChapter.LevelNumber = currChapter.LevelNumber;
-                    for (int j = 0; j < resetChapter.JigsawPeicesUnlocked.Length; j++)
-                    {
-                        resetChapter.JigsawPeicesUnlocked[j] = 0.0f;
-                    }
-                    gss.Chapters.Add(resetChapter);
-                }
-                else { Debug.LogError(String.Format("Cannot reset as chapter with key {0} have not been found", levelKeys[i])); }
-
+                File.Delete(FilePath());
             }
 
-            serializer.Serialize(writer, gss);
-            writer.Close();
-           
-		}
+            //Unlocking partially tutorial level
+            XmlSerializer serializer = new XmlSerializer(typeof(GameSaveState));
+            using (TextWriter writer = new StreamWriter(GameStateSaver.FilePath()))
+            {
+                GameSaveState gss = new GameSaveState();
 
-		Debug.Log("Reset game state");
+                List<String> levelKeys = new List<string>(StateJigsawPuzzle.Instance.Chapters.Keys);
+
+                for (int i = 0; i < levelKeys.Count; i++)
+                {
+                    ChapterSaveState resetChapter = new ChapterSaveState();
+                    resetChapter.LevelName = levelKeys[i];
+
+                    Chapter currChapter;
+                    StateJigsawPuzzle.Instance.Chapters.TryGetValue(levelKeys[i], out currChapter);
+                    if (currChapter != null)
+                    {
+                        resetChapter.LevelNumber = currChapter.LevelNumber;
+                        for (int j = 0; j < resetChapter.JigsawPeicesUnlocked.Length; j++)
+                        {
+                            resetChapter.JigsawPeicesUnlocked[j] = 0.0f;
+                        }
+                        gss.Chapters.Add(resetChapter);
+                    }
+                    else {
+                        ListenIn.Logger.Log(String.Format("Cannot reset as chapter with key {0} have not been found", levelKeys[i]), ListenIn.LoggerMessageType.Error);
+                        //Debug.LogError(String.Format("Cannot reset as chapter with key {0} have not been found", levelKeys[i]));
+                    }
+
+                }
+
+                serializer.Serialize(writer, gss);
+                writer.Close();
+
+            }
+        }
+        catch (Exception ex)
+        {
+            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+        }
+        
 	}
 
 	public static string FilePath()
 	{
         return Application.persistentDataPath + "/user_" + DatabaseXML.Instance.PatientId.ToString() + "_SavedState.xml";
-        //return Application.persistentDataPath + "/SavedState.xml";
 	}
 
 }

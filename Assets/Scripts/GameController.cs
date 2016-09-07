@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+
 using MadLevelManager;
 
 public class GameController {
@@ -42,28 +44,23 @@ public class GameController {
     private State m_CurState;
     private bool m_Initializtion = false;
 
-    public State GetState(States state)
-    {
-        return m_States[(int)state];
-    }
-
-    public void ReloadState()
-    {
-        if (m_CurState != null)
-        {
-            m_CurState.Init();
-        }
-    }
-
     public void ChangeState(States state)
     {
-        // Debug.Log("Change State");
-        if (m_CurState!=null)
+        try
         {
-            m_CurState.Exit();
+            // Debug.Log("Change State");
+            if (m_CurState != null)
+            {
+                m_CurState.Exit();
+            }
+            m_CurState = m_States[(int)state];
+            m_CurState.Init();
         }
-        m_CurState = m_States[(int)state];
-        m_CurState.Init();
+        catch (System.Exception ex)
+        {
+            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+        }
+
     }
 
     public void Init()
@@ -72,40 +69,54 @@ public class GameController {
         {
             m_Initializtion = true;
             Application.targetFrameRate = 60;
-            DatabaseXML.Instance.InitializeDatabase();
-            CUserTherapy.Instance.LoadDataset_UserProfile();
-            StateJigsawPuzzle.Instance.OnGameLoadedInitialization();
 
-            IMadLevelProfileBackend backend = MadLevelProfile.backend;
-            string profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
-            Debug.Log(profile);
+            //Setting the logger
+            GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI_Canvas_Debug"));
+            Text debug_text = go.GetComponentInChildren<Text>();
+            ListenIn.Logger.SetLoggerUIFrame(debug_text);
+            ListenIn.Logger.SetLoggerLogToExternal(true);
 
             try
             {
+                DatabaseXML.Instance.InitializeDatabase();
+                CUserTherapy.Instance.LoadDataset_UserProfile();
+                StateJigsawPuzzle.Instance.OnGameLoadedInitialization();
+
+                IMadLevelProfileBackend backend = MadLevelProfile.backend;
+                string profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
+                ListenIn.Logger.Log(string.Format("Loaded profile: {0}", profile), ListenIn.LoggerMessageType.Info);
+                //Debug.Log(profile);
+                
                 GameStateSaver.Instance.Load();
+                
+                ChangeState(States.Idle);
+                //ChangeState(States.Splash);
             }
             catch (System.Exception ex)
             {
-
-                Debug.LogError(ex.Message);
-                GameStateSaver.Instance.ResetListenIn();
+                ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Info);
             }
-            ChangeState(States.Idle);
-            //ChangeState(States.Splash);
+            
         }
         else
         {
             ChangeState(States.Idle);
-            //TODO this was the default behaviour
-            //ReloadState();
         }		
 	}
     public void Update()
     {
-        if (m_CurState != null)
+        try
         {
-            m_CurState.Update();
+            if (m_CurState != null)
+            {
+                m_CurState.Update();
+            }
         }
+        catch (System.Exception ex)
+        {
+            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+        }
+
     }
 
 }
