@@ -516,6 +516,28 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //get the patient element
         XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
         patient_element.SetAttribute("id", patient_id);
+        //set new patient
+        PatientId = int.Parse(patient_id);
+
+        // set dataset id
+        if (dataset_text.Equals("Dataset A"))
+            DatasetId = 0;
+        else if (dataset_text.Equals("Dataset B"))
+            DatasetId = 1;
+        patient_element.SetAttribute("datasetid", DatasetId.ToString());
+        
+        //save doc 
+        database_xml.Save(xml_file);        
+
+        StartCoroutine(get_patient_progress());
+
+        //CUserTherapy.Instance.LoadUserProfile();
+        CUserTherapy.Instance.LoadDataset_UserProfile();
+
+        /*
+        //get the patient element
+        XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
+        patient_element.SetAttribute("id", patient_id);
         //save doc 
         database_xml.Save(xml_file);
         //set new patient
@@ -530,6 +552,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         //CUserTherapy.Instance.LoadUserProfile();
         CUserTherapy.Instance.LoadDataset_UserProfile();
+        */
     }
 
     IEnumerator get_patient_datasetid()

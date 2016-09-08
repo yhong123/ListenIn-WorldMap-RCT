@@ -180,7 +180,7 @@ public class PatientDB : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         patient_switch_message.GetComponent<Animator>().SetBool("Start", true);
         //set the new patient in the xml
         Debug.Log("Patient Dataset: " + patient_dataset_switch.captionText.text);
-        DatabaseXML.Instance.SetNewPatient(patient_switch.captionText.text);
+        DatabaseXML.Instance.SetNewPatient(patient_switch.captionText.text, patient_dataset_switch.captionText.text);
     }
 
     public void AddNewPatientUI()
@@ -249,11 +249,26 @@ public class PatientDB : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 break;
             }
             count_options++;
-        }
-        
+        }        
         patient_switch.RefreshShownValue();
 
-        patient_dataset_switch.AddOptions(new List<Dropdown.OptionData>() { new Dropdown.OptionData() { text = "DatasetA" }, new Dropdown.OptionData() { text = "DatasetB" }, new Dropdown.OptionData() { text = "DatasetC" } });
+        //select the dataset of the current patient in the dropdown
+        string strDataset = "Dataset A";
+        if (DatabaseXML.Instance.DatasetId == 1)
+            strDataset = "Dataset B";
+        count_options = 0;
+        foreach (Dropdown.OptionData patient_ds_switch_string in patient_dataset_switch.options)
+        {
+            if (strDataset.Equals(patient_ds_switch_string.text))
+            {
+                patient_dataset_switch.value = count_options;
+                break;
+            }
+            count_options++;
+        }
+        patient_dataset_switch.RefreshShownValue();
+
+        //patient_dataset_switch.AddOptions(new List<Dropdown.OptionData>() { new Dropdown.OptionData() { text = "DatasetA" }, new Dropdown.OptionData() { text = "DatasetB" }, new Dropdown.OptionData() { text = "DatasetC" } });
         patient_dataset_switch.RefreshShownValue();
     }
 
