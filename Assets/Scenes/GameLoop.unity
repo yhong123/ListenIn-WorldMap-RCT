@@ -1085,6 +1085,7 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   audioMixerGroups:
   - {fileID: 24324684, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
+  - {fileID: 24313230, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   - {fileID: 24368674, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   - {fileID: 24301952, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   - {fileID: 24300001, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
@@ -1186,75 +1187,75 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22427514, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22427514, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22427514, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 39.333336
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22427514, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22427514, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 58.666668
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22427514, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444618, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444618, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444618, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 100.00001
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444618, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444618, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 58.666668
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444618, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22480694, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22480694, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22480694, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 160.66667
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22480694, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22480694, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 58.666668
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22480694, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}

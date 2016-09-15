@@ -537,7 +537,7 @@ public class GameControlScript : MonoBehaviour
 
         // set background noise
         int intNoiseLevel = CUserTherapy.Instance.GetCurNoiseLevel();
-        //intNoiseLevel = 5;
+        intNoiseLevel = 5;
         Debug.Log("*** intNoiseLevel = " + intNoiseLevel);
 
         if (intNoiseLevel == 1)
@@ -566,7 +566,8 @@ public class GameControlScript : MonoBehaviour
             string strAudio = lsNoiseFile[intIdx];
 
             float fVoiceChannelDBlevel = m_sound_manager.GetChannelLevel(ChannelType.VoiceText);
-            
+            Debug.Log("fVoiceChannelDBlevel = '" + fVoiceChannelDBlevel + "'");
+
             if (intNoiseLevel == 2)
             {
                 //strAudio = "cafe_short";  
@@ -585,7 +586,8 @@ public class GameControlScript : MonoBehaviour
             else if (intNoiseLevel >= 5)
             {
                 //strAudio = "rugby_short"; 
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
+                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
+                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel);
             }
             m_sound_manager.Stop(ChannelType.BackgroundNoise);
 

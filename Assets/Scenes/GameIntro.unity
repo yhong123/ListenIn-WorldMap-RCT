@@ -225,6 +225,7 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   audioMixerGroups:
   - {fileID: 24324684, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
+  - {fileID: 24313230, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   - {fileID: 24368674, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   - {fileID: 24301952, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   - {fileID: 24300001, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}

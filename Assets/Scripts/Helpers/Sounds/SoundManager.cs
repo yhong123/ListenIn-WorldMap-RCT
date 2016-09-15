@@ -62,12 +62,12 @@ public class SoundManager : MonoBehaviour {
 
 		channelInfos.Add(ChannelType.VoiceText.ToString(), new ChannelInfo(){defaultDBLevel = 10.0f, settedDBLevel = 10.0f, audioMixerGroup = audioMixerGroups[0]});
 		channelInfos.Add(ChannelType.PhoneVoice.ToString(), new ChannelInfo(){defaultDBLevel = 10.0f, settedDBLevel = 10.0f, audioMixerGroup = audioMixerGroups[1]});
-		channelInfos.Add(ChannelType.BackgroundNoise.ToString(), new ChannelInfo(){defaultDBLevel = 0.0f, settedDBLevel = 0.0f, audioMixerGroup = audioMixerGroups[1]});
-		channelInfos.Add(ChannelType.SoundFx.ToString(), new ChannelInfo(){defaultDBLevel = -5.0f, settedDBLevel = -5.0f, audioMixerGroup = audioMixerGroups[2]});
+		channelInfos.Add(ChannelType.BackgroundNoise.ToString(), new ChannelInfo(){defaultDBLevel = 0.0f, settedDBLevel = 0.0f, audioMixerGroup = audioMixerGroups[2]});
+		channelInfos.Add(ChannelType.SoundFx.ToString(), new ChannelInfo(){defaultDBLevel = -5.0f, settedDBLevel = -5.0f, audioMixerGroup = audioMixerGroups[3]});
 
-		channelInfos.Add(ChannelType.LevelMusic.ToString(), new ChannelInfo(){defaultDBLevel = -5.0f, settedDBLevel = 0.0f, audioMixerGroup = audioMixerGroups[4]});
-		channelInfos.Add(ChannelType.LevelEffects.ToString(), new ChannelInfo(){defaultDBLevel = -2.0f, settedDBLevel = -2.0f, audioMixerGroup = audioMixerGroups[5]});
-		channelInfos.Add(ChannelType.CoinEffects.ToString(), new ChannelInfo(){defaultDBLevel = 7.0f, settedDBLevel = 10.0f, audioMixerGroup = audioMixerGroups[6]});
+		channelInfos.Add(ChannelType.LevelMusic.ToString(), new ChannelInfo(){defaultDBLevel = -5.0f, settedDBLevel = 0.0f, audioMixerGroup = audioMixerGroups[5]});
+		channelInfos.Add(ChannelType.LevelEffects.ToString(), new ChannelInfo(){defaultDBLevel = -2.0f, settedDBLevel = -2.0f, audioMixerGroup = audioMixerGroups[6]});
+		channelInfos.Add(ChannelType.CoinEffects.ToString(), new ChannelInfo(){defaultDBLevel = 7.0f, settedDBLevel = 10.0f, audioMixerGroup = audioMixerGroups[7]});
 	}
 	
 	// Update is called once per frame
