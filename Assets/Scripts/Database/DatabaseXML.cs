@@ -84,6 +84,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             //if it doesn't, create it
             Directory.CreateDirectory(xml_location);
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Database/backup");
+            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/");
             //create an xml from the local sample one
             database_xml.LoadXml(database_xml_file.text);
             //and save it only once
@@ -93,6 +94,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         database_xml.LoadXml(File.ReadAllText(xml_file));
 
         //Debug.Log(Application.persistentDataPath);
+
+        if (!Directory.Exists(Application.persistentDataPath + @"/ListenIn/Therapy/"))
+            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/");
 
         //get id patient from the xml
         PatientId = int.Parse(GetPatient());

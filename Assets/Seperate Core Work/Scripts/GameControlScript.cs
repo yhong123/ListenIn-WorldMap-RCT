@@ -537,8 +537,8 @@ public class GameControlScript : MonoBehaviour
 
         // set background noise
         int intNoiseLevel = CUserTherapy.Instance.GetCurNoiseLevel();
-        intNoiseLevel = 5;
-        Debug.Log("*** intNoiseLevel = " + intNoiseLevel);
+        //intNoiseLevel = 5;
+        //Debug.Log("*** intNoiseLevel = " + intNoiseLevel);
 
         if (intNoiseLevel == 1)
         {
@@ -586,8 +586,10 @@ public class GameControlScript : MonoBehaviour
             else if (intNoiseLevel >= 5)
             {
                 //strAudio = "rugby_short"; 
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel);
+                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
+                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel);
+                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel + 5);
+                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel + 20);
             }
             m_sound_manager.Stop(ChannelType.BackgroundNoise);
 

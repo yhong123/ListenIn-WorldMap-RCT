@@ -1382,6 +1382,8 @@ class CUser
 
         // Save the document to a file. White space is preserved (no white space).
         string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_profile.xml";   //m_strAppPath + "user_profile.xml";
+        string strXmlFileNew = strXmlFile + ".new";
+        string strXmlFileOld = strXmlFile + ".old";
 
         XmlElement xmlChild = doc.CreateElement("userid");
         xmlChild.InnerText = m_strUserId;
@@ -1455,7 +1457,37 @@ class CUser
         doc.DocumentElement.AppendChild(xmlChild);
 
         //doc.PreserveWhitespace = true;
-        doc.Save(strXmlFile);
+        //doc.Save(strXmlFile);
+        try
+        {
+            // Write to file.txt.new
+            // Move file.txt to file.txt.old
+            // Move file.txt.new to file.txt
+            // Delete file.txt.old
+            //doc.PreserveWhitespace = true;
+
+            doc.Save(strXmlFileNew);
+            if (System.IO.File.Exists(strXmlFile))
+                System.IO.File.Move(strXmlFile, strXmlFileOld);
+            System.IO.File.Move(strXmlFileNew, strXmlFile);
+            // backup
+            string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
+            string xml_backup = m_strAppPath + @"/ListenIn/Therapy/" + "user_" + m_strUserId + "_profile-" + strDate + ".xml";
+            if (System.IO.File.Exists(strXmlFileOld))
+            {
+                System.IO.File.Copy(strXmlFileOld, xml_backup, true);
+                System.IO.File.Delete(strXmlFileOld);
+            }
+        }
+        catch (System.Xml.XmlException ex)
+        {
+            ListenIn.Logger.Log("CUser-saveUserProfileToXml-" + ex.Message, ListenIn.LoggerMessageType.Info);
+        }
+        catch (Exception e)
+        {
+            //Console.WriteLine("The process failed: {0}", e.ToString());
+            ListenIn.Logger.Log("CUser-saveUserProfileToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+        }
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -1471,6 +1503,8 @@ class CUser
 
         // Save the document to a file. White space is preserved (no white space).
         string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_therapyblocks.xml";
+        string strXmlFileNew = strXmlFile + ".new";
+        string strXmlFileOld = strXmlFile + ".old";
 
         /*
         <block idx="0">
@@ -1628,6 +1662,37 @@ class CUser
 
         //doc.PreserveWhitespace = true;
         doc.Save(strXmlFile);
+
+        try
+        {
+            // Write to file.txt.new
+            // Move file.txt to file.txt.old
+            // Move file.txt.new to file.txt
+            // Delete file.txt.old
+            //doc.PreserveWhitespace = true;
+
+            doc.Save(strXmlFileNew);
+            if (System.IO.File.Exists(strXmlFile))
+                System.IO.File.Move(strXmlFile, strXmlFileOld);
+            System.IO.File.Move(strXmlFileNew, strXmlFile);
+            // backup
+            string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
+            string xml_backup = m_strAppPath + @"/ListenIn/Therapy/" + "user_" + m_strUserId + "_therapyblocks-" + strDate + ".xml";
+            if (System.IO.File.Exists(strXmlFileOld))
+            {
+                System.IO.File.Copy(strXmlFileOld, xml_backup, true);
+                System.IO.File.Delete(strXmlFileOld);
+            }
+        }
+        catch (System.Xml.XmlException ex)
+        {
+            ListenIn.Logger.Log("CUser-saveTherapyBlocksToXml-" + ex.Message, ListenIn.LoggerMessageType.Info);
+        }
+        catch (Exception e)
+        {
+            //Console.WriteLine("The process failed: {0}", e.ToString());
+            ListenIn.Logger.Log("CUser-saveTherapyBlocksToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+        }
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -1642,7 +1707,13 @@ class CUser
             "</root>");
 
         // Save the document to a file. White space is preserved (no white space).
+        // Write to file.txt.new
+        // Move file.txt to file.txt.old
+        // Move file.txt.new to file.txt
+        // Delete file.txt.old
         string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_challengeitemfeatures_history.xml";
+        string strXmlFileNew = strXmlFile + ".new";
+        string strXmlFileOld = strXmlFile + ".old";
 
         /*
         <item idx="0">
@@ -1692,10 +1763,38 @@ class CUser
             xmlNode.AppendChild(xmlChild2);
 
             doc.DocumentElement.AppendChild(xmlNode);
-        }
+        }        
 
-        //doc.PreserveWhitespace = true;
-        doc.Save(strXmlFile);
+        try
+        {
+            // Write to file.txt.new
+            // Move file.txt to file.txt.old
+            // Move file.txt.new to file.txt
+            // Delete file.txt.old
+            //doc.PreserveWhitespace = true;
+            
+            doc.Save(strXmlFileNew);
+            if (System.IO.File.Exists(strXmlFile))
+                System.IO.File.Move(strXmlFile, strXmlFileOld);
+            System.IO.File.Move(strXmlFileNew, strXmlFile);
+            // backup
+            string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
+            string xml_backup = m_strAppPath + @"/ListenIn/Therapy/" + "user_" + m_strUserId + "_challengeitemfeatures_history-" + strDate + ".xml";
+            if (System.IO.File.Exists(strXmlFileOld))
+            {
+                System.IO.File.Copy(strXmlFileOld, xml_backup, true);
+                System.IO.File.Delete(strXmlFileOld);
+            }
+        }
+        catch (System.Xml.XmlException ex)
+        {
+            ListenIn.Logger.Log("CUser-saveChallengeItemFeaturesHistoryToXml-" + ex.Message, ListenIn.LoggerMessageType.Info);
+        }
+        catch (Exception e)
+        {
+            //Console.WriteLine("The process failed: {0}", e.ToString());
+            ListenIn.Logger.Log("CUser-saveChallengeItemFeaturesHistoryToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);            
+        }
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -1785,8 +1884,10 @@ class CUser
     public void saveLexicalItem_HistoryExposure_Csv()
     {
         string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_lexicalitem_history_exposure.csv";
+        string strCsvFileNew = strCsvFile + ".new";
+        string strCsvFileOld = strCsvFile + ".old";
 
-        using (System.IO.StreamWriter sw = new System.IO.StreamWriter(strCsvFile))
+        using (System.IO.StreamWriter sw = new System.IO.StreamWriter(strCsvFileNew))
         {
             for (var i = 0; i < m_lsLexicalItem_HistoryExposure.Count; i++)
             {
@@ -1798,6 +1899,35 @@ class CUser
                 // write to file
                 sw.WriteLine(strRow);
             }
+        }
+
+        try
+        {
+            // Write to file.txt.new
+            // Move file.txt to file.txt.old
+            // Move file.txt.new to file.txt
+            // Delete file.txt.old            
+            
+            if (System.IO.File.Exists(strCsvFile))
+                System.IO.File.Move(strCsvFile, strCsvFileOld);
+            System.IO.File.Move(strCsvFileNew, strCsvFile);
+            // backup
+            string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
+            string xml_backup = m_strAppPath + @"/ListenIn/Therapy/" + "user_" + m_strUserId + "_lexicalitem_history_exposure-" + strDate + ".csv";
+            if (System.IO.File.Exists(strCsvFileOld))
+            {
+                System.IO.File.Copy(strCsvFileOld, xml_backup, true);
+                System.IO.File.Delete(strCsvFileOld);
+            }
+        }
+        catch (System.Xml.XmlException ex)
+        {
+            ListenIn.Logger.Log("CUser-saveLexicalItem_HistoryExposure_Csv-" + ex.Message, ListenIn.LoggerMessageType.Info);
+        }
+        catch (Exception e)
+        {
+            //Console.WriteLine("The process failed: {0}", e.ToString());
+            ListenIn.Logger.Log("CUser-saveLexicalItem_HistoryExposure_Csv-" + e.ToString(), ListenIn.LoggerMessageType.Info);
         }
     }
 

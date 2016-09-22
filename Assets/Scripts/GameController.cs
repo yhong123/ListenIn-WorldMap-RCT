@@ -71,9 +71,9 @@ public class GameController {
             Application.targetFrameRate = 60;
 
             //Setting the logger
-            GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI_Canvas_Debug"));
+            /*GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI_Canvas_Debug"));
             Text debug_text = go.GetComponentInChildren<Text>();
-            ListenIn.Logger.SetLoggerUIFrame(debug_text);
+            ListenIn.Logger.SetLoggerUIFrame(debug_text);*/
             ListenIn.Logger.SetLoggerLogToExternal(true);
 
             try

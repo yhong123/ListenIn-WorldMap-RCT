@@ -474,6 +474,8 @@ class CUserTherapy : Singleton<CUserTherapy>
         {            
             // Save the document to a file. White space is preserved (no white space).
             string strXmlFile = Application.persistentDataPath + "/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all.xml";
+            string strXmlFileNew = strXmlFile + ".new";
+            string strXmlFileOld = strXmlFile + ".old";
 
             XmlDocument doc = new XmlDocument();
             if (!System.IO.File.Exists(strXmlFile))
@@ -575,7 +577,37 @@ class CUserTherapy : Singleton<CUserTherapy>
             doc.DocumentElement.AppendChild(xmlNode);
 
             //doc.PreserveWhitespace = true;
-            doc.Save(strXmlFile);
+            //doc.Save(strXmlFile);
+            try
+            {
+                // Write to file.txt.new
+                // Move file.txt to file.txt.old
+                // Move file.txt.new to file.txt
+                // Delete file.txt.old
+                //doc.PreserveWhitespace = true;
+
+                doc.Save(strXmlFileNew);
+                if (System.IO.File.Exists(strXmlFile))
+                    System.IO.File.Move(strXmlFile, strXmlFileOld);
+                System.IO.File.Move(strXmlFileNew, strXmlFile);
+                // backup
+                string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");                
+                string xml_backup = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all-" + strDate + ".xml";
+                if (System.IO.File.Exists(strXmlFileOld))
+                {
+                    System.IO.File.Copy(strXmlFileOld, xml_backup, true);
+                    System.IO.File.Delete(strXmlFileOld);
+                }
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                ListenIn.Logger.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine("The process failed: {0}", e.ToString());
+                ListenIn.Logger.Log("CUserTherapy-SaveTrials-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+            }
         }
         catch (System.Exception ex)
         {
