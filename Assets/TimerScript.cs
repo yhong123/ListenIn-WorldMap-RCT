@@ -23,7 +23,7 @@ public class TimerScript : MonoBehaviour {
         }
         catch (Exception ex)
         {
-            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
         }
     }
 }

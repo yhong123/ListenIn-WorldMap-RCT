@@ -1481,12 +1481,12 @@ class CUser
         }
         catch (System.Xml.XmlException ex)
         {
-            ListenIn.Logger.Log("CUser-saveUserProfileToXml-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("CUser-saveUserProfileToXml-" + ex.Message, ListenIn.LoggerMessageType.Info);
         }
         catch (Exception e)
         {
             //Console.WriteLine("The process failed: {0}", e.ToString());
-            ListenIn.Logger.Log("CUser-saveUserProfileToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("CUser-saveUserProfileToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);
         }
     }
 
@@ -1686,12 +1686,12 @@ class CUser
         }
         catch (System.Xml.XmlException ex)
         {
-            ListenIn.Logger.Log("CUser-saveTherapyBlocksToXml-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("CUser-saveTherapyBlocksToXml-" + ex.Message, ListenIn.LoggerMessageType.Info);
         }
         catch (Exception e)
         {
             //Console.WriteLine("The process failed: {0}", e.ToString());
-            ListenIn.Logger.Log("CUser-saveTherapyBlocksToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("CUser-saveTherapyBlocksToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);
         }
     }
 
@@ -1788,12 +1788,12 @@ class CUser
         }
         catch (System.Xml.XmlException ex)
         {
-            ListenIn.Logger.Log("CUser-saveChallengeItemFeaturesHistoryToXml-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("CUser-saveChallengeItemFeaturesHistoryToXml-" + ex.Message, ListenIn.LoggerMessageType.Info);
         }
         catch (Exception e)
         {
             //Console.WriteLine("The process failed: {0}", e.ToString());
-            ListenIn.Logger.Log("CUser-saveChallengeItemFeaturesHistoryToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);            
+            ListenIn.Logger.Instance.Log("CUser-saveChallengeItemFeaturesHistoryToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);            
         }
     }
 
@@ -1922,12 +1922,12 @@ class CUser
         }
         catch (System.Xml.XmlException ex)
         {
-            ListenIn.Logger.Log("CUser-saveLexicalItem_HistoryExposure_Csv-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("CUser-saveLexicalItem_HistoryExposure_Csv-" + ex.Message, ListenIn.LoggerMessageType.Info);
         }
         catch (Exception e)
         {
             //Console.WriteLine("The process failed: {0}", e.ToString());
-            ListenIn.Logger.Log("CUser-saveLexicalItem_HistoryExposure_Csv-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("CUser-saveLexicalItem_HistoryExposure_Csv-" + e.ToString(), ListenIn.LoggerMessageType.Info);
         }
     }
 

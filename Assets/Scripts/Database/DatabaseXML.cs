@@ -203,6 +203,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             if (lsm != null)
             {
                 lsm.OpenPauseMenu();
+                
                 Debug.Log("Forcing menu after idle timeout - case WorldMap");
                 return;
             }
@@ -504,10 +505,10 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
         }
 
-        ListenIn.Logger.EmptyBuffer();
+        ListenIn.Logger.Instance.EmptyBuffer();
 
     }
 

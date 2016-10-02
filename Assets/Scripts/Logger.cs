@@ -12,17 +12,17 @@ namespace ListenIn
 
     struct MessageToLog { public string message; public LoggerMessageType messageType; }
 
-    public static class Logger
+    public class Logger : Singleton<Logger>
     {
-        private static Text _screenLogger = null;
-        private static string _externalPath = Path.Combine(Application.persistentDataPath, "Logs");
-        private static bool _logToExternalFile;
-        private static bool _isLoggerReady = false;
-        private static DateTime _lastLogTime;
-        private static readonly IList<MessageToLog> LogBufferList = new List<MessageToLog>();
-        private static readonly string _logFormat = "[{0}]: {1}";
+        private Text _screenLogger;
+        private string _externalPath;
+        private bool _logToExternalFile;
+        private bool _isLoggerReady;
+        private DateTime _lastLogTime;
+        private readonly IList<MessageToLog> LogBufferList = new List<MessageToLog>();
+        private readonly string _logFormat = "[{0}]: {1}";
 
-        private static Color GetLoggerMessageColor(LoggerMessageType messageType)
+        private Color GetLoggerMessageColor(LoggerMessageType messageType)
         {
             Color col = Color.black;
             switch (messageType)
@@ -42,13 +42,13 @@ namespace ListenIn
             return col;
         }
 
-        public static void SetLoggerUIFrame(Text text)
+        public void SetLoggerUIFrame(Text text)
         {
             _screenLogger = text;
             _isLoggerReady = true;
         }
 
-        public static void SetLoggerLogToExternal(bool logToExternal)
+        public void SetLoggerLogToExternal(bool logToExternal)
         {
             _logToExternalFile = logToExternal;
 
@@ -61,10 +61,11 @@ namespace ListenIn
                     Log("Created directory for external logger", LoggerMessageType.Info);
                 }
             }
+
+            _isLoggerReady = true;
         }
 
-
-        public static void Log(string mes, LoggerMessageType mesType)
+        public void Log(string mes, LoggerMessageType mesType)
         {
             if (!_isLoggerReady)
                 return;
@@ -110,7 +111,7 @@ namespace ListenIn
 
         }
 
-        public static void EmptyBuffer()
+        public void EmptyBuffer()
         {
             try
             {
@@ -146,7 +147,7 @@ namespace ListenIn
             }
         }
 
-        private static void WriteConsole(MessageToLog mtl)
+        private void WriteConsole(MessageToLog mtl)
         {
             if (_screenLogger != null)
             {
@@ -154,15 +155,63 @@ namespace ListenIn
                 _screenLogger.color = GetLoggerMessageColor(mtl.messageType);
             }
 
-            if (Application.isEditor)
-                Debug.Log(mtl.message);
+            //Removing for avoiding loop within the editor
+            //if (Application.isEditor)
+            //    Debug.Log(mtl.message);
 
         }
 
-        private static string GetLoggerLine(MessageToLog mtl)
+        private string GetLoggerLine(MessageToLog mtl)
         {
             return string.Concat("[", DateTime.Now.ToString("HH::mm:ss"), "] : ", String.Format(_logFormat, mtl.messageType.ToString(), mtl.message));
         }
+
+        #region Unity functions
+
+        protected override void Awake()
+        {
+            _screenLogger = null;
+            _externalPath = Path.Combine(Application.persistentDataPath, "Logs");
+            _logToExternalFile = false;
+            _isLoggerReady = false;
+        }
+
+        protected override void OnEnable()
+        {
+            Application.logMessageReceived += HandleLog;
+        }
+        protected override void OnDisable()
+        {
+            Application.logMessageReceived -= HandleLog;
+        }
+
+        //Handling unity debug log messages
+        private void HandleLog(string logString, string stackTrace, LogType type)
+        {
+
+            if (applicationQuitting)
+                return;
+
+            MessageToLog mtl = new MessageToLog() { message = logString };
+            if (type == LogType.Assert || type == LogType.Error || type == LogType.Exception)
+            {
+                mtl.messageType = LoggerMessageType.Error;
+            }
+            else if (type == LogType.Warning)
+            {
+                mtl.messageType = LoggerMessageType.Warning;
+            }
+            else if (type == LogType.Log)
+            {
+                mtl.messageType = LoggerMessageType.Info;
+            }
+
+            lock (LogBufferList)
+            {
+                LogBufferList.Add(mtl);
+            }
+        }
+        #endregion
 
     }
 }

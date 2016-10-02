@@ -92,7 +92,7 @@ class CUserTherapy : Singleton<CUserTherapy>
         m_lsChallengeItemFeatures = m_recommender.getChallengeItemFeaturesList();
 
         yield return 1;        
-        Debug.Log("ENDO OF COURITINE - LoadFiles()");
+        Debug.Log("END OF COROUTINE - LoadFiles()");
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -428,7 +428,7 @@ class CUserTherapy : Singleton<CUserTherapy>
                 }
                 catch (System.Exception ex)
                 {
-                    ListenIn.Logger.Log("CUserTherapy-IsEndOfLevel-" + ex.Message, ListenIn.LoggerMessageType.Info);
+                    ListenIn.Logger.Instance.Log("CUserTherapy-IsEndOfLevel-" + ex.Message, ListenIn.LoggerMessageType.Info);
                 }
             }
             return true;
@@ -461,7 +461,7 @@ class CUserTherapy : Singleton<CUserTherapy>
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Log("CUserTherapy-SaveTherapyTimeToDB-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("CUserTherapy-SaveTherapyTimeToDB-" + ex.Message, ListenIn.LoggerMessageType.Info);
         }
     }
 
@@ -601,17 +601,17 @@ class CUserTherapy : Singleton<CUserTherapy>
             }
             catch (System.Xml.XmlException ex)
             {
-                ListenIn.Logger.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+                ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
             }
             catch (Exception e)
             {
                 //Console.WriteLine("The process failed: {0}", e.ToString());
-                ListenIn.Logger.Log("CUserTherapy-SaveTrials-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+                ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + e.ToString(), ListenIn.LoggerMessageType.Info);
             }
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
         }
     }
 

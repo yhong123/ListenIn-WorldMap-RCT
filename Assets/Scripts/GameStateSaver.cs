@@ -81,7 +81,7 @@ public class GameStateSaver : MonoBehaviour {
 		}
 		else
 		{
-            ListenIn.Logger.Log("First initialization", ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("First initialization", ListenIn.LoggerMessageType.Info);
             GameStateSaver.Instance.ResetListenIn();
 		}
 
@@ -123,14 +123,14 @@ public class GameStateSaver : MonoBehaviour {
 			writer.Close();
 
 		}
-        ListenIn.Logger.Log("Save game state", ListenIn.LoggerMessageType.Info);
+        ListenIn.Logger.Instance.Log("Save game state", ListenIn.LoggerMessageType.Info);
         //Debug.Log("Save game state");
 	}
 
 	public void ResetListenIn()
 	{
         //Debug.Log("Initializing ListenIn");
-        ListenIn.Logger.Log("Resetting Listen In", ListenIn.LoggerMessageType.Info);
+        ListenIn.Logger.Instance.Log("Resetting Listen In", ListenIn.LoggerMessageType.Info);
         Reset();
 		Load ();
 	}
@@ -170,7 +170,7 @@ public class GameStateSaver : MonoBehaviour {
                         gss.Chapters.Add(resetChapter);
                     }
                     else {
-                        ListenIn.Logger.Log(String.Format("Cannot reset as chapter with key {0} have not been found", levelKeys[i]), ListenIn.LoggerMessageType.Error);
+                        ListenIn.Logger.Instance.Log(String.Format("Cannot reset as chapter with key {0} have not been found", levelKeys[i]), ListenIn.LoggerMessageType.Error);
                         //Debug.LogError(String.Format("Cannot reset as chapter with key {0} have not been found", levelKeys[i]));
                     }
 
@@ -183,7 +183,7 @@ public class GameStateSaver : MonoBehaviour {
         }
         catch (Exception ex)
         {
-            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
         }
         
 	}

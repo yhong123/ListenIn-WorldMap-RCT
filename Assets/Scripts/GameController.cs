@@ -58,7 +58,7 @@ public class GameController {
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
         }
 
     }
@@ -73,8 +73,8 @@ public class GameController {
             //Setting the logger
             /*GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI_Canvas_Debug"));
             Text debug_text = go.GetComponentInChildren<Text>();
-            ListenIn.Logger.SetLoggerUIFrame(debug_text);*/
-            ListenIn.Logger.SetLoggerLogToExternal(true);
+            ListenIn.Logger.Instance.SetLoggerUIFrame(debug_text);*/
+            ListenIn.Logger.Instance.SetLoggerLogToExternal(true);
 
             try
             {
@@ -84,7 +84,7 @@ public class GameController {
 
                 IMadLevelProfileBackend backend = MadLevelProfile.backend;
                 string profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
-                ListenIn.Logger.Log(string.Format("Loaded profile: {0}", profile), ListenIn.LoggerMessageType.Info);
+                ListenIn.Logger.Instance.Log(string.Format("Loaded profile: {0}", profile), ListenIn.LoggerMessageType.Info);
                 //Debug.Log(profile);
                 
                 GameStateSaver.Instance.Load();
@@ -94,7 +94,7 @@ public class GameController {
             }
             catch (System.Exception ex)
             {
-                ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Info);
+                ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Info);
             }
             
         }
@@ -114,7 +114,7 @@ public class GameController {
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
         }
 
     }

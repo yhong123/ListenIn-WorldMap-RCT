@@ -8,7 +8,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     //preventing concurrent call to the instance
     private static object _lock = new object();
 
-    private static bool applicationQuitting = false;
+    protected static bool applicationQuitting = false;
 
     public static T Instance
     {
@@ -55,6 +55,16 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     }
 
     protected virtual void Awake()
+    {
+
+    }
+
+    protected virtual void OnEnable()
+    {
+
+    }
+
+    protected virtual void OnDisable()
     {
 
     }
