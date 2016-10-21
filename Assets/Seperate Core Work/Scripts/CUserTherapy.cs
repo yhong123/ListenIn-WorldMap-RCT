@@ -143,6 +143,20 @@ class CUserTherapy : Singleton<CUserTherapy>
 
             int intDistractorNum = convertDistractorNum(features.m_dComplexity_DistractorNum);
 
+            List<int> lsPictureChoiceIdx = pickDistractors(intDistractorNum, challengeItem.m_lsPictureChoice);
+            for (var j = 0; j < lsPictureChoiceIdx.Count; j++)
+            {
+                int intChoiceIdx = lsPictureChoiceIdx[j];
+                CStimulus picChoice = new CStimulus();
+                picChoice.intOriginalIdx = intChoiceIdx;
+                picChoice.m_strName = challengeItem.m_lsPictureChoice[intChoiceIdx].m_strName;
+                picChoice.m_strType = challengeItem.m_lsPictureChoice[intChoiceIdx].m_strType;
+                picChoice.m_strPType = challengeItem.m_lsPictureChoice[intChoiceIdx].m_strPType;
+                picChoice.m_strImage = challengeItem.m_lsPictureChoice[intChoiceIdx].m_strImageFile;
+                trial.m_lsStimulus.Add(picChoice);
+            }
+
+            /*--------------------------------------------------------------------------------------
             // 2 foils
             if (intDistractorNum == 2)
             {
@@ -230,13 +244,14 @@ class CUserTherapy : Singleton<CUserTherapy>
                     //Debug.Log("image = " + picChoice.m_strImage + ", ");
                 }
             }
+            ------------------------------------------------------------------------------*/
 
             string str = "";
             for (var j = 0; j < trial.m_lsStimulus.Count; ++j)            
                 str = str + trial.m_lsStimulus[j].m_strType + ", ";
             Debug.Log("foil num = " + intDistractorNum + ", foil type = " + str);
 
-            /*
+            /*------------------------------------------------------------------
             // 2 foils - 1P, 1S; 3 foils - 2P, 1S; 4 foils - 2P, 2S; 5 foils - 1P, 1S; 
             if ( (intDistractorNum == 2) || (intDistractorNum == 3) )
             {
@@ -274,7 +289,8 @@ class CUserTherapy : Singleton<CUserTherapy>
                     trial.m_lsStimulus.Add(picChoice);
                     //Debug.Log("image = " + picChoice.m_strImage + ", ");
                 }
-            }*/
+            }
+            -------------------------------------------------------------*/
 
             trial.m_intTargetIdx = challengeItem.m_intTargetIdx;
 
@@ -320,6 +336,171 @@ class CUserTherapy : Singleton<CUserTherapy>
         // reset current idx
         m_intCurIdx = -1;
         m_intTotalCorrect = 0;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    // pickDistractors
+    //----------------------------------------------------------------------------------------------------
+    private List<int> pickDistractors(int intDistractorNum, List<CPictureChoice> lsPictureChoice)
+    {
+        List<int> lsIdx = new List<int>();
+
+        List<int> lsPIdx = new List<int>();  // list of P1, P2, P3, foil 1
+        List<int> lsSIdx = new List<int>();  // list of S1, S2, S3, foil 2, foil 3
+        List<int> lsUnIdx = new List<int>();  // list of un, other 
+
+        for (var i = 0; i < lsPictureChoice.Count; i++)
+        {
+            string strType = lsPictureChoice[i].m_strType.ToLower();
+            strType.Trim();
+            if ((strType.Equals("p1")) || (strType.Equals("p2")) || (strType.Equals("p3")) || (strType.Equals("foil 1")))
+                lsPIdx.Add(i);
+            else if ((strType.Equals("s1")) || (strType.Equals("s2")) || (strType.Equals("s3")) || (strType.Equals("foil 2")) || (strType.Equals("foil 3")))
+                lsSIdx.Add(i);
+            else if ((strType.Equals("un")) || (strType.Equals("other")) )
+                lsUnIdx.Add(i);
+        }        
+
+        // randomize list
+        for (int i = 0; i < lsPIdx.Count; i++)
+        {
+            int temp = lsPIdx[i];
+            int intRandomIndex = UnityEngine.Random.Range(i, lsPIdx.Count);
+            lsPIdx[i] = lsPIdx[intRandomIndex];
+            lsPIdx[intRandomIndex] = temp;
+        }
+        for (int i = 0; i < lsSIdx.Count; i++)
+        {
+            int temp = lsSIdx[i];
+            int intRandomIndex = UnityEngine.Random.Range(i, lsSIdx.Count);
+            lsSIdx[i] = lsSIdx[intRandomIndex];
+            lsSIdx[intRandomIndex] = temp;
+        }
+        for (int i = 0; i < lsUnIdx.Count; i++)
+        {
+            int temp = lsUnIdx[i];
+            int intRandomIndex = UnityEngine.Random.Range(i, lsUnIdx.Count);
+            lsUnIdx[i] = lsUnIdx[intRandomIndex];
+            lsUnIdx[intRandomIndex] = temp;
+        }
+
+        // add target first
+        lsIdx.Add(0);        
+
+        // 2 foils
+        if (intDistractorNum == 2)
+        {
+            // pick 1st foil = phonological & 2nd foil = semantic
+            int intCtr = 0;
+            for (int i = 0; i < lsPIdx.Count; i++)
+            {
+                lsIdx.Add(lsPIdx[i]);
+                intCtr++;
+                if (intCtr >= 1) break;
+            }
+            for (int i = 0; i < lsSIdx.Count; i++)
+            {
+                lsIdx.Add(lsSIdx[i]);
+                intCtr++;
+                if (intCtr >= 2) break;
+            }
+            if (intCtr < 2)
+            {
+                for (int i = 0; i < lsUnIdx.Count; i++)
+                {
+                    lsIdx.Add(lsUnIdx[i]);
+                    intCtr++;
+                    if (intCtr >= 2) break;
+                }
+            }
+        }
+        // 3 foils
+        else if (intDistractorNum == 3)
+        {
+            // pick 1st foils = phonological & 2rd foil = semantic, 3rd foil = randomly phonological/semantic
+            int intCtr = 0;
+            int intLastPIdx = 0;
+            for (int i = 0; i < lsPIdx.Count; i++)
+            {
+                lsIdx.Add(lsPIdx[i]);
+                intLastPIdx = i;
+                intCtr++;
+                if (intCtr >= 1) break;
+            }
+            int intLastSIdx = 0;
+            for (int i = 0; i < lsSIdx.Count; i++)
+            {
+                lsIdx.Add(lsSIdx[i]);
+                intLastSIdx = i;
+                intCtr++;
+                if (intCtr >= 2) break;
+            }
+            // 3rd foil selected randomly from phonological / semantic
+            System.Random rnd = new System.Random();
+            int intType = rnd.Next(0, 2); // random 0, 1
+            if (intType == 0)  // pick from phonological
+            {
+                for (int i = intLastPIdx+1; i < lsPIdx.Count; i++)
+                {
+                    lsIdx.Add(lsPIdx[i]);                    
+                    intCtr++;
+                    if (intCtr >= 3) break;
+                }
+            }
+            else  // pick from semantic
+            {
+                for (int i = intLastSIdx+1; i < lsSIdx.Count; i++)
+                {
+                    lsIdx.Add(lsSIdx[i]);                    
+                    intCtr++;
+                    if (intCtr >= 3) break;
+                }
+            }
+            if (intCtr < 3)  // if still not enough then pick from unrelated
+            {
+                for (int i = 0; i < lsUnIdx.Count; i++)
+                {
+                    lsIdx.Add(lsUnIdx[i]);
+                    intCtr++;
+                    if (intCtr >= 3) break;
+                }
+            }
+        }
+        // 4 foils
+        else if (intDistractorNum == 4)
+        {
+            // pick 1st & 2nd foils = phonological & 3rd & 4th foils = semantic
+            int intCtr = 0;
+            for (int i = 0; i < lsPIdx.Count; i++)
+            {
+                lsIdx.Add(lsPIdx[i]);
+                intCtr++;
+                if (intCtr >= 2) break;
+            }
+            for (int i = 0; i < lsSIdx.Count; i++)
+            {
+                lsIdx.Add(lsSIdx[i]);
+                intCtr++;
+                if (intCtr >= 4) break;
+            }
+            if (intCtr < 4)
+            {
+                for (int i = 0; i < lsUnIdx.Count; i++)
+                {
+                    lsIdx.Add(lsUnIdx[i]);
+                    intCtr++;
+                    if (intCtr >= 4) break;
+                }
+            }
+        }
+        // 5 foils
+        else
+        {
+            for (var j = 1; j < intDistractorNum + 1; ++j)            
+                lsIdx.Add(j);    
+        }       
+
+        return lsIdx;
     }
 
     //----------------------------------------------------------------------------------------------------

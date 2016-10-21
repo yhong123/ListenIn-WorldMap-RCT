@@ -768,7 +768,7 @@ class CUser
         {
             // set new weekly schedule
             CUser_ForcedBlockHistory_Weekly weekly = new CUser_ForcedBlockHistory_Weekly();
-            weekly.m_strDate = System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");   // System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            weekly.m_strDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             m_lsForcedBlockHistory_Weekly.Add(weekly);
         }
         else
@@ -787,7 +787,7 @@ class CUser
             {
                 // set up new daily schedule
                 CUser_ForcedBlockHistory_Daily daily = new CUser_ForcedBlockHistory_Daily();
-                daily.m_strDate = System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");  // System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                daily.m_strDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 lastWeekly.m_lsForcedBlockHistory_Daily.Add(daily);
                 m_intCurBlockType = 0;
             }
@@ -811,7 +811,7 @@ class CUser
                 {
                     // set up new daily schedule
                     CUser_ForcedBlockHistory_Daily daily = new CUser_ForcedBlockHistory_Daily();
-                    daily.m_strDate = System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");   // System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    daily.m_strDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     lastWeekly.m_lsForcedBlockHistory_Daily.Add(daily);
                     m_intCurBlockType = 0;
                 }
@@ -887,8 +887,8 @@ class CUser
                             intNextNoiseLevel = m_lsNoiseLevelHistory.Last() - 1;
                         if (intNextNoiseLevel < (int)CConstants.g_NoiseLevel.PhoneVoice)
                             intNextNoiseLevel = (int)CConstants.g_NoiseLevel.PhoneVoice;
-                        if (intNextNoiseLevel > (int)CConstants.g_NoiseLevel.Noise20)
-                            intNextNoiseLevel = (int)CConstants.g_NoiseLevel.Noise20;
+                        if (intNextNoiseLevel > (int)CConstants.g_NoiseLevel.Noise5)
+                            intNextNoiseLevel = (int)CConstants.g_NoiseLevel.Noise5;
                     }
                     m_lsNoiseLevelHistory.Add(intNextNoiseLevel);
                     Console.WriteLine("intNextNoiseLevel = " + intNextNoiseLevel);
@@ -1134,7 +1134,7 @@ class CUser
 
         if (therapyBlock.m_dAccuracyRate >= 0.7)
         {
-            therapyBlock.m_dTrainingStep = 0.004;  // 0.001;  // cannot be too high coz it will come to a point where there is not enough easy items
+            therapyBlock.m_dTrainingStep = 0.002;  // 0.001;  // cannot be too high coz it will come to a point where there is not enough easy items
                                                    /*int intIdx = m_lsCifComplexity_Distinct.FindIndex(a => a > therapyBlock.m_dUserAbility);
                                                    if (intIdx > -1)
                                                        therapyBlock.m_dUserAbility = m_lsCifComplexity_Distinct[intIdx];*/
@@ -1148,7 +1148,7 @@ class CUser
         else if (therapyBlock.m_dAccuracyRate <= 0.4)
         {
             double dNextLowerComplexity = getCifComplexity_Distinct(therapyBlock.m_dUserAbility_Accumulated, -1);
-            therapyBlock.m_dTrainingStep = dNextLowerComplexity - therapyBlock.m_dUserAbility_Accumulated;  // this should be -ve / 0
+            therapyBlock.m_dTrainingStep = Math.Round(dNextLowerComplexity - therapyBlock.m_dUserAbility_Accumulated, 4);  // this should be -ve / 0
                                                                                                             //therapyBlock.m_dUserAbility = therapyBlock.m_dUserAbility + therapyBlock.m_dTrainingStep;                
             therapyBlock.m_dNextBlock_DiversityThresholdUpper = dNextLowerComplexity;  // therapyBlock.m_dUserAbility_Accumulated;  //getCifComplexity_Distinct(therapyBlock.m_dUserAbility_Accumulated, 1); 
             therapyBlock.m_dNextBlock_DiversityThresholdLower = /*therapyBlock.m_dUserAbility -*/ getCifComplexity_Distinct(therapyBlock.m_dUserAbility_Accumulated, -3);  //m_dCorpusComplexity_StdDeviation * 0.2;
@@ -1301,7 +1301,7 @@ class CUser
         if (m_lsTherapyBlock.Count == 1)
         {
             CUser_ForcedBlockHistory_Weekly weekly = new CUser_ForcedBlockHistory_Weekly();
-            weekly.m_strDate = System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");   // System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            weekly.m_strDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             m_lsForcedBlockHistory_Weekly.Add(weekly);
         }
         if (m_intCurBlockType == 1)
@@ -1535,11 +1535,11 @@ class CUser
             xmlNode.SetAttributeNode(attr);
 
             XmlElement xmlChild2 = doc.CreateElement("sTime");
-            xmlChild2.InnerText = m_lsTherapyBlock[i].m_dtStartTime.ToString("MM/dd/yyyy HH:mm:ss"); //System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");   time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            xmlChild2.InnerText = m_lsTherapyBlock[i].m_dtStartTime.ToString("yyyy-MM-dd HH:mm:ss"); //System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");   time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             xmlNode.AppendChild(xmlChild2);
 
             xmlChild2 = doc.CreateElement("eTime");
-            xmlChild2.InnerText = m_lsTherapyBlock[i].m_dtEndTime.ToString("MM/dd/yyyy HH:mm:ss"); // m_lsTherapyBlock[i].m_dtEndTime.ToString("yyyy-MM-dd HH:mm:ss");
+            xmlChild2.InnerText = m_lsTherapyBlock[i].m_dtEndTime.ToString("yyyy-MM-dd HH:mm:ss"); // m_lsTherapyBlock[i].m_dtEndTime.ToString("yyyy-MM-dd HH:mm:ss");
             xmlNode.AppendChild(xmlChild2);
 
             xmlChild2 = doc.CreateElement("rIdx");

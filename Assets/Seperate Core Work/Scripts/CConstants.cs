@@ -17,7 +17,8 @@ static class CConstants
 
     public enum g_LinguisticType { Word, EasySentence, HardSentence };
 
-    public enum g_NoiseLevel { NoNoise, PhoneVoice, Noise5, Noise10, Noise15, Noise20 };
+    // noise1 = -5db, noise2 = 0db, noise3 = 5db, noise4 = 10db, noise5 = 15db
+    public enum g_NoiseLevel { NoNoise, PhoneVoice, Noise1, Noise2, Noise3, Noise4, Noise5 };
     //public enum g_NoiseLevel { NoNoise };
 
     public const int g_intItemNumPerBlock = 15;

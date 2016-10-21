@@ -1069,9 +1069,13 @@ class CRecommender
             int intChallengeItemIdx = m_lsChallengeItemFeatures[intChallengeItemFeaturesIdx].m_intChallengeItemIdx;
             lsLexicalItemIdx.Add(m_lsChallengeItem[intChallengeItemIdx].m_intLexicalItemIdx);
 
-            lsFrequency.Add((double)m_lsChallengeItemFeatures[intChallengeItemFeaturesIdx].m_dComplexity_Frequency);
+            lsFrequency.Add((double)m_lsChallengeItemFeatures[intChallengeItemFeaturesIdx].m_intFrequency);
+            lsConcreteness.Add((double)m_lsChallengeItemFeatures[intChallengeItemFeaturesIdx].m_intConcreteness);
+            lsDistractorNum.Add((double)m_lsChallengeItemFeatures[intChallengeItemFeaturesIdx].m_intDistractorNum);
+
+            /*lsFrequency.Add((double)m_lsChallengeItemFeatures[intChallengeItemFeaturesIdx].m_dComplexity_Frequency);
             lsConcreteness.Add((double)m_lsChallengeItemFeatures[intChallengeItemFeaturesIdx].m_dComplexity_Concreteness);
-            lsDistractorNum.Add((double)m_lsChallengeItemFeatures[intChallengeItemFeaturesIdx].m_dComplexity_DistractorNum);
+            lsDistractorNum.Add((double)m_lsChallengeItemFeatures[intChallengeItemFeaturesIdx].m_dComplexity_DistractorNum);*/
         }
         double dStdDeviation_Frequency = Math.Round(calculateStdDeviation(lsFrequency), 4);
         double dStdDeviation_Concreteness = Math.Round(calculateStdDeviation(lsConcreteness), 4);

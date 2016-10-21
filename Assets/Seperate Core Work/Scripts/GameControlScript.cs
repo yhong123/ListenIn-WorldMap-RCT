@@ -571,25 +571,30 @@ public class GameControlScript : MonoBehaviour
             if (intNoiseLevel == 2)
             {
                 //strAudio = "cafe_short";  
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 20);
+                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 20);
+                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 15);  // noise1 = -5db
             }
             else if (intNoiseLevel == 3)
             {
                 //strAudio = "darts_short"; 
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 15);
+                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 15);
+                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 10); // noise2 = 0db
             }
             else if (intNoiseLevel == 4)
             {
                 //strAudio = "race_short";  
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 10);
+                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 10);
+                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5); // noise3 = 5db
             }
-            else if (intNoiseLevel >= 5)
+            else if (intNoiseLevel == 5)
             {
                 //strAudio = "rugby_short"; 
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel);
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel + 5);
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel + 20);
+                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
+                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 0); // noise4 = 10db               
+            }
+            else if (intNoiseLevel >= 6)
+            {                
+                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel + 5); // noise5 = 15db
             }
             m_sound_manager.Stop(ChannelType.BackgroundNoise);
 
