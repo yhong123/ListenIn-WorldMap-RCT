@@ -87,7 +87,7 @@ class CUserTherapy : Singleton<CUserTherapy>
     //----------------------------------------------------------------------------------------------------
     IEnumerator Coroutine_LoadDataset_UserProfile()
     {
-        m_recommender.init(Application.persistentDataPath + "/", DatabaseXML.Instance.PatientId.ToString(), DatabaseXML.Instance.DatasetId);
+        m_recommender.init(Application.persistentDataPath /*+ "/"*/, DatabaseXML.Instance.PatientId.ToString(), DatabaseXML.Instance.DatasetId);
         m_lsChallengeItem = m_recommender.getChallengeItemList();
         m_lsChallengeItemFeatures = m_recommender.getChallengeItemFeaturesList();
 
@@ -125,6 +125,13 @@ class CUserTherapy : Singleton<CUserTherapy>
         m_lsResponse.Clear();
 
         List<int> lsIdx = m_recommender.getNextBlock();
+
+        // for debugging
+        /*lsIdx.Clear();
+        lsIdx.Add(608); lsIdx.Add(1624); lsIdx.Add(1444); lsIdx.Add(1636); lsIdx.Add(588);
+        lsIdx.Add(1408); lsIdx.Add(504); lsIdx.Add(2204); lsIdx.Add(1364); lsIdx.Add(1416);
+        lsIdx.Add(1596); lsIdx.Add(172); lsIdx.Add(1412); lsIdx.Add(1420); lsIdx.Add(16);*/
+
         Debug.Log("lsIdx.Count = " + lsIdx.Count);
         if (lsIdx.Count < CConstants.g_intItemNumPerBlock)
         {
@@ -654,7 +661,9 @@ class CUserTherapy : Singleton<CUserTherapy>
         try
         {            
             // Save the document to a file. White space is preserved (no white space).
-            string strXmlFile = Application.persistentDataPath + "/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all.xml";
+            //string strXmlFile = Application.persistentDataPath + "/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all.xml";
+            string strXmlFile = System.IO.Path.Combine(Application.persistentDataPath, "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all.xml");
+
             string strXmlFileNew = strXmlFile + ".new";
             string strXmlFileOld = strXmlFile + ".old";
 

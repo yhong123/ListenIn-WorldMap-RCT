@@ -335,7 +335,8 @@ class CUser
         m_lsForcedBlockHistory_Weekly.Clear();
 
         // check if file exists
-        string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_profile.xml";
+        //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_profile.xml";
+        string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_profile.xml");
         if (!System.IO.File.Exists(strXmlFile))
             return;
 
@@ -388,7 +389,8 @@ class CUser
         m_lsTherapyBlock.Clear();
 
         // check if file exists
-        string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_therapyblocks.xml";
+        //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_therapyblocks.xml";
+        string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_therapyblocks.xml");
         Console.WriteLine("loadTherapyBlocks = " + strXmlFile);
         if (!System.IO.File.Exists(strXmlFile))
             return;
@@ -469,7 +471,9 @@ class CUser
         m_lsChallengeItemFeatures_History.Clear();
 
         // check if file exists
-        string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_challengeitemfeatures_history.xml";
+        //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_challengeitemfeatures_history.xml";
+        string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_challengeitemfeatures_history.xml");
+
         if (!System.IO.File.Exists(strXmlFile))
             return;
 
@@ -516,7 +520,9 @@ class CUser
         m_lsChallengeItemFeatures_HistoryComplexity.Clear();
 
         // check if file exists
-        string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_challengeitemfeatures_history_complexity.csv";
+        //string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_challengeitemfeatures_history_complexity.csv";
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_challengeitemfeatures_history_complexity.csv");
+
         if (!System.IO.File.Exists(strCsvFile))
         {
             // set up user's historyComplexity with the original complexity
@@ -577,7 +583,9 @@ class CUser
         m_lsChallengeItem_HistoryComplexity.Clear();
 
         // check if file exists
-        string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_challengeitem_history_complexity.csv";
+        //string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_challengeitem_history_complexity.csv";
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_challengeitem_history_complexity.csv");
+
         if (!System.IO.File.Exists(strCsvFile))
         {
             // set up user's historyComplexity with the original complexity
@@ -636,7 +644,9 @@ class CUser
         m_lsLexicalItem_HistoryComplexity.Clear();
 
         // check if file exists
-        string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_lexicalitem_history_complexity.csv";
+        //string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_lexicalitem_history_complexity.csv";
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_lexicalitem_history_complexity.csv");
+
         if (!System.IO.File.Exists(strCsvFile))
         {
             // set up user's historyComplexity with the original complexity
@@ -695,7 +705,9 @@ class CUser
         m_lsLexicalItem_HistoryExposure.Clear();
 
         // check if file exists
-        string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_lexicalitem_history_exposure.csv";
+        //string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_lexicalitem_history_exposure.csv";
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_lexicalitem_history_exposure.csv");
+
         if (!System.IO.File.Exists(strCsvFile))
         {
             // set up user's history with the 0 exposure
@@ -1381,7 +1393,9 @@ class CUser
             "</root>");
 
         // Save the document to a file. White space is preserved (no white space).
-        string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_profile.xml";   //m_strAppPath + "user_profile.xml";
+        //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_profile.xml";   //m_strAppPath + "user_profile.xml";
+        string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_profile.xml");
+
         string strXmlFileNew = strXmlFile + ".new";
         string strXmlFileOld = strXmlFile + ".old";
 
@@ -1502,7 +1516,9 @@ class CUser
             "</root>");
 
         // Save the document to a file. White space is preserved (no white space).
-        string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_therapyblocks.xml";
+        //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_therapyblocks.xml";
+        string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_therapyblocks.xml");
+
         string strXmlFileNew = strXmlFile + ".new";
         string strXmlFileOld = strXmlFile + ".old";
 
@@ -1711,7 +1727,9 @@ class CUser
         // Move file.txt to file.txt.old
         // Move file.txt.new to file.txt
         // Delete file.txt.old
-        string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_challengeitemfeatures_history.xml";
+        //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_challengeitemfeatures_history.xml";
+        string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_challengeitemfeatures_history.xml");
+
         string strXmlFileNew = strXmlFile + ".new";
         string strXmlFileOld = strXmlFile + ".old";
 
@@ -1802,7 +1820,8 @@ class CUser
     //----------------------------------------------------------------------------------------------------
     public void saveChallengeItemFeatures_HistoryComplexity_Csv()
     {
-        string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_challengeitemfeatures_history_complexity.csv";
+        //string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_challengeitemfeatures_history_complexity.csv";
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_challengeitemfeatures_history_complexity.csv");
 
         using (System.IO.StreamWriter sw = new System.IO.StreamWriter(strCsvFile))
         {
@@ -1829,7 +1848,8 @@ class CUser
     //----------------------------------------------------------------------------------------------------
     public void saveChallengeItem_HistoryComplexity_Csv()
     {
-        string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_challengeitem_history_complexity.csv";
+        //string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_challengeitem_history_complexity.csv";
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_challengeitem_history_complexity.csv");
 
         using (System.IO.StreamWriter sw = new System.IO.StreamWriter(strCsvFile))
         {
@@ -1856,7 +1876,8 @@ class CUser
     //----------------------------------------------------------------------------------------------------
     public void saveLexicalItem_HistoryComplexity_Csv()
     {
-        string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_lexicalitem_history_complexity.csv";
+        //string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_lexicalitem_history_complexity.csv";
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_lexicalitem_history_complexity.csv");
 
         using (System.IO.StreamWriter sw = new System.IO.StreamWriter(strCsvFile))
         {
@@ -1883,7 +1904,9 @@ class CUser
     //----------------------------------------------------------------------------------------------------
     public void saveLexicalItem_HistoryExposure_Csv()
     {
-        string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_lexicalitem_history_exposure.csv";
+        //string strCsvFile = m_strAppPath + "user_" + m_strUserId + "_lexicalitem_history_exposure.csv";
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_lexicalitem_history_exposure.csv");
+
         string strCsvFileNew = strCsvFile + ".new";
         string strCsvFileOld = strCsvFile + ".old";
 
