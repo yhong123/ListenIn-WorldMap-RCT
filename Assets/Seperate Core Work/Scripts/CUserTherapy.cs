@@ -91,8 +91,8 @@ class CUserTherapy : Singleton<CUserTherapy>
         m_lsChallengeItem = m_recommender.getChallengeItemList();
         m_lsChallengeItemFeatures = m_recommender.getChallengeItemFeaturesList();
 
-        yield return 1;        
-        Debug.Log("END OF COROUTINE - LoadFiles()");
+        yield return null;        
+        Debug.Log("CUserTHerapy: Coroutine_LoadDataset_UserProfile()");
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -640,12 +640,14 @@ class CUserTherapy : Singleton<CUserTherapy>
         
             DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.therapy_time_insert);
 
-            if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-            {
-                //read the xml
-                //DatabaseXML.Instance.ReadDatabaseXML();
-                DatabaseXML.Instance.uploadHistoryXml();
-            }
+            //Andrea: 30/10 moved this on the uploadmanager
+
+            //if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+            //{
+            //    //read the xml
+            //    //DatabaseXML.Instance.ReadDatabaseXML();
+            //    DatabaseXML.Instance.uploadHistoryXml();
+            //}
         }
         catch (System.Exception ex)
         {

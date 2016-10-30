@@ -79,4 +79,29 @@ public class ChapterSelectMono : MonoBehaviour {
         
 	}
 
+    public void OpenUploadScreen()
+    {
+        try
+        {
+            GameObject menu = GameObject.FindGameObjectWithTag("MenuUI");
+            if (menu != null)
+            {
+                ShowPanels sp = menu.GetComponentInChildren<ShowPanels>();
+                if (sp != null)
+                    sp.ShowUploadUI();
+                else
+                    Debug.LogError("MENU UI tag found but not showpanels script attached");
+            }
+            else
+            {
+                Debug.LogError("Open Menu has been but not Menu has been found");
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("ChapterSelectMono: " + ex.Message);
+        }
+
+    }
+
 }

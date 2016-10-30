@@ -148,7 +148,6 @@ public class StatePinball : State
 	// Use this for initialization
 	public override void Init()
 	{
-        ListenIn.Logger.Instance.Log("Entering Pinball state", LoggerMessageType.Info);
         //Debug.Log("Enteering Pinball state");
         if (go == null)
         {
@@ -166,6 +165,7 @@ public class StatePinball : State
         {
             //Getting level from resources
             string currLevel = String.Concat("LevelPrefabs/",MadLevel.currentLevelName);
+            ListenIn.Logger.Instance.Log(String.Format("StatePinball: loading {0}", currLevel), LoggerMessageType.Info);
             GameObject loadLevel = GameObject.Instantiate(Resources.Load(currLevel, typeof(GameObject)), Vector3.zero, Quaternion.identity) as GameObject;
             loadLevel.transform.SetParent(go.transform, true);
             loadLevel.transform.SetAsFirstSibling();
@@ -219,6 +219,8 @@ public class StatePinball : State
         TimeSpan span = endGame - startGame;
         double dGameTimeMin = Math.Round(span.TotalMinutes, 4);
 
+        Debug.Log("StatePinball: adding game_time_insert query");
+
         Dictionary<string, string> time_insert = new Dictionary<string, string>();
         time_insert.Add("patientid", DatabaseXML.Instance.PatientId.ToString());
         time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -226,16 +228,18 @@ public class StatePinball : State
 
         DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.game_time_insert);
 
-        if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-        {
-            //read the xml
-            DatabaseXML.Instance.ReadDatabaseXML();
-        }
+        //Andrea: 30/10 move it for later
+
+        //if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+        //{
+        //    //read the xml
+        //    DatabaseXML.Instance.ReadDatabaseXML();
+        //}
     }
 
 	public void InitLevelPinball()
 	{
-        ListenIn.Logger.Instance.Log("Init Pinball level", LoggerMessageType.Info);
+        ListenIn.Logger.Instance.Log("StatePinball: Initializing specific pinball level", LoggerMessageType.Info);
         //Debug.Log("");
         m_PinballMono.UIHolder.SetActive(true);
         //m_PinballMono.FireButton.SetActive(true);
@@ -273,8 +277,8 @@ public class StatePinball : State
 
     public override void Exit()
     {
-        ListenIn.Logger.Instance.Log("Exiting pinball level", LoggerMessageType.Info);
-        //Debug.Log("Exiting Pinball state");
+        ListenIn.Logger.Instance.Log("StatePinball: exiting pinball level", LoggerMessageType.Info);
+        //Debug.Log("Exiting Pinball state"); 
 
 		//preparing the scene by removing elements that will create problems.
 		ExitLevelPinball();

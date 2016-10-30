@@ -102,14 +102,15 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         PatientId = int.Parse(GetPatient());
         DatasetId = int.Parse(GetDatasetId());
 
+        //Andrea: 30/10 this call has been changed to being done by upload manager
         //if internet read the xml
-        if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-        {
-            //read the xml
-            ReadDatabaseXML();
-            //and get the patient progress
-            //StartCoroutine(get_patient_progress());
-        }
+        //if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+        //{
+        //    //read the xml
+        //    StartCoroutine(ReadDatabaseXML());
+        //    //and get the patient progress
+        //    //StartCoroutine(get_patient_progress());
+        //}
     }
 
     protected override void Awake()
@@ -244,7 +245,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     }
     
     //function which reads the xml in order
-    public void ReadDatabaseXML()
+    public IEnumerator ReadDatabaseXML()
     {
         //current time
         string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
@@ -273,11 +274,12 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 }
                 //queue the forms
                 xml_forms_queue.Enqueue(new DatabaseQuery(xml_query_url, xml_form));
-                Debug.Log("ADDED TO THE QUEUE");
+                Debug.Log(string.Format("DatabaseXML: {0} query prepared", xml_query_url));
             }
             //go through the queue and insert them in order
-            StartCoroutine(send_xml_query());
+            yield return StartCoroutine(send_xml_query());
 
+            Debug.Log("DatabaseXML: backup and refreshing database xml");
             //when finishes, save it as the current date in another folder
             string xml_backup = Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + ".xml";
             File.Copy(xml_file, xml_backup);
@@ -295,6 +297,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
     IEnumerator send_xml_query()
     {
+        Debug.Log("DatabaseXML: starting communication with DB");
         //first in, first out logic
         foreach (DatabaseQuery form in xml_forms_queue)
         {
@@ -307,7 +310,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             }
            
         }
-        Debug.Log("ENDO OF COURITINE - ALL INSERTED TO THE DB");
+        Debug.Log("DatabaseXML: end of send xml query");
     }
 
     public void uploadHistoryXml()
@@ -315,7 +318,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         StartCoroutine("UploadHistory2");
     }
 
-    IEnumerator UploadHistory2()
+    public IEnumerator UploadHistory2()
     {
         /*map.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
                 "<root>" +
@@ -329,7 +332,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //string strCiComplexity = "";
         //string strCifComplexity = "";
         string strCifHistory = "";
-        
+
+        Debug.Log("DatabaseXML: reading strProfile");
+
         XmlDocument doc1 = new XmlDocument();
         string strXmlFile1 = Application.persistentDataPath + "/" + "user_" + PatientId + "_profile.xml";
         if (System.IO.File.Exists(strXmlFile1))
@@ -337,6 +342,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             doc1.Load(strXmlFile1);
             strProfile = doc1.OuterXml;
         }
+
+        Debug.Log("DatabaseXML: reading strTherapyBlocks");
 
         XmlDocument doc2 = new XmlDocument();
         string strXmlFile2 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks.xml";
@@ -346,6 +353,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             strTherapyBlocks = doc2.OuterXml;
         }
 
+        Debug.Log("DatabaseXML: reading strTherapyBlocksAll");
+
         XmlDocument doc3 = new XmlDocument();
         string strXmlFile3 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks_all.xml";
         if (System.IO.File.Exists(strXmlFile3))
@@ -354,10 +363,12 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             strTherapyBlocksAll = doc3.OuterXml;
         }
 
+        Debug.Log("DatabaseXML: reading strLiExposure");
+
         string strCsvFile4 = Application.persistentDataPath + "/" + "user_" + PatientId + "_lexicalitem_history_exposure.csv";
         if (System.IO.File.Exists(strCsvFile4))
-            strLiExposure = System.IO.File.ReadAllText(strCsvFile4);            
-        
+            strLiExposure = System.IO.File.ReadAllText(strCsvFile4);
+
         /*string strCsvFile5 = Application.persistentDataPath + "/" + "user_" + PatientId + "_lexicalitem_history_complexity.csv";
         if (System.IO.File.Exists(strCsvFile5))
             strLiComplexity = System.IO.File.ReadAllText(strCsvFile5);
@@ -369,8 +380,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string strCsvFile7 = Application.persistentDataPath + "/" + "user_" + PatientId + "_challengeitemfeatures_history_complexity.csv";
         if (System.IO.File.Exists(strCsvFile7))
             strCifComplexity = System.IO.File.ReadAllText(strCsvFile7);*/
-        
+
+        Debug.Log("DatabaseXML: reading strCifHistory");
+
         XmlDocument doc8 = new XmlDocument();
+        //Yean: I guess you have to change this line as well
         string strXmlFile8 = Application.persistentDataPath + "/" + "user_" + PatientId + "_challengeitemfeatures_history.xml";
         if (System.IO.File.Exists(strXmlFile8))
         {
@@ -390,6 +404,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //form.AddField("ciComplexity", strCiComplexity);
         //form.AddField("cifComplexity", strCifComplexity);        
         //form.AddBinaryData("file", levelData, fileName, "text/xml");
+
+        Debug.Log("DatabaseXML: uploading " + therapy_history_insert);
 
         //change the url to the url of the php file
         WWW w = new WWW(therapy_history_insert, form);

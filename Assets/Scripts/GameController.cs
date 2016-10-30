@@ -79,6 +79,7 @@ public class GameController {
             try
             {
                 DatabaseXML.Instance.InitializeDatabase();
+                UploadManager.Instance.Initialize();
                 CUserTherapy.Instance.LoadDataset_UserProfile();
                 StateJigsawPuzzle.Instance.OnGameLoadedInitialization();
 

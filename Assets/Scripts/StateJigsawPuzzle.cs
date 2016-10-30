@@ -34,7 +34,7 @@ public class StateJigsawPuzzle : State
     private bool returnToSelectScreen = false;
     private bool startTimer = false;
     private float initialTime;
-    private float secToWait = 3.5f;
+    private float secToWait = 1.5f;
     private ParticleSystem endSystemEffect;
 
     private int m_patientId = -1;
@@ -226,14 +226,19 @@ public class StateJigsawPuzzle : State
             returnToSelectScreen = false;
             startTimer = true;
             initialTime = Time.time;
-            m_chapterSelectMono.SavePinballGame();
+            //Andrea: 30/10 moved to upload manager
+            //m_chapterSelectMono.SavePinballGame();
         }
         else if (startTimer)
         {
-            if( (Time.time - initialTime) > secToWait)
+            //Andrea: 30/10 starting uploadManager instead of changin scene here
+            
+            if ( (Time.time - initialTime) > secToWait)
             {
                 startTimer = false;
-                MadLevel.LoadLevelByName("World Map Select");
+                m_chapterSelectMono.OpenUploadScreen();
+                UploadManager.Instance.EndOfTherapyClean();
+                //MadLevel.LoadLevelByName("World Map Select");
             }
         }
     }   

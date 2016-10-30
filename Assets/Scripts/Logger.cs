@@ -10,7 +10,7 @@ namespace ListenIn
 {
     public enum LoggerMessageType { Info, Warning, Error };
 
-    struct MessageToLog { public string message; public LoggerMessageType messageType; }
+    struct MessageToLog { public string message; public LoggerMessageType messageType; public string logDate; }
 
     public class Logger : Singleton<Logger>
     {
@@ -165,7 +165,7 @@ namespace ListenIn
 
         private string GetLoggerLine(MessageToLog mtl)
         {
-            return string.Concat("[", DateTime.Now.ToString("HH::mm:ss"), "] : ", String.Format(_logFormat, mtl.messageType.ToString(), mtl.message));
+            return string.Concat("[", mtl.logDate, "] : ", String.Format(_logFormat, mtl.messageType.ToString(), mtl.message));
         }
 
         #region Unity functions
@@ -207,6 +207,9 @@ namespace ListenIn
             {
                 mtl.messageType = LoggerMessageType.Info;
             }
+
+            string currLogTime = DateTime.Now.ToString("HH::mm:ss");
+            mtl.logDate = currLogTime;
 
             lock (LogBufferList)
             {
