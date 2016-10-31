@@ -333,39 +333,43 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //string strCifComplexity = "";
         string strCifHistory = "";
 
-        Debug.Log("DatabaseXML: reading strProfile");
+        Debug.Log("DatabaseXML-UploadHistory2: reading user_profile.xml");
 
         XmlDocument doc1 = new XmlDocument();
-        string strXmlFile1 = Application.persistentDataPath + "/" + "user_" + PatientId + "_profile.xml";
+        //string strXmlFile1 = Application.persistentDataPath + "/" + "user_" + PatientId + "_profile.xml";
+        string strXmlFile1 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_profile.xml");
         if (System.IO.File.Exists(strXmlFile1))
         {
             doc1.Load(strXmlFile1);
             strProfile = doc1.OuterXml;
         }
 
-        Debug.Log("DatabaseXML: reading strTherapyBlocks");
+        Debug.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks.xml");
 
         XmlDocument doc2 = new XmlDocument();
-        string strXmlFile2 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks.xml";
+        //string strXmlFile2 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks.xml";
+        string strXmlFile2 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks.xml");
         if (System.IO.File.Exists(strXmlFile2))
         {
             doc2.Load(strXmlFile2);
             strTherapyBlocks = doc2.OuterXml;
         }
 
-        Debug.Log("DatabaseXML: reading strTherapyBlocksAll");
+        Debug.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks_all.xml");
 
         XmlDocument doc3 = new XmlDocument();
-        string strXmlFile3 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks_all.xml";
+        //string strXmlFile3 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks_all.xml";
+        string strXmlFile3 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_all.xml");
         if (System.IO.File.Exists(strXmlFile3))
         {
             doc3.Load(strXmlFile3);
             strTherapyBlocksAll = doc3.OuterXml;
         }
 
-        Debug.Log("DatabaseXML: reading strLiExposure");
+        Debug.Log("DatabaseXML-UploadHistory2: reading user_lexicalitem_history_exposure.csv");
 
-        string strCsvFile4 = Application.persistentDataPath + "/" + "user_" + PatientId + "_lexicalitem_history_exposure.csv";
+        //string strCsvFile4 = Application.persistentDataPath + "/" + "user_" + PatientId + "_lexicalitem_history_exposure.csv";
+        string strCsvFile4 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_lexicalitem_history_exposure.csv");
         if (System.IO.File.Exists(strCsvFile4))
             strLiExposure = System.IO.File.ReadAllText(strCsvFile4);
 
@@ -381,11 +385,12 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         if (System.IO.File.Exists(strCsvFile7))
             strCifComplexity = System.IO.File.ReadAllText(strCsvFile7);*/
 
-        Debug.Log("DatabaseXML: reading strCifHistory");
+        Debug.Log("DatabaseXML-UploadHistory2: reading user_challengeitemfeatures_history.xml");
 
         XmlDocument doc8 = new XmlDocument();
         //Yean: I guess you have to change this line as well
-        string strXmlFile8 = Application.persistentDataPath + "/" + "user_" + PatientId + "_challengeitemfeatures_history.xml";
+        //string strXmlFile8 = Application.persistentDataPath + "/" + "user_" + PatientId + "_challengeitemfeatures_history.xml";
+        string strXmlFile8 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history.xml");
         if (System.IO.File.Exists(strXmlFile8))
         {
             doc8.Load(strXmlFile8);
