@@ -103,6 +103,9 @@ public class ShowPanels : MonoBehaviour {
 
     public void ShowUploadUI()
     {
+        DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
+        DatabaseXML.Instance.SetIsMenu = false;
+        Time.timeScale = 1.0f;
         challengePanel.SetActive(false);
         menuPanel.SetActive(false);
         optionsTint.SetActive(false);
@@ -182,7 +185,7 @@ public class ShowPanels : MonoBehaviour {
         {
             Debug.Log(String.Format("Show panels: {0}", ex.Message));
         }
-        DatabaseXML.Instance.SetIsMenu = false;
+
     }
 
 }

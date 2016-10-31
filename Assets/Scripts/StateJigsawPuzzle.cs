@@ -174,6 +174,7 @@ public class StateJigsawPuzzle : State
         rewardAnimation = false;
         endSystemEffect = null;
 
+        //The first part of the if is a called at the first time
         if (!activateReward)
         {
             ChapterInitialization();
@@ -182,6 +183,7 @@ public class StateJigsawPuzzle : State
         }
         else
         {
+            //This is reached when going back after pinball
             activateReward = false;
             jigsawUnlocked = GameObject.Find("JiggsawEarned(Clone)");
             if (jigsawUnlocked != null && jigsawUnlocked.transform.childCount != 0)
@@ -192,7 +194,9 @@ public class StateJigsawPuzzle : State
             {
                 returnToSelectScreen = true;
             }
+            //Hiding demo and play button
             currChapter.Mono.PlayButton.SetActive(false);
+            m_chapterSelectMono.DemoButton.SetActive(false);
         }    
 
     }
