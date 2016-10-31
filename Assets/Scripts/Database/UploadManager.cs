@@ -40,13 +40,14 @@ public class UploadManager : Singleton<UploadManager> {
             Debug.LogError("UploadManager: " + ex.Message);
         }
 
-        yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
-
-
-        //Here put all the methods with Ienumrator in order to wait them to be completed
-        Debug.Log("UploadManager: " + Time.time + " sending data out to the DB.");
-        yield return StartCoroutine(DatabaseXML.Instance.ReadDatabaseXML());
-
+        if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+        {
+            yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
+            
+            //Here put all the methods with Ienumrator in order to wait them to be completed
+            Debug.Log("UploadManager: " + Time.time + " sending data out to the DB.");
+            yield return StartCoroutine(DatabaseXML.Instance.ReadDatabaseXML());
+        }
         Debug.Log("UploadManager: " + Time.time + " collecting memory");
 
         //Collecting memory
