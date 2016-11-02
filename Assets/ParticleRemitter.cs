@@ -33,7 +33,8 @@ public class ParticleRemitter : MonoBehaviour {
         lightParticle.Play();
         ringParticle.Play();
         yield return new WaitForSeconds(5);
-        StartCoroutine(StopParticles());
+        if (gameObject.activeInHierarchy)
+            StartCoroutine(StopParticles());
     }
 
     IEnumerator StopParticles()
@@ -42,11 +43,13 @@ public class ParticleRemitter : MonoBehaviour {
         lightParticle.Stop();
         ringParticle.Stop();
         yield return new WaitForSeconds(8);
-        StartCoroutine(EmitParticles());
+        if (gameObject.activeInHierarchy)
+            StartCoroutine(EmitParticles());
     }
 
     void InitializeParticles()
     {
-        StartCoroutine(EmitParticles());
+        if(gameObject.activeInHierarchy)
+            StartCoroutine(EmitParticles());
     }
 }

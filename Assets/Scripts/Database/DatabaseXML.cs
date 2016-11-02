@@ -188,13 +188,16 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         }
         else if (!isMenuPaused && idle_time > 60 * 5)
         {
-            OpenPauseMenu();
+            if (!OpenPauseMenu())
+            {
+                ResetTimer(TimerType.Idle);
+            }
         }
 
         #endregion
     }
 
-    private void OpenPauseMenu()
+    private bool OpenPauseMenu()
     {
         //Works only on the WorldMapScene
         GameObject menuUI = GameObject.FindGameObjectWithTag("MenuUI");
@@ -206,21 +209,22 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 lsm.OpenPauseMenu();
                 
                 Debug.Log("Forcing menu after idle timeout - case WorldMap");
-                return;
+                return true;
             }
         }
 
-        GameObject jigsawPuzzle = GameObject.FindGameObjectWithTag("JigsawPuzzle");
-        if (jigsawPuzzle != null)
-        {
-            ChapterSelectMono csm = jigsawPuzzle.GetComponent<ChapterSelectMono>();
-            if (csm != null)
-            {
-                csm.OpenMenu();
-                Debug.Log("Forcing menu after idle timeout - case Jigsaw puzzle before therapy or Pinball");
-                return;
-            }
-        }
+        //Andrea
+        //GameObject jigsawPuzzle = GameObject.FindGameObjectWithTag("JigsawPuzzle");
+        //if (jigsawPuzzle != null)
+        //{
+        //    ChapterSelectMono csm = jigsawPuzzle.GetComponent<ChapterSelectMono>();
+        //    if (csm != null)
+        //    {
+        //        csm.OpenMenu();
+        //        Debug.Log("Forcing menu after idle timeout - case Jigsaw puzzle before therapy or Pinball");
+        //        return;
+        //    }
+        //}
 
         GameObject challengeTherapy = GameObject.FindGameObjectWithTag("Challenge");
         if (challengeTherapy != null)
@@ -230,9 +234,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             {
                 mm.OpenMenu();
                 Debug.Log("Forcing menu after idle timeout - case Therapy Challenge");
-                return;
+                return true;
             }
         }
+
+        return false;
 
     }
 
