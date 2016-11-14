@@ -1395,7 +1395,7 @@ class CUser
         // Save the document to a file. White space is preserved (no white space).
         //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_profile.xml";   //m_strAppPath + "user_profile.xml";
         string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_profile.xml");
-
+        
         string strXmlFileNew = strXmlFile + ".new";
         string strXmlFileOld = strXmlFile + ".old";
 
@@ -1484,6 +1484,10 @@ class CUser
             if (System.IO.File.Exists(strXmlFile))
                 System.IO.File.Move(strXmlFile, strXmlFileOld);
             System.IO.File.Move(strXmlFileNew, strXmlFile);
+
+            string strXmlFile_ = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_profile_.xml");
+            System.IO.File.Copy(strXmlFile, strXmlFile_, true);
+
             // backup
             string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
             string xml_backup = m_strAppPath + @"/ListenIn/Therapy/" + "user_" + m_strUserId + "_profile-" + strDate + ".xml";
@@ -1691,6 +1695,10 @@ class CUser
             if (System.IO.File.Exists(strXmlFile))
                 System.IO.File.Move(strXmlFile, strXmlFileOld);
             System.IO.File.Move(strXmlFileNew, strXmlFile);
+
+            string strXmlFile_ = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_therapyblocks_.xml");
+            System.IO.File.Copy(strXmlFile, strXmlFile_, true);
+
             // backup
             string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
             string xml_backup = m_strAppPath + @"/ListenIn/Therapy/" + "user_" + m_strUserId + "_therapyblocks-" + strDate + ".xml";
@@ -1795,6 +1803,10 @@ class CUser
             if (System.IO.File.Exists(strXmlFile))
                 System.IO.File.Move(strXmlFile, strXmlFileOld);
             System.IO.File.Move(strXmlFileNew, strXmlFile);
+
+            string strXmlFile_ = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_challengeitemfeatures_history_.xml");
+            System.IO.File.Copy(strXmlFile, strXmlFile_, true);
+
             // backup
             string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
             string xml_backup = m_strAppPath + @"/ListenIn/Therapy/" + "user_" + m_strUserId + "_challengeitemfeatures_history-" + strDate + ".xml";
@@ -1934,6 +1946,10 @@ class CUser
             if (System.IO.File.Exists(strCsvFile))
                 System.IO.File.Move(strCsvFile, strCsvFileOld);
             System.IO.File.Move(strCsvFileNew, strCsvFile);
+
+            string strCsvFile_ = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_lexicalitem_history_exposure_.csv");
+            System.IO.File.Copy(strCsvFile, strCsvFile_, true);
+
             // backup
             string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
             string xml_backup = m_strAppPath + @"/ListenIn/Therapy/" + "user_" + m_strUserId + "_lexicalitem_history_exposure-" + strDate + ".csv";

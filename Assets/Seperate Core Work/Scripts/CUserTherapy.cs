@@ -782,6 +782,10 @@ class CUserTherapy : Singleton<CUserTherapy>
                 if (System.IO.File.Exists(strXmlFile))
                     System.IO.File.Move(strXmlFile, strXmlFileOld);
                 System.IO.File.Move(strXmlFileNew, strXmlFile);
+
+                string strXmlFile_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all_.xml");
+                System.IO.File.Copy(strXmlFile, strXmlFile_, true);
+
                 // backup
                 string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");                
                 string xml_backup = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all-" + strDate + ".xml";

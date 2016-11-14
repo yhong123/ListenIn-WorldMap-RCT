@@ -253,6 +253,26 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //function which reads the xml in order
     public IEnumerator ReadDatabaseXML()
     {
+        ////current time
+        //string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
+        ////Create the backup
+        //string xml_backup = Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + ".xml";
+        //File.Copy(xml_file, xml_backup);
+        //yield return null;
+        ////Reset the original xml_file
+        ////empty the inserter xml
+        //XmlElement elmRoot = (XmlElement)database_xml.SelectSingleNode("/database/queries");
+        ////remove all
+        //elmRoot.RemoveAll();
+        ////and save
+        //database_xml.Save(xml_file);
+        //yield return null;
+        ////Read backup
+
+        ////Send backup queries to DB
+
+
+        ///OLD VERSION
         //current time
         string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
         //Debug.Log(current_date);
@@ -343,10 +363,13 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         XmlDocument doc1 = new XmlDocument();
         //string strXmlFile1 = Application.persistentDataPath + "/" + "user_" + PatientId + "_profile.xml";
-        string strXmlFile1 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_profile.xml");
-        if (System.IO.File.Exists(strXmlFile1))
-        {
-            doc1.Load(strXmlFile1);
+        //string strXmlFile1 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_profile.xml");
+        string strXmlFile1_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_profile_.xml");
+        if (System.IO.File.Exists(strXmlFile1_))
+        {            
+            //System.IO.File.Move(strXmlFile1, strXmlFile1_);
+            //System.IO.File.Copy(strXmlFile1, strXmlFile1_, true);
+            doc1.Load(strXmlFile1_);
             strProfile = doc1.OuterXml;
         }
 
@@ -354,10 +377,13 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         XmlDocument doc2 = new XmlDocument();
         //string strXmlFile2 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks.xml";
-        string strXmlFile2 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks.xml");
-        if (System.IO.File.Exists(strXmlFile2))
+        //string strXmlFile2 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks.xml");
+        string strXmlFile2_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_.xml");
+        if (System.IO.File.Exists(strXmlFile2_))
         {
-            doc2.Load(strXmlFile2);
+            //System.IO.File.Move(strXmlFile2, strXmlFile2_);
+            //System.IO.File.Copy(strXmlFile2, strXmlFile2_, true);
+            doc2.Load(strXmlFile2_);
             strTherapyBlocks = doc2.OuterXml;
         }
 
@@ -365,19 +391,27 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         XmlDocument doc3 = new XmlDocument();
         //string strXmlFile3 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks_all.xml";
-        string strXmlFile3 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_all.xml");
-        if (System.IO.File.Exists(strXmlFile3))
+        //string strXmlFile3 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_all.xml");
+        string strXmlFile3_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_all_.xml");
+        if (System.IO.File.Exists(strXmlFile3_))
         {
-            doc3.Load(strXmlFile3);
+            //System.IO.File.Move(strXmlFile3, strXmlFile3_);
+            //System.IO.File.Copy(strXmlFile3, strXmlFile3_, true);
+            doc3.Load(strXmlFile3_);
             strTherapyBlocksAll = doc3.OuterXml;
         }
 
         Debug.Log("DatabaseXML-UploadHistory2: reading user_lexicalitem_history_exposure.csv");
 
         //string strCsvFile4 = Application.persistentDataPath + "/" + "user_" + PatientId + "_lexicalitem_history_exposure.csv";
-        string strCsvFile4 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_lexicalitem_history_exposure.csv");
-        if (System.IO.File.Exists(strCsvFile4))
-            strLiExposure = System.IO.File.ReadAllText(strCsvFile4);
+        //string strCsvFile4 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_lexicalitem_history_exposure.csv");
+        string strCsvFile4_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_lexicalitem_history_exposure_.csv");
+        if (System.IO.File.Exists(strCsvFile4_))
+        {
+            //System.IO.File.Move(strCsvFile4, strCsvFile4_);
+            //System.IO.File.Copy(strCsvFile4, strCsvFile4_, true);
+            strLiExposure = System.IO.File.ReadAllText(strCsvFile4_);
+        }
 
         /*string strCsvFile5 = Application.persistentDataPath + "/" + "user_" + PatientId + "_lexicalitem_history_complexity.csv";
         if (System.IO.File.Exists(strCsvFile5))
@@ -396,10 +430,13 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         XmlDocument doc8 = new XmlDocument();
         //Yean: I guess you have to change this line as well
         //string strXmlFile8 = Application.persistentDataPath + "/" + "user_" + PatientId + "_challengeitemfeatures_history.xml";
-        string strXmlFile8 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history.xml");
-        if (System.IO.File.Exists(strXmlFile8))
+        //string strXmlFile8 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history.xml");
+        string strXmlFile8_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history_.xml");
+        if (System.IO.File.Exists(strXmlFile8_))
         {
-            doc8.Load(strXmlFile8);
+            //System.IO.File.Move(strXmlFile8, strXmlFile8_);
+            //System.IO.File.Copy(strXmlFile8, strXmlFile8_, true);
+            doc8.Load(strXmlFile8_);
             strCifHistory = doc8.OuterXml;
         }        
 
