@@ -119,23 +119,43 @@ class CDataset
         m_intDatasetId = intDatasetId;
         if (m_intDatasetId == 0)
         {
-            m_strFile_LexicalItem_Xml = "setA_stimuli_lexicalitems_all";
-            m_strFile_ChallengeItem_Xml = "setA_stimuli_challengeitems_all";
-            m_strFile_ChallengeItemFeature_Csv = "setA_stimuli_challengeitemfeatures_all";
-            m_strFile_ChallengeItemFeatureNeighbours_Csv = "setA_stimuli_challengeitemfeatures_neighbours_all_30";
-            m_strFile_ChallengeItemFeatureForced_Csv = "setA_stimuli_challengeitemfeatures_forced_all";
-            m_strFile_ChallengeItemFeatureStarterPool_Csv = "setA_stimuli_challengeitemfeatures_starterpool";
-            m_strFile_ChallengeItemFeatureMedianPool_Csv = "setA_stimuli_challengeitemfeatures_medianpool";
+            m_strFile_LexicalItem_Xml = "2016-08-setA_stimuli_lexicalitems_all";
+            m_strFile_ChallengeItem_Xml = "2016-08-setA_stimuli_challengeitems_all";
+            m_strFile_ChallengeItemFeature_Csv = "2016-08-setA_stimuli_challengeitemfeatures_all";
+            m_strFile_ChallengeItemFeatureNeighbours_Csv = "2016-08-setA_stimuli_challengeitemfeatures_neighbours_all_30";
+            m_strFile_ChallengeItemFeatureForced_Csv = "2016-08-setA_stimuli_challengeitemfeatures_forced_all";
+            m_strFile_ChallengeItemFeatureStarterPool_Csv = "2016-08-setA_stimuli_challengeitemfeatures_starterpool";
+            m_strFile_ChallengeItemFeatureMedianPool_Csv = "2016-08-setA_stimuli_challengeitemfeatures_medianpool";
         }
-        else
+        else if (m_intDatasetId == 1)
         {
-            m_strFile_LexicalItem_Xml = "setB_stimuli_lexicalitems_all";
-            m_strFile_ChallengeItem_Xml = "setB_stimuli_challengeitems_all";
-            m_strFile_ChallengeItemFeature_Csv = "setB_stimuli_challengeitemfeatures_all";
-            m_strFile_ChallengeItemFeatureNeighbours_Csv = "setB_stimuli_challengeitemfeatures_neighbours_all_30";
-            m_strFile_ChallengeItemFeatureForced_Csv = "setB_stimuli_challengeitemfeatures_forced_all";
-            m_strFile_ChallengeItemFeatureStarterPool_Csv = "setB_stimuli_challengeitemfeatures_starterpool";
-            m_strFile_ChallengeItemFeatureMedianPool_Csv = "setB_stimuli_challengeitemfeatures_medianpool";
+            m_strFile_LexicalItem_Xml = "2016-10-setB_stimuli_lexicalitems_all";
+            m_strFile_ChallengeItem_Xml = "2016-10-setB_stimuli_challengeitems_all";
+            m_strFile_ChallengeItemFeature_Csv = "2016-10-setB_stimuli_challengeitemfeatures_all";
+            m_strFile_ChallengeItemFeatureNeighbours_Csv = "2016-10-setB_stimuli_challengeitemfeatures_neighbours_all_30";
+            m_strFile_ChallengeItemFeatureForced_Csv = "2016-10-setB_stimuli_challengeitemfeatures_forced_all";
+            m_strFile_ChallengeItemFeatureStarterPool_Csv = "2016-10-setB_stimuli_challengeitemfeatures_starterpool";
+            m_strFile_ChallengeItemFeatureMedianPool_Csv = "2016-10-setB_stimuli_challengeitemfeatures_medianpool";
+        }
+        else if (m_intDatasetId == 2)
+        {
+            m_strFile_LexicalItem_Xml = "2016-11-setA_stimuli_lexicalitems_all";
+            m_strFile_ChallengeItem_Xml = "2016-11-setA_stimuli_challengeitems_all";
+            m_strFile_ChallengeItemFeature_Csv = "2016-11-setA_stimuli_challengeitemfeatures_all";
+            m_strFile_ChallengeItemFeatureNeighbours_Csv = "2016-11-setA_stimuli_challengeitemfeatures_neighbours_all_30";
+            m_strFile_ChallengeItemFeatureForced_Csv = "2016-11-setA_stimuli_challengeitemfeatures_forced_all";
+            m_strFile_ChallengeItemFeatureStarterPool_Csv = "2016-11-setA_stimuli_challengeitemfeatures_starterpool";
+            m_strFile_ChallengeItemFeatureMedianPool_Csv = "2016-11-setA_stimuli_challengeitemfeatures_medianpool";
+        }
+        else if (m_intDatasetId == 3)
+        {
+            m_strFile_LexicalItem_Xml = "2016-11-setB_stimuli_lexicalitems_all";
+            m_strFile_ChallengeItem_Xml = "2016-11-setB_stimuli_challengeitems_all";
+            m_strFile_ChallengeItemFeature_Csv = "2016-11-setB_stimuli_challengeitemfeatures_all";
+            m_strFile_ChallengeItemFeatureNeighbours_Csv = "2016-11-setB_stimuli_challengeitemfeatures_neighbours_all_30";
+            m_strFile_ChallengeItemFeatureForced_Csv = "2016-11-setB_stimuli_challengeitemfeatures_forced_all";
+            m_strFile_ChallengeItemFeatureStarterPool_Csv = "2016-11-setB_stimuli_challengeitemfeatures_starterpool";
+            m_strFile_ChallengeItemFeatureMedianPool_Csv = "2016-11-setB_stimuli_challengeitemfeatures_medianpool";
         }
 
         // load lexical items (xml)

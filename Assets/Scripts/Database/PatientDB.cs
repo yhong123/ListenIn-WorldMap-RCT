@@ -253,9 +253,13 @@ public class PatientDB : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         patient_switch.RefreshShownValue();
 
         //select the dataset of the current patient in the dropdown
-        string strDataset = "Dataset A";
+        string strDataset = "Dataset A-2016-08";
         if (DatabaseXML.Instance.DatasetId == 1)
-            strDataset = "Dataset B";
+            strDataset = "Dataset B-2016-10";
+        else if (DatabaseXML.Instance.DatasetId == 2)
+            strDataset = "Dataset A-2016-11";
+        else if (DatabaseXML.Instance.DatasetId == 3)
+            strDataset = "Dataset B-2016-11";
         count_options = 0;
         foreach (Dropdown.OptionData patient_ds_switch_string in patient_dataset_switch.options)
         {

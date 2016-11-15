@@ -589,10 +589,14 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         PatientId = int.Parse(patient_id);
 
         // set dataset id
-        if (dataset_text.Equals("Dataset A"))
+        if (dataset_text.Equals("Dataset A-2016-08"))
             DatasetId = 0;
-        else if (dataset_text.Equals("Dataset B"))
+        else if (dataset_text.Equals("Dataset B-2016-10"))
             DatasetId = 1;
+        else if (dataset_text.Equals("Dataset A-2016-11"))
+            DatasetId = 2;
+        else if (dataset_text.Equals("Dataset B-2016-11"))
+            DatasetId = 3;
         patient_element.SetAttribute("datasetid", DatasetId.ToString());
         
         //save doc 
