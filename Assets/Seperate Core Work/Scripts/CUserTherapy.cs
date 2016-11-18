@@ -616,7 +616,8 @@ class CUserTherapy : Singleton<CUserTherapy>
                 }
                 catch (System.Exception ex)
                 {
-                    ListenIn.Logger.Instance.Log("CUserTherapy-IsEndOfLevel-" + ex.Message, ListenIn.LoggerMessageType.Info);
+                    //ListenIn.Logger.Instance.Log("CUserTherapy-IsEndOfLevel-" + ex.Message, ListenIn.LoggerMessageType.Info);
+                    Debug.Log("CUserTherapy-IsEndOfLevel-" + ex.Message);
                 }
             }
             return true;
@@ -651,7 +652,8 @@ class CUserTherapy : Singleton<CUserTherapy>
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log("CUserTherapy-SaveTherapyTimeToDB-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTherapyTimeToDB-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            Debug.Log("CUserTherapy-SaveTherapyTimeToDB-" + ex.Message);
         }
     }
 
@@ -677,7 +679,17 @@ class CUserTherapy : Singleton<CUserTherapy>
                 "</root>");
             }
             else
-                doc.Load(strXmlFile);
+            {
+                System.IO.FileInfo info = new System.IO.FileInfo(strXmlFile);
+                if (info.Length == 0)
+                {
+                    doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
+                    "<root>" +
+                    "</root>");
+                }
+                else
+                    doc.Load(strXmlFile);
+            }
 
             /*
             <block idx="0">
@@ -797,17 +809,20 @@ class CUserTherapy : Singleton<CUserTherapy>
             }
             catch (System.Xml.XmlException ex)
             {
-                ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+                //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+                Debug.Log("CUserTherapy-SaveTrials-" + ex.Message);
             }
             catch (Exception e)
             {
                 //Console.WriteLine("The process failed: {0}", e.ToString());
-                ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+                //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+                Debug.Log("CUserTherapy-SaveTrials-" + e.ToString());
             }
         }
         catch (System.Exception ex)
         {
             ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            Debug.Log("CUserTherapy-SaveTrials-" + ex.Message);
         }
     }
 
