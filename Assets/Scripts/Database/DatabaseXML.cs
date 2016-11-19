@@ -13,7 +13,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public int PatientId = 1;
     public int DatasetId = 0;
     public TextAsset database_xml_file;
+
     //create an XML file to keep and read it
+    //Andrea: making it a local variable
     public XmlDocument database_xml;
     //form to send thq ueries
     WWWForm xml_form;
@@ -101,7 +103,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 string strPatientId = PlayerPrefs.GetString("patient_id", "");
                 string strDatasetId = PlayerPrefs.GetString("dataset_id", "");
                 if (strPatientId.Equals("") || strDatasetId.Equals(""))
+                {
+                    Debug.Log("No previous patient or dataset ID saved in PlayerPrefs");
                     return;
+                }
+                   
 
                 database_xml.LoadXml(database_xml_file.text);
                 XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
@@ -362,72 +368,134 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //function which reads the xml in order
     public IEnumerator ReadDatabaseXML()
     {
-        ////current time
-        //string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
-        ////Create the backup
-        //string xml_backup = Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + ".xml";
-        //File.Copy(xml_file, xml_backup);
-        //yield return null;
-        ////Reset the original xml_file
-        ////empty the inserter xml
-        //XmlElement elmRoot = (XmlElement)database_xml.SelectSingleNode("/database/queries");
-        ////remove all
-        //elmRoot.RemoveAll();
-        ////and save
-        //database_xml.Save(xml_file);
-        //yield return null;
-        ////Read backup
-
-        ////Send backup queries to DB
-
-
-        ///OLD VERSION
-        //current time
-        string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
-        //Debug.Log(current_date);
-        //select all the query tags
-        XmlNodeList _list = database_xml.SelectNodes("/database/queries/query");
-        //if there's none, do nothing
-        if (_list.Count != 0)
+        //Andrea 19/11: changing the order of execution in order to prevent DatabaseXML crashing
+        if (QueriesOnTheXML() == 0)
         {
-            //queue to insert the forms
-            xml_forms_queue = new Queue<DatabaseQuery>();
-            //go through each one of them
-            foreach (XmlNode _node in _list)
-            {
-                xml_form = new WWWForm();
-                //get the url of the query to be send
-                xml_query_url = _node.Attributes[0].Value;
-                Debug.Log(_node.Attributes[0].Value);
-                //go through all the XML variables nodes inside the current query
-                foreach (XmlNode _node_variables in _node.ChildNodes)
-                {
-                    //create the fields for the WWWForm
-                    xml_form.AddField(_node_variables.Attributes[0].Value, _node_variables.Attributes[1].Value);
-                    //StartCoroutine(send_xml_query());
-                    Debug.Log(_node_variables.Attributes[0].Value + " - " + _node_variables.Attributes[1].Value);
-                }
-                //queue the forms
-                xml_forms_queue.Enqueue(new DatabaseQuery(xml_query_url, xml_form));
-                Debug.Log(string.Format("DatabaseXML: {0} query prepared", xml_query_url));
-            }
-            //go through the queue and insert them in order
-            yield return StartCoroutine(send_xml_query());
-
-            Debug.Log("DatabaseXML: backup and refreshing database xml");
-            //when finishes, save it as the current date in another folder
+            Debug.Log("ReadDatabaseXML: No queries to be inserted at this time");
+            yield return null;
+        }
+        else
+        {
+            //current time
+            string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
+            //Create the backup
             string xml_backup = Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + ".xml";
-            File.Copy(xml_file, xml_backup);
-            //empty the inserter xml
-            XmlElement elmRoot = (XmlElement)database_xml.SelectSingleNode("/database/queries");
-            //remove all
-            elmRoot.RemoveAll();
-            //and save
-            database_xml.Save(xml_file);
+            try
+            {
+                File.Copy(xml_file, xml_backup);
+                Debug.Log("ReadDatabaseXML: copied current version of DatabaseXML");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
+            yield return null;
 
-            //StartCoroutine("UploadHistory2");
+            //Reset the original xml_file to ampty state
+            try
+            {
+                XmlElement elmRoot = (XmlElement)database_xml.SelectSingleNode("/database/queries");
+                //remove all
+                elmRoot.RemoveAll();
+                //and save
+                database_xml.Save(xml_file);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
+            yield return null;
+
+            //Read backup
+            try
+            {
+                Debug.Log("ReadDatabaseXML: reading database xml backup");
+                XmlDocument backup_database_xml = new XmlDocument();
+                backup_database_xml.LoadXml(File.ReadAllText(xml_backup));
+
+                //select all the query tags
+                XmlNodeList _list = backup_database_xml.SelectNodes("/database/queries/query");
+
+                //Resetting forms enqueu
+                //queue to insert the forms
+                xml_forms_queue = new Queue<DatabaseQuery>();
+                //go through each one of them
+                foreach (XmlNode _node in _list)
+                {
+                    xml_form = new WWWForm();
+                    //get the url of the query to be send
+                    xml_query_url = _node.Attributes[0].Value;
+                    Debug.Log(_node.Attributes[0].Value);
+                    //go through all the XML variables nodes inside the current query
+                    foreach (XmlNode _node_variables in _node.ChildNodes)
+                    {
+                        //create the fields for the WWWForm
+                        xml_form.AddField(_node_variables.Attributes[0].Value, _node_variables.Attributes[1].Value);
+                        //StartCoroutine(send_xml_query());
+                        Debug.Log(_node_variables.Attributes[0].Value + " - " + _node_variables.Attributes[1].Value);
+                    }
+                    //queue the forms
+                    xml_forms_queue.Enqueue(new DatabaseQuery(xml_query_url, xml_form));
+                    Debug.Log(string.Format("ReadDatabaseXML: {0} query prepared", xml_query_url));
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
+
+            //Send backup queries to DB
+            //go through the queue and insert them in order
+            yield return StartCoroutine(send_xml_query());            
 
         }
+
+        /////OLD VERSION
+        ////current time
+        //string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
+        ////Debug.Log(current_date);
+        ////select all the query tags
+        //XmlNodeList _list = database_xml.SelectNodes("/database/queries/query");
+        ////if there's none, do nothing
+        //if (_list.Count != 0)
+        //{
+        //    //queue to insert the forms
+        //    xml_forms_queue = new Queue<DatabaseQuery>();
+        //    //go through each one of them
+        //    foreach (XmlNode _node in _list)
+        //    {
+        //        xml_form = new WWWForm();
+        //        //get the url of the query to be send
+        //        xml_query_url = _node.Attributes[0].Value;
+        //        Debug.Log(_node.Attributes[0].Value);
+        //        //go through all the XML variables nodes inside the current query
+        //        foreach (XmlNode _node_variables in _node.ChildNodes)
+        //        {
+        //            //create the fields for the WWWForm
+        //            xml_form.AddField(_node_variables.Attributes[0].Value, _node_variables.Attributes[1].Value);
+        //            //StartCoroutine(send_xml_query());
+        //            Debug.Log(_node_variables.Attributes[0].Value + " - " + _node_variables.Attributes[1].Value);
+        //        }
+        //        //queue the forms
+        //        xml_forms_queue.Enqueue(new DatabaseQuery(xml_query_url, xml_form));
+        //        Debug.Log(string.Format("DatabaseXML: {0} query prepared", xml_query_url));
+        //    }
+        //    //go through the queue and insert them in order
+        //    yield return StartCoroutine(send_xml_query());
+
+        //    Debug.Log("DatabaseXML: backup and refreshing database xml");
+        //    //when finishes, save it as the current date in another folder
+        //    string xml_backup = Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + ".xml";
+        //    File.Copy(xml_file, xml_backup);
+        //    //empty the inserter xml
+        //    XmlElement elmRoot = (XmlElement)database_xml.SelectSingleNode("/database/queries");
+        //    //remove all
+        //    elmRoot.RemoveAll();
+        //    //and save
+        //    database_xml.Save(xml_file);
+
+        //    //StartCoroutine("UploadHistory2");
+        //}
     }
 
     IEnumerator send_xml_query()
