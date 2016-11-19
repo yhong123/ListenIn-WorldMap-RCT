@@ -72,7 +72,8 @@ namespace ListenIn
             if (!_isLoggerReady)
                 return;
 
-            MessageToLog mtl = new MessageToLog() { message = mes, messageType = mesType };
+            string currLogTime = DateTime.Now.ToString("HH::mm:ss");
+            MessageToLog mtl = new MessageToLog() { message = mes, messageType = mesType, logDate = currLogTime };
 
             try
             {
@@ -221,10 +222,11 @@ namespace ListenIn
         {
             try
             {
-                if (_isLoggerReady && _lastLogTime.AddSeconds(60).Ticks > DateTime.UtcNow.Ticks)
+                if (_isLoggerReady && _lastLogTime.AddSeconds(60) < DateTime.UtcNow && !applicationQuitting)
                 {
-                    EmptyBuffer();
                     _lastLogTime = DateTime.UtcNow;
+                    EmptyBuffer();
+  
                 }
             }
             catch (Exception ex)

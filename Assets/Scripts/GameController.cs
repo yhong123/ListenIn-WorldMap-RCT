@@ -95,7 +95,7 @@ public class GameController {
             }
             catch (System.Exception ex)
             {
-                ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Info);
+                ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
             }
             
         }
