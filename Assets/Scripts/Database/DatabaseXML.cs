@@ -933,6 +933,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string block_game_string = ((int)therapy_pinball_time).ToString();
         block_game_string = GUI.TextField(new Rect(10, 70 + offset, 200, 20), "Pinball time: " + block_game_string + "(s)", 25);
         */
+#if UNITY_ANDROID
+        GUI.TextField(new Rect(10, 100, 200, 20), "BATTERY: " + GetBatteryLevel() + "%");
+#endif
     }
 
     public void SetTimerState(TimerType tymerType, bool state)
@@ -975,6 +978,43 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             default:
                 break;
         }
+    }
+#endregion
+#region GETBATTERYLEVEL
+    public static float GetBatteryLevel()
+    {
+        try
+        {
+            using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            {
+                if (null != unityPlayer)
+                {
+                    using (AndroidJavaObject currActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+                    {
+                        if (null != currActivity)
+                        {
+                            using (AndroidJavaObject intentFilter = new AndroidJavaObject("android.content.IntentFilter", new object[]{ "android.intent.action.BATTERY_CHANGED" }))
+                            {
+                                using (AndroidJavaObject batteryIntent = currActivity.Call<AndroidJavaObject>("registerReceiver", new object[]{null,intentFilter}))
+                                {
+                                    int level = batteryIntent.Call<int>("getIntExtra", new object[]{"level",-1});
+                                    int scale = batteryIntent.Call<int>("getIntExtra", new object[]{"scale",-1});
+ 
+                                    // Error checking that probably isn't needed but I added just in case.
+                                    if (level == -1 || scale == -1)
+                                    {
+                                        return 50f;
+                                    }
+                                    return ((float)level / (float)scale) * 100.0f;
+                                }
+                               
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (System.Exception ex){}
+        return 100;
     }
 #endregion
 }
