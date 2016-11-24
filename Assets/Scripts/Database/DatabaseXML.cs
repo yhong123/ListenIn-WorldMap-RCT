@@ -91,6 +91,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             database_xml.LoadXml(database_xml_file.text);
             //and save it only once
             database_xml.Save(xml_file);
+
+            // save patient id & dataset id in playerprefs
+            PlayerPrefs.SetString("patient_id", PatientId.ToString());
+            PlayerPrefs.SetString("dataset_id", DatasetId.ToString());
+            PlayerPrefs.Save();
         }
 
         // check database.xml file length - if the file corrupted with length 0kb, then recreate the using setting from PlayerPrefs
@@ -156,20 +161,20 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string strXmlFile_TherapyBlocks = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks.xml");
         string strXmlFile_CifHistory = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history.xml");
         string strCsvFile_LiHistory = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_lexicalitem_history_exposure.csv");
-        string strXmlFile_TherapyBlocksAll = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_all.xml");
+        //string strXmlFile_TherapyBlocksAll = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_all.xml");
 
         if ((!System.IO.File.Exists(strXmlFile_UserProfile)) || (!System.IO.File.Exists(strXmlFile_TherapyBlocks)) ||
-                              (!System.IO.File.Exists(strXmlFile_CifHistory)) || (!System.IO.File.Exists(strCsvFile_LiHistory)) ||
-                              (!System.IO.File.Exists(strXmlFile_TherapyBlocksAll)))
+                              (!System.IO.File.Exists(strXmlFile_CifHistory)) || (!System.IO.File.Exists(strCsvFile_LiHistory))  )   /*||
+                              (!System.IO.File.Exists(strXmlFile_TherapyBlocksAll)))  */
             return;
 
         FileInfo info1 = new FileInfo(strXmlFile_UserProfile);
         FileInfo info2 = new FileInfo(strXmlFile_TherapyBlocks);
         FileInfo info3 = new FileInfo(strXmlFile_CifHistory);
         FileInfo info4 = new FileInfo(strCsvFile_LiHistory);
-        FileInfo info5 = new FileInfo(strXmlFile_TherapyBlocksAll);
-        if ( (info1.Length == 0) || (info2.Length == 0) || (info3.Length == 0) || (info4.Length == 0) || (info5.Length == 0))
-        {
+        //FileInfo info5 = new FileInfo(strXmlFile_TherapyBlocksAll);
+        if ( (info1.Length == 0) || (info2.Length == 0) || (info3.Length == 0) || (info4.Length == 0) /*|| (info5.Length == 0)*/ )
+        {            
             // one of the files has corrupted, revert back to previous day
             if (Directory.Exists(Application.persistentDataPath + @"/ListenIn/Therapy/"))
             {
@@ -185,32 +190,33 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                     string xml_backup_TherapyBlocks = "";
                     string xml_backup_CifHistory = "";
                     string csv_backup_LiHistory = "";
-                    string xml_backup_TherapyBlocksAll = "";
+                    //string xml_backup_TherapyBlocksAll = "";
                     while (!bFound && intCtr < 10)
                     {
-                        backup_date = backup_date.AddDays(-1);
+                        //backup_date = backup_date.AddDays(-1);
                         string strDate = backup_date.ToString("yyyy-MM-dd");                        
                         xml_backup_UserProfile = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + PatientId + "_profile-" + strDate + ".xml";
                         xml_backup_TherapyBlocks = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + PatientId + "_therapyblocks-" + strDate + ".xml";
                         xml_backup_CifHistory = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + PatientId + "_challengeitemfeatures_history-" + strDate + ".xml";
                         csv_backup_LiHistory = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + PatientId + "_lexicalitem_history_exposure-" + strDate + ".csv";
-                        xml_backup_TherapyBlocksAll = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + PatientId + "_therapyblocks_all-" + strDate + ".xml";
+                        //xml_backup_TherapyBlocksAll = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + PatientId + "_therapyblocks_all-" + strDate + ".xml";
 
                         if  ( (System.IO.File.Exists(xml_backup_UserProfile)) && (System.IO.File.Exists(xml_backup_TherapyBlocks)) &&
-                              (System.IO.File.Exists(xml_backup_CifHistory)) && (System.IO.File.Exists(csv_backup_LiHistory)) &&
-                              (System.IO.File.Exists(xml_backup_TherapyBlocksAll))  ) 
+                              (System.IO.File.Exists(xml_backup_CifHistory)) && (System.IO.File.Exists(csv_backup_LiHistory)) /*&&
+                              (System.IO.File.Exists(xml_backup_TherapyBlocksAll)) */ ) 
                         {
                             info1 = new FileInfo(xml_backup_UserProfile);
                             info2 = new FileInfo(xml_backup_TherapyBlocks);
                             info3 = new FileInfo(xml_backup_CifHistory);
                             info4 = new FileInfo(csv_backup_LiHistory);
-                            info5 = new FileInfo(xml_backup_TherapyBlocksAll);
-                            if ((info1.Length > 0) && (info2.Length > 0) && (info3.Length > 0) && (info4.Length > 0) && (info5.Length > 0))
+                            //info5 = new FileInfo(xml_backup_TherapyBlocksAll);
+                            if ((info1.Length > 0) && (info2.Length > 0) && (info3.Length > 0) && (info4.Length > 0) /*&& (info5.Length > 0) */)
                             {
                                 bFound = true;
                                 break;
                             }
-                        }        
+                        }
+                        backup_date = backup_date.AddDays(-1);
                     }  // end while
 
                     if (bFound)
@@ -219,9 +225,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                         System.IO.File.Copy(xml_backup_TherapyBlocks, strXmlFile_TherapyBlocks, true);
                         System.IO.File.Copy(xml_backup_CifHistory, strXmlFile_CifHistory, true);
                         System.IO.File.Copy(csv_backup_LiHistory, strCsvFile_LiHistory, true);
-                        System.IO.File.Copy(xml_backup_TherapyBlocksAll, strXmlFile_TherapyBlocksAll, true);
+                        //System.IO.File.Copy(xml_backup_TherapyBlocksAll, strXmlFile_TherapyBlocksAll, true);
 
-                        Debug.Log("fixTherapyCorruptedFiles");
+                        Debug.Log(" ***** FIX CORRUPTED THERAPY FILES ***** ");
                     }
                 }
             }
@@ -542,13 +548,21 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //string strXmlFile1 = Application.persistentDataPath + "/" + "user_" + PatientId + "_profile.xml";
         //string strXmlFile1 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_profile.xml");
         string strXmlFile1_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_profile_.xml");
-        if (System.IO.File.Exists(strXmlFile1_))
-        {            
-            //System.IO.File.Move(strXmlFile1, strXmlFile1_);
-            //System.IO.File.Copy(strXmlFile1, strXmlFile1_, true);
-            doc1.Load(strXmlFile1_);
-            strProfile = doc1.OuterXml;
+        try
+        {
+            if (System.IO.File.Exists(strXmlFile1_))
+            {            
+                //System.IO.File.Move(strXmlFile1, strXmlFile1_);
+                //System.IO.File.Copy(strXmlFile1, strXmlFile1_, true);
+                doc1.Load(strXmlFile1_);
+                strProfile = doc1.OuterXml;
+            }
         }
+        catch (System.Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+        yield return null;
 
         Debug.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks.xml");
 
@@ -556,39 +570,64 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //string strXmlFile2 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks.xml";
         //string strXmlFile2 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks.xml");
         string strXmlFile2_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_.xml");
-        if (System.IO.File.Exists(strXmlFile2_))
-        {
-            //System.IO.File.Move(strXmlFile2, strXmlFile2_);
-            //System.IO.File.Copy(strXmlFile2, strXmlFile2_, true);
-            doc2.Load(strXmlFile2_);
-            strTherapyBlocks = doc2.OuterXml;
+        try
+        { 
+            if (System.IO.File.Exists(strXmlFile2_))
+            {
+                //System.IO.File.Move(strXmlFile2, strXmlFile2_);
+                //System.IO.File.Copy(strXmlFile2, strXmlFile2_, true);
+                doc2.Load(strXmlFile2_);
+                strTherapyBlocks = doc2.OuterXml;
+            }
         }
+        catch (System.Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+        yield return null;
 
-        Debug.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks_all.xml");
+        Debug.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks_rt.xml");
 
         XmlDocument doc3 = new XmlDocument();
         //string strXmlFile3 = Application.persistentDataPath + "/" + "user_" + PatientId + "_therapyblocks_all.xml";
         //string strXmlFile3 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_all.xml");
-        string strXmlFile3_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_all_.xml");
-        if (System.IO.File.Exists(strXmlFile3_))
+        //string strXmlFile3_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_all_.xml");
+        string strXmlFile3_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_rt_.xml");
+        try
         {
-            //System.IO.File.Move(strXmlFile3, strXmlFile3_);
-            //System.IO.File.Copy(strXmlFile3, strXmlFile3_, true);
-            doc3.Load(strXmlFile3_);
-            strTherapyBlocksAll = doc3.OuterXml;
+            if (System.IO.File.Exists(strXmlFile3_))
+            {
+                //System.IO.File.Move(strXmlFile3, strXmlFile3_);
+                //System.IO.File.Copy(strXmlFile3, strXmlFile3_, true);
+                doc3.Load(strXmlFile3_);
+                strTherapyBlocksAll = doc3.OuterXml;
+            }
         }
+        catch (System.Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+        yield return null;
 
         Debug.Log("DatabaseXML-UploadHistory2: reading user_lexicalitem_history_exposure.csv");
 
         //string strCsvFile4 = Application.persistentDataPath + "/" + "user_" + PatientId + "_lexicalitem_history_exposure.csv";
         //string strCsvFile4 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_lexicalitem_history_exposure.csv");
         string strCsvFile4_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_lexicalitem_history_exposure_.csv");
-        if (System.IO.File.Exists(strCsvFile4_))
+        try
         {
-            //System.IO.File.Move(strCsvFile4, strCsvFile4_);
-            //System.IO.File.Copy(strCsvFile4, strCsvFile4_, true);
-            strLiExposure = System.IO.File.ReadAllText(strCsvFile4_);
+            if (System.IO.File.Exists(strCsvFile4_))
+            {
+                //System.IO.File.Move(strCsvFile4, strCsvFile4_);
+                //System.IO.File.Copy(strCsvFile4, strCsvFile4_, true);
+                strLiExposure = System.IO.File.ReadAllText(strCsvFile4_);
+            }
         }
+        catch (System.Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+        yield return null;
 
         /*string strCsvFile5 = Application.persistentDataPath + "/" + "user_" + PatientId + "_lexicalitem_history_complexity.csv";
         if (System.IO.File.Exists(strCsvFile5))
@@ -609,13 +648,21 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //string strXmlFile8 = Application.persistentDataPath + "/" + "user_" + PatientId + "_challengeitemfeatures_history.xml";
         //string strXmlFile8 = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history.xml");
         string strXmlFile8_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history_.xml");
-        if (System.IO.File.Exists(strXmlFile8_))
+        try
         {
-            //System.IO.File.Move(strXmlFile8, strXmlFile8_);
-            //System.IO.File.Copy(strXmlFile8, strXmlFile8_, true);
-            doc8.Load(strXmlFile8_);
-            strCifHistory = doc8.OuterXml;
-        }        
+            if (System.IO.File.Exists(strXmlFile8_))
+            {
+                //System.IO.File.Move(strXmlFile8, strXmlFile8_);
+                //System.IO.File.Copy(strXmlFile8, strXmlFile8_, true);
+                doc8.Load(strXmlFile8_);
+                strCifHistory = doc8.OuterXml;
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+        yield return null;
 
         // create WWWForm
         WWWForm form = new WWWForm();
@@ -782,7 +829,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         // save patient id & dataset id in playerprefs
         PlayerPrefs.SetString("patient_id", PatientId.ToString());
         PlayerPrefs.SetString("dataset_id", DatasetId.ToString());
-        //PlayerPrefs.Save();
+        PlayerPrefs.Save();
 
         StartCoroutine(get_patient_progress());
 

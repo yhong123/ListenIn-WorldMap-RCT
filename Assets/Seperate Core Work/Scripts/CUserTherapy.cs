@@ -606,13 +606,17 @@ class CUserTherapy : Singleton<CUserTherapy>
                     m_recommender.updateUserHistory(lsResponse);
                     //m_recommender.updateUserHistory(m_lsTrial, m_lsResponse);
 
+                    // save total therapy time to db
+                    SaveTherapyTimeToDB();
+
                     //AddCompletedLevel();
                     //UpdateStatisticDay();
+                    SaveReactionTime();
                     SaveTrials();
                     //SaveUserProfile();
 
                     // save total therapy time to db
-                    SaveTherapyTimeToDB();
+                    //SaveTherapyTimeToDB();
                 }
                 catch (System.Exception ex)
                 {
@@ -638,9 +642,13 @@ class CUserTherapy : Singleton<CUserTherapy>
             time_insert.Add("patientid", DatabaseXML.Instance.PatientId.ToString());
             time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             time_insert.Add("totaltime", getTotalTherapyTimeMin().ToString());
-        
+
+            Debug.Log("CUserTherapy-SaveTherapyTimeToDB-DatabaseXML.Instance.WriteDatabaseXML start");
+
             DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.therapy_time_insert);
 
+            Debug.Log("CUserTherapy-SaveTherapyTimeToDB-DatabaseXML.Instance.WriteDatabaseXML end");
+            
             //Andrea: 30/10 moved this on the uploadmanager
 
             //if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
@@ -670,6 +678,8 @@ class CUserTherapy : Singleton<CUserTherapy>
 
             string strXmlFileNew = strXmlFile + ".new";
             string strXmlFileOld = strXmlFile + ".old";
+
+            Debug.Log("CUserTherapy-SaveTrials- load XmlDocument");
 
             XmlDocument doc = new XmlDocument();
             if (!System.IO.File.Exists(strXmlFile))
@@ -703,6 +713,8 @@ class CUserTherapy : Singleton<CUserTherapy>
                 </res>                
             </block> 
             */
+
+            Debug.Log("CUserTherapy-SaveTrials- append nodes");
 
             XmlElement xmlNode = doc.CreateElement("block");
             XmlAttribute attr = doc.CreateAttribute("idx");
@@ -790,6 +802,8 @@ class CUserTherapy : Singleton<CUserTherapy>
                 // Delete file.txt.old
                 //doc.PreserveWhitespace = true;
 
+                Debug.Log("CUserTherapy-SaveTrials- save XmlDocument");
+
                 doc.Save(strXmlFileNew);
                 if (System.IO.File.Exists(strXmlFile))
                     System.IO.File.Move(strXmlFile, strXmlFileOld);
@@ -823,6 +837,117 @@ class CUserTherapy : Singleton<CUserTherapy>
         {
             ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
             Debug.Log("CUserTherapy-SaveTrials-" + ex.Message);
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    // SaveReactionTime
+    //----------------------------------------------------------------------------------------------------
+    private void SaveReactionTime()
+    {
+        try
+        {
+            // Save the document to a file. White space is preserved (no white space).
+            //string strXmlFile = Application.persistentDataPath + "/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all.xml";
+            string strXmlFile = System.IO.Path.Combine(Application.persistentDataPath, "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_rt.xml");
+
+            string strXmlFileNew = strXmlFile + ".new";
+            string strXmlFileOld = strXmlFile + ".old";
+
+            Debug.Log("CUserTherapy-SaveReactionTime - load XmlDocument");
+
+            XmlDocument doc = new XmlDocument();
+            if (!System.IO.File.Exists(strXmlFile))
+            {
+                doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
+                "<root>" +
+                "</root>");
+            }
+            else
+            {
+                System.IO.FileInfo info = new System.IO.FileInfo(strXmlFile);
+                if (info.Length == 0)
+                {
+                    doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
+                    "<root>" +
+                    "</root>");
+                }
+                else
+                    doc.Load(strXmlFile);
+            }
+
+            /*
+            <block idx="0">                
+                <res idx="0" rt="" />    
+            </block> 
+            */
+
+            Debug.Log("CUserTherapy-SaveReactionTime- append nodes");
+
+            XmlElement xmlNode = doc.CreateElement("block");
+            XmlAttribute attr = doc.CreateAttribute("idx");
+            attr.Value = m_recommender.getLastTherapyBlockIdx().ToString();
+            xmlNode.SetAttributeNode(attr);            
+
+            for (int i = 0; i < m_lsResponse.Count; i++)
+            {
+                // add trials
+                XmlElement xmlChild2 = doc.CreateElement("res");
+                XmlAttribute attr2 = doc.CreateAttribute("i");
+                attr2.Value = i.ToString();
+                xmlChild2.SetAttributeNode(attr2);                
+
+                attr2 = doc.CreateAttribute("rt");
+                attr2.Value = m_lsResponse[i].m_fRTSec.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+                               
+                xmlNode.AppendChild(xmlChild2);
+            }
+
+            doc.DocumentElement.AppendChild(xmlNode);
+
+            //doc.PreserveWhitespace = true;
+            //doc.Save(strXmlFile);
+            try
+            {
+                // Write to file.txt.new
+                // Move file.txt to file.txt.old
+                // Move file.txt.new to file.txt
+                // Delete file.txt.old
+                //doc.PreserveWhitespace = true;
+
+                Debug.Log("CUserTherapy-SaveReactionTime- save XmlDocument");
+
+                doc.Save(strXmlFileNew);
+                if (System.IO.File.Exists(strXmlFile))
+                    System.IO.File.Move(strXmlFile, strXmlFileOld);
+                System.IO.File.Move(strXmlFileNew, strXmlFile);
+
+                string strXmlFile_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_rt_.xml");
+                System.IO.File.Copy(strXmlFile, strXmlFile_, true);
+
+                // backup
+                string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
+                string xml_backup = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_rt-" + strDate + ".xml";
+                if (System.IO.File.Exists(strXmlFileOld))
+                {
+                    System.IO.File.Copy(strXmlFileOld, xml_backup, true);
+                    System.IO.File.Delete(strXmlFileOld);
+                }
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                Debug.Log("CUserTherapy-SaveReactionTime-" + ex.Message);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("CUserTherapy-SaveReactionTime-" + e.ToString());
+            }
+        }
+        catch (System.Exception ex)
+        {
+            ListenIn.Logger.Instance.Log("CUserTherapy-SaveReactionTime-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            Debug.Log("CUserTherapy-SaveReactionTime-" + ex.Message);
         }
     }
 

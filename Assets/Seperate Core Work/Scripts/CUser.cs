@@ -291,6 +291,7 @@ class CUser
     //----------------------------------------------------------------------------------------------------
     public int getLexicalItemExposureCtr(int intLexicalItemIdx)
     {
+        //Debug.Log("getLexicalItemExposureCtr: intLexicalItemIdx = " + intLexicalItemIdx);
         return m_lsLexicalItem_HistoryExposure[intLexicalItemIdx].m_intExposureCtr;
 
     }
@@ -910,7 +911,7 @@ class CUser
                 m_lsNoiseLevelHistory.Add(1);
 
             // set the next noise block index
-            Random rnd = new Random();
+            System.Random rnd = new System.Random();
             int intRnd = rnd.Next(0, CConstants.g_intNoiseBlockInterval);
             // no two consecutive noise blocks are allowed
             if ((intRnd == 0) && (getLastTherapyBlock().m_intNoiseLevel > 0))
