@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LevelSelectManager : MonoBehaviour {
 
@@ -29,6 +30,19 @@ public class LevelSelectManager : MonoBehaviour {
         PauseButton.SetActive(true);
         OptionTint.SetActive(false);
         PauseMenu.SetActive(false);
+    }
+
+    int pico = 0;
+    public void testa()
+    {
+        Dictionary<string, string> dailyTherapy = new Dictionary<string, string>();
+
+        dailyTherapy.Add("patient", pico.ToString());
+        dailyTherapy.Add("level_start", "level");
+        dailyTherapy.Add("date", "aaaaaaaa");
+
+        DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_update);
+        pico++;
     }
 
 }
