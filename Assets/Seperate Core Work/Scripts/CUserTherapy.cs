@@ -693,9 +693,41 @@ class CUserTherapy : Singleton<CUserTherapy>
                 System.IO.FileInfo info = new System.IO.FileInfo(strXmlFile);
                 if (info.Length == 0)
                 {
-                    doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
-                    "<root>" +
-                    "</root>");
+                    // the file has corrupted file so recover from the backup folder
+                    System.DateTime backup_date = System.DateTime.Now;
+                    bool bFound = false;
+                    int intCtr = 0;
+                    string xml_backup_TherapyBlocksAll = "";
+                    while (!bFound && intCtr < 10)
+                    {
+                        //backup_date = backup_date.AddDays(-1);
+                        string strDate = backup_date.ToString("yyyy-MM-dd");
+                        xml_backup_TherapyBlocksAll = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all-" + strDate + ".xml";
+
+                        if (System.IO.File.Exists(xml_backup_TherapyBlocksAll))
+                        {
+                            System.IO.FileInfo info1 = new System.IO.FileInfo(xml_backup_TherapyBlocksAll);
+                            if (info1.Length > 0)
+                            {
+                                bFound = true;
+                                break;
+                            }
+                        }
+                        backup_date = backup_date.AddDays(-1);
+                    }  // end while
+
+                    if (bFound)
+                    {
+                        System.IO.File.Copy(xml_backup_TherapyBlocksAll, strXmlFile, true);
+                        doc.Load(strXmlFile);
+                        Debug.Log(" ***** CUserTherapy-SaveTrials: FIX CORRUPTED THERAPY FILE ***** ");
+                    }
+                    else
+                    {
+                        doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
+                        "<root>" +
+                        "</root>");
+                    }
                 }
                 else
                     doc.Load(strXmlFile);
@@ -868,9 +900,41 @@ class CUserTherapy : Singleton<CUserTherapy>
                 System.IO.FileInfo info = new System.IO.FileInfo(strXmlFile);
                 if (info.Length == 0)
                 {
-                    doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
-                    "<root>" +
-                    "</root>");
+                    // the file has corrupted file so recover from the backup folder
+                    System.DateTime backup_date = System.DateTime.Now;
+                    bool bFound = false;
+                    int intCtr = 0;
+                    string xml_backup_TherapyBlocksAll_Rt = "";
+                    while (!bFound && intCtr < 10)
+                    {
+                        //backup_date = backup_date.AddDays(-1);
+                        string strDate = backup_date.ToString("yyyy-MM-dd");
+                        xml_backup_TherapyBlocksAll_Rt = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_rt-" + strDate + ".xml";
+
+                        if (System.IO.File.Exists(xml_backup_TherapyBlocksAll_Rt))
+                        {
+                            System.IO.FileInfo info1 = new System.IO.FileInfo(xml_backup_TherapyBlocksAll_Rt);                            
+                            if (info1.Length > 0) 
+                            {
+                                bFound = true;
+                                break;
+                            }
+                        }
+                        backup_date = backup_date.AddDays(-1);
+                    }  // end while
+
+                    if (bFound)
+                    {
+                        System.IO.File.Copy(xml_backup_TherapyBlocksAll_Rt, strXmlFile, true);
+                        doc.Load(strXmlFile);
+                        Debug.Log(" ***** CUserTherapy-SaveReactionTime: FIX CORRUPTED THERAPY FILE ***** ");
+                    }
+                    else
+                    {
+                        doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
+                        "<root>" +
+                        "</root>");
+                    }
                 }
                 else
                     doc.Load(strXmlFile);
