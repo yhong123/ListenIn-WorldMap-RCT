@@ -73,8 +73,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
     public void InitializeDatabase()
     {
+
         Debug.Log(Application.persistentDataPath);
-        xml_file = Application.persistentDataPath + @"/ListenIn/Database/database.xml";
+        //current xml file to write on
         xml_location = Application.persistentDataPath + @"/ListenIn/Database/";
 
         //create the document
@@ -89,9 +90,13 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/");
             //create an xml from the local sample one
             database_xml.LoadXml(database_xml_file.text);
-            //and save it only once
-            database_xml.Save(xml_file);
+            //and save it only once, 1 is the default file name
+            database_xml.Save(Application.persistentDataPath + @"/ListenIn/Database/1.xml");
         }
+
+        Debug.Log("numberos de archivos: " + Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length);
+        //create the file route by the current xml file
+        xml_file = Application.persistentDataPath + @"/ListenIn/Database/" + Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length + ".xml";
 
         // check database.xml file length - if the file corrupted with length 0kb, then recreate the using setting from PlayerPrefs
         {
@@ -231,7 +236,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     protected override void Awake()
     {
         //Getting the xml template from the resources
-        database_xml_file = Resources.Load("database") as TextAsset;        
+        database_xml_file = Resources.Load("database") as TextAsset;
     }
 
     protected void Update()
@@ -368,87 +373,111 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //function which reads the xml in order
     public IEnumerator ReadDatabaseXML()
     {
-        //Andrea 19/11: changing the order of execution in order to prevent DatabaseXML crashing
-        if (QueriesOnTheXML() == 0)
+        //current number of files
+        int number_of_xml = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
+        //current time
+        string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
+        //cycle for the xmls
+        for (int i = 1; i <= number_of_xml; i++)
         {
-            Debug.Log("ReadDatabaseXML: No queries to be inserted at this time");
-            yield return null;
-        }
-        else
-        {
-            //current time
-            string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
-            //Create the backup
-            string xml_backup = Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + ".xml";
-            try
+            //Andrea 19/11: changing the order of execution in order to prevent DatabaseXML crashing
+            if (QueriesOnTheXML() == 0)
             {
-                File.Copy(xml_file, xml_backup);
-                Debug.Log("ReadDatabaseXML: copied current version of DatabaseXML");
+                Debug.Log("ReadDatabaseXML: No queries to be inserted at this time");
+                yield return null;
             }
-            catch (System.Exception ex)
+            else
             {
-                Debug.LogError(ex.Message);
-            }
-            yield return null;
-
-            //Reset the original xml_file to ampty state
-            try
-            {
-                XmlElement elmRoot = (XmlElement)database_xml.SelectSingleNode("/database/queries");
-                //remove all
-                elmRoot.RemoveAll();
-                //and save
-                database_xml.Save(xml_file);
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError(ex.Message);
-            }
-            yield return null;
-
-            //Read backup
-            try
-            {
-                Debug.Log("ReadDatabaseXML: reading database xml backup");
-                XmlDocument backup_database_xml = new XmlDocument();
-                backup_database_xml.LoadXml(File.ReadAllText(xml_backup));
-
-                //select all the query tags
-                XmlNodeList _list = backup_database_xml.SelectNodes("/database/queries/query");
-
-                //Resetting forms enqueu
-                //queue to insert the forms
-                xml_forms_queue = new Queue<DatabaseQuery>();
-                //go through each one of them
-                foreach (XmlNode _node in _list)
+                //create folder-backup
+                Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + "/");
+                //Create the backup
+                string xml_backup = Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + "/" + i + ".xml";
+                //current file
+                xml_file = Application.persistentDataPath + @"/ListenIn/Database/" + i + ".xml";
+                try
                 {
-                    xml_form = new WWWForm();
-                    //get the url of the query to be send
-                    xml_query_url = _node.Attributes[0].Value;
-                    Debug.Log(_node.Attributes[0].Value);
-                    //go through all the XML variables nodes inside the current query
-                    foreach (XmlNode _node_variables in _node.ChildNodes)
-                    {
-                        //create the fields for the WWWForm
-                        xml_form.AddField(_node_variables.Attributes[0].Value, _node_variables.Attributes[1].Value);
-                        //StartCoroutine(send_xml_query());
-                        Debug.Log(_node_variables.Attributes[0].Value + " - " + _node_variables.Attributes[1].Value);
-                    }
-                    //queue the forms
-                    xml_forms_queue.Enqueue(new DatabaseQuery(xml_query_url, xml_form));
-                    Debug.Log(string.Format("ReadDatabaseXML: {0} query prepared", xml_query_url));
+                    File.Copy(xml_file, xml_backup);
+                    Debug.Log("ReadDatabaseXML: copied current version of DatabaseXML");
                 }
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError(ex.Message);
-            }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError(ex.Message);
+                }
+                yield return null;
 
-            //Send backup queries to DB
-            //go through the queue and insert them in order
-            yield return StartCoroutine(send_xml_query());            
+                File.Delete(Application.persistentDataPath + @"/ListenIn/Database/" + i + ".xml");
 
+                ////Reset the original xml_file to ampty state
+                //try
+                //{
+                //    XmlElement elmRoot = (XmlElement)database_xml.SelectSingleNode("/database/queries");
+                //    //remove all
+                //    elmRoot.RemoveAll();
+                //    //and save
+                //    database_xml.Save(xml_file);
+                //}
+                //catch (System.Exception ex)
+                //{
+                //    Debug.LogError(ex.Message);
+                //}
+                //yield return null;
+
+                //Read backup
+                try
+                {
+                    Debug.Log("ReadDatabaseXML: reading database xml backup");
+                    XmlDocument backup_database_xml = new XmlDocument();
+                    backup_database_xml.LoadXml(File.ReadAllText(xml_backup));
+
+                    //select all the query tags
+                    XmlNodeList _list = backup_database_xml.SelectNodes("/database/queries/query");
+
+                    //Resetting forms enqueu
+                    //queue to insert the forms
+                    xml_forms_queue = new Queue<DatabaseQuery>();
+                    //go through each one of them
+                    foreach (XmlNode _node in _list)
+                    {
+                        xml_form = new WWWForm();
+                        //get the url of the query to be send
+                        xml_query_url = _node.Attributes[0].Value;
+                        Debug.Log(_node.Attributes[0].Value);
+                        //go through all the XML variables nodes inside the current query
+                        foreach (XmlNode _node_variables in _node.ChildNodes)
+                        {
+                            //create the fields for the WWWForm
+                            xml_form.AddField(_node_variables.Attributes[0].Value, _node_variables.Attributes[1].Value);
+                            //StartCoroutine(send_xml_query());
+                            Debug.Log(_node_variables.Attributes[0].Value + " - " + _node_variables.Attributes[1].Value);
+                        }
+                        //queue the forms
+                        xml_forms_queue.Enqueue(new DatabaseQuery(xml_query_url, xml_form));
+                        Debug.Log(string.Format("ReadDatabaseXML: {0} query prepared", xml_query_url));
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError(ex.Message);
+                }
+
+                //Send backup queries to DB
+                //go through the queue and insert them in order
+                //ACAyield return StartCoroutine(send_xml_query());            
+
+            }
         }
+        //origin path
+        xml_file = Application.persistentDataPath + @"/ListenIn/Database/1.xml";
+        //create new original file
+        //create the document
+        database_xml = new XmlDocument();
+        //create an xml from the local sample one
+        database_xml.LoadXml(database_xml_file.text);
+        //get/set the patient element
+        XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
+        patient_element.SetAttribute("id", PatientId.ToString());
+        //and save it
+        database_xml.Save(xml_file);
 
         /////OLD VERSION
         ////current time
@@ -650,7 +679,28 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //function which inserts queries to the xml file
     public void WriteDatabaseXML(Dictionary<string,string> www_form, string url_www_form)
     {
-        //insert daily once
+        //if more than 5 queries, create a new doc
+        if (QueriesOnTheXML() > 5)
+        {
+            //number of .xml
+            int number_of_xml = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
+            Debug.Log("numero cuando se escribe: " + number_of_xml);
+            //save
+            //database_xml.Save(Application.persistentDataPath + @"/ListenIn/Database/" + number_of_xml + ".xml");
+            //file name for the next one / if only 1 file then = number of files + 1
+            xml_file = Application.persistentDataPath + @"/ListenIn/Database/" + (number_of_xml + 1) + ".xml";
+            //create the document
+            database_xml = new XmlDocument();
+            //create an xml from the local sample one
+            database_xml.LoadXml(database_xml_file.text);
+            //get the patient element
+            XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
+            patient_element.SetAttribute("id", PatientId.ToString());
+            //and save it
+            database_xml.Save(xml_file);
+        }
+
+            //insert daily once
         if (url_www_form != therapy_daily_insert)
         {
             //variable node for the xml
@@ -678,7 +728,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             //save doc 
             database_xml.Save(xml_file);
         }
-        else if(!therapy_daily_inserted)
+        else if (!therapy_daily_inserted)
         {
             //one therapy only
             therapy_daily_inserted = true;
@@ -706,7 +756,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             root_tag.AppendChild(query_node);
             //save doc 
             database_xml.Save(xml_file);
-        } 
+        }    
     }
 
     void OnApplicationQuit()
@@ -846,6 +896,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     {
         //get the patient element
         XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
+        Debug.Log(patient_element.GetAttribute("id"));
         return patient_element.GetAttribute("id");
     }
 
@@ -933,6 +984,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string block_game_string = ((int)therapy_pinball_time).ToString();
         block_game_string = GUI.TextField(new Rect(10, 70 + offset, 200, 20), "Pinball time: " + block_game_string + "(s)", 25);
         */
+#if UNITY_ANDROID
+        GUI.TextField(new Rect(10, 100, 200, 20), "BATTERY: " + GetBatteryLevel() + "%");
+#endif
     }
 
     public void SetTimerState(TimerType tymerType, bool state)
@@ -975,6 +1029,43 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             default:
                 break;
         }
+    }
+#endregion
+#region GETBATTERYLEVEL
+    public static float GetBatteryLevel()
+    {
+        try
+        {
+            using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            {
+                if (null != unityPlayer)
+                {
+                    using (AndroidJavaObject currActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+                    {
+                        if (null != currActivity)
+                        {
+                            using (AndroidJavaObject intentFilter = new AndroidJavaObject("android.content.IntentFilter", new object[]{ "android.intent.action.BATTERY_CHANGED" }))
+                            {
+                                using (AndroidJavaObject batteryIntent = currActivity.Call<AndroidJavaObject>("registerReceiver", new object[]{null,intentFilter}))
+                                {
+                                    int level = batteryIntent.Call<int>("getIntExtra", new object[]{"level",-1});
+                                    int scale = batteryIntent.Call<int>("getIntExtra", new object[]{"scale",-1});
+ 
+                                    // Error checking that probably isn't needed but I added just in case.
+                                    if (level == -1 || scale == -1)
+                                    {
+                                        return 50f;
+                                    }
+                                    return ((float)level / (float)scale) * 100.0f;
+                                }
+                               
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (System.Exception ex){}
+        return 100;
     }
 #endregion
 }
