@@ -225,8 +225,7 @@ namespace ListenIn
                 if (_isLoggerReady && _lastLogTime.AddSeconds(60) < DateTime.UtcNow && !applicationQuitting)
                 {
                     _lastLogTime = DateTime.UtcNow;
-                    EmptyBuffer();
-  
+                    EmptyBuffer();  
                 }
             }
             catch (Exception ex)

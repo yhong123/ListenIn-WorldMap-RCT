@@ -12,7 +12,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //Andrea is using ID 1 for internal testing
     public int PatientId = 1;
     public int DatasetId = 0;
-    public TextAsset database_xml_file;
+    public TextAsset database_xml_file = null;
 
     //create an XML file to keep and read it
     //Andrea: making it a local variable
@@ -85,10 +85,16 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         if (!Directory.Exists(Application.persistentDataPath + @"/ListenIn/"))
         {
             //if it doesn't, create it
+            Debug.Log("Creating directories");
             Directory.CreateDirectory(xml_location);
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Database/backup");
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/");
             //create an xml from the local sample one
+            if (database_xml_file == null)
+            {
+                //Getting the xml template from the resources
+                database_xml_file = Resources.Load("database") as TextAsset;
+            }
             database_xml.LoadXml(database_xml_file.text);
             //and save it only once, 1 is the default file name
             database_xml.Save(Application.persistentDataPath + @"/ListenIn/Database/1.xml");
@@ -96,6 +102,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         int currSplittedFiles = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
         Debug.Log("Numbers of total databaseXML files: " + currSplittedFiles);
+        if (currSplittedFiles == 0)
+        {
+            Debug.Log("First ListenIn Initialization");
+            currSplittedFiles++;
+        }
         //create the file route by the current xml file
         xml_file = Application.persistentDataPath + @"/ListenIn/Database/" + currSplittedFiles + ".xml";
 
@@ -244,6 +255,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     protected override void Awake()
     {
         //Getting the xml template from the resources
+        Debug.Log("Loading standard databasexml file...");
         database_xml_file = Resources.Load("database") as TextAsset;
     }
 
@@ -377,7 +389,24 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //if there's none, do nothing
         return _list.Count;
     }
-    
+
+    public bool CheckUploadSafeCondition()
+    {
+        //current number of files
+        int number_of_xml = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
+        if (number_of_xml > 10 && UploadManager.Instance.currentBatteryLevel > 30.0f)
+        {
+            return true;
+        }
+
+        if (number_of_xml <= 10 && UploadManager.Instance.currentBatteryLevel > 15.0f)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     //function which reads the xml in order
     public IEnumerator ReadDatabaseXML()
     {
@@ -386,8 +415,6 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //current time
         string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
         //cycle for the xmls
-
-
 
         for (int i = 1; i <= number_of_xml; i++)
         {

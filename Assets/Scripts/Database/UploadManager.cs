@@ -5,6 +5,7 @@ using MadLevelManager;
 
 public class UploadManager : Singleton<UploadManager> {
 
+    public float currentBatteryLevel = 0.0f;
     private bool backToLevelSelection = false;
     private float _currDeltaTime = 0;
     private float startUploadTime = 0;
@@ -50,10 +51,18 @@ public class UploadManager : Singleton<UploadManager> {
         {
             yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
 
-            //Here put all the methods with Ienumrator in order to wait them to be completed
             _currDeltaTime = Time.time - startUploadTime;
-            Debug.Log("UploadManager: " + _currDeltaTime + " sending data out to the DB.");
-            yield return StartCoroutine(DatabaseXML.Instance.ReadDatabaseXML());
+            //Yean: this is where we do the safe upload
+            if (DatabaseXML.Instance.CheckUploadSafeCondition())
+            {
+                //Here put all the methods with Ienumrator in order to wait them to be completed
+                Debug.Log("UploadManager: " + _currDeltaTime + " sending data out to the DB.");
+                yield return StartCoroutine(DatabaseXML.Instance.ReadDatabaseXML());
+            }
+            else
+            {
+                Debug.Log("UploadManager: " + _currDeltaTime + " battery level is critical for exporting.");
+            }
         }
         _currDeltaTime = Time.time - startUploadTime;
         Debug.Log("UploadManager: " + _currDeltaTime + " collecting memory");
@@ -89,11 +98,12 @@ public class UploadManager : Singleton<UploadManager> {
                                     // Error checking.
                                     if (level == -1 || scale == -1)
                                     {
-                                        return 50f;
+                                        currentBatteryLevel = 0.0f;
+                                        return currentBatteryLevel;
                                     }
-                                    return ((float)level / (float)scale) * 100.0f;
+                                    currentBatteryLevel = ((float)level / (float)scale) * 100.0f;
+                                    return currentBatteryLevel;
                                 }
-
                             }
                         }
                     }
@@ -101,7 +111,8 @@ public class UploadManager : Singleton<UploadManager> {
             }
         }
         catch (System.Exception ex) { }
-        return 99;
+        currentBatteryLevel = 101.0f;
+        return currentBatteryLevel;
     }
     #endregion
 
