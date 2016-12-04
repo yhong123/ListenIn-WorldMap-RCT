@@ -290,6 +290,18 @@ MonoBehaviour:
     groupId: 0
     extensionGUID: 
     lockedByDefault: 1
+  - _sceneObject: {fileID: 102900000, guid: 9fed064c7334a25459ed8d3c61c8c9d1, type: 3}
+    _scenePath: Assets/Scenes/SetupScreen.unity
+    _sceneName: SetupScreen
+    scene: 
+    parent: {fileID: 11400000}
+    order: 230
+    name: Setup Screen
+    type: 0
+    arguments: 
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
   groups: []
   extensions: []
   version: 1
