@@ -705,7 +705,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 404984561}
-        m_MethodName: SendLogToEmail
+        m_MethodName: SendEmailButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

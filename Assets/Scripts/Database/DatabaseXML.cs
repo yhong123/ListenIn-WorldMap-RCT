@@ -78,6 +78,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     {
 
         Debug.Log(Application.persistentDataPath);
+        xml_forms_queue = new Queue<DatabaseQuery>();
         //current xml file to write on
         xml_location = Application.persistentDataPath + @"/ListenIn/Database/";
 
@@ -432,7 +433,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
                 //Resetting forms enqueu
                 //queue to insert the forms
-                xml_forms_queue = new Queue<DatabaseQuery>();
+                //Andrea: doing this in send query to database
+                //xml_forms_queue.Clear();
                 //create folder-backup
                 //Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + "/");
                 //Create the backup with index plus date
@@ -503,7 +505,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
                 //Send backup queries to DB
                 //go through the queue and insert them in order
-                //yield return StartCoroutine(send_xml_query());            
+                Debug.Log("DatabaseXML: starting communication with DB file #" + i);
+                yield return StartCoroutine(send_xml_query());            
 
             }
         }
@@ -532,7 +535,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         
 
         //Sending off queries
-        yield return StartCoroutine(send_xml_query());
+        //yield return StartCoroutine(send_xml_query());
 
         /////OLD VERSION
         ////current time
@@ -584,7 +587,6 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
     IEnumerator send_xml_query()
     {
-        Debug.Log("DatabaseXML: starting communication with DB");
         //first in, first out logic
         foreach (DatabaseQuery form in xml_forms_queue)
         {
@@ -597,7 +599,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             }
            
         }
-        Debug.Log("DatabaseXML: end of send xml query");
+        //Clear current
+        xml_forms_queue.Clear();
+        Debug.Log("DatabaseXML: end of send xml query (splitted version)");
     }
 
     public void uploadHistoryXml()

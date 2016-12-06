@@ -4,9 +4,10 @@ using MadLevelManager;
 using System.Collections;
 using System.IO;
 using System.Linq;
-using UnityEditor;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 public class AppControllerSetupScreen : MonoBehaviour {
 
@@ -21,6 +22,7 @@ public class AppControllerSetupScreen : MonoBehaviour {
     [SerializeField]
     private Button m_playButton;
 
+    private bool lockEmailSending = false;
     // Use this for initialization
     void Start () {
         m_playButton.interactable = false;
@@ -152,20 +154,87 @@ public class AppControllerSetupScreen : MonoBehaviour {
         MadLevel.LoadLevelByName("World Map Select");
     }
 
-    public void SendLogToEmail()
+    private IEnumerator SendLogToEmail()
     {
-        string path = ListenIn.Logger.Instance.GetLogPath;
-        if (!string.IsNullOrEmpty(path))
+
+        lockEmailSending = true;
+        //http://answers.unity3d.com/questions/473469/email-a-file-from-editor-script.html
+        //For setting up accounts this must be turned on: https://www.google.com/settings/security/lesssecureapps
+        m_feedbackTextScreen.text = "Praparing email...";
+
+        yield return new WaitForEndOfFrame();
+
+        if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
         {
-            var topFile = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
-            MailMessage mailMessage = new MailMessage();
-            SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
-            string fromEmail = "ListenIn" + Application.version + "@gmail.com";
-            mailMessage.From = new MailAddress(fromEmail);
-            mailMessage.To.Add("listeninlog@gmail.com");
-            string identifier = "";
-            //mailMessage.Subject()
-            //http://answers.unity3d.com/questions/473469/email-a-file-from-editor-script.html
+            string path = ListenIn.Logger.Instance.GetLogPath;
+            if (!string.IsNullOrEmpty(path))
+            {
+                var topFile = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault().FullName;
+                string fromEmail = "listeninlog@gmail.com";
+                string subject = "Patient id " + DatabaseXML.Instance.PatientId.ToString();
+
+                using (MailMessage mailMessage = new MailMessage())
+                {
+                    mailMessage.From = new MailAddress(fromEmail);
+                    mailMessage.To.Add("listeninlog@gmail.com");
+                    mailMessage.Subject = subject;// subject;
+                    mailMessage.Body = "Log created from application version " + Application.version;
+                    Attachment attachment;
+                    attachment = new System.Net.Mail.Attachment(topFile);
+                    mailMessage.Attachments.Add(attachment);
+                                       
+                    {
+                        SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+                        smtpServer.Port = 587;
+                        smtpServer.Credentials = new NetworkCredential("listeninlog@gmail.com", "listeninlogger");
+                        smtpServer.EnableSsl = true;
+                        ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+                        {
+                            return true;
+                        };
+
+                        yield return new WaitForEndOfFrame();
+
+                        try
+                        {
+                            smtpServer.Send(mailMessage);
+                            m_feedbackTextScreen.text = "Thanks for feedback!";
+                        }
+                        catch (System.Exception ex)
+                        {
+                            m_feedbackTextScreen.text = "Log not uploaded...";
+                            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+                        }
+                        finally
+                        {
+                            lockEmailSending = false;
+                        }
+                    }
+                }
+                
+                yield return new WaitForEndOfFrame();
+                
+            }
+            else
+            {
+                lockEmailSending = false;
+                m_feedbackTextScreen.text = "No internet detected...";
+            }
+            yield return null;
         }
+    }
+
+    public void SendEmailButton()
+    {
+        if (!lockEmailSending)
+        {
+            StartCoroutine(SendLogToEmail());
+        }
+        else
+        {
+            m_feedbackTextScreen.text = "Wait...";
+        }
+        
+        
     }
 }
