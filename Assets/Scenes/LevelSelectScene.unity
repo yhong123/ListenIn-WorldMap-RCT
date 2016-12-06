@@ -319,6 +319,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 46632766}
+  - 114: {fileID: 46632768}
   - 223: {fileID: 46632765}
   - 114: {fileID: 46632764}
   - 114: {fileID: 46632767}
@@ -401,6 +402,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textTotal: {fileID: 1910933117}
   _textToday: {fileID: 1346900993}
+--- !u!114 &46632768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 46632763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1301386320, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &77430621
 GameObject:
   m_ObjectHideFlags: 0
@@ -4058,11 +4075,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 425840, guid: c885a86acfb73b44997b8fc0076ba602, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0.51944447
+      value: 0.5222222
       objectReference: {fileID: 0}
     - target: {fileID: 425840, guid: c885a86acfb73b44997b8fc0076ba602, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.51944447
+      value: 0.5222222
       objectReference: {fileID: 0}
     - target: {fileID: 110448, guid: c885a86acfb73b44997b8fc0076ba602, type: 2}
       propertyPath: m_IsActive
@@ -4595,6 +4612,7 @@ GameObject:
   - 222: {fileID: 1159464771}
   - 114: {fileID: 1159464770}
   - 114: {fileID: 1159464769}
+  - 114: {fileID: 1159464772}
   m_Layer: 5
   m_Name: TestButton
   m_TagString: Untagged
@@ -4659,8 +4677,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1031671308}
-        m_MethodName: testa
+      - m_Target: {fileID: 1159464772}
+        m_MethodName: TestSplitting
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4705,6 +4723,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1159464767}
+--- !u!114 &1159464772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1159464767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4802afb3c6322846ac5bd4f9b12b2c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1166202197
 GameObject:
   m_ObjectHideFlags: 0

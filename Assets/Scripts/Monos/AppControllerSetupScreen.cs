@@ -2,6 +2,11 @@
 using UnityEngine.UI;
 using MadLevelManager;
 using System.Collections;
+using System.IO;
+using System.Linq;
+using UnityEditor;
+using System.Net;
+using System.Net.Mail;
 
 public class AppControllerSetupScreen : MonoBehaviour {
 
@@ -116,16 +121,51 @@ public class AppControllerSetupScreen : MonoBehaviour {
         }
         yield return new WaitForEndOfFrame();
 
+        percentage = 85;
+        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+
+        try
+        {
+            CleaningUpOlderLogs();
+        }
+        catch (System.Exception ex)
+        {
+            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+        }
+
         percentage = 100;
         m_textScreen.text = string.Format(m_textStringFormat, percentage);
+
         m_playButton.interactable = true;
         m_playButton.gameObject.SetActive(true);
 
+    }
+
+    private void CleaningUpOlderLogs()
+    {
+        //Andrea: need to implement this function
     }
 
     public void GoToWorldMap()
     {
         //Debug.Log("PressedButton");
         MadLevel.LoadLevelByName("World Map Select");
+    }
+
+    public void SendLogToEmail()
+    {
+        string path = ListenIn.Logger.Instance.GetLogPath;
+        if (!string.IsNullOrEmpty(path))
+        {
+            var topFile = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
+            MailMessage mailMessage = new MailMessage();
+            SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+            string fromEmail = "ListenIn" + Application.version + "@gmail.com";
+            mailMessage.From = new MailAddress(fromEmail);
+            mailMessage.To.Add("listeninlog@gmail.com");
+            string identifier = "";
+            //mailMessage.Subject()
+            //http://answers.unity3d.com/questions/473469/email-a-file-from-editor-script.html
+        }
     }
 }

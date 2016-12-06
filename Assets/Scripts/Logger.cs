@@ -16,6 +16,12 @@ namespace ListenIn
     {
         private Text _screenLogger;
         private string _externalPath;
+        public string GetLogPath
+        {
+            get { return _externalPath; }
+            private set { _externalPath = value; }
+        }
+        
         private bool _logToExternalFile;
         private bool _isLoggerReady;
         private DateTime _lastLogTime;

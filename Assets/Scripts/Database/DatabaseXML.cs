@@ -9,6 +9,9 @@ using MadLevelManager;
 
 public class DatabaseXML : Singleton<DatabaseXML> {
 
+    
+    [SerializeField]
+    public static int MaximumQueriesPerFile = 50;
     //Andrea is using ID 1 for internal testing
     public int PatientId = 1;
     public int DatasetId = 0;
@@ -732,7 +735,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public void WriteDatabaseXML(Dictionary<string,string> www_form, string url_www_form)
     {
         //if more than 5 queries, create a new doc
-        if (QueriesOnTheXML() > 5)
+        if (QueriesOnTheXML() > DatabaseXML.MaximumQueriesPerFile)
         {
             //number of .xml
             int number_of_xml = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
