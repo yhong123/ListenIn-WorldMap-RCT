@@ -3870,11 +3870,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 425840, guid: c885a86acfb73b44997b8fc0076ba602, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0.74444443
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 425840, guid: c885a86acfb73b44997b8fc0076ba602, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.74444443
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 110448, guid: c885a86acfb73b44997b8fc0076ba602, type: 2}
       propertyPath: m_IsActive
@@ -4283,7 +4283,7 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Dataset A-2016-11
       m_Image: {fileID: 0}
-    - m_Text: Dataset B-2016-11
+    - m_Text: Dataset B-2016-12
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

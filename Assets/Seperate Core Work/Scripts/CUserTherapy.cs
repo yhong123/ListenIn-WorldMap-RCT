@@ -599,11 +599,13 @@ class CUserTherapy : Singleton<CUserTherapy>
                 { 
                     // save data
                     List<int> lsResponse = new List<int>();
+                    List<float> lsResponseRtSec = new List<float>();
                     for (int i = 0; i < m_lsResponse.Count; i++)
                     {
-                        lsResponse.Add(m_lsResponse[i].m_intScore);                     
+                        lsResponse.Add(m_lsResponse[i].m_intScore);
+                        lsResponseRtSec.Add(m_lsResponse[i].m_fRTSec);
                     }
-                    m_recommender.updateUserHistory(lsResponse);
+                    m_recommender.updateUserHistory(lsResponse, lsResponseRtSec);
                     //m_recommender.updateUserHistory(m_lsTrial, m_lsResponse);
 
                     // save total therapy time to db
@@ -611,7 +613,7 @@ class CUserTherapy : Singleton<CUserTherapy>
 
                     //AddCompletedLevel();
                     //UpdateStatisticDay();
-                    SaveReactionTime();
+                    //SaveReactionTime();  // 2016-12-06
                     SaveTrials();
                     //SaveUserProfile();
 
@@ -666,9 +668,135 @@ class CUserTherapy : Singleton<CUserTherapy>
     }
 
     //----------------------------------------------------------------------------------------------------
-    // SaveTrials
+    // SaveTrials: 2016-12-06
     //----------------------------------------------------------------------------------------------------
     private void SaveTrials()
+    {
+        try
+        {
+            XmlDocument doc = new XmlDocument();            
+            doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
+                        "<root>" +
+                        "</root>");
+                        
+            Debug.Log("CUserTherapy-SaveTrials- append nodes");
+
+            int intBlockIdx = m_recommender.getLastTherapyBlockIdx();
+
+            XmlElement xmlNode = doc.CreateElement("block");
+            XmlAttribute attr = doc.CreateAttribute("idx");
+            attr.Value = intBlockIdx.ToString();
+            xmlNode.SetAttributeNode(attr);
+
+            for (int i = 0; i < m_lsTrial.Count; i++)
+            {
+                // add trials
+                XmlElement xmlChild2 = doc.CreateElement("trial");
+                XmlAttribute attr2 = doc.CreateAttribute("idx");
+                attr2.Value = i.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                attr2 = doc.CreateAttribute("ciIdx");
+                attr2.Value = m_lsTrial[i].m_intChallengeItemIdx.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                attr2 = doc.CreateAttribute("cifIdx");
+                attr2.Value = m_lsTrial[i].m_intChallengeItemFeaturesIdx.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                for (var j = 0; j < m_lsTrial[i].m_lsStimulus.Count; j++)
+                {
+                    XmlElement xmlChild3 = doc.CreateElement("stim");
+                    attr2 = doc.CreateAttribute("idx");
+                    attr2.Value = j.ToString();
+                    xmlChild3.SetAttributeNode(attr2);
+
+                    attr2 = doc.CreateAttribute("oriIdx");
+                    attr2.Value = m_lsTrial[i].m_lsStimulus[j].intOriginalIdx.ToString();
+                    xmlChild3.SetAttributeNode(attr2);
+
+                    attr2 = doc.CreateAttribute("t");
+                    attr2.Value = m_lsTrial[i].m_lsStimulus[j].m_strType;
+                    xmlChild3.SetAttributeNode(attr2);
+
+                    attr2 = doc.CreateAttribute("pt");
+                    attr2.Value = m_lsTrial[i].m_lsStimulus[j].m_strPType;
+                    xmlChild3.SetAttributeNode(attr2);
+
+                    xmlChild2.AppendChild(xmlChild3);
+                }
+                xmlNode.AppendChild(xmlChild2);
+            }
+
+            for (int i = 0; i < m_lsResponse.Count; i++)
+            {
+                // add trials
+                XmlElement xmlChild2 = doc.CreateElement("res");
+                XmlAttribute attr2 = doc.CreateAttribute("idx");
+                attr2.Value = i.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                attr2 = doc.CreateAttribute("score");
+                attr2.Value = m_lsResponse[i].m_intScore.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                attr2 = doc.CreateAttribute("rt");
+                attr2.Value = m_lsResponse[i].m_fRTSec.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                attr2 = doc.CreateAttribute("replay");
+                attr2.Value = m_lsResponse[i].m_intReplayBtnCtr.ToString();
+                xmlChild2.SetAttributeNode(attr2);
+
+                for (var j = 0; j < m_lsResponse[i].m_lsSelectedStimulusIdx.Count; j++)
+                {
+                    XmlElement xmlChild3 = doc.CreateElement("stim");
+                    xmlChild3.InnerText = m_lsResponse[i].m_lsSelectedStimulusIdx[j].ToString();
+                    xmlChild2.AppendChild(xmlChild3);
+                }
+                xmlNode.AppendChild(xmlChild2);
+            }
+
+            doc.DocumentElement.AppendChild(xmlNode);
+
+            //doc.PreserveWhitespace = true;
+            //doc.Save(strXmlFile);
+            try
+            {
+                // Write to file.txt.new
+                // Move file.txt to file.txt.old
+                // Move file.txt.new to file.txt
+                // Delete file.txt.old
+                //doc.PreserveWhitespace = true;
+
+                Debug.Log("CUserTherapy-SaveTrials- save XmlDocument");
+                
+                string strXmlFile = System.IO.Path.Combine(Application.persistentDataPath + @"/ListenIn/Therapy/all/",  "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblock_" + intBlockIdx + ".xml");
+                doc.Save(strXmlFile);                
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+                Debug.Log("CUserTherapy-SaveTrials-" + ex.Message);
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine("The process failed: {0}", e.ToString());
+                //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+                Debug.Log("CUserTherapy-SaveTrials-" + e.ToString());
+            }
+        }
+        catch (System.Exception ex)
+        {
+            ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            Debug.Log("CUserTherapy-SaveTrials-" + ex.Message);
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    // SaveTrials_old
+    //----------------------------------------------------------------------------------------------------
+    private void SaveTrials_old()
     {
         try
         {            

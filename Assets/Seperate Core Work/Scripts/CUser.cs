@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Collections;
 
+using UnityEngine;
 
 //namespace Assets.Seperate_Core_Work.Scripts.TherapyItemRecSys
 //{
@@ -81,7 +82,8 @@ class CUser
         loadUserProfile();
         Console.WriteLine("m_strUserId = " + m_strUserId + " noise level = " + m_intCurNoiseLevel + " corpus complexity = " + m_dCorpusTotalComplexity);
 
-        loadTherapyBlocks();
+        //loadTherapyBlocks();
+        loadTherapyBlocks_Csv();
         loadChallengeItemFeatures_History();
         //loadChallengeItemFeatures_HistoryComplexity();
         //loadChallengeItem_HistoryComplexity();
@@ -462,6 +464,119 @@ class CUser
     }
 
     //----------------------------------------------------------------------------------------------------
+    // loadTherapyBlocks_Csv (csv)
+    //----------------------------------------------------------------------------------------------------
+    private void loadTherapyBlocks_Csv()
+    {
+        m_lsTherapyBlock.Clear();
+
+        // check if file exists
+        //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_therapyblocks.xml";
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_therapyblocks.csv");       
+        if (!System.IO.File.Exists(strCsvFile))
+            return;
+
+        string strWholeFile = System.IO.File.ReadAllText(strCsvFile);
+
+        // split into lines
+        strWholeFile = strWholeFile.Replace('\n', '\r');
+        string[] lines = strWholeFile.Split(new char[] { '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+        // see how many rows & columns there are
+        int intNumRows = lines.Length;
+        //int intNumCols = lines[0].Split(',').Length;
+
+        int i = 0;
+        while (i < intNumRows)
+        {
+            //Console.WriteLine (lines [i]);
+            CUser_TherapyBlock block = new CUser_TherapyBlock();
+                        
+            string[] line_r = lines[i].Split(',');
+            int intNumCols = line_r.Length;
+
+            // first col = idx
+            //for (int j = 1; j < intNumCols - 1; j++)
+            {
+                //Console.WriteLine(line_r[j]);
+
+                //strRow = strRow + m_lsTherapyBlock[i].m_dtStartTime.ToString("yyyy-MM-dd HH:mm:ss") + ",";
+                string strYear = "";
+                string strMonth = "";
+                string strDay = "";
+                string strHour = "";
+                string strMinute = "";
+                string strSecond = "";
+
+                if (line_r[1] != "") strYear = line_r[1];
+                if (line_r[2] != "") strMonth = line_r[2];
+                if (line_r[3] != "") strDay = line_r[3];
+                if (line_r[4] != "") strHour = line_r[4];
+                if (line_r[5] != "") strMinute = line_r[5];
+                if (line_r[6] != "") strSecond = line_r[6];
+                //Debug.Log(strYear + "-" + strMonth + "-" + strDay + " " + strHour + ":" + strMinute + ":" + strSecond);
+                block.m_dtStartTime = Convert.ToDateTime(strYear + "-" + strMonth + "-" + strDay + " " + strHour + ":" + strMinute + ":" + strSecond);
+
+                if (line_r[7] != "") strYear = line_r[7];
+                if (line_r[8] != "") strMonth = line_r[8];
+                if (line_r[9] != "") strDay = line_r[9];
+                if (line_r[10] != "") strHour = line_r[10];
+                if (line_r[11] != "") strMinute = line_r[11];
+                if (line_r[12] != "") strSecond = line_r[12];
+                block.m_dtEndTime = Convert.ToDateTime(strYear + "-" + strMonth + "-" + strDay + " " + strHour + ":" + strMinute + ":" + strSecond);
+
+
+                if (line_r[13] != "") block.m_intRoundIdx = Convert.ToInt32(line_r[13]);
+                if (line_r[14] != "") block.m_intLinguisticType = Convert.ToInt32(line_r[14]);
+                if (line_r[15] != "") block.m_intNoiseLevel = Convert.ToInt32(line_r[15]);
+                if (line_r[16] != "") block.m_intBlockType = Convert.ToInt32(line_r[16]);
+
+                int j = 17;
+                for (int k = 0; k < CConstants.g_intItemNumPerBlock; k++)
+                {
+                    int intStartIdx = j + (k * 5);
+                    if (line_r[intStartIdx + 0] != "") block.m_lsChallengeItemFeaturesIdx.Add(Convert.ToInt32(line_r[intStartIdx+0]));
+                    if (line_r[intStartIdx + 1] != "") block.m_lsIsDiversity.Add(Convert.ToInt32(line_r[intStartIdx + 1]));
+                    if (line_r[intStartIdx + 2] != "") block.m_lsResponseAccuracy.Add(Convert.ToInt32(line_r[intStartIdx + 2]));
+                    if (line_r[intStartIdx + 3] != "") block.m_lsResponseRtSec.Add(Convert.ToDouble(line_r[intStartIdx + 3]));
+                    if (line_r[intStartIdx + 4] != "") block.m_lsChallengeItemFeatures_Complexity.Add(Convert.ToDouble(line_r[intStartIdx + 4]));
+                }
+                    
+                j = j + (CConstants.g_intItemNumPerBlock * 5);
+                if (line_r[j] != "") block.m_dAccuracyRate = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dBlockComplexity = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dUserAbility_Accumulated = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dUserAbility_ThisBlockAvg = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dTrainingStep = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dNextBlock_DiversityThresholdUpper = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dNextBlock_DiversityThresholdLower = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dMean_Frequency = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dStdDeviation_Frequency = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dMean_Concreteness = Convert.ToDouble(line_r[j]);          
+                j++;
+                if (line_r[j] != "") block.m_dStdDeviation_Concreteness = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dMean_DistractorNum = Convert.ToDouble(line_r[j]);
+                j++;
+                if (line_r[j] != "") block.m_dStdDeviation_DistractorNum = Convert.ToDouble(line_r[j]);            
+            }
+            m_lsTherapyBlock.Add(block);
+
+            i++; // next line
+        }    // end while
+
+    }
+
+    //----------------------------------------------------------------------------------------------------
     // loadChallengeItemFeatures_History (xml)
     //----------------------------------------------------------------------------------------------------
     private void loadChallengeItemFeatures_History()
@@ -635,7 +750,7 @@ class CUser
     }
 
     //----------------------------------------------------------------------------------------------------
-    // loadLexicalItem_HistoryComplexity (xml)
+    // loadLexicalItem_HistoryComplexity (csv)
     //----------------------------------------------------------------------------------------------------
     private void loadLexicalItem_HistoryComplexity()
     {
@@ -861,6 +976,18 @@ class CUser
             {
                 if ((m_lsNoiseBlockIdx.Count % CConstants.g_intNoiseBlockNumPerWindow) == 0)
                 {
+                    // check list if there is any non-exist idx due to auto recovery, delete the non-exist idx 
+                    while (m_lsNoiseBlockIdx.Count > 0)
+                    {
+                        if (m_lsNoiseBlockIdx[m_lsNoiseBlockIdx.Count - 1] >= m_lsTherapyBlock.Count)
+                        {
+                            Debug.Log("getCurBlockNoiseLevel(): Remove " + m_lsNoiseBlockIdx[m_lsNoiseBlockIdx.Count - 1]);
+                            m_lsNoiseBlockIdx.RemoveAt(m_lsNoiseBlockIdx.Count - 1);
+                        }
+                        else
+                            break;
+                    }
+
                     //List<CUser_TherapyBlock> lsTherapyBlockNoise = new List<CUser_TherapyBlock>();
                     //lsTherapyBlockNoise = m_lsTherapyBlock.FindAll(a => a.m_intNoiseLevel > 0);
                     double dTotal = 0;
@@ -963,7 +1090,7 @@ class CUser
     // updateHistory
     //----------------------------------------------------------------------------------------------------
     public void updateHistory(DateTime dtStartTime, List<int> lsLexicalItemIdx,
-                                    List<int> lsChallengeItemFeaturesIdx, List<int> lsIsDiversity, List<int> lsResponse, int intDiversityNum,
+                                    List<int> lsChallengeItemFeaturesIdx, List<int> lsIsDiversity, List<int> lsResponse, List<float> lsResponseRtSec, int intDiversityNum,
                                     double dMean_Frequency, double dMean_Concreteness, double dMean_DistractorNum,
                                     double dStdDeviation_Frequency, double dStdDeviation_Concreteness, double dStdDeviation_DistractorNum
                                     )
@@ -1018,6 +1145,7 @@ class CUser
             therapyBlock.m_lsChallengeItemFeaturesIdx.Add(lsChallengeItemFeaturesIdx[i]);
             therapyBlock.m_lsIsDiversity.Add(lsIsDiversity[i]);
             therapyBlock.m_lsResponseAccuracy.Add(lsResponse[i]);
+            therapyBlock.m_lsResponseRtSec.Add(Math.Round(lsResponseRtSec[i], 4));
             intTotalAccuracy += lsResponse[i];
 
             // calculate complexity
@@ -1324,7 +1452,8 @@ class CUser
 
         // save to xml
         saveUserProfileToXml();
-        saveTherapyBlocksToXml();
+        //saveTherapyBlocksToXml();
+        saveTherapyBlocksToCsv();
         saveChallengeItemFeaturesHistoryToXml();
         //saveChallengeItemFeatures_HistoryComplexity_Csv();
         //saveChallengeItem_HistoryComplexity_Csv();
@@ -1717,6 +1846,106 @@ class CUser
         {
             //Console.WriteLine("The process failed: {0}", e.ToString());
             ListenIn.Logger.Instance.Log("CUser-saveTherapyBlocksToXml-" + e.ToString(), ListenIn.LoggerMessageType.Info);
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    // saveTherapyBlocksToCsv
+    //----------------------------------------------------------------------------------------------------
+    public void saveTherapyBlocksToCsv()
+    {
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_therapyblocks.csv");
+
+        string strCsvFileNew = strCsvFile + ".new";
+        string strCsvFileOld = strCsvFile + ".old";
+
+        using (System.IO.StreamWriter sw = new System.IO.StreamWriter(strCsvFileNew))
+        {        
+            for (int i = 0; i < m_lsTherapyBlock.Count; i++)
+            {
+                string strRow = "";
+                strRow = strRow + i + ",";
+
+                //strRow = strRow + "2016,12,02,11,12,33" + ",";                
+                strRow = strRow + m_lsTherapyBlock[i].m_dtStartTime.Year + "," + m_lsTherapyBlock[i].m_dtStartTime.Month.ToString("00") + "," + 
+                            m_lsTherapyBlock[i].m_dtStartTime.Day.ToString("00") + "," + m_lsTherapyBlock[i].m_dtStartTime.Hour.ToString("00") + "," + 
+                            m_lsTherapyBlock[i].m_dtStartTime.Minute.ToString("00") + "," + m_lsTherapyBlock[i].m_dtStartTime.Second.ToString("00") + ",";
+
+                strRow = strRow + m_lsTherapyBlock[i].m_dtEndTime.Year + "," + m_lsTherapyBlock[i].m_dtEndTime.Month.ToString("00") + "," + 
+                            m_lsTherapyBlock[i].m_dtEndTime.Day.ToString("00") + "," + m_lsTherapyBlock[i].m_dtEndTime.Hour.ToString("00") + "," + 
+                            m_lsTherapyBlock[i].m_dtEndTime.Minute.ToString("00") + "," + m_lsTherapyBlock[i].m_dtEndTime.Second.ToString("00") + ",";
+                //   strRow = strRow + m_lsTherapyBlock[i].m_dtStartTime.ToString("yyyy-MM-dd-HH:mm:ss") + ",";
+                //    strRow = strRow + m_lsTherapyBlock[i].m_dtStartTime.ToString("yyyy-MM-dd") + ",";
+                //    strRow = strRow + m_lsTherapyBlock[i].m_dtStartTime.ToString("HH:mm:ss") + ",";
+                //strRow = strRow + m_lsTherapyBlock[i].m_dtEndTime.ToString("yyyy-MM-dd HH:mm:ss") + ",";
+                //    strRow = strRow + m_lsTherapyBlock[i].m_dtEndTime.ToString("yyyy-MM-dd") + ",";
+                //    strRow = strRow + m_lsTherapyBlock[i].m_dtEndTime.ToString("HH:mm:ss") + ",";
+                //strRow = strRow + "\"" + m_lsTherapyBlock[i].m_dtStartTime.ToString("yyyy-MM-dd HH:mm:ss") + "\"" + ",";
+                //strRow = strRow + "\"" + m_lsTherapyBlock[i].m_dtEndTime.ToString("yyyy-MM-dd HH:mm:ss") + "\"" + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_intRoundIdx.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_intLinguisticType.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_intNoiseLevel.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_intBlockType.ToString() + ",";
+
+                for (var j = 0; j < m_lsTherapyBlock[i].m_lsChallengeItemFeaturesIdx.Count; j++)
+                {
+                    strRow = strRow + m_lsTherapyBlock[i].m_lsChallengeItemFeaturesIdx[j].ToString() + ",";
+                    strRow = strRow + m_lsTherapyBlock[i].m_lsIsDiversity[j].ToString() + ",";
+                    strRow = strRow + m_lsTherapyBlock[i].m_lsResponseAccuracy[j].ToString() + ",";
+                    strRow = strRow + m_lsTherapyBlock[i].m_lsResponseRtSec[j].ToString() + ",";
+                    strRow = strRow + m_lsTherapyBlock[i].m_lsChallengeItemFeatures_Complexity[j].ToString() + ",";
+                }
+
+                strRow = strRow + m_lsTherapyBlock[i].m_dAccuracyRate.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dBlockComplexity.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dUserAbility_Accumulated.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dUserAbility_ThisBlockAvg.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dTrainingStep.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dNextBlock_DiversityThresholdUpper.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dNextBlock_DiversityThresholdLower.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dMean_Frequency.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dStdDeviation_Frequency.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dMean_Concreteness.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dStdDeviation_Concreteness.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dMean_DistractorNum.ToString() + ",";
+                strRow = strRow + m_lsTherapyBlock[i].m_dStdDeviation_DistractorNum.ToString() + ",";
+
+                // write to file
+                sw.WriteLine(strRow);               
+            }
+        }
+
+        try
+        {
+            // Write to file.txt.new
+            // Move file.txt to file.txt.old
+            // Move file.txt.new to file.txt
+            // Delete file.txt.old            
+
+            if (System.IO.File.Exists(strCsvFile))
+                System.IO.File.Move(strCsvFile, strCsvFileOld);
+            System.IO.File.Move(strCsvFileNew, strCsvFile);
+
+            string strCsvFile_ = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_therapyblocks_.csv");
+            System.IO.File.Copy(strCsvFile, strCsvFile_, true);
+
+            // backup
+            string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
+            string xml_backup = m_strAppPath + @"/ListenIn/Therapy/" + "user_" + m_strUserId + "_therapyblocks-" + strDate + ".csv";
+            if (System.IO.File.Exists(strCsvFileOld))
+            {
+                System.IO.File.Copy(strCsvFileOld, xml_backup, true);
+                System.IO.File.Delete(strCsvFileOld);
+            }
+        }
+        catch (System.Xml.XmlException ex)
+        {
+            ListenIn.Logger.Instance.Log("CUser-saveTherapyBlocksToCsv-" + ex.Message, ListenIn.LoggerMessageType.Info);
+        }
+        catch (Exception e)
+        {
+            //Console.WriteLine("The process failed: {0}", e.ToString());
+            ListenIn.Logger.Instance.Log("CUser-saveTherapyBlocksToCsv-" + e.ToString(), ListenIn.LoggerMessageType.Info);
         }
     }
 

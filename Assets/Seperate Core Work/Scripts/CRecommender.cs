@@ -1050,7 +1050,7 @@ class CRecommender
     //----------------------------------------------------------------------------------------------------
     // updateUserHistory & save to xml files
     //----------------------------------------------------------------------------------------------------
-    public void updateUserHistory(List<int> lsResponse)
+    public void updateUserHistory(List<int> lsResponse, List<float> lsResponseRtSec)
     {
         if (m_lsCurrentBlock_ChallengeItemFeaturesIdx.Count == 0)
             return;
@@ -1081,7 +1081,7 @@ class CRecommender
         double dStdDeviation_Concreteness = Math.Round(calculateStdDeviation(lsConcreteness), 4);
         double dStdDeviation_DistractorNum = Math.Round(calculateStdDeviation(lsDistractorNum), 4);
 
-        m_user.updateHistory(m_dtCurrentBlock_StartTime, lsLexicalItemIdx, m_lsCurrentBlock_ChallengeItemFeaturesIdx, m_lsCurrentBlock_IsDiversity, lsResponse, m_intCurrentBlock_DiversityNum,
+        m_user.updateHistory(m_dtCurrentBlock_StartTime, lsLexicalItemIdx, m_lsCurrentBlock_ChallengeItemFeaturesIdx, m_lsCurrentBlock_IsDiversity, lsResponse, lsResponseRtSec, m_intCurrentBlock_DiversityNum,
                                 lsFrequency.Average(), lsConcreteness.Average(), lsDistractorNum.Average(),
                                 dStdDeviation_Frequency, dStdDeviation_Concreteness, dStdDeviation_DistractorNum);
 

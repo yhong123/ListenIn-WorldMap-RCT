@@ -26,6 +26,7 @@ class CUser_TherapyBlock
     public List<double> m_lsChallengeItemFeatures_Complexity = new List<double>();
     public List<int> m_lsIsDiversity = new List<int>();
     public List<int> m_lsResponseAccuracy = new List<int>();
+    public List<double> m_lsResponseRtSec = new List<double>();  // 2016-12-06
     public double m_dAccuracyRate = 0;
     public double m_dBlockComplexity = 0;
     public double m_dUserAbility_Accumulated = 0;  // accumulated user ability

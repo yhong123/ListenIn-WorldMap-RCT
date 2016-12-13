@@ -259,7 +259,7 @@ public class PatientDB : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         else if (DatabaseXML.Instance.DatasetId == 2)
             strDataset = "Dataset A-2016-11";
         else if (DatabaseXML.Instance.DatasetId == 3)
-            strDataset = "Dataset B-2016-11";
+            strDataset = "Dataset B-2016-12";
         count_options = 0;
         foreach (Dropdown.OptionData patient_ds_switch_string in patient_dataset_switch.options)
         {
