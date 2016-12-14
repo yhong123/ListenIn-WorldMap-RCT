@@ -451,8 +451,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 {
                     Debug.LogError(ex.Message);
                 }
-                yield return null;
-                
+                                
                 ////Reset the original xml_file to ampty state
                 //try
                 //{
@@ -599,7 +598,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             }
            
         }
-        //Clear current
+        //Clear current content
         xml_forms_queue.Clear();
         Debug.Log("DatabaseXML: end of send xml query (splitted version)");
     }
