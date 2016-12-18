@@ -85,11 +85,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //create the document
         database_xml = new XmlDocument();
 
-        //check if directory doesn't exit
+        //check if directory doesn't exit -- FIRST INITIALIZATION
         if (!Directory.Exists(Application.persistentDataPath + @"/ListenIn/"))
         {
             //if it doesn't, create it
-            Debug.Log("Creating directories");
+            Debug.Log("DatabaseXML: first initialization - creating directories");
             Directory.CreateDirectory(xml_location);
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Database/backup");
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/");
@@ -119,7 +119,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             FileInfo info = new FileInfo(xml_file);
             if (info.Length == 0)
             {
-                Debug.Log("********** database.xml is EMPTY!!!");
+                Debug.Log("DatabaseXML: ********** database.xml is EMPTY!!!");
 
                 if(!LoadCurrentUserFromPlayerPrefs())
                     return;                                
@@ -259,7 +259,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     protected override void Awake()
     {
         //Getting the xml template from the resources
-        Debug.Log("Loading standard databasexml file...");
+        Debug.Log("Loading databasexml current file...");
         database_xml_file = Resources.Load("database") as TextAsset;
     }
 
@@ -863,16 +863,26 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     }
 
     //return lenght
-    public void SetNewPatient(string patient_id, string dataset_text = "")
+    public IEnumerator SetNewPatient(string patient_id, string dataset_text = "")
     {
+        //Checking if current patient has still data to be loaded
+        if (QueriesOnTheXML() != 0)
+        {
+            yield return StartCoroutine(ReadDatabaseXML());
+        }
+
+        Debug.Log("DatabaseXML: switching patient routine");
         //Save current game data
-        StartCoroutine(update_patient_progress(PatientId));
+        yield return StartCoroutine(update_patient_progress(PatientId));
 
         //get the patient element
         XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
         patient_element.SetAttribute("id", patient_id);
         //set new patient
         PatientId = int.Parse(patient_id);
+
+        //save doc 
+        database_xml.Save(xml_file);
 
         // set dataset id
         if (dataset_text.Equals("Dataset A-2016-08"))
@@ -884,7 +894,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         else if (dataset_text.Equals("Dataset B-2016-11"))
             DatasetId = 3;
         patient_element.SetAttribute("datasetid", DatasetId.ToString());
-        
+
         //save doc 
         database_xml.Save(xml_file);
 
@@ -893,7 +903,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         PlayerPrefs.SetString("dataset_id", DatasetId.ToString());
         //PlayerPrefs.Save();
 
-        StartCoroutine(get_patient_progress());
+        yield return StartCoroutine(get_patient_progress());
 
         //CUserTherapy.Instance.LoadUserProfile();
         CUserTherapy.Instance.LoadDataset_UserProfile();
@@ -955,7 +965,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     {
         //get the patient element
         XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
-        Debug.Log(patient_element.GetAttribute("id"));
+        Debug.Log("DatabaseXML: current patient " + patient_element.GetAttribute("id"));
         return patient_element.GetAttribute("id");
     }
 
@@ -1002,13 +1012,15 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         GameStateSaver.Instance.ResetListenIn();
 
-        MadLevel.ReloadCurrent();
+        //Andrea: No need to reload current user as this will happen during setup screen
+        //MadLevel.ReloadCurrent();
 
     }
 
     IEnumerator update_patient_progress(int currId)
     {
-        //create the the form to send it 
+        //create the the form to send it
+        Debug.Log("DatabaseXML: sending game state to the server...");
         WWWForm patient_progress_update_form = new WWWForm();
         patient_progress_update_form.AddField("patient", currId);
 
@@ -1022,6 +1034,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         WWW sql_patient_progress_update = new WWW(insert_patient_progress, patient_progress_update_form);
         yield return sql_patient_progress_update;
     }
+
 #region TimerUpdates
     public enum TimerType { Idle, WorldMap, Therapy, Pinball }
 

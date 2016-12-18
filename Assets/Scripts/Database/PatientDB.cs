@@ -180,7 +180,7 @@ public class PatientDB : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         patient_switch_message.GetComponent<Animator>().SetBool("Start", true);
         //set the new patient in the xml
         Debug.Log("Patient Dataset: " + patient_dataset_switch.captionText.text);
-        DatabaseXML.Instance.SetNewPatient(patient_switch.captionText.text, patient_dataset_switch.captionText.text);
+        StartCoroutine(DatabaseXML.Instance.SetNewPatient(patient_switch.captionText.text, patient_dataset_switch.captionText.text));
     }
 
     public void AddNewPatientUI()

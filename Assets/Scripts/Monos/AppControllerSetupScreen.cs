@@ -22,13 +22,17 @@ public class AppControllerSetupScreen : MonoBehaviour {
     [SerializeField]
     private Button m_playButton;
 
+    [SerializeField]
+    private GameObject switchPatient;
+
     private bool lockEmailSending = false;
     // Use this for initialization
     void Start () {
         m_playButton.interactable = false;
         m_playButton.gameObject.SetActive(false);
-        StartCoroutine(SetupInitialization());
-	}
+        switchPatient.gameObject.SetActive(false);
+        StartCoroutine(SetupInitialization());        
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -141,11 +145,32 @@ public class AppControllerSetupScreen : MonoBehaviour {
         m_playButton.interactable = true;
         m_playButton.gameObject.SetActive(true);
 
+        switchPatient.gameObject.SetActive(true);
+
     }
 
     private void CleaningUpOlderLogs()
     {
         //Andrea: need to implement this function
+        string path = ListenIn.Logger.Instance.GetLogPath;
+        if (!string.IsNullOrEmpty(path))
+        {
+            var files = new DirectoryInfo(path).GetFiles().OrderBy(f => f.LastWriteTime).Select(x => x.FullName).ToList();
+            if (files != null)
+            {
+                int currCount = files.Count();
+                if (currCount > 50)
+                {
+                    Debug.Log("SetupScreen: removing oldest logs");
+                    //Removing oldest one, leaving 50 total logs
+                    for (int i = 0; i < currCount - 50; i++)
+                    {
+                        File.Delete(files[i]);
+                    }
+                }
+            }
+            
+        }
     }
 
     public void GoToWorldMap()
@@ -169,48 +194,59 @@ public class AppControllerSetupScreen : MonoBehaviour {
             string path = ListenIn.Logger.Instance.GetLogPath;
             if (!string.IsNullOrEmpty(path))
             {
-                var topFile = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault().FullName;
-                string fromEmail = "listeninlog@gmail.com";
-                string subject = "Patient id " + DatabaseXML.Instance.PatientId.ToString();
+                var topFiles = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).Take(3).Select(x => x.FullName).ToList();
 
-                using (MailMessage mailMessage = new MailMessage())
+                if (topFiles != null)
                 {
-                    mailMessage.From = new MailAddress(fromEmail);
-                    mailMessage.To.Add("listeninlog@gmail.com");
-                    mailMessage.Subject = subject;// subject;
-                    mailMessage.Body = "Log created from application version " + Application.version;
-                    Attachment attachment;
-                    attachment = new System.Net.Mail.Attachment(topFile);
-                    mailMessage.Attachments.Add(attachment);
-                                       
+                    string fromEmail = "listeninlog@gmail.com";
+                    string subject = "Patient id " + DatabaseXML.Instance.PatientId.ToString();
+
+                    using (MailMessage mailMessage = new MailMessage())
                     {
-                        SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
-                        smtpServer.Port = 587;
-                        smtpServer.Credentials = new NetworkCredential("listeninlog@gmail.com", "listeninlogger");
-                        smtpServer.EnableSsl = true;
-                        ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-                        {
-                            return true;
-                        };
+                        mailMessage.From = new MailAddress(fromEmail);
+                        mailMessage.To.Add("listeninlog@gmail.com");
+                        mailMessage.Subject = subject;// subject;
+                        mailMessage.Body = "Log created from application version " + Application.version;
 
-                        yield return new WaitForEndOfFrame();
+                        for (int i = 0; i < topFiles.Count; i++)
+                        {
+                            //Adding attachments
+                            Attachment attachment;
+                            attachment = new System.Net.Mail.Attachment(topFiles[i]);
+                            mailMessage.Attachments.Add(attachment);
+                        }                       
 
-                        try
                         {
-                            smtpServer.Send(mailMessage);
-                            m_feedbackTextScreen.text = "Thanks for feedback!";
-                        }
-                        catch (System.Exception ex)
-                        {
-                            m_feedbackTextScreen.text = "Log not uploaded...";
-                            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
-                        }
-                        finally
-                        {
-                            lockEmailSending = false;
+                            SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+                            smtpServer.Port = 587;
+                            smtpServer.Credentials = new NetworkCredential("listeninlog@gmail.com", "listeninlogger");
+                            smtpServer.EnableSsl = true;
+                            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+                            {
+                                return true;
+                            };
+
+                            yield return new WaitForEndOfFrame();
+
+                            try
+                            {
+                                smtpServer.Send(mailMessage);
+                                m_feedbackTextScreen.text = "Thanks for feedback!";
+                            }
+                            catch (System.Exception ex)
+                            {
+                                m_feedbackTextScreen.text = "Log not uploaded...";
+                                ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+                            }
+                            finally
+                            {
+                                lockEmailSending = false;
+                            }
                         }
                     }
                 }
+
+                
                 
                 yield return new WaitForEndOfFrame();
                 
