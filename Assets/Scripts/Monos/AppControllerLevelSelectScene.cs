@@ -5,8 +5,9 @@ public class AppControllerLevelSelectScene : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-        GameController.Instance.Init();
-	}
+        GameController.Instance.ChangeState(GameController.States.Idle);
+        //GameController.Instance.Init();
+    }
 	
 	// Update is called once per frame
 	void Update () {

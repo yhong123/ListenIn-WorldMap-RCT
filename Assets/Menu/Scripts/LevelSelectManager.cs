@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LevelSelectManager : MonoBehaviour {
 
@@ -30,5 +31,7 @@ public class LevelSelectManager : MonoBehaviour {
         OptionTint.SetActive(false);
         PauseMenu.SetActive(false);
     }
+
+
 
 }
