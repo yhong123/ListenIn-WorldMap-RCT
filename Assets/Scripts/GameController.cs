@@ -82,7 +82,7 @@ public class GameController {
                 DatabaseXML.Instance.InitializeDatabase();
                 UploadManager.Instance.Initialize();
                 CUserTherapy.Instance.LoadDataset_UserProfile();
-                StateJigsawPuzzle.Instance.OnGameLoadedInitialization();
+                StateJigsawPuzzle.Instance.OnGameLoadedInitialization();                               
 
                 IMadLevelProfileBackend backend = MadLevelProfile.backend;
                 string profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
@@ -103,8 +103,10 @@ public class GameController {
         else
         {
             ChangeState(States.Idle);
-        }		
-	}
+        }
+        
+    }
+
     public void Update()
     {
         try
@@ -120,5 +122,7 @@ public class GameController {
         }
 
     }
+
+    
 
 }

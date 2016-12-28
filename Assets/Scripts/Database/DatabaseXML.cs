@@ -146,7 +146,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         PatientId = int.Parse(GetPatient());
         DatasetId = int.Parse(GetDatasetId());
 
-        Debug.Log("*** PatientId = " + PatientId + ", DatasetId = " + DatasetId);
+        Debug.Log("*** PatientId = " + PatientId + ", DatasetId = " + DatasetId);               
 
         //Andrea: 30/10 this call has been changed to being done by upload manager
         //if internet read the xml
@@ -1167,7 +1167,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         yield return sql_patient_progress_update;
     }
 
-#region TimerUpdates
+    
+
+    #region TimerUpdates
     public enum TimerType { Idle, WorldMap, Therapy, Pinball }
 
 
