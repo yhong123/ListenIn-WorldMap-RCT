@@ -169,7 +169,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string strDatasetId = PlayerPrefs.GetString("dataset_id", "");
         if (strPatientId.Equals("") || strDatasetId.Equals(""))
         {
-            Debug.Log("No previous patient or dataset ID saved in PlayerPrefs");
+            Debug.Log("DatabaseXML: no previous patient or dataset ID saved in PlayerPrefs");
             return false;
         }
 
