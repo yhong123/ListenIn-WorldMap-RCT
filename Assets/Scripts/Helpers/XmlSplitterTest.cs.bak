@@ -11,7 +11,7 @@ public class XmlSplitterTest : MonoBehaviour {
     public void TestSplitting()
     {
         //Yean: can you insert data in the databasexml as well please? (Andrea)
-        /*for (int i = 0; i < DatabaseXML.MaximumQueriesPerFile; i++)
+        for (int i = 0; i < DatabaseXML.MaximumQueriesPerFile; i++)
         {
             Dictionary<string, string> dailyTherapy = new Dictionary<string, string>();
 
@@ -22,62 +22,6 @@ public class XmlSplitterTest : MonoBehaviour {
             dailyTherapy.Add("date", "aaaaaaaa");
 
             DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_update);
-        }*/
-
-        {
-            // insert therapy daily
-            Dictionary<string, string> dailyTherapy = new Dictionary<string, string>();
-            int patient = DatabaseXML.Instance.PatientId;
-            System.DateTime now = System.DateTime.Now;
-            dailyTherapy.Add("patient", patient.ToString());
-            dailyTherapy.Add("level_start", "10");
-            dailyTherapy.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-            DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_daily_insert);
-            dailyTherapy.Clear();
-
-            // insert therapy session
-            dailyTherapy.Add("patient", patient.ToString());
-            dailyTherapy.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-            DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_insert);
-
-            // insert 30 therapy blocks, each block has 15 challenges
-            for (int k = 0; k < 30; k++)
-            {
-                Dictionary<string, string> block_start = new Dictionary<string, string>();
-                block_start.Add("patient", patient.ToString());
-                block_start.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-                DatabaseXML.Instance.WriteDatabaseXML(block_start, DatabaseXML.Instance.therapy_block_insert);
-
-                for (int m = 0; m < 15; m++)
-                {
-                    // insert therapy challenges            
-                    Dictionary<string, string> challenge_insert = new Dictionary<string, string>();
-
-                    challenge_insert.Add("patient", DatabaseXML.Instance.PatientId.ToString());
-                    challenge_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                    challenge_insert.Add("cif_idx", "1407");
-
-                    string strStimOriIdx = "";
-                    string strStimType = "";
-                    for (int i = 0; i < 6; i++)
-                    {
-                        strStimOriIdx = strStimOriIdx + "1,";
-                        strStimType = strStimType + "p1,";
-                    }
-                    challenge_insert.Add("stim_ori_idx", strStimOriIdx);
-                    challenge_insert.Add("stim_type", strStimType);
-
-                    string strSelectedStimIdx = "";
-                    for (int i = 0; i < 3; i++)
-                        strSelectedStimIdx = strSelectedStimIdx + "0,";
-                    challenge_insert.Add("selected_stim_idx", strSelectedStimIdx);
-
-                    challenge_insert.Add("rt_sec", "2.1765");
-                    challenge_insert.Add("accuracy", "1");
-
-                    DatabaseXML.Instance.WriteDatabaseXML(challenge_insert, DatabaseXML.Instance.therapy_challenge_insert);
-                }
-            }
         }
 
         // simulated user profile & therapy data
@@ -393,98 +337,5 @@ public class XmlSplitterTest : MonoBehaviour {
         }
         
     }
-	//----------------------------------------------------------------------------------------------------
-    // SaveTrials_Csv
-    //----------------------------------------------------------------------------------------------------
-    public void SaveTrials_Csv()
-    {
-        string strCsvFile = System.IO.Path.Combine(Application.persistentDataPath, "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all.csv");
-
-        /*string strCsvFileNew = strCsvFile + ".new";
-        string strCsvFileOld = strCsvFile + ".old";
-
-        if (System.IO.File.Exists(strCsvFile))
-            System.IO.File.Copy(strCsvFile, strCsvFileOld, true);*/
-
-        using (System.IO.StreamWriter sw = new System.IO.StreamWriter(strCsvFile))
-        {
-            for (int k = 0; k < 2000; k++)
-            {
-                string strRow = "";
-
-                int intBlockIdx = k;
-                strRow = strRow + intBlockIdx + ",";
-
-                for (int i = 0; i < 15 /*m_lsTrial.Count*/; i++)
-                {
-                    // trial idx
-                    strRow = strRow + i + ",";
-                    strRow = strRow /*+ m_lsTrial[i].m_intChallengeItemIdx.ToString()*/ + "1123,";
-                    strRow = strRow /*+ m_lsTrial[i].m_intChallengeItemFeaturesIdx.ToString()*/ + "1123,";
-
-                    for (var j = 0; j < 6 /*m_lsTrial[i].m_lsStimulus.Count*/; j++)
-                    {
-                        strRow = strRow + j + ",";
-                        strRow = strRow /*+ m_lsTrial[i].m_lsStimulus[j].intOriginalIdx.ToString()*/ + "0,";
-                        strRow = strRow /*+ m_lsTrial[i].m_lsStimulus[j].m_strType*/ + "target,";
-                        strRow = strRow /*+ m_lsTrial[i].m_lsStimulus[j].m_strPType*/ + "P2,";
-                    }
-                }
-
-                for (int i = 0; i < 6 /*m_lsResponse.Count*/; i++)
-                {
-                    strRow = strRow + i + ",";
-                    strRow = strRow /*+ m_lsResponse[i].m_intScore.ToString()*/ + "1,";
-                    strRow = strRow /*+ m_lsResponse[i].m_fRTSec.ToString()*/ + "0.6667,";
-                    strRow = strRow /*+ m_lsResponse[i].m_intReplayBtnCtr.ToString()*/ + "0,";
-
-                    for (var j = 0; j < 6 /*m_lsResponse[i].m_lsSelectedStimulusIdx.Count*/; j++)
-                    {
-                        strRow = strRow /*+ m_lsResponse[i].m_lsSelectedStimulusIdx[j].ToString()*/ + "0,";
-                    }
-                }
-
-                // write to file
-                sw.WriteLine(strRow);
-            }
-        }
-
-        /*try
-        {
-            // Write to file.txt.new
-            // Move file.txt to file.txt.old
-            // Move file.txt.new to file.txt
-            // Delete file.txt.old
-            //doc.PreserveWhitespace = true;
-
-            //if (System.IO.File.Exists(strCsvFile))
-            //    System.IO.File.Move(strCsvFile, strCsvFileOld);
-            //System.IO.File.Move(strCsvFileNew, strCsvFile);
-
-            string strCsvFile_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all_.csv");
-            System.IO.File.Copy(strCsvFile, strCsvFile_, true);
-
-            // backup
-            string strDate = System.DateTime.Now.ToString("yyyy-MM-dd");
-            string csv_backup = Application.persistentDataPath + @"/ListenIn/Therapy/" + "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all-" + strDate + ".csv";
-            if (System.IO.File.Exists(strCsvFileOld))
-            {
-                System.IO.File.Copy(strCsvFileOld, csv_backup, true);
-                System.IO.File.Delete(strCsvFileOld);
-            }
-        }
-        catch (System.Xml.XmlException ex)
-        {
-            //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
-            Debug.Log("CUserTherapy-SaveTrials_Csv-" + ex.Message);
-        }
-        catch (Exception e)
-        {
-            //Console.WriteLine("The process failed: {0}", e.ToString());
-            //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + e.ToString(), ListenIn.LoggerMessageType.Info);
-            Debug.Log("CUserTherapy-SaveTrials_Csv-" + e.ToString());
-        }*/
-    }
-
 
 }

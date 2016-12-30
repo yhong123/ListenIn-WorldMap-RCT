@@ -61,6 +61,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_dev/patient_datasetid_select.php";
     public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert.php";
 	public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert_2.php";
+	public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_detail_insert.php";
 
     //timers
     float therapy_time = 0;
