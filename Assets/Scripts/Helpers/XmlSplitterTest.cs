@@ -10,6 +10,7 @@ public class XmlSplitterTest : MonoBehaviour {
     
     public void TestSplitting()
     {
+        //Yean: can you insert data in the databasexml as well please? (Andrea)
         for (int i = 0; i < DatabaseXML.MaximumQueriesPerFile; i++)
         {
             Dictionary<string, string> dailyTherapy = new Dictionary<string, string>();

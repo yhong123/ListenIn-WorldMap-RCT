@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Xml;
 using System.IO;
@@ -16,6 +17,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public int PatientId = 1;
     public int DatasetId = 0;
     public TextAsset database_xml_file = null;
+
+    public delegate void SwitchingPatient(string message);
+    public SwitchingPatient OnSwitchedPatient;
 
     //create an XML file to keep and read it
     //Andrea: making it a local variable
@@ -997,6 +1001,10 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //return lenght
     public IEnumerator SetNewPatient(string patient_id, string dataset_text = "")
     {
+        if (OnSwitchedPatient != null)
+        {
+            OnSwitchedPatient("Switching patient... please wait");
+        }
         //Checking if current patient has still data to be loaded
         if (QueriesOnTheXML() != 0)
         {
@@ -1039,6 +1047,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         //CUserTherapy.Instance.LoadUserProfile();
         CUserTherapy.Instance.LoadDataset_UserProfile();
+
+        if (OnSwitchedPatient != null)
+        {
+            OnSwitchedPatient(String.Format("Switched to patient {0}.", PatientId.ToString()));
+        }
 
         /*
         //get the patient element

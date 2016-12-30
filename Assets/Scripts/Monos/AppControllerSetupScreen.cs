@@ -9,7 +9,8 @@ using System.Net.Mail;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
-public class AppControllerSetupScreen : MonoBehaviour {
+public class AppControllerSetupScreen : MonoBehaviour
+{
 
     [SerializeField]
     private Text m_textScreen;
@@ -27,17 +28,24 @@ public class AppControllerSetupScreen : MonoBehaviour {
 
     private bool lockEmailSending = false;
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         m_playButton.interactable = false;
         m_playButton.gameObject.SetActive(false);
         switchPatient.gameObject.SetActive(false);
-        StartCoroutine(SetupInitialization());        
+        StartCoroutine(SetupInitialization());
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    private void UpdateFeedbackLog(string message)
+    {
+        if (m_feedbackTextScreen != null)
+            m_feedbackTextScreen.text = message;
+    }
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     private IEnumerator SetupInitialization()
     {
@@ -52,12 +60,13 @@ public class AppControllerSetupScreen : MonoBehaviour {
         ListenIn.Logger.Instance.SetLoggerLogToExternal(true);
         ListenIn.Logger.Instance.Log("Log started", ListenIn.LoggerMessageType.Info);
         yield return new WaitForEndOfFrame();
-        
+
         percentage = 3;
         m_textScreen.text = string.Format(m_textStringFormat, percentage);
         try
         {
             DatabaseXML.Instance.InitializeDatabase();
+            DatabaseXML.Instance.OnSwitchedPatient += UpdateFeedbackLog;
         }
         catch (System.Exception ex)
         {
@@ -169,13 +178,14 @@ public class AppControllerSetupScreen : MonoBehaviour {
                     }
                 }
             }
-            
+
         }
     }
 
     public void GoToWorldMap()
     {
         //Debug.Log("PressedButton");
+        DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
         MadLevel.LoadLevelByName("World Map Select");
     }
 
@@ -214,7 +224,7 @@ public class AppControllerSetupScreen : MonoBehaviour {
                             Attachment attachment;
                             attachment = new System.Net.Mail.Attachment(topFiles[i]);
                             mailMessage.Attachments.Add(attachment);
-                        }                       
+                        }
 
                         {
                             SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
@@ -246,10 +256,10 @@ public class AppControllerSetupScreen : MonoBehaviour {
                     }
                 }
 
-                
-                
+
+
                 yield return new WaitForEndOfFrame();
-                
+
             }
             else
             {
@@ -270,7 +280,7 @@ public class AppControllerSetupScreen : MonoBehaviour {
         {
             m_feedbackTextScreen.text = "Wait...";
         }
-        
-        
+
+
     }
 }

@@ -14,12 +14,24 @@ MonoBehaviour:
   creationDate: 1452093221
   _active: 1
   levels:
+  - _sceneObject: {fileID: 102900000, guid: 9fed064c7334a25459ed8d3c61c8c9d1, type: 3}
+    _scenePath: Assets/Scenes/SetupScreen.unity
+    _sceneName: SetupScreen
+    scene: 
+    parent: {fileID: 11400000}
+    order: 0
+    name: Setup Screen
+    type: 0
+    arguments: 
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4a2124bcbd035094782266239c77f519, type: 3}
     _scenePath: Assets/Scenes/LevelSelectScene.unity
     _sceneName: LevelSelectScene
     scene: 
     parent: {fileID: 11400000}
-    order: 0
+    order: 10
     name: World Map Select
     type: 0
     arguments: 
@@ -31,7 +43,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 10
+    order: 20
     name: Great Canyon
     type: 1
     arguments: Great Canyon
@@ -43,7 +55,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 20
+    order: 30
     name: Dodgeball
     type: 1
     arguments: Dodgeball
@@ -55,7 +67,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 30
+    order: 40
     name: Halloween
     type: 1
     arguments: Halloween
@@ -67,7 +79,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 40
+    order: 50
     name: Artic View
     type: 1
     arguments: Artic View
@@ -79,7 +91,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 50
+    order: 60
     name: Space Travel
     type: 1
     arguments: Space Travel
@@ -91,7 +103,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 60
+    order: 70
     name: London
     type: 1
     arguments: London
@@ -103,7 +115,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 70
+    order: 80
     name: Fearless Ski
     type: 1
     arguments: Fearless Ski
@@ -115,7 +127,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 80
+    order: 90
     name: Great Coliseum
     type: 1
     arguments: Great Coliseum
@@ -127,7 +139,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 90
+    order: 100
     name: Moscow
     type: 1
     arguments: Moscow
@@ -139,7 +151,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 100
+    order: 110
     name: Tibet
     type: 1
     arguments: Tibet
@@ -151,7 +163,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 110
+    order: 120
     name: Fuji Mountain
     type: 1
     arguments: Fuji Mountain
@@ -163,7 +175,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 120
+    order: 130
     name: Wonder Land
     type: 1
     arguments: Wonder Land
@@ -175,7 +187,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 130
+    order: 140
     name: Egypt
     type: 1
     arguments: Egypt
@@ -187,7 +199,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 140
+    order: 150
     name: Cheeky Jungle
     type: 1
     arguments: Cheeky Jungle
@@ -199,7 +211,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 150
+    order: 160
     name: Underworld
     type: 1
     arguments: Underworld
@@ -211,7 +223,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 160
+    order: 170
     name: Cookie Monster
     type: 1
     arguments: Cookie Monster
@@ -223,7 +235,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 170
+    order: 180
     name: Fun Fair
     type: 1
     arguments: Fun Fair
@@ -235,7 +247,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 180
+    order: 190
     name: Far Islands
     type: 1
     arguments: Far Islands
@@ -247,7 +259,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 190
+    order: 200
     name: Candy Madness
     type: 1
     arguments: Candy Madness
@@ -259,7 +271,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 200
+    order: 210
     name: Tricky Lights
     type: 1
     arguments: Tricky Lights
@@ -271,7 +283,7 @@ MonoBehaviour:
     _sceneName: Demo
     scene: 
     parent: {fileID: 11400000}
-    order: 210
+    order: 220
     name: Demo Level
     type: 0
     arguments: 
@@ -283,20 +295,8 @@ MonoBehaviour:
     _sceneName: GameIntro
     scene: 
     parent: {fileID: 11400000}
-    order: 220
-    name: Game Intro
-    type: 0
-    arguments: 
-    groupId: 0
-    extensionGUID: 
-    lockedByDefault: 1
-  - _sceneObject: {fileID: 102900000, guid: 9fed064c7334a25459ed8d3c61c8c9d1, type: 3}
-    _scenePath: Assets/Scenes/SetupScreen.unity
-    _sceneName: SetupScreen
-    scene: 
-    parent: {fileID: 11400000}
     order: 230
-    name: Setup Screen
+    name: Game Intro
     type: 0
     arguments: 
     groupId: 0
