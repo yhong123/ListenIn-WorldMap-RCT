@@ -47,10 +47,12 @@ public class UploadManager : Singleton<UploadManager> {
             Debug.LogError("UploadManager: " + ex.Message);
         }
 
+        _currDeltaTime = Time.time - startUploadTime;
+        Debug.Log("UploadManager: " + _currDeltaTime + " upload history 2");
+        yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
+
         if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
         {
-            yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
-
             _currDeltaTime = Time.time - startUploadTime;
             //Yean: this is where we do the safe upload
             if (DatabaseXML.Instance.CheckUploadSafeCondition())
@@ -58,12 +60,14 @@ public class UploadManager : Singleton<UploadManager> {
                 //Here put all the methods with Ienumrator in order to wait them to be completed
                 Debug.Log("UploadManager: " + _currDeltaTime + " sending data out to the DB.");
                 yield return StartCoroutine(DatabaseXML.Instance.ReadDatabaseXML());
+                
             }
             else
             {
                 Debug.Log("UploadManager: " + _currDeltaTime + " battery level is critical for exporting.");
             }
         }
+
         _currDeltaTime = Time.time - startUploadTime;
         Debug.Log("UploadManager: " + _currDeltaTime + " collecting memory");
 

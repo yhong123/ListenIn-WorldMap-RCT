@@ -428,9 +428,14 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public IEnumerator ReadDatabaseXML()
     {
         //current number of files
-        int number_of_xml = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
+        string pathToXMLs = Path.Combine(Application.persistentDataPath, "ListenIn/Database");
+        string pathToBkups = Path.Combine(Application.persistentDataPath, "ListenIn/Database/backup");
+        int number_of_xml = new DirectoryInfo(pathToXMLs).GetFiles().Length;// Directory.GetFiles(pathToXMLs, "*.xml ", SearchOption.TopDirectoryOnly).Length;
         //current time
-        string current_date = System.DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss");
+        Debug.Log("ReadDatabaseXML: # xml found = " + number_of_xml);
+        var current_date = System.DateTime.Now;// .ToString("yyyy.MM.dd-HH.mm.ss");
+        string current_date_string = String.Concat(DateTime.Today.ToString("yyyy-MM-dd"), "-", current_date.Hour.ToString(), "_", current_date.Minute.ToString(),"_", current_date.Second.ToString());
+        //Debug.Log("ReadDatabaseXML: current date string = " + current_date_string);
         //cycle for the xmls
 
         for (int i = 1; i <= number_of_xml; i++)
@@ -451,14 +456,16 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 //create folder-backup
                 //Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Database/backup/" + current_date + "/");
                 //Create the backup with index plus date
-                string xml_backup = Application.persistentDataPath + @"/ListenIn/Database/backup/" + i + "__" + current_date + ".xml";
+                string bkupfilename = String.Concat(i.ToString(), "__", current_date_string, ".xml");
+                string xml_backup = Path.Combine(pathToBkups, bkupfilename); //Application.persistentDataPath + @"/ListenIn/Database/backup/" + filename;
+                Debug.Log("XML_BACKUP: " + xml_backup);
                 //current file
-                xml_file = Application.persistentDataPath + @"/ListenIn/Database/" + i + ".xml";
+                xml_file = Path.Combine(pathToXMLs,String.Format("{0}.xml", i.ToString()));//Application.persistentDataPath + @"/ListenIn/Database/" + i.ToString() + ".xml";
                 try
                 {
                     File.Copy(xml_file, xml_backup);
                     Debug.Log("ReadDatabaseXML: copied current version of DatabaseXML");
-                    File.Delete(Application.persistentDataPath + @"/ListenIn/Database/" + i + ".xml");
+                    File.Delete(xml_file);
                 }
                 catch (System.Exception ex)
                 {
