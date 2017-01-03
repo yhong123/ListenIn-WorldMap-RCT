@@ -23,7 +23,17 @@ public class XmlSplitterTest : MonoBehaviour {
 
             DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_update);
         }*/
+        simulate_populateDatabaseXML();
 
+        // simulated user profile & therapy data
+        simulate_saveUserProfileToXml();
+        simulate_saveTherapyBlocksToCsv();
+        simulate_saveChallengeItemFeaturesHistoryToXml();
+
+    }
+
+    private void simulate_populateDatabaseXML()
+    {
         {
             // insert therapy daily
             Dictionary<string, string> dailyTherapy = new Dictionary<string, string>();
@@ -92,12 +102,6 @@ public class XmlSplitterTest : MonoBehaviour {
 
             }
         }
-
-        // simulated user profile & therapy data
-        simulate_saveUserProfileToXml();
-        simulate_saveTherapyBlocksToCsv();
-        simulate_saveChallengeItemFeaturesHistoryToXml();
-
     }
 
     //----------------------------------------------------------------------------------------------------
