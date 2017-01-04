@@ -46,7 +46,7 @@ public class XmlSplitterTest : MonoBehaviour {
             dailyTherapy.Clear();
 
             // insert therapy session
-            now = now.AddSeconds(5);
+            //now = now.AddSeconds(5);
             dailyTherapy.Add("patient", patient.ToString());
             dailyTherapy.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
             DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_insert);
@@ -54,7 +54,7 @@ public class XmlSplitterTest : MonoBehaviour {
             // insert 30 therapy blocks, each block has 15 challenges
             for (int k = 0; k < 30; k++)
             {
-                now = now.AddSeconds(5);
+                //now = now.AddSeconds(5);
                 Dictionary<string, string> block_start = new Dictionary<string, string>();
                 block_start.Add("patient", patient.ToString());
                 block_start.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -62,7 +62,7 @@ public class XmlSplitterTest : MonoBehaviour {
 
                 for (int m = 0; m < 15; m++)
                 {
-                    now = now.AddSeconds(1);
+                    //now = now.AddSeconds(1);
                     // insert therapy challenges            
                     Dictionary<string, string> challenge_insert = new Dictionary<string, string>();
 
@@ -92,7 +92,7 @@ public class XmlSplitterTest : MonoBehaviour {
                 }
 
                 //Exiting pinball
-                now = now.AddSeconds(10);
+                //now = now.AddSeconds(10);
                 Dictionary<string, string> time_insert = new Dictionary<string, string>();
                 time_insert.Add("patientid", DatabaseXML.Instance.PatientId.ToString());
                 time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));

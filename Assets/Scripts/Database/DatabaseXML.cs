@@ -4,6 +4,7 @@ using System.Collections;
 using System.Xml;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using MadLevelManager;
@@ -18,7 +19,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public int DatasetId = 0;
     public TextAsset database_xml_file = null;
 
-    public delegate void SwitchingPatient(string message);
+    public delegate void SwitchingPatient(string message, bool canContinue);
     public SwitchingPatient OnSwitchedPatient;
 
     //create an XML file to keep and read it
@@ -112,31 +113,54 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             database_xml.Save(Application.persistentDataPath + @"/ListenIn/Database/1.xml");
         }
 
-        int currSplittedFiles = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
-        Debug.Log("Numbers of total databaseXML files: " + currSplittedFiles);
+        string pathToXMLs = Path.Combine(Application.persistentDataPath, "ListenIn/Database");
+        //number of .xml
+        int currSplittedFiles = new DirectoryInfo(pathToXMLs).GetFiles().Length;
+        //int currSplittedFiles = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
+        ListenIn.Logger.Instance.Log(String.Format("Numbers of total databaseXML files: {0}", currSplittedFiles), ListenIn.LoggerMessageType.Info);
         if (currSplittedFiles == 0)
         {
             Debug.Log("First ListenIn Initialization");
             currSplittedFiles++;
         }
         //create the file route by the current xml file
-        xml_file = Application.persistentDataPath + @"/ListenIn/Database/" + currSplittedFiles + ".xml";
+        xml_file = Path.Combine(pathToXMLs, String.Format("{0}.xml", currSplittedFiles.ToString()));// Application.persistentDataPath + @"/ListenIn/Database/" + currSplittedFiles + ".xml";
 
         // check database.xml file length - if the file corrupted with length 0kb, then recreate the using setting from PlayerPrefs
         {
-            FileInfo info = new FileInfo(xml_file);
-            if (info.Length == 0)
+            try
             {
-                Debug.Log("DatabaseXML: ********** database.xml is EMPTY!!!");
+                FileInfo info = new FileInfo(xml_file);
+                if (info.Length == 0)
+                {
+                    Debug.Log("DatabaseXML: ********** database.xml is EMPTY!!!");
 
-                if(!LoadCurrentUserFromPlayerPrefs())
-                    return;                                
+                    if (!LoadCurrentUserFromPlayerPrefs())
+                        return;
+                }
+                else
+                {
+                    //load the xml from the path
+                    database_xml.LoadXml(File.ReadAllText(xml_file));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                //load the xml from the path
-                database_xml.LoadXml(File.ReadAllText(xml_file));
+                //Found a number of splitted xmls which is not consistent (i.e. like 3 xmls but not 1,2,3 as standard)
+                //Erasing files
+                List<string> files = new DirectoryInfo(pathToXMLs).GetFiles().Select(X => X.FullName).ToList();
+                if (files != null && files.Count != 0)
+                {
+                    for (int i = 0; i < files.Count; i++)
+                    {
+                        File.Delete(files[i]);
+                    }
+                }
+                //Recreating original condition from Playerprefs
+                xml_file = Application.persistentDataPath + @"/ListenIn/Database/1.xml";
+                LoadCurrentUserFromPlayerPrefs();
             }
+
         }
 
         //load the xml from the path
@@ -410,7 +434,10 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public bool CheckUploadSafeCondition()
     {
         //current number of files
-        int number_of_xml = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
+        string pathToXMLs = Path.Combine(Application.persistentDataPath, "ListenIn/Database");
+        //number of .xml
+        int number_of_xml = new DirectoryInfo(pathToXMLs).GetFiles().Length;
+        //int number_of_xml = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
         if (number_of_xml > 10 && UploadManager.Instance.currentBatteryLevel > 30.0f)
         {
             return true;
@@ -421,6 +448,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             return true;
         }
 
+        ListenIn.Logger.Instance.Log("LOAD BATTERY", ListenIn.LoggerMessageType.Warning);
         return false;
     }
 
@@ -432,7 +460,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string pathToBkups = Path.Combine(Application.persistentDataPath, "ListenIn/Database/backup");
         int number_of_xml = new DirectoryInfo(pathToXMLs).GetFiles().Length;// Directory.GetFiles(pathToXMLs, "*.xml ", SearchOption.TopDirectoryOnly).Length;
         //current time
-        Debug.Log("ReadDatabaseXML: # xml found = " + number_of_xml);
+        ListenIn.Logger.Instance.Log(String.Format("ReadDatabaseXML: # xml found = {0}" ,number_of_xml), ListenIn.LoggerMessageType.Info);
         var current_date = System.DateTime.Now;// .ToString("yyyy.MM.dd-HH.mm.ss");
         string current_date_string = String.Concat(DateTime.Today.ToString("yyyy-MM-dd"), "-", current_date.Hour.ToString(), "_", current_date.Minute.ToString(),"_", current_date.Second.ToString());
         //Debug.Log("ReadDatabaseXML: current date string = " + current_date_string);
@@ -448,7 +476,6 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             }
             else
             {
-
                 //Resetting forms enqueu
                 //queue to insert the forms
                 //Andrea: doing this in send query to database
@@ -524,7 +551,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
                 //Send backup queries to DB
                 //go through the queue and insert them in order
-                Debug.Log("DatabaseXML: starting communication with DB file #" + i);
+                ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: starting communication with DB file #{0}", i), ListenIn.LoggerMessageType.Info);
                 yield return StartCoroutine(send_xml_query());            
 
             }
@@ -884,13 +911,14 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //if more than 5 queries, create a new doc
         if (QueriesOnTheXML() > DatabaseXML.MaximumQueriesPerFile)
         {
+            string pathToXMLs = Path.Combine(Application.persistentDataPath, "ListenIn/Database");
             //number of .xml
-            int number_of_xml = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
-            Debug.Log("DatabaseXML: Created new database xml file with index: " + number_of_xml);
+            int number_of_xml = new DirectoryInfo(pathToXMLs).GetFiles().Length;// Directory.GetFiles(pathToXMLs, "*.xml ", SearchOption.TopDirectoryOnly).Length;
+            ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: Created new database xml file with index: {0}", number_of_xml), ListenIn.LoggerMessageType.Info);
             //save
             //database_xml.Save(Application.persistentDataPath + @"/ListenIn/Database/" + number_of_xml + ".xml");
             //file name for the next one / if only 1 file then = number of files + 1
-            xml_file = Application.persistentDataPath + @"/ListenIn/Database/" + (number_of_xml + 1) + ".xml";
+            xml_file = Path.Combine(pathToXMLs, String.Format("{0}.xml",(number_of_xml + 1).ToString()));
             //create the document
             database_xml = new XmlDocument();
             //create an xml from the local sample one
@@ -1011,7 +1039,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     {
         if (OnSwitchedPatient != null)
         {
-            OnSwitchedPatient("Switching patient... please wait");
+            OnSwitchedPatient("Switching patient... please wait", false);
         }
         //Checking if current patient has still data to be loaded
         if (QueriesOnTheXML() != 0)
@@ -1058,7 +1086,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         if (OnSwitchedPatient != null)
         {
-            OnSwitchedPatient(String.Format("Switched to patient {0}.", PatientId.ToString()));
+            OnSwitchedPatient(String.Format("Switched to patient {0}.", PatientId.ToString()),true);
         }
 
         /*

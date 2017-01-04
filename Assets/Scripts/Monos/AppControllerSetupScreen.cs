@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Collections.Generic;
 
 public class AppControllerSetupScreen : MonoBehaviour
 {
@@ -36,10 +37,11 @@ public class AppControllerSetupScreen : MonoBehaviour
         StartCoroutine(SetupInitialization());
     }
 
-    private void UpdateFeedbackLog(string message)
+    private void UpdateFeedbackLog(string message, bool canContinue)
     {
         if (m_feedbackTextScreen != null)
             m_feedbackTextScreen.text = message;
+        m_playButton.interactable = canContinue;
     }
     // Update is called once per frame
     void Update()
@@ -164,7 +166,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         string path = ListenIn.Logger.Instance.GetLogPath;
         if (!string.IsNullOrEmpty(path))
         {
-            var files = new DirectoryInfo(path).GetFiles().OrderBy(f => f.LastWriteTime).Select(x => x.FullName).ToList();
+            List<string> files = new DirectoryInfo(path).GetFiles().OrderBy(f => f.LastWriteTime).Select(x => x.FullName).ToList();
             if (files != null)
             {
                 int currCount = files.Count();
