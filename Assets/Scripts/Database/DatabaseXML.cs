@@ -1067,7 +1067,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             DatasetId = 1;
         else if (dataset_text.Equals("Dataset A-2016-11"))
             DatasetId = 2;
-        else if (dataset_text.Equals("Dataset B-2016-11"))
+        else if (dataset_text.Equals("Dataset B-2016-12"))
             DatasetId = 3;
         patient_element.SetAttribute("datasetid", DatasetId.ToString());
 
