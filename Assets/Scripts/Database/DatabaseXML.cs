@@ -70,7 +70,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     float therapy_worldmap_time = 0;
     bool count_therapy_time = false;
     bool count_pinball_time = false;
-    bool count_worlmap_time = false;
+    bool count_worldmap_time = false;
     bool isMenuPaused = false;
     public bool SetIsMenu { get { return isMenuPaused; } set { isMenuPaused = value; } }
     private int reasonToExit = 0;
@@ -341,7 +341,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             therapy_pinball_time += Time.deltaTime;
         }
 
-        if (count_worlmap_time)
+        if (count_worldmap_time)
         {
             therapy_worldmap_time += Time.deltaTime;
         }
@@ -355,7 +355,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         //TODO: unify the menu system
         #region TimeoutGame
-        if (isMenuPaused && idle_time > 60 * 10)
+        if (isMenuPaused && idle_time > 60 * 5)
         {
             Debug.Log("Forcing ListenIn to quit");
             reasonToExit = 99;
@@ -367,10 +367,15 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
         }
-        else if (!isMenuPaused && idle_time > 60 * 5)
+        else if (!isMenuPaused && idle_time > 60 * 2)
         {
-            if (!OpenPauseMenu())
+            if (OpenPauseMenu())
             {
+                ResetTimer(TimerType.Idle);
+            }
+            else
+            {
+                Debug.Log("Forcing menu did not happen: could be uploading screen or a transition");
                 ResetTimer(TimerType.Idle);
             }
         }
@@ -904,7 +909,6 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         }
     }
 
-
     //function which inserts queries to the xml file
     public void WriteDatabaseXML(Dictionary<string,string> www_form, string url_www_form)
     {
@@ -1224,9 +1228,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
     void OnGUI()
     {
-        // to hide timer 
-        /*float offset = 30;
-        //YEAN: these are the timers 
+         //to hide timer
+        float offset = 30;
+        //YEAN: these are the timers
         string iddle_time_string = ((int)idle_time).ToString();
         iddle_time_string = GUI.TextField(new Rect(10, 10 + offset, 200, 20), "idle time: " + iddle_time_string + "(s)", 25);
 
@@ -1238,11 +1242,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         string block_game_string = ((int)therapy_pinball_time).ToString();
         block_game_string = GUI.TextField(new Rect(10, 70 + offset, 200, 20), "Pinball time: " + block_game_string + "(s)", 25);
-        
-#if UNITY_ANDROID
-        GUI.TextField(new Rect(10, 100, 200, 20), "BATTERY: " + UploadManager.Instance.GetBatteryLevel() + "%");
-#endif
-*/
+
+//#if UNITY_ANDROID
+//        GUI.TextField(new Rect(10, 100, 200, 20), "BATTERY: " + UploadManager.Instance.GetBatteryLevel() + "%");
+//#endif
+
     }
 
     public void SetTimerState(TimerType tymerType, bool state)
@@ -1253,7 +1257,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 count_iddle_time = state;
                 break;
             case TimerType.WorldMap:
-                count_worlmap_time = state;
+                count_worldmap_time = state;
                 break;
             case TimerType.Therapy:
                 count_therapy_time = state;
