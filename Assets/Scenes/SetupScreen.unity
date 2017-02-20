@@ -176,6 +176,10 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11455966, guid: fb25dd20af02b914a841285673c5c3cb, type: 2}
+      propertyPath: m_Options.m_Options.Array.data[3].m_Text
+      value: Dataset B-2016-12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fb25dd20af02b914a841285673c5c3cb, type: 2}
   m_IsPrefabParent: 0
