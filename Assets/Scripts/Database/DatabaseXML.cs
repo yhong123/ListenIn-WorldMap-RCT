@@ -357,7 +357,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         #region TimeoutGame
         if (isMenuPaused && idle_time > 60 * 10)
         {
-            Debug.Log("Forcing Quitting ListenIn");
+            Debug.Log("Forcing ListenIn to quit");
             reasonToExit = 99;
             Application.Quit();
 

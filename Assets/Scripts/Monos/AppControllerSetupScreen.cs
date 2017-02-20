@@ -52,6 +52,7 @@ public class AppControllerSetupScreen : MonoBehaviour
     private IEnumerator SetupInitialization()
     {
         Application.targetFrameRate = 60;
+        //Screen.sleepTimeout = SleepTimeout.NeverSleep;
         int percentage = 1;
         m_textScreen.text = string.Format(m_textStringFormat, percentage);
 
