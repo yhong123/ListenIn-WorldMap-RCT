@@ -81,6 +81,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //insert daily threapy once
     bool therapy_daily_inserted = false;
 
+    float m_fTherapy_block_idle_time_sec = 0;   // to keep track the idle time within a therapy block
+
     public void InitializeDatabase()
     {
 
@@ -333,7 +335,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //block timer
         if (count_therapy_time)
         {
-            therapy_time += Time.deltaTime;
+            therapy_time += Time.deltaTime;            
         }
 
         if (count_pinball_time)
@@ -352,6 +354,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             idle_time += Time.unscaledDeltaTime;
             //Debug.Log((int)therapy_block_time);
         }
+
+        if (isMenuPaused)
+            m_fTherapy_block_idle_time_sec += Time.unscaledDeltaTime;
 
         //TODO: unify the menu system
         #region TimeoutGame
@@ -653,6 +658,16 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //Clear current content
         xml_forms_queue.Clear();
         Debug.Log("DatabaseXML: end of send xml query (splitted version)");
+    }
+
+    public void resetTherapy_block_idle_time_sec()
+    {
+        m_fTherapy_block_idle_time_sec = 0;
+    }
+
+    public float getTherapy_block_idle_time_sec()
+    {
+        return m_fTherapy_block_idle_time_sec;
     }
 
     public void uploadHistoryXml()
@@ -1242,10 +1257,10 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         string block_game_string = ((int)therapy_pinball_time).ToString();
         block_game_string = GUI.TextField(new Rect(10, 70 + offset, 200, 20), "Pinball time: " + block_game_string + "(s)", 25);
-
-//#if UNITY_ANDROID
-//        GUI.TextField(new Rect(10, 100, 200, 20), "BATTERY: " + UploadManager.Instance.GetBatteryLevel() + "%");
-//#endif
+                
+        //#if UNITY_ANDROID
+        //        GUI.TextField(new Rect(10, 100, 200, 20), "BATTERY: " + UploadManager.Instance.GetBatteryLevel() + "%");
+        //#endif
 
     }
 
@@ -1260,7 +1275,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 count_worldmap_time = state;
                 break;
             case TimerType.Therapy:
-                count_therapy_time = state;
+                count_therapy_time = state;                
                 break;
             case TimerType.Pinball:
                 count_pinball_time = state;
@@ -1278,10 +1293,10 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 idle_time = 0.0f;
                 break;
             case TimerType.WorldMap:
-                therapy_time = 0.0f;
-                break;
-            case TimerType.Therapy:
                 therapy_worldmap_time = 0.0f;
+                break;
+            case TimerType.Therapy:                
+                therapy_time = 0.0f;
                 break;
             case TimerType.Pinball:
                 therapy_pinball_time = 0.0f;

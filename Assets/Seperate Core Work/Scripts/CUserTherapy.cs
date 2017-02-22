@@ -123,6 +123,7 @@ class CUserTherapy : Singleton<CUserTherapy>
 
         m_lsTrial.Clear();
         m_lsResponse.Clear();
+        DatabaseXML.Instance.resetTherapy_block_idle_time_sec();
 
         List<int> lsIdx = m_recommender.getNextBlock();
 
@@ -606,7 +607,8 @@ class CUserTherapy : Singleton<CUserTherapy>
                         lsResponse.Add(m_lsResponse[i].m_intScore);
                         lsResponseRtSec.Add(m_lsResponse[i].m_fRTSec);
                     }
-                    m_recommender.updateUserHistory(lsResponse, lsResponseRtSec);
+                    double dTherapyBlockIdleTime = DatabaseXML.Instance.getTherapy_block_idle_time_sec();
+                    m_recommender.updateUserHistory(lsResponse, lsResponseRtSec, dTherapyBlockIdleTime);
                     //m_recommender.updateUserHistory(m_lsTrial, m_lsResponse);
 
                     // save total therapy time to db

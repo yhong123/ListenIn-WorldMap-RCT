@@ -1092,7 +1092,7 @@ class CUser
     public void updateHistory(DateTime dtStartTime, List<int> lsLexicalItemIdx,
                                     List<int> lsChallengeItemFeaturesIdx, List<int> lsIsDiversity, List<int> lsResponse, List<float> lsResponseRtSec, int intDiversityNum,
                                     double dMean_Frequency, double dMean_Concreteness, double dMean_DistractorNum,
-                                    double dStdDeviation_Frequency, double dStdDeviation_Concreteness, double dStdDeviation_DistractorNum
+                                    double dStdDeviation_Frequency, double dStdDeviation_Concreteness, double dStdDeviation_DistractorNum, double dTherapyBlockIdleTimeSec
                                     )
     {
         if ((lsChallengeItemFeaturesIdx.Count == 0) || (lsResponse.Count == 0))
@@ -1124,7 +1124,7 @@ class CUser
         //therapyBlock.m_strStartTime = strStartTime;
         //therapyBlock.m_strEndTime = System.DateTime.Now.ToString();
         therapyBlock.m_dtStartTime = dtStartTime;
-        therapyBlock.m_dtEndTime = System.DateTime.Now;
+        therapyBlock.m_dtEndTime = System.DateTime.Now.AddSeconds(dTherapyBlockIdleTimeSec * -1);   // minus idle time
         therapyBlock.m_intLinguisticType = m_lsChallengeItemFeatures[lsChallengeItemFeaturesIdx[0]].m_intLinguisticType;
         therapyBlock.m_intRoundIdx = m_intRoundIdx;
         //therapyBlock.m_dNoiseLevelComplexity = dNoiseLevel;
@@ -1405,8 +1405,8 @@ class CUser
         // update total therapy time
         //TimeSpan span = DateTime.Now - Convert.ToDateTime(therapyBlock.m_strStartTime);
         TimeSpan span = DateTime.Now - therapyBlock.m_dtStartTime;
-        m_dTotalTherapyTimeMin += Math.Round(span.TotalMinutes, 4);
-        m_dTodayTherapyTimeMin += Math.Round(span.TotalMinutes, 4);
+        m_dTotalTherapyTimeMin += Math.Round(span.TotalMinutes, 4) - Math.Round(dTherapyBlockIdleTimeSec/60, 4);
+        m_dTodayTherapyTimeMin += Math.Round(span.TotalMinutes, 4) - Math.Round(dTherapyBlockIdleTimeSec/60, 4);
 
         // update m_lsChallengeItemFeatures_History
         for (int i = 0; i < lsChallengeItemFeaturesIdx.Count; i++)
