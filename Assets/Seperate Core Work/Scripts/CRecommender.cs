@@ -1050,7 +1050,7 @@ class CRecommender
     //----------------------------------------------------------------------------------------------------
     // updateUserHistory & save to xml files
     //----------------------------------------------------------------------------------------------------
-    public void updateUserHistory(List<int> lsResponse, List<float> lsResponseRtSec, double dTherapyBlockIdleTimeSec)
+    public void updateUserHistory(List<int> lsResponse, List<float> lsResponseRtSec, double dTherapyBlockIdleTimeSec, double dTotalTherapyTimeMin)
     {
         if (m_lsCurrentBlock_ChallengeItemFeaturesIdx.Count == 0)
             return;
@@ -1083,7 +1083,7 @@ class CRecommender
 
         m_user.updateHistory(m_dtCurrentBlock_StartTime, lsLexicalItemIdx, m_lsCurrentBlock_ChallengeItemFeaturesIdx, m_lsCurrentBlock_IsDiversity, lsResponse, lsResponseRtSec, m_intCurrentBlock_DiversityNum,
                                 lsFrequency.Average(), lsConcreteness.Average(), lsDistractorNum.Average(),
-                                dStdDeviation_Frequency, dStdDeviation_Concreteness, dStdDeviation_DistractorNum, dTherapyBlockIdleTimeSec);
+                                dStdDeviation_Frequency, dStdDeviation_Concreteness, dStdDeviation_DistractorNum, dTherapyBlockIdleTimeSec, dTotalTherapyTimeMin);
 
     }
 

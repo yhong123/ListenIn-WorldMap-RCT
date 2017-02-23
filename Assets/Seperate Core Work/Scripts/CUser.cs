@@ -1092,7 +1092,8 @@ class CUser
     public void updateHistory(DateTime dtStartTime, List<int> lsLexicalItemIdx,
                                     List<int> lsChallengeItemFeaturesIdx, List<int> lsIsDiversity, List<int> lsResponse, List<float> lsResponseRtSec, int intDiversityNum,
                                     double dMean_Frequency, double dMean_Concreteness, double dMean_DistractorNum,
-                                    double dStdDeviation_Frequency, double dStdDeviation_Concreteness, double dStdDeviation_DistractorNum, double dTherapyBlockIdleTimeSec
+                                    double dStdDeviation_Frequency, double dStdDeviation_Concreteness, double dStdDeviation_DistractorNum, 
+                                    double dTherapyBlockIdleTimeSec, double dTotalTherapyTimeMin
                                     )
     {
         if ((lsChallengeItemFeaturesIdx.Count == 0) || (lsResponse.Count == 0))
@@ -1405,7 +1406,8 @@ class CUser
         // update total therapy time
         //TimeSpan span = DateTime.Now - Convert.ToDateTime(therapyBlock.m_strStartTime);
         TimeSpan span = DateTime.Now - therapyBlock.m_dtStartTime;
-        m_dTotalTherapyTimeMin += Math.Round(span.TotalMinutes, 4) - Math.Round(dTherapyBlockIdleTimeSec/60, 4);
+        //m_dTotalTherapyTimeMin += Math.Round(span.TotalMinutes, 4) - Math.Round(dTherapyBlockIdleTimeSec/60, 4);
+        m_dTotalTherapyTimeMin = dTotalTherapyTimeMin;
         m_dTodayTherapyTimeMin += Math.Round(span.TotalMinutes, 4) - Math.Round(dTherapyBlockIdleTimeSec/60, 4);
 
         // update m_lsChallengeItemFeatures_History

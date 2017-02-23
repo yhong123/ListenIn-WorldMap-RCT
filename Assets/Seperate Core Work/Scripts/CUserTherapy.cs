@@ -78,6 +78,7 @@ class CUserTherapy : Singleton<CUserTherapy>
         StartCoroutine("Coroutine_LoadDataset_UserProfile");
 
         // show total therapy time on main screen
+        DatabaseXML.Instance.setTotal_therapy_time_sec(Convert.ToSingle(getTotalTherapyTimeMin()*60));
         StateChallenge.Instance.SetTotalTherapyTime(getTotalTherapyTimeMin());
         StateChallenge.Instance.SetTodayTherapyTime(getTodayTherapyTimeMin());
     }
@@ -608,7 +609,8 @@ class CUserTherapy : Singleton<CUserTherapy>
                         lsResponseRtSec.Add(m_lsResponse[i].m_fRTSec);
                     }
                     double dTherapyBlockIdleTime = DatabaseXML.Instance.getTherapy_block_idle_time_sec();
-                    m_recommender.updateUserHistory(lsResponse, lsResponseRtSec, dTherapyBlockIdleTime);
+                    double dTotalTherapyTimeMin = Math.Round(DatabaseXML.Instance.getTotal_therapy_time_sec()/60, 4);
+                    m_recommender.updateUserHistory(lsResponse, lsResponseRtSec, dTherapyBlockIdleTime, dTotalTherapyTimeMin);
                     //m_recommender.updateUserHistory(m_lsTrial, m_lsResponse);
 
                     // save total therapy time to db

@@ -80,8 +80,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     bool count_iddle_time = false;
     //insert daily threapy once
     bool therapy_daily_inserted = false;
-
+    
     float m_fTherapy_block_idle_time_sec = 0;   // to keep track the idle time within a therapy block
+    float m_fTotal_therapy_time_sec = 0;   // to keep track the total therapy time
 
     public void InitializeDatabase()
     {
@@ -335,7 +336,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //block timer
         if (count_therapy_time)
         {
-            therapy_time += Time.deltaTime;            
+            therapy_time += Time.deltaTime;
+            m_fTotal_therapy_time_sec += Time.deltaTime;
         }
 
         if (count_pinball_time)
@@ -360,7 +362,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         //TODO: unify the menu system
         #region TimeoutGame
-        if (isMenuPaused && idle_time > 60 * 5)
+        if (isMenuPaused && idle_time > 60 * 1)
         {
             Debug.Log("Forcing ListenIn to quit");
             reasonToExit = 99;
@@ -372,7 +374,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
         }
-        else if (!isMenuPaused && idle_time > 60 * 2)
+        else if (!isMenuPaused && idle_time > 60 * 1)
         {
             if (OpenPauseMenu())
             {
@@ -668,6 +670,16 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public float getTherapy_block_idle_time_sec()
     {
         return m_fTherapy_block_idle_time_sec;
+    }
+
+    public void setTotal_therapy_time_sec(float fTotalTime)
+    {
+        m_fTotal_therapy_time_sec = fTotalTime;
+    }
+
+    public float getTotal_therapy_time_sec()
+    {
+        return m_fTotal_therapy_time_sec;
     }
 
     public void uploadHistoryXml()
@@ -1255,8 +1267,14 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string block_therapy_string = ((int)therapy_time).ToString();
         block_therapy_string = GUI.TextField(new Rect(10, 50 + offset, 200, 20), "Therapy time: " + block_therapy_string + "(s)", 25);
 
+        string total_therapy_string = ((int)m_fTotal_therapy_time_sec).ToString();
+        total_therapy_string = GUI.TextField(new Rect(10, 70 + offset, 200, 20), "Total therapy time: " + total_therapy_string + "(s)", 25);
+
+        string therapy_block_idle_string = ((int)m_fTherapy_block_idle_time_sec).ToString();
+        therapy_block_idle_string = GUI.TextField(new Rect(10, 90 + offset, 200, 20), "Therapy block idle: " + therapy_block_idle_string + "(s)", 25);
+
         string block_game_string = ((int)therapy_pinball_time).ToString();
-        block_game_string = GUI.TextField(new Rect(10, 70 + offset, 200, 20), "Pinball time: " + block_game_string + "(s)", 25);
+        block_game_string = GUI.TextField(new Rect(10, 110 + offset, 200, 20), "Pinball time: " + block_game_string + "(s)", 25);
                 
         //#if UNITY_ANDROID
         //        GUI.TextField(new Rect(10, 100, 200, 20), "BATTERY: " + UploadManager.Instance.GetBatteryLevel() + "%");
