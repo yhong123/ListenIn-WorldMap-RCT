@@ -9,7 +9,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: UCL_SoftV
+  companyName: UCL Neurotherapeutics Group
   productName: ListenIn
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -89,7 +89,7 @@ PlayerSettings:
     16:10: 1
     16:9: 0
     Others: 0
-  bundleIdentifier: com.UCL_SoftV.ListenIn
+  bundleIdentifier: com.UCL_NT.ListenIn
   bundleVersion: 1.0.0
   preloadedAssets: []
   metroEnableIndependentInputSource: 0
@@ -97,7 +97,7 @@ PlayerSettings:
   xboxOneDisableKinectGpuReservation: 0
   virtualRealitySupported: 0
   productGUID: dbf8d12728cbfde41b8a7a0a6b77f86a
-  AndroidBundleVersionCode: 11
+  AndroidBundleVersionCode: 3
   AndroidMinSdkVersion: 21
   AndroidPreferredInstallLocation: 0
   aotOptions: 
@@ -158,7 +158,7 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/AndreaCastegnaro/Desktop/listenInKeystore.keystore
+  AndroidKeystoreName: C:/Users/Listen-In-user1/Documents/my_projects/listen-in/software/listenInKeystore.keystore
   AndroidKeyaliasName: listenin
   AndroidTVCompatibility: 0
   AndroidIsGame: 1
@@ -173,9 +173,9 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 8c5eee1cc01055b4fa05622f7fb80966, type: 3}
-      m_Width: 0
-      m_Height: 0
+      m_Icon: {fileID: 2800000, guid: 01c8e533faa68fc448a11ab07a654f60, type: 3}
+      m_Width: 128
+      m_Height: 128
   - m_BuildTarget: Android
     m_Icons:
     - serializedVersion: 2

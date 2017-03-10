@@ -47,22 +47,22 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public string insert_patient_progress = "https://ageofalgo.com/LI/patient_game_update.php";
     public string select_patient_progress = "https://ageofalgo.com/LI/patient_game_select.php";
     */
-    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_insert.php";
-    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_update.php";
-    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_insert.php";
-    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_update.php";
-    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_insert.php";
-    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_update.php";
-    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_insert.php";
-    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_update.php";
-    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_select.php";
+    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_insert.php";
+    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_update.php";
+    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_insert.php";
+    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_update.php";
+    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_insert.php";
+    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_update.php";
+    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_insert.php";
+    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_update.php";
+    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_select.php";
 
-    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_time_insert.php";
-    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_dev/game_time_insert.php";
-    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_dev/patient_datasetid_select.php";
-    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert.php";
-	public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert_2.php";
-	public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_detail_insert.php";
+    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_time_insert.php";
+    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_rct/game_time_insert.php";
+    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_rct/patient_datasetid_select.php";
+    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert.php";
+	public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert_2.php";
+	public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_detail_insert.php";
 
     //timers
     float therapy_time = 0;

@@ -142,15 +142,18 @@ class CUserTherapy : Singleton<CUserTherapy>
             //lsIdx = m_recommender.getNextBlock();
         }
         for (var i = 0; i < lsIdx.Count; ++i)
-        {
+        {            
             CChallengeItemFeatures features = m_lsChallengeItemFeatures[lsIdx[i]];
-            CChallengeItem challengeItem = m_lsChallengeItem[features.m_intChallengeItemIdx];
+            CChallengeItem challengeItem = m_lsChallengeItem[features.m_intChallengeItemIdx];                        
 
             CTrial trial = new CTrial();
             trial.m_intChallengeItemFeaturesIdx = lsIdx[i];
             trial.m_intChallengeItemIdx = features.m_intChallengeItemIdx;
 
             int intDistractorNum = convertDistractorNum(features.m_dComplexity_DistractorNum);
+
+            //Debug.Log(DatabaseXML.Instance.DatasetId + "-" + m_lsChallengeItem.Count);
+            //Debug.Log(features.m_intChallengeItemIdx + "-" + features.m_intChallengeItemIdx + "-" + challengeItem.m_strName + "-" + intDistractorNum );
 
             List<int> lsPictureChoiceIdx = pickDistractors(intDistractorNum, challengeItem.m_lsPictureChoice);
             for (var j = 0; j < lsPictureChoiceIdx.Count; j++)
