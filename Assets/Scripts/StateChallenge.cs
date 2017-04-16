@@ -139,7 +139,7 @@ public class StateChallenge : State
     
     public void SetTotalTherapyTime(double time)
     {
-        Debug.Log("SetTherapyTimeMin = " + time);
+        Debug.Log("StateChallenge: SetTherapyTimeMin = " + time);
         //therapyTime = TimeSpan.FromMinutes(time);
         totalTherapyTime = time;
     }

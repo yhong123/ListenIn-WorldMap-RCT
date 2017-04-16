@@ -38,41 +38,41 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //urls
     //DEVELOPMENT
 
-    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_insert.php";
-    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_update.php";
-    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_insert.php";
-    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_update.php";
-    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_insert.php";
-    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_update.php";
-    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_insert.php";
-    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_update.php";
-    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_select.php";
+    //public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_insert.php";
+    //public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_update.php";
+    //public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_insert.php";
+    //public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_update.php";
+    //public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_insert.php";
+    //public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_update.php";
+    //public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_insert.php";
+    //public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_update.php";
+    //public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_select.php";
 
-    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_time_insert.php";
-    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_dev/game_time_insert.php";
-    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_dev/patient_datasetid_select.php";
-    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert.php";
-    public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert_2.php";
-    public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_detail_insert.php";
+    //public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_time_insert.php";
+    //public string game_time_insert = "http://italk.ucl.ac.uk/listenin_dev/game_time_insert.php";
+    //public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_dev/patient_datasetid_select.php";
+    //public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert.php";
+    //public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert_2.php";
+    //public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_detail_insert.php";
 
     //urls
     //REAL DATABASE
-    //   public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_insert.php";
-    //   public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_update.php";
-    //   public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_insert.php";
-    //   public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_update.php";
-    //   public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_insert.php";
-    //   public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_update.php";
-    //   public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_insert.php";
-    //   public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_update.php";
-    //   public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_select.php";
+    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_insert.php";
+    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_update.php";
+    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_insert.php";
+    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_update.php";
+    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_insert.php";
+    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_update.php";
+    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_insert.php";
+    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_update.php";
+    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_select.php";
 
-    //   public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_time_insert.php";
-    //   public string game_time_insert = "http://italk.ucl.ac.uk/listenin_rct/game_time_insert.php";
-    //   public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_rct/patient_datasetid_select.php";
-    //   public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert.php";
-    //public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert_2.php";
-    //public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_detail_insert.php";
+    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_time_insert.php";
+    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_rct/game_time_insert.php";
+    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_rct/patient_datasetid_select.php";
+    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert.php";
+    public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert_2.php";
+    public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_detail_insert.php";
 
     //timers
     float therapy_time = 0;
@@ -129,11 +129,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string pathToXMLs = Path.Combine(Application.persistentDataPath, "ListenIn/Database");
         //number of .xml
         int currSplittedFiles = new DirectoryInfo(pathToXMLs).GetFiles().Length;
-        //int currSplittedFiles = Directory.GetFiles(Application.persistentDataPath + @"/ListenIn/Database", "*.xml ", SearchOption.TopDirectoryOnly).Length;
+
         ListenIn.Logger.Instance.Log(String.Format("Numbers of total databaseXML files: {0}", currSplittedFiles), ListenIn.LoggerMessageType.Info);
         if (currSplittedFiles == 0)
         {
-            Debug.Log("DatabaseXML: No xml splitted files found");
+            Debug.Log("DatabaseXML: No xml splitted files found!");
             currSplittedFiles++;
         }
         //create the file route by the current xml file
@@ -161,19 +161,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             {
                 Debug.Log(String.Format("DatabaseXML: {0}", ex.Message));
 
-                //Found a number of splitted xmls which is not consistent (i.e. like 3 xmls but not 1,2,3 as standard)
-                //Erasing files
-                List<string> files = new DirectoryInfo(pathToXMLs).GetFiles().Select(X => X.FullName).ToList();
-                if (files != null && files.Count != 0)
-                {
-                    for (int i = 0; i < files.Count; i++)
-                    {
-                        File.Delete(files[i]);
-                    }
-                }
-                //Recreating original condition from Playerprefs
-                xml_file = Application.persistentDataPath + @"/ListenIn/Database/1.xml";
-                LoadCurrentUserFromPlayerPrefs();
+                CleanXMLSplitting();                
             }
 
         }
@@ -207,21 +195,43 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     {
         string strPatientId = PlayerPrefs.GetString("patient_id", "");
         string strDatasetId = PlayerPrefs.GetString("dataset_id", "");
-        if (strPatientId.Equals("") || strDatasetId.Equals(""))
-        {
-            Debug.Log("DatabaseXML: no previous patient or dataset ID saved in PlayerPrefs (maybe is the default user? #1)");
-            return false;
-        }
-
         database_xml.LoadXml(database_xml_file.text);
         XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
+        if (strPatientId.Equals("") || strDatasetId.Equals(""))
+        {
+            Debug.Log("DatabaseXML: no previous patient or dataset ID saved in PlayerPref. Using default user #1...");
+            patient_element.SetAttribute("id", "1");
+            patient_element.SetAttribute("datasetid", "0");
+
+            //save doc 
+            database_xml.Save(xml_file);
+            return false;
+        }
         patient_element.SetAttribute("id", strPatientId);
         patient_element.SetAttribute("datasetid", strDatasetId);
 
         //save doc 
         database_xml.Save(xml_file);
         return true;
-    }    
+    }
+
+    private void CleanXMLSplitting()
+    {
+        string pathToXMLs = Path.Combine(Application.persistentDataPath, "ListenIn/Database");
+        //Found a number of splitted xmls which is not consistent (i.e. like 3 xmls but not 1,2,3 as standard)
+        //Erasing files
+        List<string> files = new DirectoryInfo(pathToXMLs).GetFiles().Select(X => X.FullName).ToList();
+        if (files != null && files.Count != 0)
+        {
+            for (int i = 0; i < files.Count; i++)
+            {
+                File.Delete(files[i]);
+            }
+        }
+        //Recreating original condition from Playerprefs
+        xml_file = Application.persistentDataPath + @"/ListenIn/Database/1.xml";
+        LoadCurrentUserFromPlayerPrefs();
+    }
 
     private void fixTherapyCorruptedFiles()
     {
@@ -262,8 +272,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                     string csv_backup_LiHistory = "";
                     //string xml_backup_TherapyBlocksAll = "";
 
-                    //Looping through backup code until 5 days before
-                    while (!bFound && intCtr < 5)
+                    //Looping through backup code until 30 days before
+                    while (!bFound && intCtr < 30)
                     {
                         //backup_date = backup_date.AddDays(-1);
                         string strDate = backup_date.ToString("yyyy-MM-dd");                        

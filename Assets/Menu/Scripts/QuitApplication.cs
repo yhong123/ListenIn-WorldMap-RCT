@@ -18,6 +18,9 @@ public class QuitApplication : MonoBehaviour {
 	#endif
 	}
 
+    /// <summary>
+    /// DEPRECATED
+    /// </summary>
 	public void ResetSavedGameState()
 	{
 		GameStateSaver.Instance.Reset();

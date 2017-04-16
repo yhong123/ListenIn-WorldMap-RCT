@@ -46,42 +46,52 @@ public class GameStateSaver : MonoBehaviour {
 
 		GameSaveState gss;
 
-        Debug.Log("Game state saved path:" + FilePath());
+        Debug.Log("GameStateSaver: Load() current state saved filename:" + FilePath());
 
 		if(File.Exists(FilePath()))
 		{
-			using(FileStream fs = new FileStream(FilePath(), FileMode.Open))
-			{
-				gss = (GameSaveState) serializer.Deserialize(fs);
+            FileInfo gamestatesaverfileinfo = new FileInfo(FilePath());
+            if (gamestatesaverfileinfo.Length == 0)
+            {
+                Debug.Log("GameStateSaver: Load() game state pieces CORRUPTED");
+                ResetListenIn();
+            }
+            else
+            {
+                using (FileStream fs = new FileStream(FilePath(), FileMode.Open))
+                {
+                    gss = (GameSaveState)serializer.Deserialize(fs);
 
-				for (int i = 0; i < gss.Chapters.Count; i++) {
-					Debug.Log(
-						"Level Name: " + gss.Chapters[i].LevelName + " " +
-			          	"LevelNumber: " + gss.Chapters[i].LevelNumber
-		          	);
-
-                    Chapter currChapter;
-                    StateJigsawPuzzle.Instance.Chapters.TryGetValue(gss.Chapters[i].LevelName, out currChapter);
-
-                    if (currChapter != null)
+                    for (int i = 0; i < gss.Chapters.Count; i++)
                     {
-                        for (int j = 0; j < gss.Chapters[i].JigsawPeicesUnlocked.Length; j++)
+                        Debug.Log(
+                            "Level Name: " + gss.Chapters[i].LevelName + " " +
+                              "LevelNumber: " + gss.Chapters[i].LevelNumber
+                          );
+
+                        Chapter currChapter;
+                        StateJigsawPuzzle.Instance.Chapters.TryGetValue(gss.Chapters[i].LevelName, out currChapter);
+
+                        if (currChapter != null)
                         {
-                            currChapter.JigsawPeicesUnlocked[j] = gss.Chapters[i].JigsawPeicesUnlocked[j];
+                            for (int j = 0; j < gss.Chapters[i].JigsawPeicesUnlocked.Length; j++)
+                            {
+                                currChapter.JigsawPeicesUnlocked[j] = gss.Chapters[i].JigsawPeicesUnlocked[j];
+                            }
                         }
+                        else { Debug.LogError(String.Format("Cannot load game state as chapter with key {0} have not been found", gss.Chapters[i].LevelName)); }
+
                     }
-                    else { Debug.LogError(String.Format("Cannot load game state as chapter with key {0} have not been found", gss.Chapters[i].LevelName)); }
 
-				}
+                    fs.Close();
+                }
+                Debug.Log("GameStateSaver: Load() jigsaw pieces game state");
+            }
 
-				fs.Close();
-			}
-			Debug.Log("Loaded game state");
-			//Debug.Log ("Found:" + gss.ciaone);
 		}
 		else
 		{
-            ListenIn.Logger.Instance.Log("First initialization", ListenIn.LoggerMessageType.Info);
+            ListenIn.Logger.Instance.Log("GameStateSaver: First initialization", ListenIn.LoggerMessageType.Info);
             GameStateSaver.Instance.ResetListenIn();
 		}
 
@@ -130,7 +140,7 @@ public class GameStateSaver : MonoBehaviour {
 	public void ResetListenIn()
 	{
         //Debug.Log("Initializing ListenIn");
-        ListenIn.Logger.Instance.Log("Resetting Listen In", ListenIn.LoggerMessageType.Info);
+        ListenIn.Logger.Instance.Log("GameStateSaver: resetting jigsaw pieces state", ListenIn.LoggerMessageType.Info);
         Reset();
 		Load ();
 	}
@@ -170,10 +180,9 @@ public class GameStateSaver : MonoBehaviour {
                         gss.Chapters.Add(resetChapter);
                     }
                     else {
-                        ListenIn.Logger.Instance.Log(String.Format("Cannot reset as chapter with key {0} have not been found", levelKeys[i]), ListenIn.LoggerMessageType.Error);
+                        ListenIn.Logger.Instance.Log(String.Format("GameStateSaver: cannot reset as chapter with key {0} have not been found", levelKeys[i]), ListenIn.LoggerMessageType.Error);
                         //Debug.LogError(String.Format("Cannot reset as chapter with key {0} have not been found", levelKeys[i]));
                     }
-
                 }
 
                 serializer.Serialize(writer, gss);

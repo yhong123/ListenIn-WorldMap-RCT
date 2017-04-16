@@ -342,7 +342,7 @@ class CUser
         string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_profile.xml");
         if (!System.IO.File.Exists(strXmlFile))
         {
-            Debug.Log(String.Format("CUser: loadUserProfile() No {0} found!", strXmlFile));
+            Debug.Log(String.Format("CUser: loadUserProfile() unable to load {0}", strXmlFile));
             return;
         }
             
@@ -400,7 +400,11 @@ class CUser
         string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_therapyblocks.xml");
         Console.WriteLine("loadTherapyBlocks = " + strXmlFile);
         if (!System.IO.File.Exists(strXmlFile))
+        {
+            Debug.Log(String.Format("CUser: loadUserProfile() unable to load {0}", strXmlFile));
             return;
+        }
+
 
         XElement root = XElement.Load(strXmlFile);
 
@@ -476,9 +480,13 @@ class CUser
 
         // check if file exists
         //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_therapyblocks.xml";
-        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_therapyblocks.csv");       
+        string strCsvFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_therapyblocks.csv");
         if (!System.IO.File.Exists(strCsvFile))
+        {
+            Debug.Log(String.Format("CUser: loadTherapyBlocks_Csv() unable to load {0}", strCsvFile));
             return;
+        }
+            
 
         string strWholeFile = System.IO.File.ReadAllText(strCsvFile);
 
@@ -595,7 +603,11 @@ class CUser
         string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_challengeitemfeatures_history.xml");
 
         if (!System.IO.File.Exists(strXmlFile))
+        {
+            Debug.Log(String.Format("CUser: loadChallengeItemFeatures_History() unable to load {0}", strXmlFile));
             return;
+        }
+            
 
         /*
         <item idx="0">
@@ -830,6 +842,7 @@ class CUser
 
         if (!System.IO.File.Exists(strCsvFile))
         {
+            Debug.Log("CUSer: loadLexicalItem_HistoryExposure() Creating basic history exposure");
             // set up user's history with the 0 exposure
             for (int k = 0; k < m_lsLexicalItem.Count; k++)
             {
