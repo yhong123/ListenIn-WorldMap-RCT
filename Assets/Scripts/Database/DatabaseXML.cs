@@ -36,33 +36,43 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     Queue<DatabaseQuery> xml_forms_queue;
     bool insert_in_order;
     //urls
-    //test
-    /*public string therapy_daily_insert = "https://ageofalgo.com/LI/therapy_daily_insert.php";
-    public string therapy_daily_update = "https://ageofalgo.com/LI/therapy_daily_update.php";
-    public string therapy_session_insert = "https://ageofalgo.com/LI/therapy_session_insert.php";
-    public string therapy_session_update = "https://ageofalgo.com/LI/therapy_session_update.php";
-    public string therapy_challenge_insert = "https://ageofalgo.com/LI/therapy_challenge_insert.php";
-    public string therapy_challenge_update = "https://ageofalgo.com/LI/therapy_challenge_update.php";
-    public string therapy_block_insert = "https://ageofalgo.com/LI/therapy_block_insert.php"; 
-    public string insert_patient_progress = "https://ageofalgo.com/LI/patient_game_update.php";
-    public string select_patient_progress = "https://ageofalgo.com/LI/patient_game_select.php";
-    */
-    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_insert.php";
-    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_update.php";
-    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_insert.php";
-    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_update.php";
-    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_insert.php";
-    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_update.php";
-    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_insert.php";
-    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_update.php";
-    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_select.php";
+    //DEVELOPMENT
 
-    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_time_insert.php";
-    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_rct/game_time_insert.php";
-    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_rct/patient_datasetid_select.php";
-    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert.php";
-	public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert_2.php";
-	public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_detail_insert.php";
+    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_insert.php";
+    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_update.php";
+    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_insert.php";
+    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_update.php";
+    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_insert.php";
+    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_update.php";
+    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_insert.php";
+    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_update.php";
+    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_select.php";
+
+    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_time_insert.php";
+    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_dev/game_time_insert.php";
+    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_dev/patient_datasetid_select.php";
+    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert.php";
+    public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert_2.php";
+    public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_detail_insert.php";
+
+    //urls
+    //REAL DATABASE
+    //   public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_insert.php";
+    //   public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_update.php";
+    //   public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_insert.php";
+    //   public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_update.php";
+    //   public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_insert.php";
+    //   public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_update.php";
+    //   public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_insert.php";
+    //   public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_update.php";
+    //   public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_select.php";
+
+    //   public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_time_insert.php";
+    //   public string game_time_insert = "http://italk.ucl.ac.uk/listenin_rct/game_time_insert.php";
+    //   public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_rct/patient_datasetid_select.php";
+    //   public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert.php";
+    //public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert_2.php";
+    //public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_detail_insert.php";
 
     //timers
     float therapy_time = 0;
@@ -87,7 +97,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public void InitializeDatabase()
     {
 
-        Debug.Log(Application.persistentDataPath);
+        Debug.Log(String.Format("Current Folder: {0}", Application.persistentDataPath));
         xml_forms_queue = new Queue<DatabaseQuery>();
         //current xml file to write on
         xml_location = Application.persistentDataPath + @"/ListenIn/Database/";
@@ -123,7 +133,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         ListenIn.Logger.Instance.Log(String.Format("Numbers of total databaseXML files: {0}", currSplittedFiles), ListenIn.LoggerMessageType.Info);
         if (currSplittedFiles == 0)
         {
-            Debug.Log("First ListenIn Initialization");
+            Debug.Log("DatabaseXML: No xml splitted files found");
             currSplittedFiles++;
         }
         //create the file route by the current xml file
@@ -149,6 +159,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             }
             catch (Exception ex)
             {
+                Debug.Log(String.Format("DatabaseXML: {0}", ex.Message));
+
                 //Found a number of splitted xmls which is not consistent (i.e. like 3 xmls but not 1,2,3 as standard)
                 //Erasing files
                 List<string> files = new DirectoryInfo(pathToXMLs).GetFiles().Select(X => X.FullName).ToList();
@@ -174,21 +186,18 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         if (!Directory.Exists(Application.persistentDataPath + @"/ListenIn/Therapy/"))
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/");
 
-        //get id patient from the xml
-        PatientId = int.Parse(GetPatient());
-        DatasetId = int.Parse(GetDatasetId());
-
-        Debug.Log("*** PatientId = " + PatientId + ", DatasetId = " + DatasetId);               
-
-        //Andrea: 30/10 this call has been changed to being done by upload manager
-        //if internet read the xml
-        //if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-        //{
-        //    //read the xml
-        //    StartCoroutine(ReadDatabaseXML());
-        //    //and get the patient progress
-        //    //StartCoroutine(get_patient_progress());
-        //}
+        try
+        {
+            //get id patient from the xml
+            PatientId = int.Parse(GetPatient());
+            DatasetId = int.Parse(GetDatasetId());
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(String.Format("DatabaseXML: {0}", ex.Message));
+        }
+        
+        Debug.Log("DatabseXML: *** PatientId = " + PatientId + ", DatasetId = " + DatasetId);               
 
         // check if there is any therapy corrupted files
         fixTherapyCorruptedFiles();
@@ -196,12 +205,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
     private bool LoadCurrentUserFromPlayerPrefs()
     {
-        // check PlayerPrefs
         string strPatientId = PlayerPrefs.GetString("patient_id", "");
         string strDatasetId = PlayerPrefs.GetString("dataset_id", "");
         if (strPatientId.Equals("") || strDatasetId.Equals(""))
         {
-            Debug.Log("DatabaseXML: no previous patient or dataset ID saved in PlayerPrefs");
+            Debug.Log("DatabaseXML: no previous patient or dataset ID saved in PlayerPrefs (maybe is the default user? #1)");
             return false;
         }
 
@@ -253,7 +261,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                     string xml_backup_CifHistory = "";
                     string csv_backup_LiHistory = "";
                     //string xml_backup_TherapyBlocksAll = "";
-                    while (!bFound && intCtr < 10)
+
+                    //Looping through backup code until 5 days before
+                    while (!bFound && intCtr < 5)
                     {
                         //backup_date = backup_date.AddDays(-1);
                         string strDate = backup_date.ToString("yyyy-MM-dd");                        
@@ -279,6 +289,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                             }
                         }        
 						backup_date = backup_date.AddDays(-1);
+                        intCtr++;
                     }  // end while
 
                     if (bFound)
@@ -291,6 +302,10 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
                         Debug.Log(" ***** FIX CORRUPTED THERAPY FILES ***** ");
                     }
+                    else
+                    {
+                        Debug.Log("DatabaseXML: No full set of backup files was found");
+                    }
                 }
             }
         }
@@ -299,7 +314,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     protected override void Awake()
     {
         //Getting the xml template from the resources
-        Debug.Log("Loading databasexml current file...");
+        Debug.Log("DatabaseXML: awake");
         database_xml_file = Resources.Load("database") as TextAsset;
     }
 
@@ -472,7 +487,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string pathToBkups = Path.Combine(Application.persistentDataPath, "ListenIn/Database/backup");
         int number_of_xml = new DirectoryInfo(pathToXMLs).GetFiles().Length;// Directory.GetFiles(pathToXMLs, "*.xml ", SearchOption.TopDirectoryOnly).Length;
         //current time
-        ListenIn.Logger.Instance.Log(String.Format("ReadDatabaseXML: # xml found = {0}" ,number_of_xml), ListenIn.LoggerMessageType.Info);
+        ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: ReadDatabaseXML() # xml found = {0}" ,number_of_xml), ListenIn.LoggerMessageType.Info);
         var current_date = System.DateTime.Now;// .ToString("yyyy.MM.dd-HH.mm.ss");
         string current_date_string = String.Concat(DateTime.Today.ToString("yyyy-MM-dd"), "-", current_date.Hour.ToString(), "_", current_date.Minute.ToString(),"_", current_date.Second.ToString());
         //Debug.Log("ReadDatabaseXML: current date string = " + current_date_string);
@@ -483,7 +498,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             //Andrea 19/11: changing the order of execution in order to prevent DatabaseXML crashing
             if (QueriesOnTheXML() == 0)
             {
-                Debug.Log("ReadDatabaseXML: No queries to be read from file " + i);
+                Debug.Log("DatabaseXML: ReadDatabaseXML() - No queries to be read from file " + i);
                 yield return null;
             }
             else
@@ -497,18 +512,18 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 //Create the backup with index plus date
                 string bkupfilename = String.Concat(i.ToString(), "__", current_date_string, ".xml");
                 string xml_backup = Path.Combine(pathToBkups, bkupfilename); //Application.persistentDataPath + @"/ListenIn/Database/backup/" + filename;
-                Debug.Log("XML_BACKUP: " + xml_backup);
+                Debug.Log("DatabaseXML: XML_BACKUP " + xml_backup);
                 //current file
                 xml_file = Path.Combine(pathToXMLs,String.Format("{0}.xml", i.ToString()));//Application.persistentDataPath + @"/ListenIn/Database/" + i.ToString() + ".xml";
                 try
                 {
                     File.Copy(xml_file, xml_backup);
-                    Debug.Log("ReadDatabaseXML: copied current version of DatabaseXML");
+                    Debug.Log("DatabaseXML: ReadDatabaseXML() - copied current version of DatabaseXML");
                     File.Delete(xml_file);
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogError(ex.Message);
+                    Debug.LogError(String.Format("DatabaseXML: {0}", ex.Message));
                 }
                                 
                 ////Reset the original xml_file to ampty state
@@ -553,7 +568,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                         }
                         //queue the forms
                         xml_forms_queue.Enqueue(new DatabaseQuery(xml_query_url, xml_form));
-                        Debug.Log(string.Format("ReadDatabaseXML: {0} query prepared", xml_query_url));
+                        Debug.Log(string.Format("DatabaseXML: ReadDatabaseXML() {0} query prepared", xml_query_url));
                     }
                 }
                 catch (System.Exception ex)
@@ -563,7 +578,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
                 //Send backup queries to DB
                 //go through the queue and insert them in order
-                ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: starting communication with DB file #{0}", i), ListenIn.LoggerMessageType.Info);
+                ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: ReadDatabaseXML() starting communication with DB file #{0}", i), ListenIn.LoggerMessageType.Info);
                 yield return StartCoroutine(send_xml_query());            
 
             }
@@ -1025,6 +1040,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     {
         try
         {
+            Debug.Log("ListenIn starting quit routine");
             //if the patient played the game, then update the daily therapy - last level played, if not then don't update
             if (QueriesOnTheXML() != 0)
             {
@@ -1060,6 +1076,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         {
             ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
         }
+
+        Debug.Log("Closing ListenIn");
 
         ListenIn.Logger.Instance.EmptyBuffer();
 
@@ -1177,7 +1195,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     {
         //get the patient element
         XmlElement patient_element = (XmlElement)database_xml.SelectSingleNode("/database/patient");
-        Debug.Log("DatabaseXML: current patient " + patient_element.GetAttribute("id"));
+        //Debug.Log("DatabaseXML: current patient " + patient_element.GetAttribute("id"));
         return patient_element.GetAttribute("id");
     }
 

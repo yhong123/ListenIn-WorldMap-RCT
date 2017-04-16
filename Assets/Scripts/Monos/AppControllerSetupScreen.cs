@@ -173,6 +173,7 @@ public class AppControllerSetupScreen : MonoBehaviour
             if (files != null)
             {
                 int currCount = files.Count();
+                Debug.Log(string.Format("SetupScreen: log count: {0}",currCount));
                 if (currCount > 50)
                 {
                     Debug.Log("SetupScreen: removing oldest logs");

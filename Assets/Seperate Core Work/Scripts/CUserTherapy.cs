@@ -75,8 +75,8 @@ class CUserTherapy : Singleton<CUserTherapy>
         m_lsChallengeItem = m_recommender.getChallengeItemList();
         m_lsChallengeItemFeatures = m_recommender.getChallengeItemFeaturesList();*/
 
-        StartCoroutine("Coroutine_LoadDataset_UserProfile");
-
+        //StartCoroutine("Coroutine_LoadDataset_UserProfile");
+        Coroutine_LoadDataset_UserProfile();
         // show total therapy time on main screen
         DatabaseXML.Instance.setTotal_therapy_time_sec(Convert.ToSingle(getTotalTherapyTimeMin()*60));
         StateChallenge.Instance.SetTotalTherapyTime(getTotalTherapyTimeMin());
@@ -86,13 +86,14 @@ class CUserTherapy : Singleton<CUserTherapy>
     //----------------------------------------------------------------------------------------------------
     // Coroutine_LoadDataset_UserProfile
     //----------------------------------------------------------------------------------------------------
-    IEnumerator Coroutine_LoadDataset_UserProfile()
+    private void Coroutine_LoadDataset_UserProfile()
     {
-        m_recommender.init(Application.persistentDataPath /*+ "/"*/, DatabaseXML.Instance.PatientId.ToString(), DatabaseXML.Instance.DatasetId);
+        /*+ "/"*/
+        m_recommender.init(Application.persistentDataPath, DatabaseXML.Instance.PatientId.ToString(), DatabaseXML.Instance.DatasetId);
         m_lsChallengeItem = m_recommender.getChallengeItemList();
         m_lsChallengeItemFeatures = m_recommender.getChallengeItemFeaturesList();
 
-        yield return null;        
+        //yield return null;        
         Debug.Log("CUserTHerapy: Coroutine_LoadDataset_UserProfile()");
     }
 
@@ -934,9 +935,7 @@ class CUserTherapy : Singleton<CUserTherapy>
 
         }    // end while
     }
-
     
-
     //----------------------------------------------------------------------------------------------------
     // SaveTrials_Csv
     //----------------------------------------------------------------------------------------------------

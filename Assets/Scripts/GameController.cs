@@ -79,6 +79,7 @@ public class GameController {
 
             try
             {
+                Debug.LogError("GameController: initializing database (is this a double initialization?)");
                 DatabaseXML.Instance.InitializeDatabase();
                 UploadManager.Instance.Initialize();
                 CUserTherapy.Instance.LoadDataset_UserProfile();
@@ -86,7 +87,7 @@ public class GameController {
 
                 IMadLevelProfileBackend backend = MadLevelProfile.backend;
                 string profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
-                ListenIn.Logger.Instance.Log(string.Format("Loaded profile: {0}", profile), ListenIn.LoggerMessageType.Info);
+                ListenIn.Logger.Instance.Log(string.Format("GameController: Loaded profile: {0}", profile), ListenIn.LoggerMessageType.Info);
                 //Debug.Log(profile);
                 
                 GameStateSaver.Instance.Load();

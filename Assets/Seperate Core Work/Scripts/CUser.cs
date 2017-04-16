@@ -80,7 +80,7 @@ class CUser
         m_strUserId = strUserId;
         m_intDatasetId = intDatasetId;
         loadUserProfile();
-        Console.WriteLine("m_strUserId = " + m_strUserId + " noise level = " + m_intCurNoiseLevel + " corpus complexity = " + m_dCorpusTotalComplexity);
+        Debug.Log("CUser: loadProfile() m_strUserId = " + m_strUserId + " noise level = " + m_intCurNoiseLevel + " corpus complexity = " + m_dCorpusTotalComplexity);
 
         //loadTherapyBlocks();
         loadTherapyBlocks_Csv();
@@ -341,7 +341,11 @@ class CUser
         //string strXmlFile = m_strAppPath + "user_" + m_strUserId + "_profile.xml";
         string strXmlFile = System.IO.Path.Combine(m_strAppPath, "user_" + m_strUserId + "_profile.xml");
         if (!System.IO.File.Exists(strXmlFile))
+        {
+            Debug.Log(String.Format("CUser: loadUserProfile() No {0} found!", strXmlFile));
             return;
+        }
+            
 
         XElement root = XElement.Load(strXmlFile);
 

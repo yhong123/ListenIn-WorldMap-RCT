@@ -90,26 +90,6 @@ namespace ListenIn
                 lock (LogBufferList)
                 {
                     LogBufferList.Add(mtl);
-                    //if (_lastLogTime.AddSeconds(60).Ticks > DateTime.UtcNow.Ticks)
-                    //    return;
-
-                    //string interpolated = String.Concat("LI-", DateTime.Today.ToString("yyyy-MM-dd"), "-", DateTime.Now.ToString("HH"), ".txt");
-                    //using
-                    //    (
-                    //        var log = File.AppendText(Path.Combine(_externalPath, interpolated))
-                    //    )
-                    //{
-                    //    foreach (var line in LogBufferList)
-                    //    {
-                    //        log.WriteLine(GetLoggerLine(line));
-                    //    }
-
-                    //    _lastLogTime = DateTime.UtcNow;
-                    //    log.Flush();
-                    //    LogBufferList.Clear();
-
-                    //}
-
                 }
             }
             catch (Exception ex)
@@ -152,10 +132,16 @@ namespace ListenIn
             }
             catch (Exception ex)
             {
-                Debug.LogError(ex.Message);
+                //This can cause infinite loop. Need to throw it.
+                throw ex;
+                //Debug.LogError(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Writes on the screen (bottom left) the current message
+        /// </summary>
+        /// <param name="mtl"></param>
         private void WriteConsole(MessageToLog mtl)
         {
             if (_screenLogger != null)
