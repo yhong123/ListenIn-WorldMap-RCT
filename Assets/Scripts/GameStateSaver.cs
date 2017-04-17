@@ -133,7 +133,7 @@ public class GameStateSaver : MonoBehaviour {
 			writer.Close();
 
 		}
-        ListenIn.Logger.Instance.Log("Save game state (jigssaw pieces) locally: ", ListenIn.LoggerMessageType.Info);
+        ListenIn.Logger.Instance.Log("GameStateSaver: save jigssaw pieces state locally. ", ListenIn.LoggerMessageType.Info);
         //Debug.Log("Save game state");
 	}
 

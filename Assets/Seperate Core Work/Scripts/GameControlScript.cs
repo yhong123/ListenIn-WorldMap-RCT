@@ -889,7 +889,7 @@ public class GameControlScript : MonoBehaviour
             StopCoroutine("WaitIncorrect");
 
         string strAudio = "Audio/phase1/" + m_curTrial.m_strTargetAudio;
-        Debug.Log("target audio = '" + strAudio + "'");
+        Debug.Log(String.Format("GameControlScript: target audio = {0}", strAudio));
         /*
         string strFolder = CTrialList.Instance.getCurAudioFolder ();
 		string strAudio = "Audio/" + strFolder + m_curTrial.m_strTargetAudio;

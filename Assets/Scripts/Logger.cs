@@ -94,7 +94,10 @@ namespace ListenIn
             }
             catch (Exception ex)
             {
-                Debug.LogError(ex.Message);
+                //Debug.LogError(ex.Message);
+                //Detaching logger to prevent an infinite recursive call
+                Application.logMessageReceived -= HandleLog;
+                _isLoggerReady = false;
             }
 
 
@@ -132,9 +135,12 @@ namespace ListenIn
             }
             catch (Exception ex)
             {
-                //This can cause infinite loop. Need to throw it.
-                throw ex;
+                //This can cause infinite loop. Cannot do anything
+                //throw ex;
                 //Debug.LogError(ex.Message);
+                //Detaching logger to prevent an infinite recursive call
+                Application.logMessageReceived -= HandleLog;
+                _isLoggerReady = false;
             }
         }
 

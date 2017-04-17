@@ -263,7 +263,7 @@ class CRecommender
     //----------------------------------------------------------------------------------------------------
     public List<int> getMedianBlock()
     {
-        Console.WriteLine("Meidan block");
+        //Console.WriteLine("Meidan block");
 
         m_lsCurrentBlock_ChallengeItemFeaturesIdx.Clear();
         m_lsCurrentBlock_IsDiversity.Clear();
@@ -314,7 +314,7 @@ class CRecommender
     //----------------------------------------------------------------------------------------------------
     public List<int> getForcedBlock()
     {
-        Console.WriteLine("*** forced block ");
+        //Console.WriteLine("*** forced block ");
 
         // calculate the last three block average number of distractors
         double dTotal = 0;
@@ -437,7 +437,7 @@ class CRecommender
         else if (bEnoughWord)
             lsRecCandidateFinal = m_lsCurrentBlock_RecCandidate_Word;
 
-        Console.WriteLine("final candidate num = " + lsRecCandidateFinal.Count + " bEnoughWord = " + bEnoughWord + " bEnoughESentence = " + bEnoughESentence + " bEnoughHSentence = " + bEnoughHSentence);
+        //Console.WriteLine("final candidate num = " + lsRecCandidateFinal.Count + " bEnoughWord = " + bEnoughWord + " bEnoughESentence = " + bEnoughESentence + " bEnoughHSentence = " + bEnoughHSentence);
 
         // pick the top-N
         m_lsCurrentBlock_ChallengeItemFeaturesIdx.Clear();
@@ -497,7 +497,7 @@ class CRecommender
 
         // get user's last therapy block        
         List<CUser_TherapyBlock> lsTherapyBlock = m_user.getTherapyBlockList();
-        Debug.Log("getNextBlock - lsTherapyBlock = " + lsTherapyBlock.Count);
+        Debug.Log(String.Format("CRecommender: getNextBlock() getNextBlock - lsTherapyBlock = {0}",lsTherapyBlock.Count));
         CUser_TherapyBlock lastTherapyBlock = lsTherapyBlock.Last();
         for (int i = lsTherapyBlock.Count - 1; i >= 0; i--)
         {
@@ -635,13 +635,13 @@ class CRecommender
                                                                             m_lsCurrentBlock_RecCandidate[i].m_dNeighbourWeight +
                                                                             m_lsCurrentBlock_RecCandidate[i].m_dExposureWeight;
         }
-        Console.WriteLine("num neighbour = " + m_lsCurrentBlock_RecCandidate.Count);
-        Debug.Log("num neighbour = " + m_lsCurrentBlock_RecCandidate.Count);
+        //Console.WriteLine("num neighbour = " + m_lsCurrentBlock_RecCandidate.Count);
+        Debug.Log(String.Format("CRecommender: getNextBlock() num neighbour = {0}", m_lsCurrentBlock_RecCandidate.Count));
 
         // zero out candidate which has complexity higher than user's ability
         double dLastUserAbility = lastTherapyBlock.m_dUserAbility_Accumulated;        
         m_dCurrentBlock_UserAbility = dLastUserAbility; // dAverageUserAbility; // Math.Round(dAverageUserAbility + (m_dataset.getCorpusComplexityStdDeviation() / 2), 4); 
-        Console.WriteLine("current user ability = " + m_dCurrentBlock_UserAbility);
+        //Console.WriteLine("current user ability = " + m_dCurrentBlock_UserAbility);
 
         bool bEnoughWord = false;
         bool bEnoughESentence = false;
@@ -652,7 +652,7 @@ class CRecommender
         while (!bEnoughWord && !bEnoughESentence && !bEnoughHSentence && (dPruningFactor <= 2))
         {
             dPruningFactor += 1;  //dPruningFactor += 0.3;
-            Console.WriteLine("dPruningFactor = " + dPruningFactor);
+            //Console.WriteLine("dPruningFactor = " + dPruningFactor);
             if (dPruningFactor > 2) break;
 
             int intCtr = 0;
@@ -664,7 +664,7 @@ class CRecommender
                 if (m_lsCurrentBlock_RecCandidate[i].m_dRecommendationStrength > 0)
                     intCtr++;
             }
-            Console.WriteLine("candidate ctr = " + m_lsCurrentBlock_RecCandidate.Count + " intCtr = " + intCtr);
+            //Console.WriteLine("candidate ctr = " + m_lsCurrentBlock_RecCandidate.Count + " intCtr = " + intCtr);
 
             int intLowerPrune = 0;
             int intUpperPrune = 0;
@@ -703,8 +703,8 @@ class CRecommender
                     //                    " upper threshold = " + (dLastUserAbility + dFactor));
                 }
             }
-            Console.WriteLine("intLowerPrune = " + intLowerPrune + " intUpperPrune = " + intUpperPrune);
-            Debug.Log("intLowerPrune = " + intLowerPrune + " intUpperPrune = " + intUpperPrune);
+            //Console.WriteLine("intLowerPrune = " + intLowerPrune + " intUpperPrune = " + intUpperPrune);
+            Debug.Log(String.Format("CRecommender: getNextBlock() intLowerPrune = {0} intUpperPrune = {1} ", intLowerPrune, intUpperPrune));
 
             // cluster candidates into word and sentence groups
             m_lsCurrentBlock_RecCandidate_Word.Clear();
@@ -729,12 +729,12 @@ class CRecommender
                         m_lsCurrentBlock_RecCandidate_Word.Add(lsCandidateTemp[i]);
                 }
             }
-            Console.WriteLine("word num = " + m_lsCurrentBlock_RecCandidate_Word.Count + " E sentence num = " + m_lsCurrentBlock_RecCandidate_ESentence.Count + " H sentence num = " + m_lsCurrentBlock_RecCandidate_HSentence.Count);
+            //Console.WriteLine("word num = " + m_lsCurrentBlock_RecCandidate_Word.Count + " E sentence num = " + m_lsCurrentBlock_RecCandidate_ESentence.Count + " H sentence num = " + m_lsCurrentBlock_RecCandidate_HSentence.Count);
             m_lsCurrentBlock_RecCandidate_Word = m_lsCurrentBlock_RecCandidate_Word.OrderByDescending(o => o.m_dCurComplexity).ThenByDescending(o => o.m_dRecommendationStrength).ToList();
             m_lsCurrentBlock_RecCandidate_ESentence = m_lsCurrentBlock_RecCandidate_ESentence.OrderByDescending(o => o.m_dCurComplexity).ThenByDescending(o => o.m_dRecommendationStrength).ToList();
             m_lsCurrentBlock_RecCandidate_HSentence = m_lsCurrentBlock_RecCandidate_HSentence.OrderByDescending(o => o.m_dCurComplexity).ThenByDescending(o => o.m_dRecommendationStrength).ToList();
 
-            Debug.Log("word num = " + m_lsCurrentBlock_RecCandidate_Word.Count + " E sentence num = " + m_lsCurrentBlock_RecCandidate_ESentence.Count + " H sentence num = " + m_lsCurrentBlock_RecCandidate_HSentence.Count);
+            Debug.Log(String.Format("CRecommender: getNextBlock() word num = {0} E sentence num = {1} H sentence num = {2}", m_lsCurrentBlock_RecCandidate_Word.Count, m_lsCurrentBlock_RecCandidate_ESentence.Count, m_lsCurrentBlock_RecCandidate_HSentence.Count));
             
             // decide word or sentence
             lsRecCandidateFinal.Clear();
@@ -745,7 +745,7 @@ class CRecommender
             // train the patient with the starter pool till he can manage 0.1322
             if ((!bEnoughWord) && (!bEnoughESentence) && (!bEnoughHSentence) && (dLastUserAbility <= 0.1322))
             {
-                Console.WriteLine("Keep training with starter pool");
+                //Console.WriteLine("Keep training with starter pool");
                 return getFirstBlock();
             }
 
@@ -790,8 +790,8 @@ class CRecommender
             else if (bEnoughWord) // (m_lsCurrentBlock_RecCandidate_Word.Count > CConstants.g_intItemNumPerBlock)
                 lsRecCandidateFinal = m_lsCurrentBlock_RecCandidate_Word.OrderByDescending(o => o.m_dCurComplexity).ThenByDescending(o => o.m_dRecommendationStrength).ToList();
 
-            Console.WriteLine("final candidate num = " + lsRecCandidateFinal.Count + " bEnoughWord = " + bEnoughWord + " bEnoughESentence = " + bEnoughESentence + " bEnoughHSentence = " + bEnoughHSentence);
-            Debug.Log("final candidate num = " + lsRecCandidateFinal.Count + " bEnoughWord = " + bEnoughWord + " bEnoughESentence = " + bEnoughESentence + " bEnoughHSentence = " + bEnoughHSentence);
+            //Console.WriteLine("final candidate num = " + lsRecCandidateFinal.Count + " bEnoughWord = " + bEnoughWord + " bEnoughESentence = " + bEnoughESentence + " bEnoughHSentence = " + bEnoughHSentence);
+            Debug.Log(String.Format("CRecommender: getNextBlock() final candidate num = {0} bEnoughWord = {1} bEnoughESentence = {2} bEnoughHSentence = {3}", lsRecCandidateFinal.Count, bEnoughWord, bEnoughESentence, bEnoughHSentence));
             
         } // end while loop
 

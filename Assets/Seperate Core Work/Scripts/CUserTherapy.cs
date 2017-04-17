@@ -123,6 +123,7 @@ class CUserTherapy : Singleton<CUserTherapy>
     {
         //m_intCurLevel = intLevel;        
 
+        Debug.Log("CUserTherapy: LoadTrials()");
         m_lsTrial.Clear();
         m_lsResponse.Clear();
         DatabaseXML.Instance.resetTherapy_block_idle_time_sec();
@@ -135,7 +136,7 @@ class CUserTherapy : Singleton<CUserTherapy>
         lsIdx.Add(1408); lsIdx.Add(504); lsIdx.Add(2204); lsIdx.Add(1364); lsIdx.Add(1416);
         lsIdx.Add(1596); lsIdx.Add(172); lsIdx.Add(1412); lsIdx.Add(1420); lsIdx.Add(16);*/
 
-        Debug.Log("lsIdx.Count = " + lsIdx.Count);
+        Debug.Log(String.Format("CUserTherapy: lsIdx.Count = {0}",lsIdx.Count));
         if (lsIdx.Count < CConstants.g_intItemNumPerBlock)
         {
             return;
@@ -634,7 +635,7 @@ class CUserTherapy : Singleton<CUserTherapy>
                 catch (System.Exception ex)
                 {
                     //ListenIn.Logger.Instance.Log("CUserTherapy-IsEndOfLevel-" + ex.Message, ListenIn.LoggerMessageType.Info);
-                    Debug.Log("CUserTherapy-IsEndOfLevel-" + ex.Message);
+                    Debug.Log(String.Format("CUserTherapy: IsEndOfLevel() {0}", ex.Message));
                 }
             }
             return true;
@@ -656,11 +657,7 @@ class CUserTherapy : Singleton<CUserTherapy>
             time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             time_insert.Add("totaltime", getTotalTherapyTimeMin().ToString());
 
-            Debug.Log("CUserTherapy-SaveTherapyTimeToDB-DatabaseXML.Instance.WriteDatabaseXML start");
-
             DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.therapy_time_insert);
-
-            Debug.Log("CUserTherapy-SaveTherapyTimeToDB-DatabaseXML.Instance.WriteDatabaseXML end");
 
             //Andrea: 30/10 moved this on the uploadmanager
 
@@ -674,7 +671,7 @@ class CUserTherapy : Singleton<CUserTherapy>
         catch (System.Exception ex)
         {
             //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTherapyTimeToDB-" + ex.Message, ListenIn.LoggerMessageType.Info);
-            Debug.Log("CUserTherapy-SaveTherapyTimeToDB-" + ex.Message);
+            Debug.LogError(String.Format("CUserTherapy: SaveTherapyTimeToDB() {0}", ex.Message));
         }
     }
 
@@ -749,16 +746,13 @@ class CUserTherapy : Singleton<CUserTherapy>
             detail_insert.Add("blockidx", intBlockIdx.ToString());
             detail_insert.Add("csv", strRow);
 
-            Debug.Log("CUserTherapy-SaveTherapyBlockDetailToDB-DatabaseXML.Instance.WriteDatabaseXML start");
-
             DatabaseXML.Instance.WriteDatabaseXML(detail_insert, DatabaseXML.Instance.therapy_block_detail_insert);
-
-            Debug.Log("CUserTherapy-SaveTherapyBlockDetailToDB-DatabaseXML.Instance.WriteDatabaseXML end");            
+            
         }
         catch (System.Exception ex)
         {
             //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTherapyTimeToDB-" + ex.Message, ListenIn.LoggerMessageType.Info);
-            Debug.Log("CUserTherapy-SaveTherapyBlockDetailToDB-" + ex.Message);
+            Debug.Log(String.Format("CUserTherapy: SaveTherapyBlockDetailToDB() {0}", ex.Message));
         }
     }
 
@@ -1043,13 +1037,13 @@ class CUserTherapy : Singleton<CUserTherapy>
         catch (System.Xml.XmlException ex)
         {
             //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
-            Debug.Log("CUserTherapy-SaveTrials_Csv-" + ex.Message);            
+            Debug.LogError(String.Format("CUserTherapy: SaveTrials_Csv {0}", ex.Message));            
         }
         catch (Exception e)
         {
             //Console.WriteLine("The process failed: {0}", e.ToString());
             //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + e.ToString(), ListenIn.LoggerMessageType.Info);
-            Debug.Log("CUserTherapy-SaveTrials_Csv-" + e.ToString());
+            Debug.LogError(String.Format("CUserTherapy: SaveTrials_Csv {0}", e.Message));
         }         
     }
 
@@ -1065,7 +1059,7 @@ class CUserTherapy : Singleton<CUserTherapy>
                         "<root>" +
                         "</root>");
                         
-            Debug.Log("CUserTherapy-SaveTrials- append nodes");
+            Debug.Log("CUserTherapy: SaveTrials() appending current block to trial nodes");
 
             int intBlockIdx = m_recommender.getLastTherapyBlockIdx();
 
@@ -1155,33 +1149,32 @@ class CUserTherapy : Singleton<CUserTherapy>
                 // Delete file.txt.old
                 //doc.PreserveWhitespace = true;
 
-                Debug.Log("CUserTherapy-SaveTrials- save XmlDocument");
-                
-                string strXmlFile = System.IO.Path.Combine(Application.persistentDataPath + @"/ListenIn/Therapy/all/",  "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblock_" + intBlockIdx + ".xml");
-                doc.Save(strXmlFile);                
+                string strXmlFile = System.IO.Path.Combine(Application.persistentDataPath + @"/ListenIn/Therapy/all/", "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblock_" + intBlockIdx + ".xml");
+                doc.Save(strXmlFile);
+                Debug.Log(String.Format("CUserTherapy: SaveTrials() saved trial block in {0}", strXmlFile));
             }
             catch (System.Xml.XmlException ex)
             {
                 //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
-                Debug.Log("CUserTherapy-SaveTrials-" + ex.Message);
+                Debug.LogError(String.Format("CUserTherapy: SaveTrials {0}", ex.Message));
             }
             catch (Exception e)
             {
                 //Console.WriteLine("The process failed: {0}", e.ToString());
                 //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + e.ToString(), ListenIn.LoggerMessageType.Info);
-                Debug.Log("CUserTherapy-SaveTrials-" + e.ToString());
+                Debug.LogError(String.Format("CUserTherapy: SaveTrials {0}", e.Message));
             }
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
-            Debug.Log("CUserTherapy-SaveTrials-" + ex.Message);
+            //ListenIn.Logger.Instance.Log("CUserTherapy-SaveTrials-" + ex.Message, ListenIn.LoggerMessageType.Info);
+            Debug.LogError(String.Format("CUserTherapy: SaveTrials {0}", ex.Message));
         }
     }
 
-    //----------------------------------------------------------------------------------------------------
-    // SaveTrials_old
-    //----------------------------------------------------------------------------------------------------
+/// <summary>
+/// DEPRECATED
+/// </summary>
     private void SaveTrials_old()
     {
         try
@@ -1386,9 +1379,9 @@ class CUserTherapy : Singleton<CUserTherapy>
         }
     }
 
-    //----------------------------------------------------------------------------------------------------
-    // SaveReactionTime
-    //----------------------------------------------------------------------------------------------------
+/// <summary>
+/// NOT USED
+/// </summary>
     private void SaveReactionTime()
     {
         try

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using MadLevelManager;
+using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
@@ -37,7 +38,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         StartCoroutine(SetupInitialization());
     }
 
-    private void UpdateFeedbackLog(string message, bool canContinue)
+    private void UpdateFeedbackLog(String message, bool canContinue)
     {
         if (m_feedbackTextScreen != null)
             m_feedbackTextScreen.text = message;
@@ -56,18 +57,18 @@ public class AppControllerSetupScreen : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         int percentage = 1;
-        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
         //Setting the logger
         GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI_Canvas_Debug"));
         Text debug_text = go.GetComponentInChildren<Text>();
         ListenIn.Logger.Instance.SetLoggerUIFrame(debug_text);
         ListenIn.Logger.Instance.SetLoggerLogToExternal(true);
-        ListenIn.Logger.Instance.Log("Log started", ListenIn.LoggerMessageType.Info);
+        ListenIn.Logger.Instance.Log("AppControllerSetup: Logger started", ListenIn.LoggerMessageType.Info);
         yield return new WaitForEndOfFrame();
 
         percentage = 3;
-        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
             DatabaseXML.Instance.InitializeDatabase();
@@ -75,74 +76,74 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
         yield return new WaitForEndOfFrame();
 
         percentage = 18;
-        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
             UploadManager.Instance.Initialize();
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
         yield return new WaitForEndOfFrame();
 
         percentage = 33;
-        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
             CUserTherapy.Instance.LoadDataset_UserProfile();
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
         yield return new WaitForEndOfFrame();
 
         percentage = 48;
-        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
             StateJigsawPuzzle.Instance.OnGameLoadedInitialization();
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
         yield return new WaitForEndOfFrame();
 
         percentage = 63;
-        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
             IMadLevelProfileBackend backend = MadLevelProfile.backend;
-            string profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
-            ListenIn.Logger.Instance.Log(string.Format("Loaded profile: {0}", profile), ListenIn.LoggerMessageType.Info);
+            String profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetupScreen: SetupInitialization() loaded pinball level profile: {0}", profile), ListenIn.LoggerMessageType.Info);
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetupScreen: SetupInitialization() {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
         yield return new WaitForEndOfFrame();
 
         percentage = 78;
-        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
             GameStateSaver.Instance.Load();
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
         yield return new WaitForEndOfFrame();
 
         percentage = 85;
-        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
         try
         {
@@ -150,15 +151,14 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
 
         percentage = 100;
-        m_textScreen.text = string.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
         m_playButton.interactable = true;
         m_playButton.gameObject.SetActive(true);
-
         switchPatient.gameObject.SetActive(true);
 
     }
@@ -166,14 +166,14 @@ public class AppControllerSetupScreen : MonoBehaviour
     private void CleaningUpOlderLogs()
     {
         //Andrea: need to implement this function
-        string path = ListenIn.Logger.Instance.GetLogPath;
-        if (!string.IsNullOrEmpty(path))
+        String path = ListenIn.Logger.Instance.GetLogPath;
+        if (!String.IsNullOrEmpty(path))
         {
-            List<string> files = new DirectoryInfo(path).GetFiles().OrderBy(f => f.LastWriteTime).Select(x => x.FullName).ToList();
+            List<String> files = new DirectoryInfo(path).GetFiles().OrderBy(f => f.LastWriteTime).Select(x => x.FullName).ToList();
             if (files != null)
             {
                 int currCount = files.Count();
-                Debug.Log(string.Format("SetupScreen: log count: {0}",currCount));
+                Debug.Log(String.Format("SetupScreen: log count: {0}",currCount));
                 if (currCount > 50)
                 {
                     Debug.Log("SetupScreen: removing oldest logs");

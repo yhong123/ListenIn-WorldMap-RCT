@@ -72,7 +72,8 @@ public class StatePinball : State
 	
 	private void RandomizeBucketPosition()
 	{
-				
+
+        Debug.Log(String.Format("StatePinball: Randomizing jigsaw pieces"));
 		List<int> intList = new List<int>();
 		
 		//TODO control the game logic differely, don t like to return like this.
@@ -99,7 +100,7 @@ public class StatePinball : State
 			for (int i = 0; i < count; i++)
 			{
 				int iToRemove = UnityEngine.Random.Range(0, BucketIs.Count);
-                ListenIn.Logger.Instance.Log(String.Format("Jigsaw Removed : [ {0}  |  {1} ]", iToRemove, BucketIs[iToRemove]), LoggerMessageType.Info);
+                //ListenIn.Logger.Instance.Log(String.Format("Jigsaw Removed : [ {0}  |  {1} ]", iToRemove, BucketIs[iToRemove]), LoggerMessageType.Info);
                 //Debug.Log("Jigsae Removed : [" + iToRemove + "|"+BucketIs[iToRemove]+"];");
 				BucketsShuffled[i] = BucketIs[iToRemove];
 				BucketIs.RemoveAt(iToRemove);
@@ -117,7 +118,7 @@ public class StatePinball : State
 			int mod = intList[i] % 4;
 			string prefabstring = "Prefabs/JigsawPieces/" + mod + "_" + div;
 
-            ListenIn.Logger.Instance.Log(String.Format(" {0} | Shuffle: [ {1} ]; Piece : [ {2} ]; Jigsaw Prefab Path : [ {3} ] ", i, BucketsShuffled[i], intList[i], prefabstring), LoggerMessageType.Info);
+            //ListenIn.Logger.Instance.Log(String.Format(" {0} | Shuffle: [ {1} ]; Piece : [ {2} ]; Jigsaw Prefab Path : [ {3} ] ", i, BucketsShuffled[i], intList[i], prefabstring), LoggerMessageType.Info);
             //Debug.Log(i + "| Shuffle : [" + BucketsShuffled[i] + "]; Piece : [" + intList[i] + "]; Jigsaw Prefab Path : [" + prefabstring + "];");
 			
 			GameObject jigsawPieceGO = GameObject.Instantiate(Resources.Load(prefabstring)) as GameObject;
@@ -219,7 +220,7 @@ public class StatePinball : State
         TimeSpan span = endGame - startGame;
         double dGameTimeMin = Math.Round(span.TotalMinutes, 4);
 
-        Debug.Log("StatePinball: adding game_time_insert query");
+        Debug.Log("StatePinball: ExitLevelPinball() adding game_time_insert query");
 
         Dictionary<string, string> time_insert = new Dictionary<string, string>();
         time_insert.Add("patientid", DatabaseXML.Instance.PatientId.ToString());
@@ -239,7 +240,6 @@ public class StatePinball : State
 
 	public void InitLevelPinball()
 	{
-        ListenIn.Logger.Instance.Log("StatePinball: Initializing specific pinball level", LoggerMessageType.Info);
         //Debug.Log("");
         m_PinballMono.UIHolder.SetActive(true);
         //m_PinballMono.FireButton.SetActive(true);
@@ -260,10 +260,11 @@ public class StatePinball : State
         if (lvlManager != null)
 		{
 			lvlManager.startingLevel = true;
-		}
+            ListenIn.Logger.Instance.Log(String.Format("StatePinball: InitLevelPinball() initializing {0} pinball level",lvlManager.name), LoggerMessageType.Info);
+        }
 		else
 		{
-            ListenIn.Logger.Instance.Log("Missing level manager", LoggerMessageType.Warning);
+            ListenIn.Logger.Instance.Log("StatePinball: InitLevelPinball() missing level manager", LoggerMessageType.Warning);
             //Debug.LogWarning("Missing level manager");
 		}
 		startGame = endGame = DateTime.UtcNow;
@@ -277,7 +278,7 @@ public class StatePinball : State
 
     public override void Exit()
     {
-        ListenIn.Logger.Instance.Log("StatePinball: exiting pinball level", LoggerMessageType.Info);
+        ListenIn.Logger.Instance.Log("StatePinball: Exit() exiting pinball level", LoggerMessageType.Info);
         //Debug.Log("Exiting Pinball state"); 
 
 		//preparing the scene by removing elements that will create problems.
@@ -289,7 +290,7 @@ public class StatePinball : State
         //m_PinballMono.SetFade();
 
         //UnityEngine.Object.Destroy(m_PinballMono.gameObject);
-        ListenIn.Logger.Instance.Log(String.Format("Mono : [ {0} ]; Name : [ {1} ]" ,m_PinballMono, m_PinballMono.name), LoggerMessageType.Info);
+        //ListenIn.Logger.Instance.Log(String.Format("Mono : [ {0} ]; Name : [ {1} ]" ,m_PinballMono, m_PinballMono.name), LoggerMessageType.Info);
         //Debug.Log("Mono : [" + m_PinballMono + "]; Name : [" + m_PinballMono.name + "];");
 		
 		StateChallenge.Instance.ResetCoins();

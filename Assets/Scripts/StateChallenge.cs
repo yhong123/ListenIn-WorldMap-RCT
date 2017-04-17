@@ -39,7 +39,7 @@ public class StateChallenge : State
         
 		m_GO = go;
 		challengeanim = go.GetComponent<ChallengeAnimator>();
-        Debug.Log("Init therapy");
+        Debug.Log("StateChallenge: Init therapy");
 
 		challengeanim.currMargin = 0;
 		challengeanim.margins[challengeanim.currMargin].SetActive(true);
@@ -69,7 +69,7 @@ public class StateChallenge : State
 
     public override void Exit()
     {
-        Debug.Log("Exiting Challege");
+        Debug.Log("StateChallenge: exiting challenge");
 		if(cheatActivated)
 		{
 			UnityEngine.GameObject.Destroy(m_GO);

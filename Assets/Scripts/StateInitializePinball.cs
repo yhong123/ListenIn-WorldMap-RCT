@@ -21,7 +21,7 @@ public class StateInitializePinball : State
 	// Use this for initialization
 	public override void Init()
 	{
-        Debug.Log("Entering Initialize Pinball trasition");
+        Debug.Log("StateInitializePinball: Init() Starting pinball transition");
         m_challenge_go = GameObject.FindGameObjectWithTag("Challenge");
         m_pinball_go = GameObject.FindGameObjectWithTag("PinballPrefab");
         pm = m_pinball_go.GetComponent<PinballMono>();
@@ -69,7 +69,7 @@ public class StateInitializePinball : State
 	
 	public override void Exit()
 	{
-        Debug.Log("Exiting Initialize Pinball trasition");
+        Debug.Log("StateInitializePinball: Exit() Finishing transiton to pinball");
         StatePinball.Instance.InitLevelPinball();
 	}
 }

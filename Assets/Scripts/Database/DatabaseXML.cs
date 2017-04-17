@@ -5,6 +5,7 @@ using System.Xml;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.SceneManagement;
 using System.Text;
 
 using MadLevelManager;
@@ -260,6 +261,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             {
                 System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Application.persistentDataPath + @"/ListenIn/Therapy/");
                 int count = dir.GetFiles().Length;
+                //we have already some backups
                 if (count >= 4)
                 {
                     // loop through all backup files till 
@@ -272,8 +274,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                     string csv_backup_LiHistory = "";
                     //string xml_backup_TherapyBlocksAll = "";
 
-                    //Looping through backup code until 30 days before
-                    while (!bFound && intCtr < 30)
+                    //Looping through backup code until 100 days before
+                    while (!bFound && intCtr < 100)
                     {
                         //backup_date = backup_date.AddDays(-1);
                         string strDate = backup_date.ToString("yyyy-MM-dd");                        
@@ -387,9 +389,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         //TODO: unify the menu system
         #region TimeoutGame
-        if (isMenuPaused && idle_time > 60 * 1)
+        if (isMenuPaused && idle_time > 60 * 2)
         {
-            Debug.Log("Forcing ListenIn to quit");
+            Debug.Log("DatabaseXML: Update() Forcing ListenIn to quit due to timeout (99)");
             reasonToExit = 99;
             Application.Quit();
 
@@ -399,7 +401,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
         }
-        else if (!isMenuPaused && idle_time > 60 * 1)
+        else if (!isMenuPaused && idle_time > 60 * 5)
         {
             if (OpenPauseMenu())
             {
@@ -407,7 +409,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             }
             else
             {
-                Debug.Log("Forcing menu did not happen: could be uploading screen or a transition");
+                Debug.LogWarning("DatabaseXML: preventing force idle menu. Could be setup screen, uploading screen or a transition");
                 ResetTimer(TimerType.Idle);
             }
         }
@@ -417,6 +419,12 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
     private bool OpenPauseMenu()
     {
+        if (SceneManager.GetActiveScene().name == "SetupScreen")
+        {
+            //Debug.Log("DatabaseXML: OpenPauseMenu() preventing screen to pause in setupscreen");
+            return false;
+        }
+
         //Works only on the WorldMapScene
         GameObject menuUI = GameObject.FindGameObjectWithTag("MenuUI");
         if (menuUI != null)
@@ -426,7 +434,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             {
                 lsm.OpenPauseMenu();
                 
-                Debug.Log("Forcing menu after idle timeout - case WorldMap");
+                Debug.Log("DatabaseXML: OpenPauseMenu() Forcing menu after idle timeout - case WorldMap");
                 return true;
             }
         }
@@ -451,7 +459,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             if (mm != null)
             {
                 mm.OpenMenu();
-                Debug.Log("Forcing menu after idle timeout - case Therapy Challenge");
+                Debug.Log("DatabaseXML: OpenPauseMenu() Forcing menu after idle timeout - case Therapy Challenge");
                 return true;
             }
         }
@@ -485,7 +493,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             return true;
         }
 
-        ListenIn.Logger.Instance.Log("LOAD BATTERY", ListenIn.LoggerMessageType.Warning);
+        ListenIn.Logger.Instance.Log("DatabaseXML: battery check failed", ListenIn.LoggerMessageType.Warning);
         return false;
     }
 
@@ -578,7 +586,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                         }
                         //queue the forms
                         xml_forms_queue.Enqueue(new DatabaseQuery(xml_query_url, xml_form));
-                        Debug.Log(string.Format("DatabaseXML: ReadDatabaseXML() {0} query prepared", xml_query_url));
+                        Debug.Log(string.Format("DatabaseXML: ReadDatabaseXML() query prepared: {0}", xml_query_url));
                     }
                 }
                 catch (System.Exception ex)
@@ -588,7 +596,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
                 //Send backup queries to DB
                 //go through the queue and insert them in order
-                ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: ReadDatabaseXML() starting communication with DB file #{0}", i), ListenIn.LoggerMessageType.Info);
+                ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: ReadDatabaseXML() starting communication with DB for file #{0}", i), ListenIn.LoggerMessageType.Info);
                 yield return StartCoroutine(send_xml_query());            
 
             }
@@ -684,7 +692,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         }
         //Clear current content
         xml_forms_queue.Clear();
-        Debug.Log("DatabaseXML: end of send xml query (splitted version)");
+        Debug.Log("DatabaseXML: send_xml_query() end of send xml query (splitted version)");
     }
 
     public void resetTherapy_block_idle_time_sec()
@@ -786,11 +794,11 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         if (w.error != null)
         {
             print(w.error);
-            Debug.Log("UploadHistory - error - " + w.error);
+            Debug.Log(String.Format("DatabaseXML: UploadHistory2() {0}", w.error));
         }
         else
         {
-            Debug.Log("UploadHistory - done");
+            Debug.Log("DatabaseXML: UploadHistory2() done");
         }
     }
 
@@ -1050,7 +1058,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     {
         try
         {
-            Debug.Log("ListenIn starting quit routine");
+            Debug.Log("DatabaseXML: ListenIn starting quit routine");
             //if the patient played the game, then update the daily therapy - last level played, if not then don't update
             if (QueriesOnTheXML() != 0)
             {
@@ -1087,7 +1095,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
         }
 
-        Debug.Log("Closing ListenIn");
+        Debug.Log("DatabaseXML: Normally exiting ListenIn...");
 
         ListenIn.Logger.Instance.EmptyBuffer();
 
@@ -1273,9 +1281,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //sql_query = new WWW(insert_patient_url, raw_data, headers);
         WWW sql_patient_progress_update = new WWW(insert_patient_progress, patient_progress_update_form);
         yield return sql_patient_progress_update;
-    }
-
-    
+    }    
 
     #region TimerUpdates
     public enum TimerType { Idle, WorldMap, Therapy, Pinball }
