@@ -10,6 +10,7 @@ using System.Net.Mail;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
+using System.Text;
 
 public class AppControllerSetupScreen : MonoBehaviour
 {
@@ -145,6 +146,12 @@ public class AppControllerSetupScreen : MonoBehaviour
         percentage = 85;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
+        yield return SendLogs();
+        yield return new WaitForEndOfFrame();
+
+        percentage = 90;
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+
         try
         {
             CleaningUpOlderLogs();
@@ -193,6 +200,71 @@ public class AppControllerSetupScreen : MonoBehaviour
         //Debug.Log("PressedButton");
         DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
         MadLevel.LoadLevelByName("World Map Select");
+    }
+
+    private IEnumerator SendLogs()
+    {
+        if (!lockEmailSending)
+        {
+            yield return StartCoroutine(SendLatestLogs());
+        }
+        else
+        {
+            m_feedbackTextScreen.text = "Wait...";
+        }
+    }
+
+    IEnumerator SendLatestLogs()
+    {
+        lockEmailSending = true;
+        m_feedbackTextScreen.text = "Uploading latest logs...";
+
+        yield return new WaitForEndOfFrame();
+
+        if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+        {
+            string path = ListenIn.Logger.Instance.GetLogPath;
+            if (!string.IsNullOrEmpty(path))
+            {
+                var topFiles = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).Take(5).ToList();
+
+                if (topFiles != null)
+                {
+                    m_feedbackTextScreen.text = "Uploading logs...";
+                    byte[] logsFile;
+                    foreach (var singleFile in topFiles)
+                    {
+                        logsFile = File.ReadAllBytes(singleFile.FullName);
+
+                        WWWForm form = new WWWForm();
+                        form.AddField("patient_id", DatabaseXML.Instance.PatientId.ToString());
+                        form.AddField("file_log", "file_log");
+                        form.AddBinaryData("file_log", logsFile, singleFile.Name);
+
+                        //change the url to the url of the php file
+                        WWW w = new WWW("http://quiley.com/test_file/upload_log.php", form);
+
+                        yield return w;
+
+                        if (w.error == null)
+                        {
+                            File.Delete(singleFile.FullName);
+                        }
+                    }
+
+                    m_feedbackTextScreen.text = "Logs uploaded...";
+                    yield return new WaitForEndOfFrame();
+
+                }
+            }
+            else
+            {
+                m_feedbackTextScreen.text = "Uploading latest logs...";
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
+
     }
 
     private IEnumerator SendLogToEmail()

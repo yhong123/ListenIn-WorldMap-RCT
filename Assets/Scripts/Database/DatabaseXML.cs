@@ -39,41 +39,41 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //urls
     //DEVELOPMENT
 
-    //public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_insert.php";
-    //public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_update.php";
-    //public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_insert.php";
-    //public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_update.php";
-    //public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_insert.php";
-    //public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_update.php";
-    //public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_insert.php";
-    //public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_update.php";
-    //public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_select.php";
+    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_insert.php";
+    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_update.php";
+    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_insert.php";
+    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_update.php";
+    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_insert.php";
+    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_update.php";
+    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_insert.php";
+    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_update.php";
+    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_select.php";
 
-    //public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_time_insert.php";
-    //public string game_time_insert = "http://italk.ucl.ac.uk/listenin_dev/game_time_insert.php";
-    //public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_dev/patient_datasetid_select.php";
-    //public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert.php";
-    //public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert_2.php";
-    //public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_detail_insert.php";
+    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_time_insert.php";
+    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_dev/game_time_insert.php";
+    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_dev/patient_datasetid_select.php";
+    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert.php";
+    public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert_2.php";
+    public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_detail_insert.php";
 
     //urls
     //REAL DATABASE
-    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_insert.php";
-    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_update.php";
-    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_insert.php";
-    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_update.php";
-    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_insert.php";
-    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_update.php";
-    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_insert.php";
-    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_update.php";
-    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_select.php";
+    //public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_insert.php";
+    //public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_update.php";
+    //public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_insert.php";
+    //public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_update.php";
+    //public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_insert.php";
+    //public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_update.php";
+    //public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_insert.php";
+    //public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_update.php";
+    //public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_select.php";
 
-    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_time_insert.php";
-    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_rct/game_time_insert.php";
-    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_rct/patient_datasetid_select.php";
-    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert.php";
-    public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert_2.php";
-    public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_detail_insert.php";
+    //public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_time_insert.php";
+    //public string game_time_insert = "http://italk.ucl.ac.uk/listenin_rct/game_time_insert.php";
+    //public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_rct/patient_datasetid_select.php";
+    //public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert.php";
+    //public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert_2.php";
+    //public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_detail_insert.php";
 
     //timers
     float therapy_time = 0;
@@ -726,7 +726,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         string strTherapyBlocksCsv = "";
         string strCifHistory = "";
 
-        Debug.Log("DatabaseXML-UploadHistory2: reading user_profile.xml");
+        ListenIn.Logger.Instance.Log("DatabaseXML-UploadHistory2: reading user_profile.xml", ListenIn.LoggerMessageType.Info);
 
         XmlDocument doc1 = new XmlDocument();
         string strXmlFile1_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_profile_.xml");
@@ -744,7 +744,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         }
         yield return null;
 
-        Debug.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks.csv");
+        ListenIn.Logger.Instance.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks.csv", ListenIn.LoggerMessageType.Info);
+        //Debug.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks.csv");
 
         string strCsvFile2_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_.csv");
         try
@@ -760,7 +761,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         }
         yield return null;
 
-        Debug.Log("DatabaseXML-UploadHistory2: reading user_challengeitemfeatures_history.xml");
+        ListenIn.Logger.Instance.Log("DatabaseXML-UploadHistory2: reading user_challengeitemfeatures_history.xml", ListenIn.LoggerMessageType.Info);
+        //Debug.Log("DatabaseXML-UploadHistory2: reading user_challengeitemfeatures_history.xml");
 
         XmlDocument doc8 = new XmlDocument();
         string strXmlFile8_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history_.xml");
@@ -785,7 +787,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         form.AddField("tb", strTherapyBlocksCsv);
         form.AddField("cifHistory", strCifHistory);
 
-        Debug.Log("DatabaseXML: uploading " + therapy_history_insert_2);
+        ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: uploading {0}", therapy_history_insert_2), ListenIn.LoggerMessageType.Info);
 
         //change the url to the url of the php file
         WWW w = new WWW(therapy_history_insert_2, form);
