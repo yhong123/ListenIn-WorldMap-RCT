@@ -1288,7 +1288,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     #region TimerUpdates
     public enum TimerType { Idle, WorldMap, Therapy, Pinball }
 
-
+#if UNITY_EDITOR
     void OnGUI()
     {
          //to hide timer
@@ -1317,7 +1317,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //#endif
 
     }
-
+#endif
     public void SetTimerState(TimerType tymerType, bool state)
     {
         switch (tymerType)

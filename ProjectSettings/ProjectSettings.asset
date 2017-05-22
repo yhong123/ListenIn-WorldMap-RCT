@@ -97,7 +97,7 @@ PlayerSettings:
   xboxOneDisableKinectGpuReservation: 0
   virtualRealitySupported: 0
   productGUID: dbf8d12728cbfde41b8a7a0a6b77f86a
-  AndroidBundleVersionCode: 5
+  AndroidBundleVersionCode: 6
   AndroidMinSdkVersion: 21
   AndroidPreferredInstallLocation: 0
   aotOptions: 
@@ -158,7 +158,7 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
+  AndroidKeystoreName: C:/Users/AndreaCastegnaro/Desktop/listenInKeystore.keystore
   AndroidKeyaliasName: 
   AndroidTVCompatibility: 0
   AndroidIsGame: 1
