@@ -52,7 +52,8 @@ public class UploadManager : Singleton<UploadManager> {
         
         if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
         {
-            yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
+            //Andrea: previously we log all the history every block. Now upload will be done at the application startup
+            //yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
 
             _currDeltaTime = Time.time - startUploadTime;
             //Yean: this is where we do the safe upload

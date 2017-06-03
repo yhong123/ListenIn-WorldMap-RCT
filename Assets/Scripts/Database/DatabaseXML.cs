@@ -728,69 +728,24 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         ListenIn.Logger.Instance.Log("DatabaseXML-UploadHistory2: reading user_profile.xml", ListenIn.LoggerMessageType.Info);
 
-        XmlDocument doc1 = new XmlDocument();
-        string strXmlFile1_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_profile_.xml");
-        try
-        {
-            if (System.IO.File.Exists(strXmlFile1_))
-            {
-                doc1.Load(strXmlFile1_);
-                strProfile = doc1.OuterXml;
-            }
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-        yield return null;
+        byte[] patientUserProfileFile;
+        byte[] patientUserTherapyBlocksFile;
+        byte[] patientUserChallengeItemFeaturesFile;
 
-        ListenIn.Logger.Instance.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks.csv", ListenIn.LoggerMessageType.Info);
-        //Debug.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks.csv");
+        string filename = String.Concat("user_",PatientId,"_profile");
+        string fullfilename = String.Concat(filename,".xml");
+        string strXmlFile1_ = System.IO.Path.Combine(Application.persistentDataPath, fullfilename);
 
-        string strCsvFile2_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_.csv");
-        try
-        {
-            if (System.IO.File.Exists(strCsvFile2_))
-            {
-                strTherapyBlocksCsv = System.IO.File.ReadAllText(strCsvFile2_);
-            }
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-        yield return null;
-
-        ListenIn.Logger.Instance.Log("DatabaseXML-UploadHistory2: reading user_challengeitemfeatures_history.xml", ListenIn.LoggerMessageType.Info);
-        //Debug.Log("DatabaseXML-UploadHistory2: reading user_challengeitemfeatures_history.xml");
-
-        XmlDocument doc8 = new XmlDocument();
-        string strXmlFile8_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history_.xml");
-        try
-        {
-            if (System.IO.File.Exists(strXmlFile8_))
-            {
-                doc8.Load(strXmlFile8_);
-                strCifHistory = doc8.OuterXml;
-            }
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-        yield return null;
-
-        // create WWWForm
+        //Andrea: ANY ERROR HERE IS NOT CATCHED. How to deal with this?
+        patientUserProfileFile = File.ReadAllBytes(strXmlFile1_);
+        
         WWWForm form = new WWWForm();
-        form.AddField("patientid", PatientId.ToString());
-        form.AddField("profile", strProfile);
-        form.AddField("tb", strTherapyBlocksCsv);
-        form.AddField("cifHistory", strCifHistory);
-
-        ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: uploading {0}", therapy_history_insert_2), ListenIn.LoggerMessageType.Info);
+        form.AddField("patient_id", DatabaseXML.Instance.PatientId.ToString());
+        form.AddField("file_xml", "file_xml");
+        form.AddBinaryData("file_xml", patientUserProfileFile, fullfilename);
 
         //change the url to the url of the php file
-        WWW w = new WWW(therapy_history_insert_2, form);
+        WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_file.php", form);
 
         yield return w;
         if (w.error != null)
@@ -802,6 +757,80 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         {
             Debug.Log("DatabaseXML: UploadHistory2() done");
         }
+        //XmlDocument doc1 = new XmlDocument();
+
+        //try
+        //{
+        //    if (System.IO.File.Exists(strXmlFile1_))
+        //    {
+        //        doc1.Load(strXmlFile1_);
+        //        strProfile = doc1.OuterXml;
+        //    }
+        //}
+        //catch (System.Exception ex)
+        //{
+        //    Debug.LogError(ex.Message);
+        //}
+        //yield return null;
+
+        //ListenIn.Logger.Instance.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks.csv", ListenIn.LoggerMessageType.Info);
+        ////Debug.Log("DatabaseXML-UploadHistory2: reading user_therapyblocks.csv");
+
+        //string strCsvFile2_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_therapyblocks_.csv");
+        //try
+        //{
+        //    if (System.IO.File.Exists(strCsvFile2_))
+        //    {
+        //        strTherapyBlocksCsv = System.IO.File.ReadAllText(strCsvFile2_);
+        //    }
+        //}
+        //catch (System.Exception ex)
+        //{
+        //    Debug.LogError(ex.Message);
+        //}
+        //yield return null;
+
+        //ListenIn.Logger.Instance.Log("DatabaseXML-UploadHistory2: reading user_challengeitemfeatures_history.xml", ListenIn.LoggerMessageType.Info);
+        ////Debug.Log("DatabaseXML-UploadHistory2: reading user_challengeitemfeatures_history.xml");
+
+        //XmlDocument doc8 = new XmlDocument();
+        //string strXmlFile8_ = System.IO.Path.Combine(Application.persistentDataPath, "user_" + PatientId + "_challengeitemfeatures_history_.xml");
+        //try
+        //{
+        //    if (System.IO.File.Exists(strXmlFile8_))
+        //    {
+        //        doc8.Load(strXmlFile8_);
+        //        strCifHistory = doc8.OuterXml;
+        //    }
+        //}
+        //catch (System.Exception ex)
+        //{
+        //    Debug.LogError(ex.Message);
+        //}
+        //yield return null;
+
+        //// create WWWForm
+        //WWWForm form = new WWWForm();
+        //form.AddField("patientid", PatientId.ToString());
+        //form.AddField("profile", strProfile);
+        //form.AddField("tb", strTherapyBlocksCsv);
+        //form.AddField("cifHistory", strCifHistory);
+
+        //ListenIn.Logger.Instance.Log(String.Format("DatabaseXML: uploading {0}", therapy_history_insert_2), ListenIn.LoggerMessageType.Info);
+
+        ////change the url to the url of the php file
+        //WWW w = new WWW(therapy_history_insert_2, form);
+
+        yield return w;
+        //if (w.error != null)
+        //{
+        //    print(w.error);
+        //    Debug.Log(String.Format("DatabaseXML: UploadHistory2() {0}", w.error));
+        //}
+        //else
+        //{
+        //    Debug.Log("DatabaseXML: UploadHistory2() done");
+        //}
     }
 
     public IEnumerator UploadHistory2_old()

@@ -85,7 +85,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
-            UploadManager.Instance.Initialize();
+            CUserTherapy.Instance.LoadDataset_UserProfile();
         }
         catch (System.Exception ex)
         {
@@ -97,7 +97,8 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
-            CUserTherapy.Instance.LoadDataset_UserProfile();
+            UploadProfileHistory();
+            //UploadManager.Instance.Initialize();
         }
         catch (System.Exception ex)
         {
@@ -195,6 +196,11 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
     }
 
+    private void UploadProfileHistory()
+    {
+        StartCoroutine(DatabaseXML.Instance.UploadHistory2());
+    }
+
     public void GoToWorldMap()
     {
         //Debug.Log("PressedButton");
@@ -242,7 +248,7 @@ public class AppControllerSetupScreen : MonoBehaviour
                         form.AddBinaryData("file_log", logsFile, singleFile.Name);
 
                         //change the url to the url of the php file
-                        WWW w = new WWW("http://quiley.com/test_file/upload_log.php", form);
+                        WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_log.php", form);
 
                         yield return w;
 
