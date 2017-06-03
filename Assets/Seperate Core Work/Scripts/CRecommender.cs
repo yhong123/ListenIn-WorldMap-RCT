@@ -889,17 +889,6 @@ class CRecommender
     private double calculateCurComplexity(int intFeaturesIdx)
     {
         double dCurComplexity = 0;
-        /*List<CUser_ChallengeItemFeatures_HistoryComplexity> features_historyComplexity = m_user.getChallengeItemFeatures_HistoryComplexityList();
-        List<CUser_ChallengeItem_HistoryComplexity> challengeItem_historyComplexity = m_user.getChallengeItem_HistoryComplexityList();
-        List<CUser_LexicalItem_HistoryComplexity> lexicalItem_historyComplexity = m_user.getLexicalItem_HistoryComplexityList();
-
-        double dItemCurComplexity = features_historyComplexity[intFeaturesIdx].m_lsComplexity_Overall.Last();
-
-        int intChallengeItemIdx = m_lsChallengeItemFeatures[intFeaturesIdx].m_intChallengeItemIdx;
-        double dChallengeItemCurComplexity = challengeItem_historyComplexity[intChallengeItemIdx].m_lsComplexity.Last();
-
-        int intLexicalItemIdx = m_lsChallengeItem[intChallengeItemIdx].m_intLexicalItemIdx;
-        double dLexicalItemCurComplexity = lexicalItem_historyComplexity[intLexicalItemIdx].m_lsComplexity.Last();*/
 
         dCurComplexity = Math.Round(m_lsChallengeItemFeatures[intFeaturesIdx].m_dComplexity_Overall, 4); // Math.Round(dItemCurComplexity * dChallengeItemCurComplexity * dLexicalItemCurComplexity, 4);
 
@@ -1081,6 +1070,7 @@ class CRecommender
         double dStdDeviation_Concreteness = Math.Round(calculateStdDeviation(lsConcreteness), 4);
         double dStdDeviation_DistractorNum = Math.Round(calculateStdDeviation(lsDistractorNum), 4);
 
+        //Updating history
         m_user.updateHistory(m_dtCurrentBlock_StartTime, lsLexicalItemIdx, m_lsCurrentBlock_ChallengeItemFeaturesIdx, m_lsCurrentBlock_IsDiversity, lsResponse, lsResponseRtSec, m_intCurrentBlock_DiversityNum,
                                 lsFrequency.Average(), lsConcreteness.Average(), lsDistractorNum.Average(),
                                 dStdDeviation_Frequency, dStdDeviation_Concreteness, dStdDeviation_DistractorNum, dTherapyBlockIdleTimeSec, dTotalTherapyTimeMin);
@@ -1112,23 +1102,6 @@ class CRecommender
     {
         return m_user.getChallengeItemFeaturesPresentedCtr(intChallengeItemFeaturesIdx);
     }
-
-    //----------------------------------------------------------------------------------------------------
-    // getLexicalItemPresentedCtr
-    //----------------------------------------------------------------------------------------------------
-    /*public int getLexicalItemPresentedCtr(int intLexicalItemIdx)
-    {
-        int intCtr = 0;
-        List<CChallengeItemFeatures_History> lsChallengeItem_History = m_user.getChallengeItem_HistoryList();
-        for (var i = 0; i < lsChallengeItem_History.Count; i++)
-        {
-            int intChallengeItemIdx = lsChallengeItem_History[i].m_intChallengeItemIdx;
-            if (intLexicalItemIdx == m_lsChallengeItem[intChallengeItemIdx].m_intLexicalItemIdx)
-                intCtr += lsChallengeItem_History[i].m_lsPresentHistory.Count;
-        }
-
-        return intCtr;
-    }*/
 
     //----------------------------------------------------------------------------------------------------
     // getLastTherapyBlock

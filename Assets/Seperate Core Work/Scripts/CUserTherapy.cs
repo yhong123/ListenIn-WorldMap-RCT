@@ -615,6 +615,7 @@ class CUserTherapy : Singleton<CUserTherapy>
                     }
                     double dTherapyBlockIdleTime = DatabaseXML.Instance.getTherapy_block_idle_time_sec();
                     double dTotalTherapyTimeMin = Math.Round(DatabaseXML.Instance.getTotal_therapy_time_sec()/60, 4);
+
                     m_recommender.updateUserHistory(lsResponse, lsResponseRtSec, dTherapyBlockIdleTime, dTotalTherapyTimeMin);
                     //m_recommender.updateUserHistory(m_lsTrial, m_lsResponse);
 

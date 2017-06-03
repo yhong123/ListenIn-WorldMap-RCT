@@ -49,10 +49,11 @@ public class UploadManager : Singleton<UploadManager> {
 
         _currDeltaTime = Time.time - startUploadTime;
         Debug.Log("UploadManager: " + _currDeltaTime + " upload history 2");
-        yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
-
+        
         if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
         {
+            yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
+
             _currDeltaTime = Time.time - startUploadTime;
             //Yean: this is where we do the safe upload
             if (DatabaseXML.Instance.CheckUploadSafeCondition())

@@ -63,6 +63,7 @@ public class GameController {
 
     }
 
+    //DEPRECATED
     public void Init()
     {
 		if (!m_Initializtion)
