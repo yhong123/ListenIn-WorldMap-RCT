@@ -732,31 +732,89 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         byte[] patientUserTherapyBlocksFile;
         byte[] patientUserChallengeItemFeaturesFile;
 
-        string filename = String.Concat("user_",PatientId,"_profile");
+        string filename = String.Concat("user_",PatientId,"_profile_");
         string fullfilename = String.Concat(filename,".xml");
         string strXmlFile1_ = System.IO.Path.Combine(Application.persistentDataPath, fullfilename);
 
         //Andrea: ANY ERROR HERE IS NOT CATCHED. How to deal with this?
-        patientUserProfileFile = File.ReadAllBytes(strXmlFile1_);
-        
-        WWWForm form = new WWWForm();
-        form.AddField("patient_id", DatabaseXML.Instance.PatientId.ToString());
-        form.AddField("file_xml", "file_xml");
-        form.AddBinaryData("file_xml", patientUserProfileFile, fullfilename);
-
-        //change the url to the url of the php file
-        WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_file.php", form);
-
-        yield return w;
-        if (w.error != null)
+        if(File.Exists(strXmlFile1_))
         {
-            print(w.error);
-            Debug.Log(String.Format("DatabaseXML: UploadHistory2() {0}", w.error));
-        }
-        else
+            patientUserProfileFile = File.ReadAllBytes(strXmlFile1_);
+
+            WWWForm form = new WWWForm();
+            form.AddField("patient_id", DatabaseXML.Instance.PatientId.ToString());
+            form.AddField("file_data", "file_data");
+            form.AddBinaryData("file_data", patientUserProfileFile, fullfilename);
+
+            //change the url to the url of the php file
+            WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_file.php", form);
+
+            yield return w;
+            if (w.error != null)
+            {
+                print(w.error);
+                Debug.Log(String.Format("DatabaseXML: UploadHistory2() {0}", w.error));
+            }
+            else
+            {
+                Debug.Log("DatabaseXML: UploadHistory2() done");
+            }
+        }            
+
+        fullfilename = String.Concat("user_", PatientId, "_therapyblocks_.csv");
+        string strCsvFile2_ = System.IO.Path.Combine(Application.persistentDataPath, fullfilename);
+
+        if (File.Exists(strCsvFile2_))
         {
-            Debug.Log("DatabaseXML: UploadHistory2() done");
+            patientUserProfileFile = File.ReadAllBytes(strCsvFile2_);
+
+            WWWForm form = new WWWForm();
+            form.AddField("patient_id", DatabaseXML.Instance.PatientId.ToString());
+            form.AddField("file_data", "file_data");
+            form.AddBinaryData("file_data", patientUserProfileFile, fullfilename);
+
+            //change the url to the url of the php file
+            WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_file.php", form);
+
+            yield return w;
+            if (w.error != null)
+            {
+                print(w.error);
+                Debug.Log(String.Format("DatabaseXML: UploadHistory2() {0}", w.error));
+            }
+            else
+            {
+                Debug.Log("DatabaseXML: UploadHistory2() done");
+            }
         }
+
+        fullfilename = String.Concat("user_", PatientId, "_challengeitemfeatures_history_.xml");
+        string strXmlFile8_ = System.IO.Path.Combine(Application.persistentDataPath, fullfilename);
+
+        if (File.Exists(strXmlFile8_))
+        {
+            patientUserProfileFile = File.ReadAllBytes(strXmlFile8_);
+
+            WWWForm form = new WWWForm();
+            form.AddField("patient_id", DatabaseXML.Instance.PatientId.ToString());
+            form.AddField("file_data", "file_data");
+            form.AddBinaryData("file_data", patientUserProfileFile, fullfilename);
+
+            //change the url to the url of the php file
+            WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_file.php", form);
+
+            yield return w;
+            if (w.error != null)
+            {
+                print(w.error);
+                Debug.Log(String.Format("DatabaseXML: UploadHistory2() {0}", w.error));
+            }
+            else
+            {
+                Debug.Log("DatabaseXML: UploadHistory2() done");
+            }
+        }
+
         //XmlDocument doc1 = new XmlDocument();
 
         //try
@@ -821,7 +879,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         ////change the url to the url of the php file
         //WWW w = new WWW(therapy_history_insert_2, form);
 
-        yield return w;
+        //yield return w;
         //if (w.error != null)
         //{
         //    print(w.error);
