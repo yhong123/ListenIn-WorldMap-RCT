@@ -58,7 +58,7 @@ public class StateChallenge : State
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            AddCoin(80);
+            AddCoin(10);
 			cheatActivated = true;
             StatePinball.Instance.initialize = false;
             GameController.Instance.ChangeState(GameController.States.StatePinball);

@@ -97,7 +97,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
-            UploadProfileHistory();
+            StartCoroutine(UploadProfileHistory());
             //UploadManager.Instance.Initialize();
         }
         catch (System.Exception ex)
@@ -196,9 +196,9 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
     }
 
-    private void UploadProfileHistory()
+    private IEnumerator UploadProfileHistory()
     {
-        StartCoroutine(DatabaseXML.Instance.UploadHistory2());
+        yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
     }
 
     public void GoToWorldMap()

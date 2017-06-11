@@ -83,6 +83,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     bool count_pinball_time = false;
     bool count_worldmap_time = false;
     bool isMenuPaused = false;
+    bool m_stop_forcetimer_routine = false;
     public bool SetIsMenu { get { return isMenuPaused; } set { isMenuPaused = value; } }
     private int reasonToExit = 0;
     public int ReasonToExit { get { return reasonToExit; } set { reasonToExit = value; } }
@@ -401,7 +402,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
         }
-        else if (!isMenuPaused && idle_time > 60 * 5)
+        else if (!isMenuPaused && idle_time > 60 * 5 && !m_stop_forcetimer_routine)
         {
             if (OpenPauseMenu())
             {
@@ -419,48 +420,55 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
     private bool OpenPauseMenu()
     {
-        if (SceneManager.GetActiveScene().name == "SetupScreen")
+        Scene currScene = SceneManager.GetActiveScene();
+        if (currScene.name == "SetupScreen")
         {
             //Debug.Log("DatabaseXML: OpenPauseMenu() preventing screen to pause in setupscreen");
             return false;
         }
 
         //Works only on the WorldMapScene
-        GameObject menuUI = GameObject.FindGameObjectWithTag("MenuUI");
-        if (menuUI != null)
+        if (currScene.name == "LevelSelectScene")
         {
-            LevelSelectManager lsm = menuUI.GetComponent<LevelSelectManager>();
-            if (lsm != null)
+            GameObject menuUI = GameObject.FindGameObjectWithTag("MenuUI");
+            if (menuUI != null)
             {
-                lsm.OpenPauseMenu();
-                
-                Debug.Log("DatabaseXML: OpenPauseMenu() Forcing menu after idle timeout - case WorldMap");
-                return true;
+                LevelSelectManager lsm = menuUI.GetComponent<LevelSelectManager>();
+                if (lsm != null)
+                {
+                    lsm.OpenPauseMenu();
+
+                    Debug.Log("DatabaseXML: OpenPauseMenu() Forcing menu after idle timeout - case WorldMap");
+                    return true;
+                }
             }
-        }
+        }        
 
         //Andrea
-        //GameObject jigsawPuzzle = GameObject.FindGameObjectWithTag("JigsawPuzzle");
-        //if (jigsawPuzzle != null)
-        //{
-        //    ChapterSelectMono csm = jigsawPuzzle.GetComponent<ChapterSelectMono>();
-        //    if (csm != null)
-        //    {
-        //        csm.OpenMenu();
-        //        Debug.Log("Forcing menu after idle timeout - case Jigsaw puzzle before therapy or Pinball");
-        //        return;
-        //    }
-        //}
-
-        GameObject challengeTherapy = GameObject.FindGameObjectWithTag("Challenge");
-        if (challengeTherapy != null)
+        if (currScene.name == "GameLoop")
         {
-            MenuManager mm = challengeTherapy.GetComponentInChildren<MenuManager>();
-            if (mm != null)
+            GameObject challengeTherapy = GameObject.FindGameObjectWithTag("Challenge");
+            if (challengeTherapy != null)
             {
-                mm.OpenMenu();
-                Debug.Log("DatabaseXML: OpenPauseMenu() Forcing menu after idle timeout - case Therapy Challenge");
-                return true;
+                MenuManager mm = challengeTherapy.GetComponentInChildren<MenuManager>();
+                if (mm != null)
+                {
+                    mm.OpenMenu();
+                    Debug.Log("DatabaseXML: OpenPauseMenu() Forcing menu after idle timeout - case Therapy Challenge");
+                    return true;
+                }
+            }
+
+            GameObject jigsawPuzzle = GameObject.FindGameObjectWithTag("PinballPrefab");
+            if (jigsawPuzzle != null)
+            {
+                MenuManager csm = jigsawPuzzle.GetComponentInChildren<MenuManager>();
+                if (csm != null)
+                {
+                    csm.OpenMenu();
+                    Debug.Log("Forcing menu after idle timeout - case Pinball");
+                    return true;
+                }
             }
         }
 
@@ -1398,7 +1406,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         string block_game_string = ((int)therapy_pinball_time).ToString();
         block_game_string = GUI.TextField(new Rect(10, 110 + offset, 200, 20), "Pinball time: " + block_game_string + "(s)", 25);
-                
+
+        block_game_string = GUI.TextField(new Rect(10, 130 + offset, 200, 20), "Prevent Pause: " + m_stop_forcetimer_routine, 25);
         //#if UNITY_ANDROID
         //        GUI.TextField(new Rect(10, 100, 200, 20), "BATTERY: " + UploadManager.Instance.GetBatteryLevel() + "%");
         //#endif
@@ -1431,6 +1440,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         switch (tymerType)
         {
             case TimerType.Idle:
+                ForcedTimerState = false;
                 idle_time = 0.0f;
                 break;
             case TimerType.WorldMap:
@@ -1446,6 +1456,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 break;
         }
     }
+
+    //This bool is set to prevent that in certain part of the game the timer could cause the game to quit abruptly (i.e when finishing the pinball wait until the end of the uploading screen)
+    public bool ForcedTimerState { set { m_stop_forcetimer_routine = value; } }
 #endregion
 
 }

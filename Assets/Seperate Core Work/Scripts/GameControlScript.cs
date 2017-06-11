@@ -780,9 +780,10 @@ public class GameControlScript : MonoBehaviour
         m_sound_manager.Stop(ChannelType.BackgroundNoise);
         //		if (m_audioBackgroundNoise.isPlaying)
         //			m_audioBackgroundNoise.Stop();
-
+        
         StateChallenge.Instance.SetTotalTherapyTime(CUserTherapy.Instance.getTotalTherapyTimeMin());
         StateChallenge.Instance.SetTodayTherapyTime(CUserTherapy.Instance.getTodayTherapyTimeMin());
+        DatabaseXML.Instance.ForcedTimerState = true;
         GameController.Instance.ChangeState(GameController.States.StateInitializePinball);
     }
 

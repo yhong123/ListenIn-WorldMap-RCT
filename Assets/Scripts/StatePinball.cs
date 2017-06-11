@@ -241,6 +241,7 @@ public class StatePinball : State
 	public void InitLevelPinball()
 	{
         //Debug.Log("");
+        DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
         m_PinballMono.UIHolder.SetActive(true);
         //m_PinballMono.FireButton.SetActive(true);
         m_PinballMono.Frame.SetActive(true);

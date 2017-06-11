@@ -103,7 +103,7 @@ public class ShowPanels : MonoBehaviour {
 
     public void ShowUploadUI()
     {
-        DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
+        //DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
         DatabaseXML.Instance.SetIsMenu = false;
         Time.timeScale = 1.0f;
         challengePanel.SetActive(false);
