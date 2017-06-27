@@ -248,7 +248,7 @@ public class AppControllerSetupScreen : MonoBehaviour
                         form.AddBinaryData("file_log", logsFile, singleFile.Name);
 
                         //change the url to the url of the php file
-                        WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_log.php", form);
+                        WWW w = new WWW("http://italk.ucl.ac.uk/listenin_rct/upload_log.php", form);
 
                         yield return w;
 

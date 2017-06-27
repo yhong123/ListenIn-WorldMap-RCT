@@ -39,41 +39,43 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     //urls
     //DEVELOPMENT
 
-    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_insert.php";
-    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_update.php";
-    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_insert.php";
-    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_update.php";
-    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_insert.php";
-    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_update.php";
-    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_insert.php";
-    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_update.php";
-    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_select.php";
+    //public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_insert.php";
+    //public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_daily_update.php";
+    //public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_insert.php";
+    //public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_session_update.php";
+    //public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_insert.php";
+    //public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_dev/therapy_challenge_update.php";
+    //public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_insert.php";
+    //public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_update.php";
+    //public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_dev/patient_game_select.php";
 
-    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_time_insert.php";
-    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_dev/game_time_insert.php";
-    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_dev/patient_datasetid_select.php";
-    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert.php";
-    public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert_2.php";
-    public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_detail_insert.php";
+    //public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_time_insert.php";
+    //public string game_time_insert = "http://italk.ucl.ac.uk/listenin_dev/game_time_insert.php";
+    //public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_dev/patient_datasetid_select.php";
+    //public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert.php";
+    //public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_dev/therapy_history_insert_2.php";
+    //public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_dev/therapy_block_detail_insert.php";
+    //public string upload_files_server = "http://italk.ucl.ac.uk/listenin_dev/upload_file.php";
 
     //urls
     //REAL DATABASE
-    //public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_insert.php";
-    //public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_update.php";
-    //public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_insert.php";
-    //public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_update.php";
-    //public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_insert.php";
-    //public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_update.php";
-    //public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_insert.php";
-    //public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_update.php";
-    //public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_select.php";
+    public string therapy_daily_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_insert.php";
+    public string therapy_daily_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_daily_update.php";
+    public string therapy_session_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_insert.php";
+    public string therapy_session_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_session_update.php";
+    public string therapy_challenge_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_insert.php";
+    public string therapy_challenge_update = "http://italk.ucl.ac.uk/listenin_rct/therapy_challenge_update.php";
+    public string therapy_block_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_insert.php";
+    public string insert_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_update.php";
+    public string select_patient_progress = "http://italk.ucl.ac.uk/listenin_rct/patient_game_select.php";
 
-    //public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_time_insert.php";
-    //public string game_time_insert = "http://italk.ucl.ac.uk/listenin_rct/game_time_insert.php";
-    //public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_rct/patient_datasetid_select.php";
-    //public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert.php";
-    //public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert_2.php";
-    //public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_detail_insert.php";
+    public string therapy_time_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_time_insert.php";
+    public string game_time_insert = "http://italk.ucl.ac.uk/listenin_rct/game_time_insert.php";
+    public string select_patient_datasetid = "http://italk.ucl.ac.uk/listenin_rct/patient_datasetid_select.php";
+    public string therapy_history_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert.php";
+    public string therapy_history_insert_2 = "http://italk.ucl.ac.uk/listenin_rct/therapy_history_insert_2.php";
+    public string therapy_block_detail_insert = "http://italk.ucl.ac.uk/listenin_rct/therapy_block_detail_insert.php";
+    public string upload_files_server = "http://italk.ucl.ac.uk/listenin_rct/upload_file.php";
 
     //timers
     float therapy_time = 0;
@@ -390,7 +392,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
         //TODO: unify the menu system
         #region TimeoutGame
-        if (isMenuPaused && idle_time > 60 * 2)
+        if (isMenuPaused && idle_time > 60 * 1)
         {
             Debug.Log("DatabaseXML: Update() Forcing ListenIn to quit due to timeout (99)");
             reasonToExit = 99;
@@ -402,7 +404,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
         }
-        else if (!isMenuPaused && idle_time > 60 * 5 && !m_stop_forcetimer_routine)
+        else if (!isMenuPaused && idle_time > 60 * 2 && !m_stop_forcetimer_routine)
         {
             if (OpenPauseMenu())
             {
@@ -755,7 +757,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             form.AddBinaryData("file_data", patientUserProfileFile, fullfilename);
 
             //change the url to the url of the php file
-            WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_file.php", form);
+            WWW w = new WWW(upload_files_server, form);
 
             yield return w;
             if (w.error != null)
@@ -782,7 +784,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             form.AddBinaryData("file_data", patientUserProfileFile, fullfilename);
 
             //change the url to the url of the php file
-            WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_file.php", form);
+            WWW w = new WWW(upload_files_server, form);
 
             yield return w;
             if (w.error != null)
@@ -809,7 +811,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             form.AddBinaryData("file_data", patientUserProfileFile, fullfilename);
 
             //change the url to the url of the php file
-            WWW w = new WWW("http://italk.ucl.ac.uk/listenin_dev/upload_file.php", form);
+            WWW w = new WWW(upload_files_server, form);
 
             yield return w;
             if (w.error != null)

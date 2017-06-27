@@ -42,16 +42,16 @@ public class PatientDB : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     WWW offline_sql_query;
     //URL
 
-    string insert_patient_url = "http://italk.ucl.ac.uk/listenin_dev/patient_insert.php";
-    string get_patient_url = "http://italk.ucl.ac.uk/listenin_dev/get_patients.php";
-    string get_stroke_site_url = "http://italk.ucl.ac.uk/listenin_dev/get_stroke_site.php";
-    string login_url = "http://italk.ucl.ac.uk/listenin_dev/doctor_login.php";
+    //string insert_patient_url = "http://italk.ucl.ac.uk/listenin_dev/patient_insert.php";
+    //string get_patient_url = "http://italk.ucl.ac.uk/listenin_dev/get_patients.php";
+    //string get_stroke_site_url = "http://italk.ucl.ac.uk/listenin_dev/get_stroke_site.php";
+    //string login_url = "http://italk.ucl.ac.uk/listenin_dev/doctor_login.php";
 
 
-    //string insert_patient_url = "http://italk.ucl.ac.uk/listenin_rct/patient_insert.php";
-    //string get_patient_url = "http://italk.ucl.ac.uk/listenin_rct/get_patients.php";
-    //string get_stroke_site_url = "http://italk.ucl.ac.uk/listenin_rct/get_stroke_site.php";
-    //string login_url = "http://italk.ucl.ac.uk/listenin_rct/doctor_login.php";
+    string insert_patient_url = "http://italk.ucl.ac.uk/listenin_rct/patient_insert.php";
+    string get_patient_url = "http://italk.ucl.ac.uk/listenin_rct/get_patients.php";
+    string get_stroke_site_url = "http://italk.ucl.ac.uk/listenin_rct/get_stroke_site.php";
+    string login_url = "http://italk.ucl.ac.uk/listenin_rct/doctor_login.php";
 
     //login dctor
     public InputField username;
