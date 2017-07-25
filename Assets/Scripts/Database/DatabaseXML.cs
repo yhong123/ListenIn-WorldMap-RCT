@@ -404,7 +404,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
         }
-        else if (!isMenuPaused && idle_time > 60 * 2 && !m_stop_forcetimer_routine)
+        else if (!isMenuPaused && idle_time > 60 * 1 && !m_stop_forcetimer_routine)
         {
             if (OpenPauseMenu())
             {
