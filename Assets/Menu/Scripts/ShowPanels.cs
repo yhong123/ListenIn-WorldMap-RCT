@@ -112,6 +112,8 @@ public class ShowPanels : MonoBehaviour {
         UploadingMessageUI.SetActive(true);
     }
 
+
+    
 	IEnumerator BackToChallenge(float waitTime)
 	{
         //Making this time scale independent
@@ -168,6 +170,48 @@ public class ShowPanels : MonoBehaviour {
 		}
 
 	}
+
+    IEnumerator BackToChallengeAndCheat(float waitTime)
+    {
+                //Making this time scale independent
+        while (waitTime > 0.0f)
+        {
+            waitTime -= Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        //Adjusting Timers
+        try
+        {
+            Time.timeScale = 1.0f;
+            DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
+            DatabaseXML.Instance.SetIsMenu = false;
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(String.Format("ShowPanels: {0}", ex.Message));
+        }
+        finally
+        {
+            challengePanel.SetActive(false);
+            menuPanel.SetActive(false);
+            optionsTint.SetActive(false);
+            locked = false;
+
+            StatePinball.Instance.m_PinballMono.UnlockAndFinishPinballGame(false);
+
+        }
+
+    }
+
+    public void BackToChallengeGameAndCheat(float waitTime)
+    {
+        if (!locked)
+        {
+            locked = true;
+            StartCoroutine(BackToChallengeAndCheat(waitTime));
+        }
+    }
 
     public void OnDestroy()
     {

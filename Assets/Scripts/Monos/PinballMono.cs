@@ -273,7 +273,7 @@ public class PinballMono : MonoBehaviour {
 		
 	}
 
-    public void UnlockAndFinishPinballGame()
+    public void UnlockAndFinishPinballGame(bool unlockAll)
     {
         CardBucketController[] cbc = GameObject.FindObjectsOfType<CardBucketController>();
         if (cbc != null && cbc.Length != 0)
@@ -281,6 +281,8 @@ public class PinballMono : MonoBehaviour {
             for (int i = 0; i < cbc.Length; i++)
             {
                 cbc[i].UnlockJigsawPiece();
+                if (!unlockAll)
+                    break;
             }
         }
 
@@ -298,7 +300,7 @@ public class PinballMono : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.C))
             {
-                UnlockAndFinishPinballGame();
+                UnlockAndFinishPinballGame(true);
             }
         }
 
