@@ -6,6 +6,8 @@ using MadLevelManager;
 
 public class GameController : Singleton<GameController> {
 
+    //Insert FSM in this
+
 
     //Andrea: This should be eliminated 
     private State[] m_States = new State[]{
