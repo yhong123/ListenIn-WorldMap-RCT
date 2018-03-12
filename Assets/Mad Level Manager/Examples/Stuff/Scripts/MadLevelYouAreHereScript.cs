@@ -37,8 +37,8 @@ public class MadLevelYouAreHereScript : MonoBehaviour {
 
     void Update() {
         if (initialized) {
-            float xChange = Mathf.Sin(Time.time * animationSpeed) * animationAmplitude;
-            transform.position = lastUnlockedTransform.position + offset + new Vector3(xChange, 0, 0);
+            float yChange = Mathf.Sin(Time.time * animationSpeed) * animationAmplitude;
+            transform.position = lastUnlockedTransform.position + offset + new Vector3(0, yChange, 0);
         }
     }
 

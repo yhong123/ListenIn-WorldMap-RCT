@@ -754,7 +754,7 @@ public class GameControlScript : MonoBehaviour
 
         // check end of level
         //if (CTrialList.Instance.IsEndOfLevel(m_bIsAdminMode) || trialsCounter == 0)
-        if (CUserTherapy.Instance.IsEndOfLevel(m_bIsAdminMode))
+        if (CUserTherapy.Instance.IsEndOfLevel(m_bIsAdminMode) || trialsCounter < 1)
         {
             EndTherapySession();
             return;
@@ -784,9 +784,17 @@ public class GameControlScript : MonoBehaviour
         StateChallenge.Instance.SetTotalTherapyTime(CUserTherapy.Instance.getTotalTherapyTimeMin());
         StateChallenge.Instance.SetTodayTherapyTime(CUserTherapy.Instance.getTodayTherapyTimeMin());
         DatabaseXML.Instance.ForcedTimerState = true;
-        GameController.Instance.ChangeState(GameController.States.StateInitializePinball);
+        //Andrea: starting to change the animation
+        StartCoroutine(FinishChallenge());        
     }
 
+    private IEnumerator FinishChallenge()
+    {
+        yield return new WaitForSeconds(4);
+        ai.Play("JumpIn");
+        yield return new WaitForSeconds(3);
+        GameController.Instance.ChangeState(GameController.States.StateInitializePinball);
+    }
 
     //----------------------------------------------------------------------------------------------------
     // ShowAllStimuli: set all stimuli to visible / invisible

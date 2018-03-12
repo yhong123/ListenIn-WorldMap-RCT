@@ -250,10 +250,13 @@ public class StatePinball : State
         m_PinballMono.SetCannonState(true);
 
         rotatingCogs[] cogs = m_PinballMono.Cannon.GetComponentsInChildren<rotatingCogs>();
-        for (int i = 0; i < cogs.Length; i++)
+        if (cogs.Length != 0)
         {
-            cogs[i].enabled = true;
-        }
+            for (int i = 0; i < cogs.Length; i++)
+            {
+                cogs[i].enabled = true;
+            }
+        }        
 
         ILevel lvlManager = m_PinballMono.transform.GetChild(0).gameObject.GetComponent<ILevel>();
         //ILevel lvlManager = m_PinballMono.Levels[ID].GetComponent<ILevel>();

@@ -183,6 +183,20 @@ public class PinballMono : MonoBehaviour {
 		}
 	}
 
+    public void EnterCannon()
+    {
+        //iTween.MoveTo();
+        //StartCoroutine(WaitForPinballEntering());
+        CoinSpawnerB2_Final spawner = m_Cannon.GetComponent<CoinSpawnerB2_Final>();
+        spawner.AnimateEnterCannon();
+    }
+
+    private IEnumerator WaitForPinballEntering()
+    {
+        yield return new WaitForSeconds(4);
+
+    }
+
     public void SetEarnedCoins()
     {
         gameObject.GetComponentInChildren<CoinSpawnerB2_Final>().SetCoinsEarned();
@@ -190,7 +204,7 @@ public class PinballMono : MonoBehaviour {
 
     public void SetSpwanerTriggerState(bool state)
     {
-        Collider2D spawnerCollider = m_Cannon.GetComponent<PolygonCollider2D>();
+        Collider2D spawnerCollider = m_Cannon.GetComponent<Collider2D>();
         spawnerCollider.enabled = state;
         Collider2D upperBarCollider = m_frame.GetComponent<Collider2D>();
         upperBarCollider.enabled = state;

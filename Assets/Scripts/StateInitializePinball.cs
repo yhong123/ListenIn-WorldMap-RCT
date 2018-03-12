@@ -47,7 +47,19 @@ public class StateInitializePinball : State
 
 	}
 
-	public void StartPinball()
+    public void StartCannonEnteringAnimation()
+    {
+        PinballMono pinballmonocomponent = m_pinball_go.GetComponent<PinballMono>();
+        if (pinballmonocomponent != null){
+            pinballmonocomponent.EnterCannon();
+        }
+        else {
+            Debug.LogError("Coud not find Pinball Mono");
+        }
+    }
+
+
+    public void StartPinball()
 	{
 		if(m_challenge_go != null)
 		{

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class CoinSpawnerB2_Final : MonoBehaviour {
 
     public GameObject coin;
+    public Vector3[] enteringPositions;
     public float speed = 5.0f;
     public Transform spawnPoint;
 	public bool isDebugging = false;
@@ -261,6 +262,18 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 	public int ReturnCoinsLeft()
     {
         return coinsEarned - totalNumberSpawned;
+    }
+
+    public void AnimateEnterCannon()
+    {
+        iTween.Init(this.gameObject);
+        iTween.MoveTo(this.gameObject, iTween.Hash("path", enteringPositions, "time", 4, "easetype", iTween.EaseType.easeOutCubic, "oncomplete", "FinishedTransition"));
+    }
+
+    public void FinishedTransition()
+    {
+        Debug.Log("Cannon in postion");
+        StateInitializePinball.Instance.StartPinball();
     }
 
 }
