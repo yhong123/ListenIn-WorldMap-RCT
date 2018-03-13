@@ -34,6 +34,8 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 
 	public bool stopDropper = false;
 
+    private bool previousDirection = false;
+
     void Start()
     {
         //Time.timeScale = 0;
@@ -60,11 +62,26 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 		else traslationTarget = -Vector3.right * speed;
 
 		translation =  Vector2.SmoothDamp(translation, traslationTarget, ref smoothVelocity, 0.10f);
-		//gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, gameObject.transform.position + traslationTarget, Time.deltaTime);
-		//gameObject.transform.Translate(traslationTarget * Time.deltaTime);
+        //gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, gameObject.transform.position + traslationTarget, Time.deltaTime);
+        //gameObject.transform.Translate(traslationTarget * Time.deltaTime);
 
-        if (transform.position.x >= maxWidth) dirRight = false;
-        if (transform.position.x <= -maxWidth) dirRight = true;
+        if (transform.position.x >= maxWidth)
+        {
+            dirRight = false;
+        }
+        if (transform.position.x <= -maxWidth)
+        {
+            dirRight = true;
+        }
+
+        if (previousDirection != dirRight)
+        {
+            Vector3 currScale = transform.localScale;
+            currScale.x *= -1;
+            transform.localScale = currScale;
+        }
+
+        previousDirection = dirRight;
         //MoveSpawnPoint(0.18f);
     }
 
@@ -267,7 +284,7 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
     public void AnimateEnterCannon()
     {
         iTween.Init(this.gameObject);
-        iTween.MoveTo(this.gameObject, iTween.Hash("path", enteringPositions, "time", 4, "easetype", iTween.EaseType.easeOutCubic, "oncomplete", "FinishedTransition"));
+        iTween.MoveTo(this.gameObject, iTween.Hash("path", enteringPositions, "time", 3.5, "easetype", iTween.EaseType.easeOutCubic, "oncomplete", "FinishedTransition"));
     }
 
     public void FinishedTransition()
