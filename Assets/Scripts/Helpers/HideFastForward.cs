@@ -4,27 +4,19 @@ using UnityEngine.SceneManagement;
 
 public class HideFastForward : MonoBehaviour {
 
-    private GameObject fastForward;
+    [SerializeField]
+    private GameObject challengeButtons;
+    [SerializeField]
+    private GameObject pinballButtons;
 
     // Use this for initialization
     void OnEnable() {
 
-        if (fastForward == null)
+        if (challengeButtons == null || pinballButtons == null)
         {
-            Transform fastForwardtransform = transform.FindChild("FastForward");
-
-            if (fastForwardtransform != null)
-            {
-                fastForward = fastForwardtransform.gameObject;
-            }
-            else
-            {
-                Debug.Log("Fast Forward button not found: returning...");
-                return;
-            }
-
+            Debug.LogError("Must menu buttons button in editor");
+            return;
         }
-        
 
         Scene currScene = SceneManager.GetActiveScene();
 
@@ -38,7 +30,8 @@ public class HideFastForward : MonoBehaviour {
                 if (mm != null)
                 {
                     Debug.Log("Opening menu in therapy: hiding fast forward button");
-                    fastForward.SetActive(false);
+                    challengeButtons.SetActive(true);
+                    pinballButtons.SetActive(false);
                     return;
                 }
             }
@@ -50,17 +43,10 @@ public class HideFastForward : MonoBehaviour {
                 if (csm != null)
                 {
                     Debug.Log("Opening menu in pinball game: enabling");
-                    fastForward.SetActive(true);
-                    
+                    challengeButtons.SetActive(false);
+                    pinballButtons.SetActive(true);
                 }
             }
-
         }
-
      }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

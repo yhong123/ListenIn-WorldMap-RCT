@@ -111,9 +111,7 @@ public class ShowPanels : MonoBehaviour {
         optionsTint.SetActive(false);
         UploadingMessageUI.SetActive(true);
     }
-
-
-    
+        
 	IEnumerator BackToChallenge(float waitTime)
 	{
         //Making this time scale independent

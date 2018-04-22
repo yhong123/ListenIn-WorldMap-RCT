@@ -106,7 +106,9 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         yield return new WaitForEndOfFrame();
 
-        percentage = 48;
+        //AndreaLIRO: Insert therapy ladder new algorithm
+
+        percentage = 55;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
