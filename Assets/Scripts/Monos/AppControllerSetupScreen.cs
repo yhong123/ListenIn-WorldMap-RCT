@@ -107,6 +107,17 @@ public class AppControllerSetupScreen : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         //AndreaLIRO: Insert therapy ladder new algorithm
+        percentage = 47;
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+
+        try
+        {
+            StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
+        }
+        catch (Exception ex)
+        {
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+        }
 
         percentage = 55;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);

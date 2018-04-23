@@ -118,8 +118,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Database/backup");
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/");
 			Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/all");   // 2016-12-06
-            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO");
-            
+            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO"); // 2018-23-04
+            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Section"); //2018-23-04
+
             //create an xml from the local sample one
             if (database_xml_file == null)
             {

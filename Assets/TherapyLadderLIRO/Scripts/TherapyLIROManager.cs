@@ -2,6 +2,7 @@
 using System.IO;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Xml;
 using System.Xml.Linq;
@@ -13,7 +14,6 @@ public enum TherapyLadderStep { CORE1 = 0, SETA = 1};
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     private TherapyLadderStep m_LIROTherapyStep;
-
     private int currIDUser;
 
     protected override void Awake()
@@ -57,9 +57,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             try
             {
                 XElement root = XElement.Load(currFullPath);
-
                 currIDUser = (int)root.Element("UserID");
-
                 if (currIDUser != DatabaseXML.Instance.PatientId)
                 {
                     Debug.LogWarning("ID mismatch between database xml and therapy LIRO manager");
@@ -81,9 +79,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 yield return StartCoroutine(SaveCurrentUserProfile());
 
         }
+
+        //AndreaLIRO: to eliminate
+        CheckCurrentSection();
+
         yield return null;
     }
-
     public IEnumerator SaveCurrentUserProfile()
     {
 
@@ -100,18 +101,92 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         string strXmlFile = System.IO.Path.Combine(currFullPath, currUser);
 
         XmlElement xmlChild = doc.CreateElement("UserID");
-        xmlChild.InnerText = m_LIROTherapyStep.ToString();
+        xmlChild.InnerText = currIDUser.ToString();
         doc.DocumentElement.AppendChild(xmlChild);
 
-         xmlChild = doc.CreateElement("LadderStep");
+        xmlChild = doc.CreateElement("LadderStep");
         xmlChild.InnerText = m_LIROTherapyStep.ToString();
         doc.DocumentElement.AppendChild(xmlChild);
-        
-
 
         doc.Save(currFullPath);
 
         yield return null;
     }
+
+    #region API
+    public void CheckCurrentSection()
+    {
+        //Andrea: add the following 
+        string currFolder = GlobalVars.GetPathToLIROCurrentLadderSection();
+        //If folder is empty create the splitted file
+        string[] currFiles = Directory.GetFiles(currFolder);
+        if (currFiles != null && currFiles.Length != 0)
+        {
+            //Proceed
+        }
+        else
+        {
+            Debug.Log("TherapyLiroManager: creating current file sections");
+            StartCoroutine(CreateCurentSection());
+        }
+    }
+
+    public void AdvanceCurrentSection()
+    {
+        int currStep = (int)m_LIROTherapyStep;
+        Array currValues = Enum.GetValues(typeof(TherapyLadderStep));
+        int size = currValues.Length;
+
+        currStep = (currStep + 1) % size;
+    }
+    #endregion
+
+    #region internalFunctions
+    internal IEnumerator CreateCurentSection()
+    {
+        if (m_LIROTherapyStep == TherapyLadderStep.CORE1)
+        {
+            //Load csv file
+            TextAsset coreItemText = Resources.Load<TextAsset>(GlobalVars.LiroCoreItems);
+            string[] itemLines = coreItemText.text.Split(new char[] { '\n' });
+
+            string coreFormat = "Core_{0}";
+            string currFileName;
+            int currFileIdx = 0;
+            int challengeCounter = 0;
+
+            List<string> currLines = new List<string>();
+
+            for (int i = 0; i < itemLines.Length; i++)
+            {
+                currLines.Add(itemLines[i]);
+                challengeCounter++;
+                if (challengeCounter == GlobalVars.ChallengeLength)
+                {
+                    //SaveFile and create a new one
+                    currFileName = String.Format(coreFormat, currFileIdx);
+                    File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFileName), currLines.ToArray());
+                    currLines.Clear();
+                    challengeCounter = 0;
+                    currFileIdx++;
+                }
+                
+            }
+            //Save the remaining in the last file
+            if (currLines.Count != 0)
+            {
+                currFileName = String.Format(coreFormat, currFileIdx);
+                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFileName), currLines.ToArray());
+                currLines.Clear();
+            }               
+        }
+        yield return null;
+    }
+
+    internal void ShuffleLines(ref string[] lines)
+    {
+        //Andrea to be implemented
+    }
+    #endregion
 
 }
