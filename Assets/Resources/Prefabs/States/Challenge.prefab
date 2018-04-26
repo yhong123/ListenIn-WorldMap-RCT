@@ -918,10 +918,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 478138}
-  - 114: {fileID: 11495608}
+  - 114: {fileID: 11413950}
   - 82: {fileID: 8270996}
   - 82: {fileID: 8284136}
   - 82: {fileID: 8265094}
+  - 114: {fileID: 11479766}
   m_Layer: 0
   m_Name: GameControl
   m_TagString: Untagged
@@ -972,7 +973,7 @@ GameObject:
   - 61: {fileID: 6153366}
   - 95: {fileID: 9528932}
   - 114: {fileID: 11462582}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Stimulus6
   m_TagString: Stimulus6
   m_Icon: {fileID: 0}
@@ -1553,7 +1554,7 @@ GameObject:
   - 61: {fileID: 6108040}
   - 95: {fileID: 9587566}
   - 114: {fileID: 11462966}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Stimulus1
   m_TagString: Stimulus1
   m_Icon: {fileID: 0}
@@ -1605,7 +1606,7 @@ GameObject:
   - 61: {fileID: 6163606}
   - 95: {fileID: 9573312}
   - 114: {fileID: 11475630}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Stimulus4
   m_TagString: Stimulus4
   m_Icon: {fileID: 0}
@@ -1842,7 +1843,7 @@ GameObject:
   - 61: {fileID: 6114854}
   - 95: {fileID: 9564278}
   - 114: {fileID: 11496906}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Stimulus2
   m_TagString: Stimulus2
   m_Icon: {fileID: 0}
@@ -2581,7 +2582,7 @@ GameObject:
   - 61: {fileID: 6199438}
   - 95: {fileID: 9581060}
   - 114: {fileID: 11453110}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Stimulus5
   m_TagString: Stimulus5
   m_Icon: {fileID: 0}
@@ -2863,7 +2864,7 @@ GameObject:
   - 61: {fileID: 6119480}
   - 95: {fileID: 9543686}
   - 114: {fileID: 11418700}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Stimulus3
   m_TagString: Stimulus3
   m_Icon: {fileID: 0}
@@ -6450,6 +6451,26 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11413950
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 136180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03763eeb2cd747a47bcc16da3056b4cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOfTrials: 50
+  m_arrAudioSource: []
+  m_audioTarget: {fileID: 0}
+  m_audioBackgroundNoise: {fileID: 0}
+  m_audio_feedback: {fileID: 0}
+  m_root_3: {fileID: 416286}
+  m_root_4: {fileID: 488358}
+  m_root_5: {fileID: 453354}
+  m_root_6: {fileID: 403986}
 --- !u!114 &11418700
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6461,6 +6482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6ff649c3fbdc54a8f1a44e13650703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_registeredID: 0
   throwPosition: {x: 0, y: 0, z: 0}
   endPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &11419038
@@ -6549,6 +6571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6ff649c3fbdc54a8f1a44e13650703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_registeredID: 0
   throwPosition: {x: 0, y: 0, z: 0}
   endPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &11462582
@@ -6562,6 +6585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6ff649c3fbdc54a8f1a44e13650703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_registeredID: 0
   throwPosition: {x: 0, y: 0, z: 0}
   endPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &11462966
@@ -6575,6 +6599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6ff649c3fbdc54a8f1a44e13650703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_registeredID: 0
   throwPosition: {x: 0, y: 0, z: 0}
   endPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &11466266
@@ -6676,8 +6701,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6ff649c3fbdc54a8f1a44e13650703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_registeredID: 0
   throwPosition: {x: 0, y: 0, z: 0}
   endPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &11479766
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 136180}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42154aa3c23e11b4cbf5d40e8ae9c8ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOfTrials: 50
+  m_arrAudioSource: []
+  m_audioTarget: {fileID: 0}
+  m_audioBackgroundNoise: {fileID: 0}
+  m_audio_feedback: {fileID: 0}
+  m_root_3: {fileID: 416286}
+  m_root_4: {fileID: 488358}
+  m_root_5: {fileID: 453354}
+  m_root_6: {fileID: 403986}
 --- !u!114 &11490660
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6700,26 +6746,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11495608
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 136180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42154aa3c23e11b4cbf5d40e8ae9c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numberOfTrials: 3
-  m_arrAudioSource: []
-  m_audioTarget: {fileID: 0}
-  m_audioBackgroundNoise: {fileID: 0}
-  m_audio_feedback: {fileID: 0}
-  m_root_3: {fileID: 416286}
-  m_root_4: {fileID: 488358}
-  m_root_5: {fileID: 453354}
-  m_root_6: {fileID: 403986}
 --- !u!114 &11496906
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6731,6 +6757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6ff649c3fbdc54a8f1a44e13650703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_registeredID: 0
   throwPosition: {x: 0, y: 0, z: 0}
   endPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &11497816

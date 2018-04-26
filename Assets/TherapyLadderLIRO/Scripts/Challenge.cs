@@ -1,25 +1,28 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 public class Challenge {
-    public int ChallengeID;
+    public long ChallengeID;
     public string FileAudioID;
-    public int CorrectImageID;
-    public int Foil1;
-    public int Foil2;
-    public int Foil3;
-    public int Foil4;
-    public int Foil5;
+    public long CorrectImageID;
+    public List<long> Foils = new List<long>();
 
-    public Challenge(int chID, string faID, int ciID, int f1, int f2, int f3, int f4, int f5)
+    public Challenge()
+    {
+
+    }
+
+    public Challenge(long chID, string faID, long ciID, long f1, long f2, long f3, long f4, long f5)
     {
         ChallengeID = chID;
         FileAudioID = faID;
         CorrectImageID = ciID;
-        Foil1 = f1;
-        Foil2 = f2;
-        Foil3 = f3;
-        Foil4 = f4;
-        Foil5 = f5;
+        Foils.Add(ciID);
+        Foils.Add(f1);
+        Foils.Add(f2);
+        Foils.Add(f3);
+        Foils.Add(f4);
+        Foils.Add(f5);
     }
 
 }

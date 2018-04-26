@@ -3,6 +3,7 @@ using System.Collections;
 
 public class StimulusScript : MonoBehaviour {
 
+    public long m_registeredID;
 	GameObject m_goImage;
 	GameObject m_goRectangle;
 	Animator m_anim;
@@ -92,10 +93,11 @@ public class StimulusScript : MonoBehaviour {
 			m_goImage = transform.FindChild("PictureFrame").gameObject;
 
 		// retrieve image from the Resource folder
-		m_goImage.GetComponent<SpriteRenderer> ().sprite = Resources.Load(strImage, typeof(Sprite)) as Sprite;
+        Sprite currSprite = Resources.Load(strImage, typeof(Sprite)) as Sprite;
+        m_goImage.GetComponent<SpriteRenderer>().sprite = currSprite;
 
-		// scale sprite to smaller size
-		Vector3 scale = new Vector3(2, 2, 1);   // new Vector3(0.65f, 0.65f, 1);
+        // scale sprite to smaller size
+        Vector3 scale = new Vector3(2, 2, 1);   // new Vector3(0.65f, 0.65f, 1);
 		m_goImage.transform.localScale = scale;
 
 	}

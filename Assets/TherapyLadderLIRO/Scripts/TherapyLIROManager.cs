@@ -159,7 +159,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             for (int i = 0; i < itemLines.Length; i++)
             {
-                currLines.Add(itemLines[i]);
+                currLines.Add(itemLines[i].Replace("\r",String.Empty).Trim());
                 challengeCounter++;
                 if (challengeCounter == GlobalVars.ChallengeLength)
                 {

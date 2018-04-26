@@ -133,7 +133,7 @@ public class StateChallenge : State
 
 	public void UnlockChallenged()
 	{
-		m_GO.GetComponentInChildren<GameControlScript>().PlayAudio();
+		m_GO.GetComponentInChildren<GameControlScriptStandard>().PlayAudioLIRO();
 	}
 
     

@@ -130,7 +130,7 @@ public class ShowPanels : MonoBehaviour {
 
             if (challenge != null)
             {
-                challenge.GetComponentInChildren<GameControlScript>().SetEnable(true);
+                challenge.GetComponentInChildren<GameControlScriptStandard>().SetEnable(true);
                 ReplaySound replayButton = challenge.GetComponentInChildren<ReplaySound>();
 
                 if (replayButton != null)
