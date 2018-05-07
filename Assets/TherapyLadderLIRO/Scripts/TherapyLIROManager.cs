@@ -14,14 +14,22 @@ public enum TherapyLadderStep { CORE1 = 0, SETA = 1};
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     private TherapyLadderStep m_LIROTherapyStep;
-    private int currIDUser;
+    public TherapyLadderStep LIROStep { get { return m_LIROTherapyStep; } }
+    private int m_currIDUser;
 
+    #region CORE
+    private int m_currSectionCounter;
+    public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }
+    #endregion
+
+
+
+    #region Unity
     protected override void Awake()
     {
         //m_LIROTherapySteps.Add(TherapyLadderStep.CORE);
         //m_LIROTherapySteps.Add(TherapyLadderStep.ACT);
     }
-
     void OnLevelWasLoaded(int level)
     {
         if (level == 0)
@@ -31,6 +39,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
 
     }
+    #endregion
 
     /// <summary>
     /// This function is called at initialiation to load the last saved information for the current user on the therapy ladder
@@ -47,7 +56,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             Debug.Log("LIRO User Profile not found, creating a new one");
             //Setting a new LIRO user profile
             m_LIROTherapyStep = (TherapyLadderStep)0;
-            currIDUser = 1;
+            m_currIDUser = 1;
             yield return StartCoroutine(SaveCurrentUserProfile());
         }
         else
@@ -57,8 +66,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             try
             {
                 XElement root = XElement.Load(currFullPath);
-                currIDUser = (int)root.Element("UserID");
-                if (currIDUser != DatabaseXML.Instance.PatientId)
+                m_currIDUser = (int)root.Element("UserID");
+                if (m_currIDUser != DatabaseXML.Instance.PatientId)
                 {
                     Debug.LogWarning("ID mismatch between database xml and therapy LIRO manager");
                 }
@@ -72,7 +81,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 Debug.LogError(ex.Message);
                 exceptionThrown = true;
                 m_LIROTherapyStep = (TherapyLadderStep)0;
-                currIDUser = 1;
+                m_currIDUser = 1;
             }
 
             if (exceptionThrown)
@@ -80,7 +89,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         }
 
-        //AndreaLIRO: to eliminate
+        //AndreaLIRO: to eliminate and put in a meaningful part.
+        //Maybe when loading the world map allocate some time for creating the current section
         CheckCurrentSection();
 
         yield return null;
@@ -101,7 +111,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         string strXmlFile = System.IO.Path.Combine(currFullPath, currUser);
 
         XmlElement xmlChild = doc.CreateElement("UserID");
-        xmlChild.InnerText = currIDUser.ToString();
+        xmlChild.InnerText = m_currIDUser.ToString();
         doc.DocumentElement.AppendChild(xmlChild);
 
         xmlChild = doc.CreateElement("LadderStep");
@@ -130,7 +140,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             StartCoroutine(CreateCurentSection());
         }
     }
-
     public void AdvanceCurrentSection()
     {
         int currStep = (int)m_LIROTherapyStep;
@@ -141,7 +150,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
     #endregion
 
-    #region internalFunctions
+    #region Internal Functions
     internal IEnumerator CreateCurentSection()
     {
         if (m_LIROTherapyStep == TherapyLadderStep.CORE1)
@@ -150,7 +159,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             TextAsset coreItemText = Resources.Load<TextAsset>(GlobalVars.LiroCoreItems);
             string[] itemLines = coreItemText.text.Split(new char[] { '\n' });
 
-            string coreFormat = "Core_{0}";
+            string coreFormat = String.Concat(m_LIROTherapyStep.ToString(), "_{0}");
             string currFileName;
             int currFileIdx = 0;
             int challengeCounter = 0;
@@ -164,7 +173,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 if (challengeCounter == GlobalVars.ChallengeLength)
                 {
                     //SaveFile and create a new one
-                    currFileName = String.Format(coreFormat, currFileIdx);
+                    currFileName = String.Format(coreFormat, currFileIdx + 1);
                     File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFileName), currLines.ToArray());
                     currLines.Clear();
                     challengeCounter = 0;
@@ -182,7 +191,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
         yield return null;
     }
-
     internal void ShuffleLines(ref string[] lines)
     {
         //Andrea to be implemented

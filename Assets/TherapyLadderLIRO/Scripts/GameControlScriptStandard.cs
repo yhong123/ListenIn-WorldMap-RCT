@@ -861,7 +861,7 @@ public class GameControlScriptStandard : MonoBehaviour
                     if (Input.GetTouch(i).phase == TouchPhase.Began)
                     {
                         currMask = LayerMask.NameToLayer("Stimulus");
-                        RaycastHit2D hitInfo = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.GetTouch(i).position), Vector2.zero, Mathf.Infinity, currMask);
+                        RaycastHit2D hitInfo = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.GetTouch(i).position), Vector2.zero, Mathf.Infinity, 1 << currMask);
                         // RaycastHit2D can be either true or null, but has an implicit conversion to bool, so we can use it like this
                         if (hitInfo)
                         {
