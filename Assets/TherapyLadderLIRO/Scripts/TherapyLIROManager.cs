@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { CORE1 = 0, SETA = 1};
+public enum TherapyLadderStep { CORE = 0, ACT = 1};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -22,22 +22,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }
     #endregion
 
-
-
     #region Unity
     protected override void Awake()
     {
-        //m_LIROTherapySteps.Add(TherapyLadderStep.CORE);
-        //m_LIROTherapySteps.Add(TherapyLadderStep.ACT);
-    }
-    void OnLevelWasLoaded(int level)
-    {
-        if (level == 0)
-        {
-            Debug.Log("First level was loaded");
-            //Check for PlayerPrefs to see if there is a data for the current step
-        }
-
     }
     #endregion
 
@@ -137,7 +124,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         else
         {
             Debug.Log("TherapyLiroManager: creating current file sections");
-            StartCoroutine(CreateCurentSection());
+            StartCoroutine(CreateCurrentSection());
         }
     }
     public void AdvanceCurrentSection()
@@ -151,9 +138,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     #endregion
 
     #region Internal Functions
-    internal IEnumerator CreateCurentSection()
+    internal IEnumerator CreateCurrentSection()
     {
-        if (m_LIROTherapyStep == TherapyLadderStep.CORE1)
+        if (m_LIROTherapyStep == TherapyLadderStep.CORE)
         {
             //Load csv file
             TextAsset coreItemText = Resources.Load<TextAsset>(GlobalVars.LiroCoreItems);
