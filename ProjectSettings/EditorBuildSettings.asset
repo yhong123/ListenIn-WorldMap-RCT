@@ -6,12 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SetupScreen.unity
+    path: Assets/Mad Level Manager/Examples/Example 1 - Grid Touch/GridExampleTouchScene.unity
   - enabled: 1
-    path: Assets/Scenes/LevelSelectScene.unity
+    path: Assets/Mad Level Manager/Examples/Stuff/Scenes/LoadingScene.unity
   - enabled: 1
-    path: Assets/Scenes/GameLoop.unity
-  - enabled: 1
-    path: Assets/Scenes/Demo.unity
-  - enabled: 1
-    path: Assets/Scenes/GameIntro.unity
+    path: Assets/Mad Level Manager/Examples/Stuff/Scenes/MadLevelTester2.unity
