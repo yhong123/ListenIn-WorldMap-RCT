@@ -96,6 +96,7 @@ GameObject:
   - 222: {fileID: 95713092}
   - 114: {fileID: 95713091}
   - 114: {fileID: 95713093}
+  - 114: {fileID: 95713094}
   m_Layer: 0
   m_Name: Basket_2
   m_TagString: Untagged
@@ -192,9 +193,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 95713091}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 95713094}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &95713094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 95713089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 2
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
 --- !u!1 &126407936
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,6 +306,7 @@ GameObject:
   - 222: {fileID: 166776662}
   - 114: {fileID: 166776661}
   - 114: {fileID: 166776663}
+  - 114: {fileID: 166776664}
   m_Layer: 0
   m_Name: Basket_5
   m_TagString: Untagged
@@ -375,9 +403,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 166776661}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 166776664}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &166776664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 166776659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 5
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
 --- !u!1 &182542841
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,6 +589,7 @@ GameObject:
   - 222: {fileID: 351746675}
   - 114: {fileID: 351746674}
   - 114: {fileID: 351746676}
+  - 114: {fileID: 351746677}
   m_Layer: 0
   m_Name: Basket_3
   m_TagString: Untagged
@@ -631,9 +686,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 351746674}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 351746677}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &351746677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 351746672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 3
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
 --- !u!1 &441553395
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,6 +726,7 @@ GameObject:
   - 222: {fileID: 441553398}
   - 114: {fileID: 441553397}
   - 114: {fileID: 441553399}
+  - 114: {fileID: 441553400}
   m_Layer: 0
   m_Name: Basket_10
   m_TagString: Untagged
@@ -741,9 +823,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 441553397}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 441553400}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &441553400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 441553395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 10
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
 --- !u!1 &468907498
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1206,7 @@ GameObject:
   - 222: {fileID: 1058290063}
   - 114: {fileID: 1058290062}
   - 114: {fileID: 1058290064}
+  - 114: {fileID: 1058290065}
   m_Layer: 0
   m_Name: Basket_4
   m_TagString: Untagged
@@ -1194,9 +1303,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1058290062}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1058290065}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1058290065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1058290060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 4
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
 --- !u!1 &1085589729
 GameObject:
   m_ObjectHideFlags: 0
@@ -1208,6 +1343,7 @@ GameObject:
   - 222: {fileID: 1085589732}
   - 114: {fileID: 1085589731}
   - 114: {fileID: 1085589733}
+  - 114: {fileID: 1085589734}
   m_Layer: 0
   m_Name: Basket_6
   m_TagString: Untagged
@@ -1304,9 +1440,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1085589731}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1085589734}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1085589734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1085589729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 6
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
 --- !u!1 &1230403677
 GameObject:
   m_ObjectHideFlags: 0
@@ -1464,6 +1626,7 @@ GameObject:
   - 222: {fileID: 1296029675}
   - 114: {fileID: 1296029674}
   - 114: {fileID: 1296029676}
+  - 114: {fileID: 1296029677}
   m_Layer: 0
   m_Name: Basket_9
   m_TagString: Untagged
@@ -1560,9 +1723,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1296029674}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1296029677}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1296029677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1296029672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 9
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
 --- !u!1 &1327249098
 GameObject:
   m_ObjectHideFlags: 0
@@ -1754,6 +1943,7 @@ GameObject:
   - 222: {fileID: 1459357127}
   - 114: {fileID: 1459357126}
   - 114: {fileID: 1459357128}
+  - 114: {fileID: 1459357129}
   m_Layer: 0
   m_Name: Basket_7
   m_TagString: Untagged
@@ -1850,9 +2040,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1459357126}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1459357129}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1459357129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1459357124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 7
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
 --- !u!1 &1466789064
 GameObject:
   m_ObjectHideFlags: 0
@@ -2104,6 +2320,7 @@ GameObject:
   - 222: {fileID: 1582603043}
   - 114: {fileID: 1582603042}
   - 114: {fileID: 1582603044}
+  - 114: {fileID: 1582603045}
   m_Layer: 0
   m_Name: Basket_8
   m_TagString: Untagged
@@ -2200,9 +2417,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1582603042}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1582603045}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1582603045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1582603040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 8
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
 --- !u!1 &1822625105
 GameObject:
   m_ObjectHideFlags: 0
@@ -2230,6 +2473,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09983658324fb3240b484f41437ae9bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  max_number_of_selected_basket: 2
+  currentSelectedBaskets: 0
 --- !u!4 &1822625107
 Transform:
   m_ObjectHideFlags: 0
@@ -2547,6 +2792,7 @@ GameObject:
   - 222: {fileID: 2030562697}
   - 114: {fileID: 2030562696}
   - 114: {fileID: 2030562698}
+  - 114: {fileID: 2030562699}
   m_Layer: 0
   m_Name: Basket_1
   m_TagString: Untagged
@@ -2644,12 +2890,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1822625106}
+        m_MethodName: RegisterBasket
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgument: {fileID: 2030562699}
+          m_ObjectArgumentAssemblyTypeName: BasketController, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2657,3 +2903,18 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &2030562699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2030562694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acfccec9169ef548b9c14b7038feca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_basketNumber: 1
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
+  m_Image: {fileID: 0}
