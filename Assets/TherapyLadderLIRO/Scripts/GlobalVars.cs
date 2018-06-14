@@ -20,11 +20,15 @@ return Application.dataPath;// +"/"+ fileName;
 
     public static string LiroProfileTemplate = "user_{0}_profile_LIRO";
     public static string LiroCoreItems = @"Doc/2018-04-core-challenge-list";
-    public static string GetPathToLIROUserProfile()
+
+    public static string GetPathToLIROBaskets()
     {
         return Path.Combine(GetPath(), @"ListenIn/LIRO");
     }
-
+    public static string GetPathToLIROUserProfile()
+    {
+        return Path.Combine(GetPath(), @"ListenIn/LIRO/Baskets");
+    }
     public static string GetPathToLIROCurrentLadderSection()
     {
         return Path.Combine(GetPath(), @"ListenIn/LIRO/Section");

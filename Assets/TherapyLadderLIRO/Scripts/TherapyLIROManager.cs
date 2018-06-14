@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Xml;
 using System.Xml.Linq;
+using System.Linq;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
@@ -20,6 +21,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     #region CORE
     private int m_currSectionCounter;
     public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }
+    #endregion
+
+    #region Delegates
+    public delegate void OnUpdateProgress(int progressAmount);
+    public OnUpdateProgress m_onUpdateProgress;
     #endregion
 
     #region Unity
@@ -135,6 +141,10 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         currStep = (currStep + 1) % size;
     }
+    public void StartCoreTherapy(List<int> selectedBasket)
+    {
+        StartCoroutine(LoadBasketFiles(selectedBasket));
+    }
     #endregion
 
     #region Internal Functions
@@ -181,6 +191,31 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     internal void ShuffleLines(ref string[] lines)
     {
         //Andrea to be implemented
+    }
+    internal IEnumerator LoadBasketFiles(List<int> baskets)
+    {
+        int currAmount = 2;
+        string currPath;
+        List<Challenge> curr_basket_list;
+
+        for (int i = 0; i < baskets.Count; i++)
+        {
+            curr_basket_list = new List<Challenge>();
+            if (m_onUpdateProgress != null)
+            {
+                m_onUpdateProgress(currAmount);
+            }
+            yield return new WaitForEndOfFrame();
+
+            CoreItemReader cir = new CoreItemReader();
+            string basketName = String.Format("Basket_{0}.csv", baskets[i]);
+            currPath = Path.Combine(GlobalVars.GetPathToLIROBaskets(), basketName);
+
+            curr_basket_list = cir.ParseCsv(currPath).ToList();
+
+            currAmount += 20;
+
+        }
     }
     #endregion
 

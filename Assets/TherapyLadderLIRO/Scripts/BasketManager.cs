@@ -1,22 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class BasketManager : MonoBehaviour {
 
     private List<int> m_selectedBasket;
     public int max_number_of_selected_basket = 2;
 
-    public int currentSelectedBaskets;
+    [SerializeField]
+    private Button m_startButton;
+    [SerializeField]
+    private GameObject m_progressScreen;
+    [SerializeField]
+    private Text m_progressTherapy;
+
+    private string m_stringProgressBarFormat = "Loading Therapy... {0}%";
 
 	// Use this for initialization
 	void Start () {
+        
         m_selectedBasket = new List<int>();
-    }
-
-    void Update()
-    {
-        currentSelectedBaskets = m_selectedBasket.Count;
+        if (m_startButton != null || m_progressScreen != null || m_progressTherapy != null)
+            Debug.LogError("Please attach the components to BasketManager");
+        m_startButton.interactable = false;
+        m_progressScreen.SetActive(false);
     }
 
     public void RegisterBasket(BasketController bc)
@@ -27,6 +35,7 @@ public class BasketManager : MonoBehaviour {
             //Remove
             bc.SetHighlightColor(false);
             m_selectedBasket.RemoveAt(indexInList);
+            m_startButton.interactable = false;
         }
         else
         {
@@ -34,8 +43,22 @@ public class BasketManager : MonoBehaviour {
             {
                 bc.SetHighlightColor(true);
                 m_selectedBasket.Add(bc.m_basketNumber);
+                if(m_selectedBasket.Count == max_number_of_selected_basket)
+                    m_startButton.interactable = true;
             }                    
         }
+    }
+
+    public void PrepareTherapy()
+    {
+        m_progressScreen.SetActive(true);
+        TherapyLIROManager.Instance.m_onUpdateProgress += UpdateProgressBar;
+        TherapyLIROManager.Instance.StartCoreTherapy(m_selectedBasket);        
+    }
+
+    private void UpdateProgressBar(int amount)
+    {
+        m_progressTherapy.text = string.Format(m_stringProgressBarFormat, amount);
     }
 
 }
