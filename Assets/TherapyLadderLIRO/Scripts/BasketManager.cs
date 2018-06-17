@@ -21,10 +21,23 @@ public class BasketManager : MonoBehaviour {
 	void Start () {
         
         m_selectedBasket = new List<int>();
-        if (m_startButton != null || m_progressScreen != null || m_progressTherapy != null)
+        if (m_startButton == null || m_progressScreen == null || m_progressTherapy == null)
             Debug.LogError("Please attach the components to BasketManager");
         m_startButton.interactable = false;
         m_progressScreen.SetActive(false);
+    }
+
+    void Update()
+    {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            m_selectedBasket.Clear();
+            m_selectedBasket.Add(1);
+            m_selectedBasket.Add(2);
+            PrepareTherapy();
+        }
+#endif
     }
 
     public void RegisterBasket(BasketController bc)

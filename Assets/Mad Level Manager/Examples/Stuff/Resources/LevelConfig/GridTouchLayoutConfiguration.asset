@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: GridTouchLayoutConfiguration
   m_EditorClassIdentifier: 
   creationDate: 0
-  _active: 1
+  _active: 0
   levels:
   - _sceneObject: {fileID: 102900000, guid: 9164c6cc16d693940b9974f78eda24c1, type: 3}
     _scenePath: Assets/Mad Level Manager/Examples/Example 1 - Grid Touch/GridExampleTouchScene.unity

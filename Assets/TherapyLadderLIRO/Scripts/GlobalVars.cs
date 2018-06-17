@@ -6,7 +6,7 @@ using System.Collections;
 public static class GlobalVars {
 
     public static int ChallengeLength = 20;
-
+    public static int ActChallengeLength = 30;
     public static string GetPath()
     {
 #if UNITY_EDITOR
@@ -23,11 +23,11 @@ return Application.dataPath;// +"/"+ fileName;
 
     public static string GetPathToLIROBaskets()
     {
-        return Path.Combine(GetPath(), @"ListenIn/LIRO");
+        return Path.Combine(GetPath(), @"ListenIn/LIRO/Baskets");
     }
     public static string GetPathToLIROUserProfile()
     {
-        return Path.Combine(GetPath(), @"ListenIn/LIRO/Baskets");
+        return Path.Combine(GetPath(), @"ListenIn/LIRO");
     }
     public static string GetPathToLIROCurrentLadderSection()
     {

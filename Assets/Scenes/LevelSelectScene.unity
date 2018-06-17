@@ -576,7 +576,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &60136475
 Transform:
   m_ObjectHideFlags: 0
@@ -603,7 +603,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -706,7 +706,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &65493699
 Transform:
   m_ObjectHideFlags: 0
@@ -733,7 +733,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -1050,7 +1050,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &109706267
 Transform:
   m_ObjectHideFlags: 0
@@ -1077,7 +1077,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -3115,6 +3115,74 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!1 &241845755
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 241845756}
+  - 222: {fileID: 241845758}
+  - 114: {fileID: 241845757}
+  m_Layer: 5
+  m_Name: CoreTherapyLIROInitializeFeedback
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &241845756
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 241845755}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1062805718}
+  m_Father: {fileID: 1328917364}
+  m_RootOrder: 9
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &241845757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 241845755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &241845758
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 241845755}
 --- !u!1 &259426467
 GameObject:
   m_ObjectHideFlags: 0
@@ -4112,7 +4180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &296907823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4127,7 +4195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -5341,7 +5409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &448917659
 Transform:
   m_ObjectHideFlags: 0
@@ -5368,7 +5436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -6513,7 +6581,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &469124891
 Transform:
   m_ObjectHideFlags: 0
@@ -6540,7 +6608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -7679,7 +7747,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &591966932
 Transform:
   m_ObjectHideFlags: 0
@@ -7706,7 +7774,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -11006,7 +11074,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &730122491
 Transform:
   m_ObjectHideFlags: 0
@@ -11033,7 +11101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -11074,7 +11142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &745207398
 Transform:
   m_ObjectHideFlags: 0
@@ -11101,7 +11169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -11311,7 +11379,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &779314277
 Transform:
   m_ObjectHideFlags: 0
@@ -11338,7 +11406,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -11850,7 +11918,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &789906336
 Transform:
   m_ObjectHideFlags: 0
@@ -11877,7 +11945,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -12045,7 +12113,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &800947546
 Transform:
   m_ObjectHideFlags: 0
@@ -12072,7 +12140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -12656,7 +12724,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &952385984
 Transform:
   m_ObjectHideFlags: 0
@@ -12683,7 +12751,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -13288,7 +13356,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &966562227
 Transform:
   m_ObjectHideFlags: 0
@@ -13315,7 +13383,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -13415,7 +13483,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &976830064
 Transform:
   m_ObjectHideFlags: 0
@@ -13442,7 +13510,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -13492,7 +13560,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &986229973
 Transform:
   m_ObjectHideFlags: 0
@@ -13519,7 +13587,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -13877,7 +13945,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1041378855
 Transform:
   m_ObjectHideFlags: 0
@@ -13904,7 +13972,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -14559,6 +14627,79 @@ Transform:
   - {fileID: 1274254273}
   m_Father: {fileID: 765297770}
   m_RootOrder: 10
+--- !u!1 &1062805717
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 1062805718}
+  - 222: {fileID: 1062805720}
+  - 114: {fileID: 1062805719}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1062805718
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1062805717}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.26, y: 0.26, z: 0.26}
+  m_Children: []
+  m_Father: {fileID: 241845756}
+  m_RootOrder: 0
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.000030517578, y: 0.000030517578}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1062805719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1062805717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 035361769c2205548b244b20dd496761, type: 3}
+    m_FontSize: 150
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 150
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: Initiaziling your customized therapy...
+--- !u!222 &1062805720
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1062805717}
 --- !u!1 &1071441038
 GameObject:
   m_ObjectHideFlags: 0
@@ -14574,7 +14715,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1071441039
 Transform:
   m_ObjectHideFlags: 0
@@ -14601,7 +14742,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -15666,7 +15807,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1193832032
 Transform:
   m_ObjectHideFlags: 0
@@ -15693,7 +15834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -16214,7 +16355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1211845683
 Transform:
   m_ObjectHideFlags: 0
@@ -16241,7 +16382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -17119,7 +17260,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1309027951
 Transform:
   m_ObjectHideFlags: 0
@@ -17146,7 +17287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -17486,7 +17627,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22404952, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -100.07408
+      value: -100.26361
       objectReference: {fileID: 0}
     - target: {fileID: 22404952, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
       propertyPath: m_SizeDelta.x
@@ -17494,7 +17635,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22404952, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 200.14816
+      value: 200.52722
       objectReference: {fileID: 0}
     - target: {fileID: 22475484, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
       propertyPath: m_AnchorMin.y
@@ -17510,7 +17651,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22475484, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -100.07408
+      value: -100.26361
       objectReference: {fileID: 0}
     - target: {fileID: 22475484, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
       propertyPath: m_SizeDelta.x
@@ -17518,7 +17659,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22475484, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 200.14816
+      value: 200.52722
       objectReference: {fileID: 0}
     - target: {fileID: 11400606, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
       propertyPath: m_Sprite
@@ -17587,9 +17728,46 @@ Prefab:
       propertyPath: m_SizeDelta.y
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 22437272, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 22421426, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22458170, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 22440854, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 22448860, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 22486252, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22417142, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451146, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4eaa1cc0c4fa19944a209a244d32ab41, type: 2}
   m_IsPrefabParent: 0
+--- !u!224 &1328917364 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 22458858, guid: 4eaa1cc0c4fa19944a209a244d32ab41,
+    type: 2}
+  m_PrefabInternal: {fileID: 1328917363}
 --- !u!1 &1338261800
 GameObject:
   m_ObjectHideFlags: 0
@@ -17810,7 +17988,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1346068149
 Transform:
   m_ObjectHideFlags: 0
@@ -17837,7 +18015,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -18818,7 +18996,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1380901865
 Transform:
   m_ObjectHideFlags: 0
@@ -18845,7 +19023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -19274,7 +19452,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1488197428
 Transform:
   m_ObjectHideFlags: 0
@@ -19301,7 +19479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -19342,7 +19520,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1490691353
 Transform:
   m_ObjectHideFlags: 0
@@ -19369,7 +19547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -19992,7 +20170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1566500001
 Transform:
   m_ObjectHideFlags: 0
@@ -20019,7 +20197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -20214,7 +20392,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1609303022
 Transform:
   m_ObjectHideFlags: 0
@@ -20241,7 +20419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -20972,7 +21150,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1646888953
 Transform:
   m_ObjectHideFlags: 0
@@ -20999,7 +21177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -21610,7 +21788,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1655716654
 Transform:
   m_ObjectHideFlags: 0
@@ -21637,7 +21815,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -22004,7 +22182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1720945959
 Transform:
   m_ObjectHideFlags: 0
@@ -22031,7 +22209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -22277,7 +22455,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1754298079
 Transform:
   m_ObjectHideFlags: 0
@@ -22304,7 +22482,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -22354,7 +22532,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1759181123
 Transform:
   m_ObjectHideFlags: 0
@@ -22381,7 +22559,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 0}
-  visible: 0
+  visible: 1
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -23021,7 +23199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1819090163
 Transform:
   m_ObjectHideFlags: 0
@@ -23048,7 +23226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -23160,10 +23338,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!4 &1832668078
 Transform:
   m_ObjectHideFlags: 0
@@ -23171,7 +23345,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1832668074}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5861111, z: 0}
+  m_LocalPosition: {x: 0, y: 0.49444443, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1932594562}
@@ -23927,7 +24101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1875348553
 Transform:
   m_ObjectHideFlags: 0
@@ -23954,7 +24128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -24054,7 +24228,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1879090351
 Transform:
   m_ObjectHideFlags: 0
@@ -24081,7 +24255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}
@@ -26017,7 +26191,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1972351743
 Transform:
   m_ObjectHideFlags: 0
@@ -26044,7 +26218,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managed: 0
   panel: {fileID: 1832668075}
-  visible: 1
+  visible: 0
   editorSelectable: 1
   pivotPoint: 8
   customPivotPoint: {x: 0, y: 0}

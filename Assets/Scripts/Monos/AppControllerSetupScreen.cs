@@ -51,6 +51,7 @@ public class AppControllerSetupScreen : MonoBehaviour
 
     }
 
+    //Called at every start of the game
     private IEnumerator SetupInitialization()
     {
         Application.targetFrameRate = 60;
@@ -72,6 +73,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
+            //AndreaLIRO: potentially the trained and untrained items can be inserted in here
             DatabaseXML.Instance.InitializeDatabase();
             DatabaseXML.Instance.OnSwitchedPatient += UpdateFeedbackLog;
         }

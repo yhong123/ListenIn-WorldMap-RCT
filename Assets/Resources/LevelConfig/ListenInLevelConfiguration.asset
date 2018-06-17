@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: ListenInLevelConfiguration
   m_EditorClassIdentifier: 
   creationDate: 1452093221
-  _active: 0
+  _active: 1
   levels:
   - _sceneObject: {fileID: 102900000, guid: 9fed064c7334a25459ed8d3c61c8c9d1, type: 3}
     _scenePath: Assets/Scenes/SetupScreen.unity

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class Challenge {
     public long ChallengeID;
+    public string LexicalItem;
+    public int Untrained;
     public string FileAudioID;
     public long CorrectImageID;
     public List<long> Foils = new List<long>();
@@ -12,9 +14,11 @@ public class Challenge {
 
     }
 
-    public Challenge(long chID, string faID, long ciID, long f1, long f2, long f3, long f4, long f5)
+    public Challenge(long chID, string lexicalItem, int untrained, string faID, long ciID, long f1, long f2, long f3, long f4, long f5)
     {
         ChallengeID = chID;
+        LexicalItem = lexicalItem;
+        Untrained = untrained; 
         FileAudioID = faID;
         CorrectImageID = ciID;
         Foils.Add(ciID);

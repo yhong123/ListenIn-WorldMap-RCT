@@ -9,6 +9,7 @@ public interface ICsvReader<T> {
     {
         get;
     }
+
     IEnumerable<T> ParseCsv(string path);
 
 }

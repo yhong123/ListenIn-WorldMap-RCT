@@ -14,13 +14,16 @@ public enum TherapyLadderStep { CORE = 0, ACT = 1};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
-    private TherapyLadderStep m_LIROTherapyStep;
-    public TherapyLadderStep LIROStep { get { return m_LIROTherapyStep; } }
-    private int m_currIDUser;
+
 
     #region CORE
+
+    [SerializeField]
+    private UserProfile m_UserProfile = new UserProfile();
+
     private int m_currSectionCounter;
     public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }
+    private static int m_numberSelectedPerLexicalItem = 5;
     #endregion
 
     #region Delegates
@@ -48,8 +51,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         {
             Debug.Log("LIRO User Profile not found, creating a new one");
             //Setting a new LIRO user profile
-            m_LIROTherapyStep = (TherapyLadderStep)0;
-            m_currIDUser = 1;
+            m_UserProfile.LIROStep = (TherapyLadderStep)0;
+            m_UserProfile.m_currIDUser = 1;
             yield return StartCoroutine(SaveCurrentUserProfile());
         }
         else
@@ -59,22 +62,22 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             try
             {
                 XElement root = XElement.Load(currFullPath);
-                m_currIDUser = (int)root.Element("UserID");
-                if (m_currIDUser != DatabaseXML.Instance.PatientId)
+                m_UserProfile.m_currIDUser = (int)root.Element("UserID");
+                if (m_UserProfile.m_currIDUser != DatabaseXML.Instance.PatientId)
                 {
                     Debug.LogWarning("ID mismatch between database xml and therapy LIRO manager");
                 }
 
                 string currStageEnum = (string)root.Element("LadderStep");
-                m_LIROTherapyStep = (TherapyLadderStep)Enum.Parse(typeof(TherapyLadderStep), currStageEnum);
+                m_UserProfile.LIROStep = (TherapyLadderStep)Enum.Parse(typeof(TherapyLadderStep), currStageEnum);
 
             }
             catch (Exception ex)
             {
                 Debug.LogError(ex.Message);
                 exceptionThrown = true;
-                m_LIROTherapyStep = (TherapyLadderStep)0;
-                m_currIDUser = 1;
+                m_UserProfile.LIROStep = (TherapyLadderStep)0;
+                m_UserProfile.m_currIDUser = 1;
             }
 
             if (exceptionThrown)
@@ -104,11 +107,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         string strXmlFile = System.IO.Path.Combine(currFullPath, currUser);
 
         XmlElement xmlChild = doc.CreateElement("UserID");
-        xmlChild.InnerText = m_currIDUser.ToString();
+        xmlChild.InnerText =  m_UserProfile.m_currIDUser.ToString();
         doc.DocumentElement.AppendChild(xmlChild);
 
         xmlChild = doc.CreateElement("LadderStep");
-        xmlChild.InnerText = m_LIROTherapyStep.ToString();
+        xmlChild.InnerText = m_UserProfile.LIROStep.ToString();
         doc.DocumentElement.AppendChild(xmlChild);
 
         doc.Save(currFullPath);
@@ -117,6 +120,10 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
 
     #region API
+    public TherapyLadderStep GetCurrentLadderStep()
+    {
+        return m_UserProfile.LIROStep;
+    }
     public void CheckCurrentSection()
     {
         //Andrea: add the following 
@@ -135,7 +142,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
     public void AdvanceCurrentSection()
     {
-        int currStep = (int)m_LIROTherapyStep;
+        int currStep = (int)m_UserProfile.LIROStep;
         Array currValues = Enum.GetValues(typeof(TherapyLadderStep));
         int size = currValues.Length;
 
@@ -150,13 +157,13 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     #region Internal Functions
     internal IEnumerator CreateCurrentSection()
     {
-        if (m_LIROTherapyStep == TherapyLadderStep.CORE)
+        if (m_UserProfile.LIROStep == TherapyLadderStep.CORE)
         {
             //Load csv file
             TextAsset coreItemText = Resources.Load<TextAsset>(GlobalVars.LiroCoreItems);
             string[] itemLines = coreItemText.text.Split(new char[] { '\n' });
 
-            string coreFormat = String.Concat(m_LIROTherapyStep.ToString(), "_{0}");
+            string coreFormat = String.Concat(m_UserProfile.LIROStep.ToString(), "_{0}");
             string currFileName;
             int currFileIdx = 0;
             int challengeCounter = 0;
@@ -175,8 +182,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     currLines.Clear();
                     challengeCounter = 0;
                     currFileIdx++;
-                }
-                
+                }                
             }
             //Save the remaining in the last file
             if (currLines.Count != 0)
@@ -195,27 +201,92 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     internal IEnumerator LoadBasketFiles(List<int> baskets)
     {
         int currAmount = 2;
-        string currPath;
-        List<Challenge> curr_basket_list;
+
+        string currBasketsPath;
+        List<Challenge> curr_basket_list_read = new List<Challenge>();
+        List<string> curr_basket_lexical_item_list = new List<string>();
+        List<Challenge> curr_basket_list_write = new List<Challenge>();
+
+        string coreFormat = String.Concat( m_UserProfile.LIROStep.ToString(), "_{0}");
+        string currFilename;
+        int total_blocks = 1;
 
         for (int i = 0; i < baskets.Count; i++)
         {
-            curr_basket_list = new List<Challenge>();
+            curr_basket_list_read.Clear();
+            curr_basket_lexical_item_list.Clear();
+            curr_basket_list_write.Clear();
+            
+            yield return new WaitForEndOfFrame();
+
+            CoreItemReader cir = new CoreItemReader();
+            string basketName = String.Format("Basket_{0}.csv", baskets[i]);
+            currBasketsPath = Path.Combine(GlobalVars.GetPathToLIROBaskets(), basketName);
+
+            //Loading all the basket challenges excluding the untrained items
+            curr_basket_list_read = cir.ParseCsv(currBasketsPath).Where(x => x.Untrained == 0).ToList();
+            currAmount += 0;
             if (m_onUpdateProgress != null)
             {
                 m_onUpdateProgress(currAmount);
             }
             yield return new WaitForEndOfFrame();
 
-            CoreItemReader cir = new CoreItemReader();
-            string basketName = String.Format("Basket_{0}.csv", baskets[i]);
-            currPath = Path.Combine(GlobalVars.GetPathToLIROBaskets(), basketName);
+            //select distinct lexical item for this batch
+            curr_basket_lexical_item_list = curr_basket_list_read.Select(x => x.LexicalItem).Distinct().ToList();
 
-            curr_basket_list = cir.ParseCsv(currPath).ToList();
+            //For each distinct lexical item choose a set number of random challenges
+            foreach (string lexical_item in curr_basket_lexical_item_list)
+            {
+                curr_basket_list_write.AddRange(
+                    curr_basket_list_read.Where(x => x.LexicalItem == lexical_item).OrderBy(y => RandomGenerator.GetRandom()).Take(m_numberSelectedPerLexicalItem).ToList()
+                    );
+            }
 
-            currAmount += 20;
+            currAmount += 4;
+            if (m_onUpdateProgress != null)
+            {
+                m_onUpdateProgress(currAmount);
+            }
+
+            List<string> currLines = new List<string>();
+            int challengeCounter = 0;
+            //Selected all the items for this basket, allocating them to blocks
+            for (int j = 0; j < curr_basket_list_write.Count; j++)
+            {
+                currLines.Add(String.Join(",", new string[] { curr_basket_list_write[j].ChallengeID.ToString(), curr_basket_list_write[j].LexicalItem.ToString(), curr_basket_list_write[j].Untrained.ToString(), curr_basket_list_write[j].FileAudioID.ToString(), curr_basket_list_write[j].CorrectImageID.ToString(), curr_basket_list_write[j].Foils[1].ToString(), curr_basket_list_write[j].Foils[2].ToString(), curr_basket_list_write[j].Foils[3].ToString(), curr_basket_list_write[j].Foils[4].ToString(), curr_basket_list_write[j].Foils[5].ToString() }));
+                challengeCounter++;
+                if (challengeCounter == GlobalVars.ChallengeLength)
+                {
+                    currFilename = String.Format(coreFormat, total_blocks); ; 
+                    File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currLines.ToArray());
+                    currLines.Clear();
+                    total_blocks++;
+                }
+            }
+            //Save the remaining in the last file
+            if (currLines.Count != 0)
+            {
+                currFilename = String.Format(coreFormat, total_blocks); ;
+                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currLines.ToArray());
+                currLines.Clear();
+                total_blocks++;
+            }
+
+            currAmount += 16;
+            if (m_onUpdateProgress != null)
+            {
+                m_onUpdateProgress(currAmount);
+            }
 
         }
+
+        currAmount = 100;
+        if (m_onUpdateProgress != null)
+        {
+            m_onUpdateProgress(currAmount);
+        }
+
     }
     #endregion
 
