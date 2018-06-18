@@ -27,6 +27,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     #region Delegates
     public delegate void OnUpdateProgress(int progressAmount);
     public OnUpdateProgress m_onUpdateProgress;
+    public delegate void OnAdvancingTherapyLadder(TherapyLadderStep newStep);
+    public OnAdvancingTherapyLadder m_onAdvancingTherapy;
     #endregion
 
     #region Unity
@@ -163,7 +165,25 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             string full_filename = Path.GetFileName(currFiles[0]);
             string[] splittedElements = full_filename.Replace(".csv", string.Empty).Split(new char[] { '_' });
 
+            //Checking the name
+            if (splittedElements[0] == m_UserProfile.LIROStep.ToString())
+            {
+                Debug.Log("Being in " + m_UserProfile.LIROStep.ToString() + " section");
+                if (m_UserProfile.m_currentBlock > m_UserProfile.m_current_Total_Blocks)
+                {
+                    Debug.Log("Therapy LIRO Manager detected end of current section");
+                    //Advancing the section
+                    AdvanceCurrentSection();
+                    StartCoroutine(CreateCurrentSection());
+                }
+            }
+            else
+            {
+                //AndreaLIRO: must decide how to act in this case
+                Debug.LogError("TherapyLIROManager: found a mismatch between file" + splittedElements[0] + " and current loaded user profile " + m_UserProfile.LIROStep.ToString());
+            }
 
+            
 
         }
         else
@@ -187,47 +207,30 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     #endregion
 
     #region Internal Functions
+
+    internal void PrepareTherapyScreen()
+    {
+        if (m_onAdvancingTherapy != null)
+            m_onAdvancingTherapy(m_UserProfile.LIROStep);
+    }
     /// <summary>
-    /// DEPRECATED
+    /// Called every time a new preparation for the ladder step must be completed
     /// </summary>
     /// <returns></returns>
     internal IEnumerator CreateCurrentSection()
     {
-        if (m_UserProfile.LIROStep == TherapyLadderStep.CORE)
+        switch (m_UserProfile.LIROStep)
         {
-            //Load csv file
-            TextAsset coreItemText = Resources.Load<TextAsset>(GlobalVars.LiroCoreItems);
-            string[] itemLines = coreItemText.text.Split(new char[] { '\n' });
-
-            string coreFormat = String.Concat(m_UserProfile.LIROStep.ToString(), "_{0}");
-            string currFileName;
-            int currFileIdx = 0;
-            int challengeCounter = 0;
-
-            List<string> currLines = new List<string>();
-
-            for (int i = 0; i < itemLines.Length; i++)
-            {
-                currLines.Add(itemLines[i].Replace("\r",String.Empty).Trim());
-                challengeCounter++;
-                if (challengeCounter == GlobalVars.ChallengeLength)
-                {
-                    //SaveFile and create a new one
-                    currFileName = String.Format(coreFormat, currFileIdx + 1);
-                    File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFileName), currLines.ToArray());
-                    currLines.Clear();
-                    challengeCounter = 0;
-                    currFileIdx++;
-                }                
-            }
-            //Save the remaining in the last file
-            if (currLines.Count != 0)
-            {
-                currFileName = String.Format(coreFormat, currFileIdx);
-                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFileName), currLines.ToArray());
-                currLines.Clear();
-            }               
+            case TherapyLadderStep.CORE:
+                PrepareTherapyScreen();
+                break;
+            case TherapyLadderStep.ACT:
+                break;
+            default:
+                Debug.LogError("This has not been found...");
+                break;
         }
+        
         yield return null;
     }
     internal void ShuffleLines(ref string[] lines)
