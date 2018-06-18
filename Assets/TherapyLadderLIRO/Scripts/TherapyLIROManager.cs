@@ -13,9 +13,7 @@ using System.Linq;
 public enum TherapyLadderStep { CORE = 0, ACT = 1};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
-
-
-
+    
     #region CORE
 
     [SerializeField]
@@ -53,6 +51,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //Setting a new LIRO user profile
             m_UserProfile.LIROStep = (TherapyLadderStep)0;
             m_UserProfile.m_currIDUser = 1;
+            m_UserProfile.m_current_Total_Blocks = 0;
+            m_UserProfile.m_currentBlock = 0;
             yield return StartCoroutine(SaveCurrentUserProfile());
         }
         else
@@ -85,38 +85,59 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         }
 
-        //AndreaLIRO: to eliminate and put in a meaningful part.
-        //Maybe when loading the world map allocate some time for creating the current section
-        CheckCurrentSection();
-
         yield return null;
     }
     public IEnumerator SaveCurrentUserProfile()
     {
-
-        string currUser = string.Format(GlobalVars.LiroProfileTemplate, DatabaseXML.Instance.PatientId);
-        string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(), currUser);
-
-        // save lsTrial to xml 
-        XmlDocument doc = new XmlDocument();
-        doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
-            "<root>" +
-            "</root>");
-
-        // Save the document to a file. White space is preserved (no white space).
-        string strXmlFile = System.IO.Path.Combine(currFullPath, currUser);
-
-        XmlElement xmlChild = doc.CreateElement("UserID");
-        xmlChild.InnerText =  m_UserProfile.m_currIDUser.ToString();
-        doc.DocumentElement.AppendChild(xmlChild);
-
-        xmlChild = doc.CreateElement("LadderStep");
-        xmlChild.InnerText = m_UserProfile.LIROStep.ToString();
-        doc.DocumentElement.AppendChild(xmlChild);
-
-        doc.Save(currFullPath);
-
+        try
+        {
+            m_UserProfile.SaveToPrefs();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
         yield return null;
+
+        try
+        {
+            string currUser = string.Format(GlobalVars.LiroProfileTemplate, DatabaseXML.Instance.PatientId);
+            string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(), currUser);
+
+            // save lsTrial to xml 
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
+                "<root>" +
+                "</root>");
+
+            // Save the document to a file. White space is preserved (no white space).
+            string strXmlFile = System.IO.Path.Combine(currFullPath, currUser);
+
+            XmlElement xmlChild = doc.CreateElement("UserID");
+            xmlChild.InnerText = m_UserProfile.m_currIDUser.ToString();
+            doc.DocumentElement.AppendChild(xmlChild);
+
+            xmlChild = doc.CreateElement("LadderStep");
+            xmlChild.InnerText = m_UserProfile.LIROStep.ToString();
+            doc.DocumentElement.AppendChild(xmlChild);
+
+            xmlChild = doc.CreateElement("CurrentBlockNumber");
+            xmlChild.InnerText = m_UserProfile.m_currentBlock.ToString();
+            doc.DocumentElement.AppendChild(xmlChild);
+
+            xmlChild = doc.CreateElement("CurrentTotalBlockNumber");
+            xmlChild.InnerText = m_UserProfile.m_current_Total_Blocks.ToString();
+            doc.DocumentElement.AppendChild(xmlChild);
+
+            doc.Save(currFullPath);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+        yield return null;
+
+        
     }
 
     #region API
@@ -124,15 +145,26 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     {
         return m_UserProfile.LIROStep;
     }
+    /// <summary>
+    /// Checking the folder with the blocks if they match the current registered step of the algorithm.
+    /// If not load from playerprefs and redo from the last saved checkpoint
+    /// </summary>
     public void CheckCurrentSection()
     {
-        //Andrea: add the following 
         string currFolder = GlobalVars.GetPathToLIROCurrentLadderSection();
-        //If folder is empty create the splitted file
+
+        //Get a single item from the ladder section folder (any is fine since they should belonging to all of the same batch)
         string[] currFiles = Directory.GetFiles(currFolder);
+        //If folder is empty create the splitted file
+
         if (currFiles != null && currFiles.Length != 0)
         {
-            //Proceed
+            //Check consistency
+            string full_filename = Path.GetFileName(currFiles[0]);
+            string[] splittedElements = full_filename.Replace(".csv", string.Empty).Split(new char[] { '_' });
+
+
+
         }
         else
         {
@@ -150,11 +182,15 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
     public void StartCoreTherapy(List<int> selectedBasket)
     {
-        StartCoroutine(LoadBasketFiles(selectedBasket));
+        StartCoroutine(LoadTherapyFromBasketFiles(selectedBasket));
     }
     #endregion
 
     #region Internal Functions
+    /// <summary>
+    /// DEPRECATED
+    /// </summary>
+    /// <returns></returns>
     internal IEnumerator CreateCurrentSection()
     {
         if (m_UserProfile.LIROStep == TherapyLadderStep.CORE)
@@ -198,7 +234,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     {
         //Andrea to be implemented
     }
-    internal IEnumerator LoadBasketFiles(List<int> baskets)
+    internal IEnumerator LoadTherapyFromBasketFiles(List<int> baskets)
     {
         int currAmount = 2;
 
@@ -225,7 +261,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             //Loading all the basket challenges excluding the untrained items
             curr_basket_list_read = cir.ParseCsv(currBasketsPath).Where(x => x.Untrained == 0).ToList();
-            currAmount += 0;
+            currAmount += 4;
             if (m_onUpdateProgress != null)
             {
                 m_onUpdateProgress(currAmount);
@@ -243,11 +279,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     );
             }
 
-            currAmount += 4;
+            currAmount += 6;
             if (m_onUpdateProgress != null)
             {
                 m_onUpdateProgress(currAmount);
             }
+            yield return new WaitForEndOfFrame();
 
             List<string> currLines = new List<string>();
             int challengeCounter = 0;
@@ -273,13 +310,19 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 total_blocks++;
             }
 
-            currAmount += 16;
+            currAmount += 11;
             if (m_onUpdateProgress != null)
             {
                 m_onUpdateProgress(currAmount);
             }
-
+            yield return new WaitForEndOfFrame();
         }
+
+        //Updating UserProfile
+        m_UserProfile.m_current_Total_Blocks = total_blocks - 1;
+        m_UserProfile.m_currentBlock = 1;
+
+        yield return StartCoroutine(SaveCurrentUserProfile());
 
         currAmount = 100;
         if (m_onUpdateProgress != null)

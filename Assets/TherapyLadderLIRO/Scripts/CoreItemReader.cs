@@ -22,15 +22,16 @@ public class CoreItemReader : ICsvReader<Challenge>
         string currBlock = File.ReadAllText(path);
         string currFileName = Path.GetFileName(path);
 
+        //AndreaLIRO: don t put this here, have who call this when preparing the block, register the information 
         //Extracting number of file so to track the progress of the player
-        TherapyLadderStep currStep = TherapyLIROManager.Instance.GetCurrentLadderStep();
-        string currNumber = Regex.Replace(currFileName, String.Concat(currStep.ToString(), "_"), String.Empty);
-        int stepNumber;
+        //TherapyLadderStep currStep = TherapyLIROManager.Instance.GetCurrentLadderStep();
+        //string currNumber = Regex.Replace(currFileName, String.Concat(currStep.ToString(), "_"), String.Empty);
+        //int stepNumber;
 
-        if (int.TryParse(currNumber, out stepNumber))
-        {
-            TherapyLIROManager.Instance.SectionCounter = stepNumber;
-        }
+        //if (int.TryParse(currNumber, out stepNumber))
+        //{
+        //    TherapyLIROManager.Instance.SectionCounter = stepNumber;
+        //}
 
         string[] lines = currBlock.Split(new char[] { '\n' });
 
