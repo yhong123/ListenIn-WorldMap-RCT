@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using MadLevelManager;
 
 public class BasketManager : MonoBehaviour {
 
@@ -40,6 +41,12 @@ public class BasketManager : MonoBehaviour {
 #endif
     }
 
+    void OnDestroy()
+    {
+        if (TherapyLIROManager.Instance != null)
+            TherapyLIROManager.Instance.m_onUpdateProgress -= UpdateProgressBar;
+    }
+
     public void RegisterBasket(BasketController bc)
     {
         int indexInList = m_selectedBasket.IndexOf(bc.m_basketNumber);
@@ -72,6 +79,17 @@ public class BasketManager : MonoBehaviour {
     private void UpdateProgressBar(int amount)
     {
         m_progressTherapy.text = string.Format(m_stringProgressBarFormat, amount);
+        if (amount == 100)
+        {
+            //Escaping to the world map select
+            StartCoroutine(BackToWorldMap());
+        }
+    }
+
+    private IEnumerator BackToWorldMap()
+    {
+        yield return new WaitForSeconds(2);
+        MadLevel.LoadLevelByName("World Map Select");
     }
 
 }

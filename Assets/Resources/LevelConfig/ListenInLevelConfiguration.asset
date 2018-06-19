@@ -302,6 +302,18 @@ MonoBehaviour:
     groupId: 0
     extensionGUID: 
     lockedByDefault: 1
+  - _sceneObject: {fileID: 102900000, guid: 62bb921cbb1a7824fa1d3e77baf1aa34, type: 3}
+    _scenePath: Assets/Scenes/BasketSelection.unity
+    _sceneName: BasketSelection
+    scene: 
+    parent: {fileID: 11400000}
+    order: 240
+    name: Basket Selection
+    type: 0
+    arguments: 
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
   groups: []
   extensions: []
   version: 1

@@ -87,6 +87,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
+            //AndreaLIRO: this will have to be removed (YEAN)
             CUserTherapy.Instance.LoadDataset_UserProfile();
         }
         catch (System.Exception ex)

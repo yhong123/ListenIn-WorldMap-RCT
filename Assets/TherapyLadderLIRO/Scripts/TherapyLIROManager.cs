@@ -53,8 +53,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //Setting a new LIRO user profile
             m_UserProfile.LIROStep = (TherapyLadderStep)0;
             m_UserProfile.m_currIDUser = 1;
-            m_UserProfile.m_current_Total_Blocks = 0;
+            m_UserProfile.m_current_Total_Blocks = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfile.m_currentBlock = 0;
+            //Wait for the data to be saved
             yield return StartCoroutine(SaveCurrentUserProfile());
         }
         else
@@ -73,13 +74,16 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 string currStageEnum = (string)root.Element("LadderStep");
                 m_UserProfile.LIROStep = (TherapyLadderStep)Enum.Parse(typeof(TherapyLadderStep), currStageEnum);
 
+                m_UserProfile.m_currentBlock = (int)root.Element("CurrentBlockNumber");
+                m_UserProfile.m_current_Total_Blocks = (int)root.Element("CurrentTotalBlockNumber");
+
             }
             catch (Exception ex)
             {
                 Debug.LogError(ex.Message);
                 exceptionThrown = true;
-                m_UserProfile.LIROStep = (TherapyLadderStep)0;
-                m_UserProfile.m_currIDUser = 1;
+                //Getting information from the last checkpoint -> PlayerPrefs
+                m_UserProfile.GetFromPrefs();
             }
 
             if (exceptionThrown)
@@ -182,14 +186,21 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 //AndreaLIRO: must decide how to act in this case
                 Debug.LogError("TherapyLIROManager: found a mismatch between file" + splittedElements[0] + " and current loaded user profile " + m_UserProfile.LIROStep.ToString());
             }
-
-            
-
         }
         else
         {
-            Debug.Log("TherapyLiroManager: creating current file sections");
-            StartCoroutine(CreateCurrentSection());
+            if (m_UserProfile.m_current_Total_Blocks == -1)
+            {
+                //Escape code for first initization - WE DO NOT HAVE TO ADVANCE
+                StartCoroutine(CreateCurrentSection());
+            }
+            else if (m_UserProfile.m_currentBlock > m_UserProfile.m_current_Total_Blocks)
+            {
+                Debug.Log("TherapyLiroManager: creating current file sections");
+                AdvanceCurrentSection();
+                StartCoroutine(CreateCurrentSection());
+            }
+
         }
     }
     public void AdvanceCurrentSection()
@@ -210,6 +221,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     internal void PrepareTherapyScreen()
     {
+        //Do eventually additional things here!
         if (m_onAdvancingTherapy != null)
             m_onAdvancingTherapy(m_UserProfile.LIROStep);
     }
@@ -219,6 +231,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// <returns></returns>
     internal IEnumerator CreateCurrentSection()
     {
+        //AndreaLIRO
+        yield return new WaitForSeconds(2);
         switch (m_UserProfile.LIROStep)
         {
             case TherapyLadderStep.CORE:
