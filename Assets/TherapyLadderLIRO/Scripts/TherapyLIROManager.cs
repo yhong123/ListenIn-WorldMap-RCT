@@ -13,7 +13,7 @@ using System.Linq;
 public enum TherapyLadderStep { CORE = 0, ACT = 1};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
-    
+
     #region CORE
 
     [SerializeField]
@@ -145,13 +145,17 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
         yield return null;
 
-        
+
     }
 
     #region API
     public TherapyLadderStep GetCurrentLadderStep()
     {
         return m_UserProfile.LIROStep;
+    }
+    public int GetCurrentBlockNumber()
+    {
+        return m_UserProfile.m_currentBlock;
     }
     /// <summary>
     /// Checking the folder with the blocks if they match the current registered step of the algorithm.
@@ -265,6 +269,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 AdvanceBlock();
                 break;
             case TherapyLadderStep.ACT:
+                yield return StartCoroutine(CleanCurrentBlock());
+                AdvanceBlock();
                 break;
             default:
                 break;
@@ -479,7 +485,17 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             total_blocks++;
         }
 
-        //AndreaLIRO: need to save
+        m_UserProfile.m_current_Total_Blocks = total_blocks - 1;
+        m_UserProfile.m_currentBlock = 1;
+
+        currAmount += 3;
+        if (m_onFinishingSetupCurrentSection != null)
+        {
+            m_onFinishingSetupCurrentSection(m_UserProfile.LIROStep, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        yield return StartCoroutine(SaveCurrentUserProfile());
 
         currAmount = 100;
         if (m_onFinishingSetupCurrentSection != null)
