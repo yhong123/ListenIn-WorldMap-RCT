@@ -70,9 +70,15 @@ public class UploadManager : Singleton<UploadManager> {
             }
         }
 
+
+        _currDeltaTime = Time.time - startUploadTime;
+        Debug.Log("UploadManager: " + _currDeltaTime + " saving the LIRO therapy");
+        //AndreaLIRO: adding the LIRO therapy update
+        yield return StartCoroutine(TherapyLIROManager.Instance.AdvanceCurrentBlockInSection());
+
+
         _currDeltaTime = Time.time - startUploadTime;
         Debug.Log("UploadManager: " + _currDeltaTime + " collecting memory");
-
         //Collecting memory
         Resources.UnloadUnusedAssets();
         System.GC.Collect();

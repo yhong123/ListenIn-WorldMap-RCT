@@ -6,6 +6,10 @@ using MadLevelManager;
 public class AppControllerLevelSelectScene : MonoBehaviour {
 
     public GameObject IniatilizeTherapyCore;
+    public ACTUiWorldMAp m_ACTUIController;
+
+    private int previousAmount = 0;
+    private int currAmount = 0;
 
 	// Use this for initialization
 	void Awake () {
@@ -16,6 +20,7 @@ public class AppControllerLevelSelectScene : MonoBehaviour {
         }
 
         TherapyLIROManager.Instance.m_onAdvancingTherapy += PrepareWorldMapSection;
+        TherapyLIROManager.Instance.m_onFinishingSetupCurrentSection += UpdatingCurrentScenePreparation;
         //GameController.Instance.Init();
     }
 
@@ -32,8 +37,11 @@ public class AppControllerLevelSelectScene : MonoBehaviour {
 
     void OnDestroy()
     {
-        if(TherapyLIROManager.Instance != null)
+        if (TherapyLIROManager.Instance != null)
+        {
             TherapyLIROManager.Instance.m_onAdvancingTherapy -= PrepareWorldMapSection;
+            TherapyLIROManager.Instance.m_onFinishingSetupCurrentSection -= UpdatingCurrentScenePreparation;
+        }            
     }
 
     // Update is called once per frame
@@ -50,6 +58,7 @@ public class AppControllerLevelSelectScene : MonoBehaviour {
                 StartCoroutine(ChangeScene(currAdvancedStep));
                 break;
             case TherapyLadderStep.ACT:
+                m_ACTUIController.ActivateUI();
                 break;
             default:
                 break;
@@ -70,7 +79,20 @@ public class AppControllerLevelSelectScene : MonoBehaviour {
             default:
                 break;
         }
+    }
 
+    void UpdatingCurrentScenePreparation(TherapyLadderStep currStep, int amount)
+    {
+        switch (currStep)
+        {
+            case TherapyLadderStep.CORE:
+                break;
+            case TherapyLadderStep.ACT:
+                m_ACTUIController.UpdateText(amount);
+                break;
+            default:
+                break;
+        }
     }
 
 }

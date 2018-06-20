@@ -629,7 +629,7 @@ public class GameControlScriptStandard : MonoBehaviour
         Debug.Log(" *** DoCheatCodes ***");
         m_intCheatCtr++;
         // if m_intCheatCtr >= 5, terminate the game
-        if (m_intCheatCtr >= 50)
+        if (m_intCheatCtr >= 5)
         {
             m_intCheatCtr = 0;
             StateChallenge.Instance.AddCoin(5);

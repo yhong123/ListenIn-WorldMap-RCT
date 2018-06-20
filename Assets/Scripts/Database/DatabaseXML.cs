@@ -119,8 +119,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/");
 			Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/all");   // 2016-12-06
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO"); // 2018-23-04
-            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Baskets"); // 2018-23-04
+            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Baskets"); // 2018-20-06
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Section"); //2018-23-04
+            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Output"); // 2018-20-06
 
             //create an xml from the local sample one
             if (database_xml_file == null)
@@ -394,33 +395,33 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             m_fTherapy_block_idle_time_sec += Time.unscaledDeltaTime;
 
         //TODO: unify the menu system
-        #region TimeoutGame
-        if (isMenuPaused && idle_time > 60 * 1)
-        {
-            Debug.Log("DatabaseXML: Update() Forcing ListenIn to quit due to timeout (99)");
-            reasonToExit = 99;
-            Application.Quit();
+//        #region TimeoutGame
+//        if (isMenuPaused && idle_time > 60 * 1)
+//        {
+//            Debug.Log("DatabaseXML: Update() Forcing ListenIn to quit due to timeout (99)");
+//            reasonToExit = 99;
+//            Application.Quit();
 
-            //If we are running in the editor
-#if UNITY_EDITOR
-            //Stop playing the scene
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        }
-        else if (!isMenuPaused && idle_time > 60 * 1 && !m_stop_forcetimer_routine)
-        {
-            if (OpenPauseMenu())
-            {
-                ResetTimer(TimerType.Idle);
-            }
-            else
-            {
-                Debug.LogWarning("DatabaseXML: preventing force idle menu. Could be setup screen, uploading screen or a transition");
-                ResetTimer(TimerType.Idle);
-            }
-        }
+//            //If we are running in the editor
+//#if UNITY_EDITOR
+//            //Stop playing the scene
+//            UnityEditor.EditorApplication.isPlaying = false;
+//#endif
+//        }
+//        else if (!isMenuPaused && idle_time > 60 * 1 && !m_stop_forcetimer_routine)
+//        {
+//            if (OpenPauseMenu())
+//            {
+//                ResetTimer(TimerType.Idle);
+//            }
+//            else
+//            {
+//                Debug.LogWarning("DatabaseXML: preventing force idle menu. Could be setup screen, uploading screen or a transition");
+//                ResetTimer(TimerType.Idle);
+//            }
+//        }
 
-        #endregion
+//        #endregion
     }
 
     private bool OpenPauseMenu()

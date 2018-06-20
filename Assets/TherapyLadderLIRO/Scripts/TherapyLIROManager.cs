@@ -29,6 +29,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     public OnUpdateProgress m_onUpdateProgress;
     public delegate void OnAdvancingTherapyLadder(TherapyLadderStep newStep);
     public OnAdvancingTherapyLadder m_onAdvancingTherapy;
+    public delegate void OnFinishingCurrentSectionSetup(TherapyLadderStep newStep, int amount);
+    public OnFinishingCurrentSectionSetup m_onFinishingSetupCurrentSection;
     #endregion
 
     #region Unity
@@ -179,6 +181,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     //Advancing the section
                     AdvanceCurrentSection();
                     StartCoroutine(CreateCurrentSection());
+                    return;
+                }
+                else
+                {
+                    PrepareCurrentSection();
                 }
             }
             else
@@ -200,9 +207,33 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 AdvanceCurrentSection();
                 StartCoroutine(CreateCurrentSection());
             }
+            else
+            {
+                Debug.LogError("TherapyLiroManager: No more file, but no condition for advancing...");
+            }
 
         }
     }
+    /// <summary>
+    /// Preparing visual for the current section
+    /// </summary>
+    public void PrepareCurrentSection()
+    {
+        switch (m_UserProfile.LIROStep)
+        {
+            case TherapyLadderStep.CORE:
+                //Do nothing visually if we are already in the world map
+                break;
+            case TherapyLadderStep.ACT:
+                PrepareACTScreen(100);
+                break;
+            default:
+                break;
+        }
+    }
+    /// <summary>
+    /// Called to increment the section before starting a new one
+    /// </summary>
     public void AdvanceCurrentSection()
     {
         int currStep = (int)m_UserProfile.LIROStep;
@@ -210,10 +241,36 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         int size = currValues.Length;
 
         currStep = (currStep + 1) % size;
+        m_UserProfile.LIROStep = (TherapyLadderStep)currStep;
     }
     public void StartCoreTherapy(List<int> selectedBasket)
     {
         StartCoroutine(LoadTherapyFromBasketFiles(selectedBasket));
+    }
+    public void StartACT()
+    {
+        StartCoroutine(LoadACTFile());
+    }
+
+    /// <summary>
+    /// Called at the end of the section cycle (core and ACT)
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator AdvanceCurrentBlockInSection()
+    {
+        switch (m_UserProfile.LIROStep)
+        {
+            case TherapyLadderStep.CORE:
+                yield return StartCoroutine(CleanCurrentBlock());
+                AdvanceBlock();
+                break;
+            case TherapyLadderStep.ACT:
+                break;
+            default:
+                break;
+        }
+        //Saving profile
+        yield return StartCoroutine(SaveCurrentUserProfile());
     }
     #endregion
 
@@ -224,6 +281,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Do eventually additional things here!
         if (m_onAdvancingTherapy != null)
             m_onAdvancingTherapy(m_UserProfile.LIROStep);
+    }
+    internal void PrepareACTScreen(int initialAmount)
+    {
+        //Do eventually additional things here!
+        if (m_onAdvancingTherapy != null)
+            m_onAdvancingTherapy(m_UserProfile.LIROStep);
+        if (m_onFinishingSetupCurrentSection != null)
+            m_onFinishingSetupCurrentSection(m_UserProfile.LIROStep, initialAmount);
     }
     /// <summary>
     /// Called every time a new preparation for the ladder step must be completed
@@ -239,6 +304,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 PrepareTherapyScreen();
                 break;
             case TherapyLadderStep.ACT:
+                PrepareACTScreen(0);
+                StartCoroutine(LoadACTFile());
                 break;
             default:
                 Debug.LogError("This has not been found...");
@@ -247,9 +314,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         
         yield return null;
     }
-    internal void ShuffleLines(ref string[] lines)
+    internal void ShuffleLines(ref List<string> lines)
     {
-        //Andrea to be implemented
+        List<string> shuffledLines = lines.OrderBy(x => Guid.NewGuid()).ToList();
+        lines.Clear();
+        lines.AddRange(shuffledLines);
     }
     internal IEnumerator LoadTherapyFromBasketFiles(List<int> baskets)
     {
@@ -347,6 +416,95 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_onUpdateProgress(currAmount);
         }
 
+    }
+    internal IEnumerator LoadACTFile()
+    {
+        int currAmount = 3;
+        if (m_onFinishingSetupCurrentSection != null)
+        {
+            m_onFinishingSetupCurrentSection(m_UserProfile.LIROStep, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        TextAsset ta = Resources.Load<TextAsset>(GlobalVars.LiroACT);
+
+        List<string> lines = ta.text.Split( new char[] { '\n' }).ToList();
+
+        currAmount = 16;
+        if (m_onFinishingSetupCurrentSection != null)
+        {
+            m_onFinishingSetupCurrentSection(m_UserProfile.LIROStep, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        ShuffleLines(ref lines);
+
+        currAmount = 27;
+        if (m_onFinishingSetupCurrentSection != null)
+        {
+            m_onFinishingSetupCurrentSection(m_UserProfile.LIROStep, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        int currCount = 0;
+        int total_blocks = 1;
+        List<string> currBlockLines = new List<string>();
+        string currFilename = String.Empty;
+        for (int i = 0; i < lines.Count; i++)
+        {
+            currBlockLines.Add(lines[i].Replace("\r","").Trim());
+            currCount++;
+            if (currCount == GlobalVars.ActChallengeLength)
+            {
+                currFilename = String.Format("{0}_{1}", m_UserProfile.LIROStep, total_blocks);
+                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
+                currBlockLines.Clear();
+                total_blocks++;
+            }
+
+            currAmount += 5;
+            if (m_onFinishingSetupCurrentSection != null)
+            {
+                m_onFinishingSetupCurrentSection(m_UserProfile.LIROStep, currAmount);
+            }
+            yield return new WaitForEndOfFrame();
+
+        }
+
+        if (currBlockLines.Count != 0)
+        {
+            currFilename = String.Format("{0}_{1}", m_UserProfile.LIROStep, total_blocks);
+            File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
+            currBlockLines.Clear();
+            total_blocks++;
+        }
+
+        //AndreaLIRO: need to save
+
+        currAmount = 100;
+        if (m_onFinishingSetupCurrentSection != null)
+        {
+            m_onFinishingSetupCurrentSection(m_UserProfile.LIROStep, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+    }
+
+    internal IEnumerator CleanCurrentBlock()
+    {
+        try
+        {
+            string filefullpath = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), String.Format("{0}_{1}", m_UserProfile.LIROStep.ToString(), m_UserProfile.m_currentBlock));
+            File.Delete(filefullpath);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Could not delete curr block file: " + ex.Message);
+        }
+        yield return null;
+    }
+    internal void AdvanceBlock()
+    {
+        m_UserProfile.m_currentBlock++;
     }
     #endregion
 
