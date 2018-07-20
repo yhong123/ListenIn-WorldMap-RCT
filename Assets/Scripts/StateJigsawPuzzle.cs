@@ -486,14 +486,16 @@ public class StateJigsawPuzzle : State
         dailyTherapy.Add("level_start", currLevelPinball.ToString());        
         dailyTherapy.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
 
-        DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy,DatabaseXML.Instance.therapy_daily_insert);
+        //AndreaLIRO: removing writing to database xml
+        //DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy,DatabaseXML.Instance.therapy_daily_insert);
 
         dailyTherapy.Clear();
 
         dailyTherapy.Add("patient", patient.ToString());
         dailyTherapy.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
 
-        DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_insert);
+        //AndreaLIRO: removing writing to database xml
+        //DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_insert);
 
         StatePinball.Instance.ID = currLevelPinball;//m_Chapters[ID].LevelNumber;
         GameController.Instance.ChangeState(GameController.States.StateChallenge);

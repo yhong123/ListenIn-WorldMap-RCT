@@ -227,7 +227,8 @@ public class StatePinball : State
         time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         time_insert.Add("totaltime", dGameTimeMin.ToString());
 
-        DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.game_time_insert);
+        //AndreaLIRO: removing writing to database xml
+        //DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.game_time_insert);
 
         //Andrea: 30/10 move it for later
 

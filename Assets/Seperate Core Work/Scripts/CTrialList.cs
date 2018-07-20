@@ -330,7 +330,8 @@ public class CTrialList {
         challenge_insert.Add("image_list", "99");
         challenge_insert.Add("accuracy", response.m_intScore.ToString());
 
-        DatabaseXML.Instance.WriteDatabaseXML(challenge_insert, DatabaseXML.Instance.therapy_challenge_insert);
+        //AndreaLIRO: removing writing to database xml
+        //DatabaseXML.Instance.WriteDatabaseXML(challenge_insert, DatabaseXML.Instance.therapy_challenge_insert);
 
         /*for (int k = 0; k < m_lsResponse.Count; k++) 
 		{

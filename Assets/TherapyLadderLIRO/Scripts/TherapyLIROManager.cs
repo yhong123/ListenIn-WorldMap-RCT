@@ -66,6 +66,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             try
             {
+                // If file exists load current profile, notify only if finding a mismatch
                 XElement root = XElement.Load(currFullPath);
                 m_UserProfile.m_currIDUser = (int)root.Element("UserID");
                 if (m_UserProfile.m_currIDUser != DatabaseXML.Instance.PatientId)
@@ -75,6 +76,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
                 string currStageEnum = (string)root.Element("LadderStep");
                 m_UserProfile.LIROStep = (TherapyLadderStep)Enum.Parse(typeof(TherapyLadderStep), currStageEnum);
+
+                Debug.Log("Current player section: " + m_UserProfile.LIROStep.ToString());
 
                 m_UserProfile.m_currentBlock = (int)root.Element("CurrentBlockNumber");
                 m_UserProfile.m_current_Total_Blocks = (int)root.Element("CurrentTotalBlockNumber");

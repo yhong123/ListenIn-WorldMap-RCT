@@ -588,7 +588,8 @@ class CUserTherapy : Singleton<CUserTherapy>
         challenge_insert.Add("image_list", "99");
         challenge_insert.Add("accuracy", response.m_intScore.ToString());*/
 
-        DatabaseXML.Instance.WriteDatabaseXML(challenge_insert, DatabaseXML.Instance.therapy_challenge_insert);        
+        //AndreaLIRO: removing writing to database xml
+        //DatabaseXML.Instance.WriteDatabaseXML(challenge_insert, DatabaseXML.Instance.therapy_challenge_insert);        
 
     }
 
@@ -658,7 +659,8 @@ class CUserTherapy : Singleton<CUserTherapy>
             time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             time_insert.Add("totaltime", getTotalTherapyTimeMin().ToString());
 
-            DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.therapy_time_insert);
+            //AndreaLIRO: removing writing to database xml
+            //DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.therapy_time_insert);
 
             //Andrea: 30/10 moved this on the uploadmanager
 
@@ -747,7 +749,8 @@ class CUserTherapy : Singleton<CUserTherapy>
             detail_insert.Add("blockidx", intBlockIdx.ToString());
             detail_insert.Add("csv", strRow);
 
-            DatabaseXML.Instance.WriteDatabaseXML(detail_insert, DatabaseXML.Instance.therapy_block_detail_insert);
+            //AndreaLIRO: removing writing to database xml
+            //DatabaseXML.Instance.WriteDatabaseXML(detail_insert, DatabaseXML.Instance.therapy_block_detail_insert);
             
         }
         catch (System.Exception ex)

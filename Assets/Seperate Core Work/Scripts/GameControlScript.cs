@@ -214,7 +214,8 @@ public class GameControlScript : MonoBehaviour
         block_start.Add("patient", patient.ToString());
         block_start.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
 
-        DatabaseXML.Instance.WriteDatabaseXML(block_start, DatabaseXML.Instance.therapy_block_insert);
+        //AndreaLIRO: removing writing to database xml
+        //DatabaseXML.Instance.WriteDatabaseXML(block_start, DatabaseXML.Instance.therapy_block_insert);
     }
 
     void SetStimuliThrowPos(Vector3 pos)

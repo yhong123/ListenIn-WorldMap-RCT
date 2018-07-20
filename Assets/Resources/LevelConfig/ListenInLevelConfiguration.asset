@@ -326,6 +326,18 @@ MonoBehaviour:
     groupId: 0
     extensionGUID: 
     lockedByDefault: 1
+  - _sceneObject: {fileID: 102900000, guid: a7432188e9048c14688c4d6fbbacb1f6, type: 3}
+    _scenePath: Assets/Scenes/MainHUB.unity
+    _sceneName: MainHUB
+    scene: 
+    parent: {fileID: 11400000}
+    order: 260
+    name: MainHUB
+    type: 0
+    arguments: 
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
   groups: []
   extensions: []
   version: 1

@@ -11,7 +11,7 @@ public class XmlSplitterTest : MonoBehaviour {
     public void TestSplitting()
     {
         //Yean: can you insert data in the databasexml as well please? (Andrea)
-        /*for (int i = 0; i < DatabaseXML.MaximumQueriesPerFile; i++)
+        for (int i = 0; i < DatabaseXML.MaximumQueriesPerFile; i++)
         {
             Dictionary<string, string> dailyTherapy = new Dictionary<string, string>();
 
@@ -21,92 +21,25 @@ public class XmlSplitterTest : MonoBehaviour {
             dailyTherapy.Add("level_start", "level");
             dailyTherapy.Add("date", "aaaaaaaa");
 
-            DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_update);
-        }*/
-        simulate_populateDatabaseXML();
+            //DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_update);
+        }
+        //simulate_populateDatabaseXML();
 
         // simulated user profile & therapy data
-        simulate_saveUserProfileToXml();
-        simulate_saveTherapyBlocksToCsv();
-        simulate_saveChallengeItemFeaturesHistoryToXml();
+        //simulate_saveUserProfileToXml();
+        //simulate_saveTherapyBlocksToCsv();
+        //simulate_saveChallengeItemFeaturesHistoryToXml();
 
     }
 
+    /*
     private void simulate_populateDatabaseXML()
-    {
-        {
-            // insert therapy daily
-            Dictionary<string, string> dailyTherapy = new Dictionary<string, string>();
-            int patient = DatabaseXML.Instance.PatientId;
-            System.DateTime now = System.DateTime.Now;
-            dailyTherapy.Add("patient", patient.ToString());
-            dailyTherapy.Add("level_start", "10");
-            dailyTherapy.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-            DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_daily_insert);
-            dailyTherapy.Clear();
-
-            // insert therapy session
-            //now = now.AddSeconds(5);
-            dailyTherapy.Add("patient", patient.ToString());
-            dailyTherapy.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-            DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_insert);
-
-            // insert 30 therapy blocks, each block has 15 challenges
-            for (int k = 0; k < 30; k++)
-            {
-                //now = now.AddSeconds(5);
-                Dictionary<string, string> block_start = new Dictionary<string, string>();
-                block_start.Add("patient", patient.ToString());
-                block_start.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-                DatabaseXML.Instance.WriteDatabaseXML(block_start, DatabaseXML.Instance.therapy_block_insert);
-
-                for (int m = 0; m < 15; m++)
-                {
-                    //now = now.AddSeconds(1);
-                    // insert therapy challenges            
-                    Dictionary<string, string> challenge_insert = new Dictionary<string, string>();
-
-                    challenge_insert.Add("patient", DatabaseXML.Instance.PatientId.ToString());
-                    challenge_insert.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-                    challenge_insert.Add("cif_idx", "1407");
-
-                    string strStimOriIdx = "";
-                    string strStimType = "";
-                    for (int i = 0; i < 6; i++)
-                    {
-                        strStimOriIdx = strStimOriIdx + "1,";
-                        strStimType = strStimType + "p1,";
-                    }
-                    challenge_insert.Add("stim_ori_idx", strStimOriIdx);
-                    challenge_insert.Add("stim_type", strStimType);
-
-                    string strSelectedStimIdx = "";
-                    for (int i = 0; i < 3; i++)
-                        strSelectedStimIdx = strSelectedStimIdx + "0,";
-                    challenge_insert.Add("selected_stim_idx", strSelectedStimIdx);
-
-                    challenge_insert.Add("rt_sec", "2.1765");
-                    challenge_insert.Add("accuracy", "1");
-
-                    DatabaseXML.Instance.WriteDatabaseXML(challenge_insert, DatabaseXML.Instance.therapy_challenge_insert);
-                }
-
-                //Exiting pinball
-                //now = now.AddSeconds(10);
-                Dictionary<string, string> time_insert = new Dictionary<string, string>();
-                time_insert.Add("patientid", DatabaseXML.Instance.PatientId.ToString());
-                time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                time_insert.Add("totaltime", "5");
-
-                DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.game_time_insert);
-
-            }
-        }
-    }
+    */
 
     //----------------------------------------------------------------------------------------------------
     // simulate_saveUserProfileToXml
     //----------------------------------------------------------------------------------------------------
+    /*
     public void simulate_saveUserProfileToXml()
     {
         string strAppPath = Application.persistentDataPath;
@@ -144,7 +77,7 @@ public class XmlSplitterTest : MonoBehaviour {
         doc.DocumentElement.AppendChild(xmlChild);
 
         xmlChild = doc.CreateElement("noiseHistory");
-        for (var i = 0; i < 50 /*m_lsNoiseLevelHistory.Count*/; i++)
+        for (var i = 0; i < 50 ; i++) //i < m_lsNoiseLevelHistory.Count
         {
             XmlElement xmlChild2 = doc.CreateElement("level");
             xmlChild2.InnerText = "2"; // m_lsNoiseLevelHistory[i].ToString();
@@ -153,7 +86,7 @@ public class XmlSplitterTest : MonoBehaviour {
         doc.DocumentElement.AppendChild(xmlChild);
 
         xmlChild = doc.CreateElement("noiseBlocks");
-        for (var i = 0; i < 50 /*m_lsNoiseBlockIdx.Count*/; i++)
+        for (var i = 0; i < 50 ; i++) // i < m_lsNoiseBlockIdx.Count
         {
             XmlElement xmlChild2 = doc.CreateElement("idx");
             xmlChild2.InnerText = "101"; // m_lsNoiseBlockIdx[i].ToString();
@@ -163,7 +96,7 @@ public class XmlSplitterTest : MonoBehaviour {
 
         // save forcedBlockHistory
         xmlChild = doc.CreateElement("forcedBlocks");
-        for (var i = 0; i < 12 /*m_lsForcedBlockHistory_Weekly.Count*/; i++)
+        for (var i = 0; i < 12; i++) // i < m_lsForcedBlockHistory_Weekly.Count
         {
             XmlElement xmlChild2 = doc.CreateElement("weekly");
 
@@ -173,7 +106,7 @@ public class XmlSplitterTest : MonoBehaviour {
             xmlChild2.AppendChild(xmlChild3);
 
             // add weekly's daily 
-            for (var j = 0; j < 4 /*m_lsForcedBlockHistory_Weekly[i].m_lsForcedBlockHistory_Daily.Count*/; j++)
+            for (var j = 0; j < 4 ; j++) //i < m_lsForcedBlockHistory_Weekly[i].m_lsForcedBlockHistory_Daily.Count
             {
                 xmlChild3 = doc.CreateElement("daily");
                 // daily date
@@ -181,7 +114,7 @@ public class XmlSplitterTest : MonoBehaviour {
                 xmlChild4.InnerText = "2016-11-03 12:50:22"; //m_lsForcedBlockHistory_Weekly[i].m_lsForcedBlockHistory_Daily[j].m_strDate;
                 xmlChild3.AppendChild(xmlChild4);
                 // daily block idx list
-                for (var k = 0; k < 4 /*m_lsForcedBlockHistory_Weekly[i].m_lsForcedBlockHistory_Daily[j].m_lsBlockIdx.Count*/; k++)
+                for (var k = 0; k < 4 ; k++) //k < m_lsForcedBlockHistory_Weekly[i].m_lsForcedBlockHistory_Daily[j].m_lsBlockIdx.Count
                 {
                     xmlChild4 = doc.CreateElement("idx");
                     xmlChild4.InnerText = "16"; //m_lsForcedBlockHistory_Weekly[i].m_lsForcedBlockHistory_Daily[j].m_lsBlockIdx[k].ToString();
@@ -219,7 +152,7 @@ public class XmlSplitterTest : MonoBehaviour {
             }
         }        
     }
-
+    */
 
     //----------------------------------------------------------------------------------------------------
     // simulate_saveTherapyBlocksToCsv
@@ -413,7 +346,7 @@ public class XmlSplitterTest : MonoBehaviour {
 	//----------------------------------------------------------------------------------------------------
     // SaveTrials_Csv
     //----------------------------------------------------------------------------------------------------
-    public void SaveTrials_Csv()
+    private void SaveTrials_Csv()
     {
         string strCsvFile = System.IO.Path.Combine(Application.persistentDataPath, "user_" + DatabaseXML.Instance.PatientId.ToString() + "_therapyblocks_all.csv");
 

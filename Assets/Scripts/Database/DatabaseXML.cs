@@ -148,31 +148,33 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         xml_file = Path.Combine(pathToXMLs, String.Format("{0}.xml", currSplittedFiles.ToString()));// Application.persistentDataPath + @"/ListenIn/Database/" + currSplittedFiles + ".xml";
 
         // check database.xml file length - if the file corrupted with length 0kb, then recreate the using setting from PlayerPrefs
-        {
-            try
-            {
-                FileInfo info = new FileInfo(xml_file);
-                if (info.Length == 0)
-                {
-                    Debug.Log("DatabaseXML: ********** database.xml is EMPTY!!!");
+        //AndreaLIRO: no execption anymore for this part
 
-                    if (!LoadCurrentUserFromPlayerPrefs())
-                        return;
-                }
-                else
-                {
-                    //load the xml from the path
-                    database_xml.LoadXml(File.ReadAllText(xml_file));
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log(String.Format("DatabaseXML: {0}", ex.Message));
+        //{
+        //    try
+        //    {
+        //        FileInfo info = new FileInfo(xml_file);
+        //        if (info.Length == 0)
+        //        {
+        //            Debug.Log("DatabaseXML: ********** database.xml is EMPTY!!!");
 
-                CleanXMLSplitting();                
-            }
+        //            if (!LoadCurrentUserFromPlayerPrefs())
+        //                return;
+        //        }
+        //        else
+        //        {
+        //            //load the xml from the path
+        //            database_xml.LoadXml(File.ReadAllText(xml_file));
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.Log(String.Format("DatabaseXML: {0}", ex.Message));
 
-        }
+        //        CleanXMLSplitting();                
+        //    }
+
+        //}
 
         //load the xml from the path
         //database_xml.LoadXml(File.ReadAllText(xml_file));
@@ -195,8 +197,9 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         
         Debug.Log("DatabseXML: *** PatientId = " + PatientId + ", DatasetId = " + DatasetId);               
 
+        //AndreaLIRO: no need to fix anything anymore
         // check if there is any therapy corrupted files
-        fixTherapyCorruptedFiles();
+        //fixTherapyCorruptedFiles();
     }
 
     private bool LoadCurrentUserFromPlayerPrefs()
@@ -223,6 +226,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         return true;
     }
 
+    //AndreaLIRO: not used anymore
     private void CleanXMLSplitting()
     {
         string pathToXMLs = Path.Combine(Application.persistentDataPath, "ListenIn/Database");
@@ -251,8 +255,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 		Debug.Log(" ***** FIX CORRUPTED THERAPY FILES 1 ***** ");
 
         if ((!System.IO.File.Exists(strXmlFile_UserProfile)) || (!System.IO.File.Exists(strCsvFile_TherapyBlocks)) ||
-                              (!System.IO.File.Exists(strXmlFile_CifHistory)) || (!System.IO.File.Exists(strCsvFile_LiHistory)) /*||
-                              (!System.IO.File.Exists(strXmlFile_TherapyBlocksAll))*/)
+                              (!System.IO.File.Exists(strXmlFile_CifHistory)) || (!System.IO.File.Exists(strCsvFile_LiHistory)) 
+                              /*||(!System.IO.File.Exists(strXmlFile_TherapyBlocksAll))*/)
             return;
 
         FileInfo info1 = new FileInfo(strXmlFile_UserProfile);
@@ -1170,14 +1174,16 @@ public class DatabaseXML : Singleton<DatabaseXML> {
                 query_therapyDailyUpdate.Add("level_end", StateJigsawPuzzle.Instance.currLevelPinball.ToString());
                 //query_therapyDailyUpdate.Add("total_therapy_time", CUserTherapy.Instance.getTotalTherapyTimeMin().ToString());
 
-                WriteDatabaseXML(query_therapyDailyUpdate, therapy_daily_update);
+                //AndreaLIRO: eliminating all the queries to the database
+                //WriteDatabaseXML(query_therapyDailyUpdate, therapy_daily_update);
 
                 //add patient progress to the xml when app close
                 Dictionary<string, string> query_patient_game_progress = new Dictionary<string, string>();
                 query_patient_game_progress.Add("patient", PatientId.ToString());
                 query_patient_game_progress.Add("progress", MadLevelProfile.SaveProfileToString());
 
-                WriteDatabaseXML(query_patient_game_progress, insert_patient_progress);
+                //AndreaLIRO: eliminating all the queries to the database
+                //WriteDatabaseXML(query_patient_game_progress, insert_patient_progress);
             }
 
 
@@ -1191,7 +1197,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             sessionUpdate.Add("therapy_game_world", therapy_worldmap_time.ToString());
             sessionUpdate.Add("exit_reason", reasonToExit.ToString());
 
-            WriteDatabaseXML(sessionUpdate, therapy_session_update);
+            //AndreaLIRO: eliminating all the queries to the database
+            //WriteDatabaseXML(sessionUpdate, therapy_session_update);
         }
         catch (System.Exception ex)
         {
