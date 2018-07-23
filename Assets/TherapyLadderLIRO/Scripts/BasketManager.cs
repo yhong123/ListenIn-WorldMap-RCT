@@ -89,7 +89,7 @@ public class BasketManager : MonoBehaviour {
     private IEnumerator BackToWorldMap()
     {
         yield return new WaitForSeconds(2);
-        MadLevel.LoadLevelByName("World Map Select");
+        MadLevel.LoadLevelByName("MainHUB");
     }
 
 }

@@ -185,9 +185,13 @@ public class AppControllerSetupScreen : MonoBehaviour
         percentage = 100;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
-        m_playButton.interactable = true;
-        m_playButton.gameObject.SetActive(true);
-        switchPatient.gameObject.SetActive(true);
+        //m_playButton.interactable = true;
+        //m_playButton.gameObject.SetActive(true);
+        //switchPatient.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(2);
+        DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
+        MadLevel.LoadLevelByName("MainHUB");
 
     }
 
@@ -225,7 +229,7 @@ public class AppControllerSetupScreen : MonoBehaviour
     {
         //Debug.Log("PressedButton");
         DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
-        MadLevel.LoadLevelByName("World Map Select");
+        MadLevel.LoadLevelByName("MainHUB");
     }
 
     private IEnumerator SendLogs()

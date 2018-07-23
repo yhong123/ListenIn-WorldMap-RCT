@@ -84,7 +84,7 @@ public class StateSplash : State
     }
     public void StartGame()
     {
-        MadLevel.LoadLevelByName("World Map Select");
+        MadLevel.LoadLevelByName("SetupScreen");
         //GameController.Instance.ChangeState(GameController.States.ChapterSelect);
         //GameController.Instance.ChangeState(GameController.States.ChapterSelect);
     }

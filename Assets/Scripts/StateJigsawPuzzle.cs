@@ -455,7 +455,8 @@ public class StateJigsawPuzzle : State
     {
         yield return new WaitForSeconds(15);
         Debug.Log("Going back to select screen");
-        MadLevel.LoadLevelByName("World Map Select");
+        //AndreaLiro: we go back to the main hub after finishing the old li loop
+        MadLevel.LoadLevelByName("MainHUB");
     }
 
     private void CleanLerpers()

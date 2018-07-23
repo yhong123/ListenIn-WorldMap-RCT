@@ -141,7 +141,7 @@ public class UploadManager : Singleton<UploadManager> {
                 Debug.Log("UploadManager: " + _currDeltaTime + " returning to main screen.");
                 backToLevelSelection = false;
                 timeoutTimer = 0.0f;
-                MadLevel.LoadLevelByName("World Map Select");
+                MadLevel.LoadLevelByName("MainHUB");
             }
         }
     }

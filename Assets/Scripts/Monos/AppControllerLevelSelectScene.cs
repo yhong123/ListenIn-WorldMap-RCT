@@ -19,8 +19,9 @@ public class AppControllerLevelSelectScene : MonoBehaviour {
             Debug.LogError("Please assign the components to AppControllerLevelSelectScene");
         }
 
-        TherapyLIROManager.Instance.m_onAdvancingTherapy += PrepareWorldMapSection;
-        TherapyLIROManager.Instance.m_onFinishingSetupCurrentSection += UpdatingCurrentScenePreparation;
+        //AndreaLIRO: goes into the main hub. This get the feedback from the therapyLIROManager to understand what to do in the current section
+        //TherapyLIROManager.Instance.m_onAdvancingTherapy += PrepareWorldMapSection;
+        //TherapyLIROManager.Instance.m_onFinishingSetupCurrentSection += UpdatingCurrentScenePreparation;
         //GameController.Instance.Init();
     }
 

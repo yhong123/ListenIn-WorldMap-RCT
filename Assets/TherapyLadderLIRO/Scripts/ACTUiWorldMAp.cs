@@ -8,7 +8,7 @@ public class ACTUiWorldMAp : MonoBehaviour {
     public Text m_baseText;
     public GameObject m_startButton;
 
-    private string text_format = "It's ACT time! Loading... {0}";
+    private string text_format = "Loading... {0}%";
 
     private int currAmount = 0;
     private int previousAmount = 0;
@@ -44,8 +44,9 @@ public class ACTUiWorldMAp : MonoBehaviour {
 
         if (previousAmount == 100)
         {
-            m_baseText.text = "It s ACT time!";
-            m_startButton.SetActive(true);
+            m_baseText.text = "Press the button to proceed";
+            if (m_startButton != null)
+                m_startButton.SetActive(true);
         }
 
     }

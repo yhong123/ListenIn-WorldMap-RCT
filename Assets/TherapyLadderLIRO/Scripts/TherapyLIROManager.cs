@@ -229,7 +229,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         switch (m_UserProfile.LIROStep)
         {
             case TherapyLadderStep.CORE:
-                //Do nothing visually if we are already in the world map
+                //AndreaLIRO: 
+                //Activate button to go to the world map
                 break;
             case TherapyLadderStep.ACT:
                 PrepareACTScreen(100);
@@ -285,6 +286,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     #region Internal Functions
 
+    
     internal void PrepareTherapyScreen()
     {
         //Do eventually additional things here!
