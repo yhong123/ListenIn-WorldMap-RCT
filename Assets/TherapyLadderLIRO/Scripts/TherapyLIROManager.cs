@@ -185,6 +185,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 if (m_UserProfile.m_currentBlock > m_UserProfile.m_current_Total_Blocks)
                 {
                     Debug.Log("Therapy LIRO Manager detected end of current section");
+                    ListenIn.Logger.Instance.Log(String.Format("ENDING OF LIRO SECTION: {0}", m_UserProfile.LIROStep.ToString()), ListenIn.LoggerMessageType.Info);
                     //Advancing the section
                     AdvanceCurrentSection();
                     StartCoroutine(CreateCurrentSection());
@@ -231,6 +232,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.CORE:
                 //AndreaLIRO: 
                 //Activate button to go to the world map
+                PrepareTherapyScreen();
                 break;
             case TherapyLadderStep.ACT:
                 PrepareACTScreen(100);
@@ -244,6 +246,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// </summary>
     public void AdvanceCurrentSection()
     {
+
         int currStep = (int)m_UserProfile.LIROStep;
         Array currValues = Enum.GetValues(typeof(TherapyLadderStep));
         int size = currValues.Length;
@@ -289,6 +292,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     
     internal void PrepareTherapyScreen()
     {
+        if (m_onFinishingSetupCurrentSection != null)
+            m_onFinishingSetupCurrentSection(m_UserProfile.LIROStep, 100);
+    }
+    internal void PrepareBasketSelectionScreen()
+    {
         //Do eventually additional things here!
         if (m_onAdvancingTherapy != null)
             m_onAdvancingTherapy(m_UserProfile.LIROStep);
@@ -312,7 +320,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         switch (m_UserProfile.LIROStep)
         {
             case TherapyLadderStep.CORE:
-                PrepareTherapyScreen();
+                PrepareBasketSelectionScreen();
                 break;
             case TherapyLadderStep.ACT:
                 PrepareACTScreen(0);

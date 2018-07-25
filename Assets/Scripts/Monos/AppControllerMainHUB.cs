@@ -16,6 +16,7 @@ public class AppControllerMainHUB : MonoBehaviour {
     void Awake()
     {
         //AndreaLIRO: goes into the main hub. This get the feedback from the therapyLIROManager to understand what to do in the current section
+        //The first event is used when detecting switches
         TherapyLIROManager.Instance.m_onAdvancingTherapy += PrepareNewSection;
         TherapyLIROManager.Instance.m_onFinishingSetupCurrentSection += UpdatingCurrentScenePreparation;
     }
@@ -34,6 +35,15 @@ public class AppControllerMainHUB : MonoBehaviour {
     {
         Debug.Log("Level Loaded calling TherapyLiroManager");
         TherapyLIROManager.Instance.CheckCurrentSection();
+    }
+
+    void OnDestroy()
+    {
+        if (TherapyLIROManager.Instance != null)
+        {
+            TherapyLIROManager.Instance.m_onAdvancingTherapy -= PrepareNewSection;
+            TherapyLIROManager.Instance.m_onFinishingSetupCurrentSection -= UpdatingCurrentScenePreparation;
+        }
     }
 
     #region Button Events
@@ -65,6 +75,7 @@ public class AppControllerMainHUB : MonoBehaviour {
         switch (currAdvanceStep)
         {
             case TherapyLadderStep.CORE:
+                m_currentSectionText.text = "Preparing customized therapy... press button";
                 currLevelToLoad = "Basket Selection";
                 m_continueButton.interactable = true;
                 break;
@@ -98,6 +109,7 @@ public class AppControllerMainHUB : MonoBehaviour {
         switch (currStep)
         {
             case TherapyLadderStep.CORE:
+                m_currentSectionText.text = "Therapy cycle";
                 currLevelToLoad = "World Map Select";
                 m_continueButton.interactable = true;
                 break;

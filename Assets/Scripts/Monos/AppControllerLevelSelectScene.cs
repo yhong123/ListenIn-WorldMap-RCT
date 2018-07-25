@@ -40,8 +40,9 @@ public class AppControllerLevelSelectScene : MonoBehaviour {
     {
         if (TherapyLIROManager.Instance != null)
         {
-            TherapyLIROManager.Instance.m_onAdvancingTherapy -= PrepareWorldMapSection;
-            TherapyLIROManager.Instance.m_onFinishingSetupCurrentSection -= UpdatingCurrentScenePreparation;
+            //AndreaLIRO: add this to the main hub code
+            //TherapyLIROManager.Instance.m_onAdvancingTherapy -= PrepareWorldMapSection;
+            //TherapyLIROManager.Instance.m_onFinishingSetupCurrentSection -= UpdatingCurrentScenePreparation;
         }            
     }
 
