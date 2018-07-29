@@ -18,9 +18,9 @@ return Application.dataPath;// +"/"+ fileName;
 #endif
     }
 
-    public static string LiroProfileTemplate = "user_{0}_profile_LIRO";
+    public static string LiroProfileTemplate = "user_{0}_profile_LIRO.json";
     public static string LiroCoreItems = @"Doc/2018-04-core-challenge-list";
-    public static string LiroACT = @"Doc/ACT";
+    public static string LiroACT = @"Doc/ACT_LIRO/ACT_LIRO";
 
     public static string GetPathToLIROOutput()
     {
