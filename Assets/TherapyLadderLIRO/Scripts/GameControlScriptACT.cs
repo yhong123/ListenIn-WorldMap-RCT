@@ -15,7 +15,6 @@ public class GameControlScriptACT : MonoBehaviour
     //List<CTrial> m_lsTrial = new List
 
     public int numberOfTrials;
-    private int trialsCounter;
     private bool enable_input = true;
     AnimationInterface ai;
 
@@ -102,11 +101,12 @@ public class GameControlScriptACT : MonoBehaviour
     int m_intCheatCtr = 0;
 
     #region CurrentBlock Variables
-    CoreItemReader cir = new CoreItemReader();
-    List<Challenge> m_currListOfChallenges = new List<Challenge>();
+    ACTItemReader air = new ACTItemReader();
+    List<ACTChallenge> m_currListOfChallenges = new List<ACTChallenge>();
     private int m_curChallengeIdx = -1;
-    private Challenge m_currChallenge;
+    private ACTChallenge m_currACTChallenge;
     private ChallengeResponse m_challengeResponse;
+    private string m_currAudioFileName;
     // trial start time, this is to keep track how long does the patient take to get a correct response 
     DateTime m_dtCurTrialStartTime;
     LayerMask currMask;
@@ -177,80 +177,6 @@ public class GameControlScriptACT : MonoBehaviour
         goPhoneModeIcon.SetActive(false);
 
         LoadCurrentBlock();
-        //CUserTherapy.Instance.LoadTrials();
-
-        // set background noise
-        int intNoiseLevel = 0;//CUserTherapy.Instance.GetCurNoiseLevel();
-        //intNoiseLevel = 5;
-        //Debug.Log("*** intNoiseLevel = " + intNoiseLevel);
-
-        if (intNoiseLevel == 1)
-        {
-            goPhoneModeIcon.SetActive(true);
-            AudioClipInfo aci;
-            aci.delayAtStart = 0.0f;
-            aci.isLoop = false;
-            aci.useDefaultDBLevel = true;
-            aci.clipTag = string.Empty;
-            m_sound_manager.Play(Resources.Load("Audio/telephone_ring") as AudioClip, ChannelType.SoundFx, aci);
-        }
-        else if (intNoiseLevel > 1)
-        {
-            List<string> lsNoiseFile = new List<string>();
-            lsNoiseFile.Add("bar_pub");
-            lsNoiseFile.Add("birds_forest");
-            lsNoiseFile.Add("city_traffic");
-            lsNoiseFile.Add("office");
-            lsNoiseFile.Add("shopping_mall");
-            lsNoiseFile.Add("supermarket");
-            lsNoiseFile.Add("swings_playground");
-            lsNoiseFile.Add("train_station");
-            System.Random rnd = new System.Random();
-            int intIdx = rnd.Next(0, lsNoiseFile.Count);
-            string strAudio = lsNoiseFile[intIdx];
-
-            float fVoiceChannelDBlevel = m_sound_manager.GetChannelLevel(ChannelType.VoiceText);
-            Debug.Log("fVoiceChannelDBlevel = '" + fVoiceChannelDBlevel + "'");
-
-            if (intNoiseLevel == 2)
-            {
-                //strAudio = "cafe_short";  
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 20);
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 15);  // noise1 = -5db
-            }
-            else if (intNoiseLevel == 3)
-            {
-                //strAudio = "darts_short"; 
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 15);
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 10); // noise2 = 0db
-            }
-            else if (intNoiseLevel == 4)
-            {
-                //strAudio = "race_short";  
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 10);
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5); // noise3 = 5db
-            }
-            else if (intNoiseLevel == 5)
-            {
-                //strAudio = "rugby_short"; 
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 0); // noise4 = 10db               
-            }
-            else if (intNoiseLevel >= 6)
-            {
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel + 5); // noise5 = 15db
-            }
-            m_sound_manager.Stop(ChannelType.BackgroundNoise);
-
-            AudioClipInfo aci;
-            aci.delayAtStart = 0.0f;
-            aci.isLoop = true;
-            aci.useDefaultDBLevel = false;
-            aci.clipTag = string.Empty;
-            m_sound_manager.Play(Resources.Load("Audio/" + strAudio) as AudioClip, ChannelType.BackgroundNoise, aci);
-        }
-
-        //CUserTherapy.Instance.LoadTrials();
         PrepareNextTrialLIRO();
     }
     //----------------------------------------------------------------------------------------------------
@@ -261,21 +187,6 @@ public class GameControlScriptACT : MonoBehaviour
 
         CleanPreviousTrial();
 
-        // load patient profile
-        //CTrialList.Instance.LoadUserProfile();
-
-        // avoid long time holding, call this function in GameController-Init() instead
-        //CUserTherapy.Instance.LoadUserProfile();
-
-        trialsCounter = numberOfTrials;
-
-        //m_bShowMainMenu = true;
-
-        m_bIsAdminMode = false;
-        m_intClickButtonAdminCtr = 0;
-        m_intCheatCtr = 0;
-
-        //OnClickButtonLevel(CTrialList.Instance.getCurLevel());
         StartTherapyACT();
     }
 
@@ -283,7 +194,7 @@ public class GameControlScriptACT : MonoBehaviour
     {
         try
         {
-            m_currListOfChallenges = cir.ParseCsv(Path.Combine
+            m_currListOfChallenges = air.ParseCsv(Path.Combine
                     (GlobalVars.GetPathToLIROCurrentLadderSection(), 
                         String.Format(
                             "{0}_{1}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), TherapyLIROManager.Instance.GetCurrentBlockNumber()
@@ -295,24 +206,14 @@ public class GameControlScriptACT : MonoBehaviour
         {
             Debug.LogError("GCTACT: " + ex.Message);
         }
-        //string currfile = Directory.GetFiles(GlobalVars.GetPathToLIROCurrentLadderSection()).OrderBy(x => Path.GetFileName(x)).FirstOrDefault();
-        //if (currfile != null)
-        //{
-        //    m_currListOfChallenges = cir.ParseCsv(currfile).ToList();
-        //    RandomizeChallenges();
-        //}
+
     }
     void PrepareNextTrialLIRO()
     {
         isRepeatOn = true;
         m_intSelectedStimulusIdx = -1;
         m_curChallengeIdx++;
-        // update CTrialList with current response
-        //CTrialList.Instance.UpdateResponseList (m_curResponse);
-        //CUserTherapy.Instance.UpdateResponseList(m_curResponse);
 
-        // check end of level
-        //if (CTrialList.Instance.IsEndOfLevel(m_bIsAdminMode) || trialsCounter == 0)
         if (CheckBlockEnding())
         {
             EndTherapySessionACT();
@@ -321,13 +222,14 @@ public class GameControlScriptACT : MonoBehaviour
 
 
         // fetch the next trial
-        m_currChallenge = m_currListOfChallenges[m_curChallengeIdx];
+        m_currACTChallenge = m_currListOfChallenges[m_curChallengeIdx];
+        //Selecting curr audio to play
+        m_currAudioFileName = (UnityEngine.Random.Range(0.0f, 1.0f) < 0.5f) ? m_currACTChallenge.FileAudioID_F : m_currACTChallenge.FileAudioID_M;
+
         // preparing response
         m_challengeResponse = new ChallengeResponse();
-        m_challengeResponse.m_challengeID = m_currChallenge.ChallengeID;
-        RandomizeFoils(m_currChallenge);
-
-        trialsCounter--;
+        m_challengeResponse.m_challengeID = m_currACTChallenge.ChallengeID;
+        RandomizeFoils(m_currACTChallenge);
 
         ShowAllStimuli(false);
 
@@ -339,11 +241,11 @@ public class GameControlScriptACT : MonoBehaviour
     {
         //yield return new WaitForSeconds(2.0f);
 
-        ai.Play("Throw");
+        //ai.Play("Throw");
 
-        for (var i = 0; i < m_currChallenge.Foils.Count; ++i)
+        for (var i = 0; i < m_currACTChallenge.Foils.Count; ++i)
         {
-            switch (m_currChallenge.Foils.Count)
+            switch (m_currACTChallenge.Foils.Count)
             {
                 case 3:
                     m_arrStimulusGO[i].stimulusScript.SetFinalPosition(m_arr3StimuliPos[i]);
@@ -362,14 +264,14 @@ public class GameControlScriptACT : MonoBehaviour
                     break;
             }
             //m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/" + m_lsTrial [m_intCurIdx].m_lsStimulus[i].m_strImage);
-            m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/phase1/" + m_currChallenge.Foils[i].ToString());
-            m_arrStimulusGO[i].stimulusScript.m_registeredID = m_currChallenge.Foils[i];
+            m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/LIRO/ACT/" + m_currACTChallenge.ChallengeID.ToString() +  "/" + m_currACTChallenge.Foils[i].ToString());
+            m_arrStimulusGO[i].stimulusScript.m_registeredID = m_currACTChallenge.Foils[i];
 
         }
 
         ShowAllStimuli(true);
-        float delay = ai.AnimationLength("Throw");
-        PlayAudioLIRO(delay);
+        //float delay = ai.AnimationLength("Throw");
+        PlayAudioLIRO(3.0f);
         ResetStimulThrowPos();
         // to keep track reaction time
         m_dtCurTrialStartTime = DateTime.Now;
@@ -438,7 +340,7 @@ public class GameControlScriptACT : MonoBehaviour
         m_intSelectedStimulusIdx = ConvertStimulusTagToIdx(hitInfo.collider.gameObject.tag);
 
         //if (m_intSelectedStimulusIdx == m_lsTrial [m_intCurIdx].m_intTargetIdx) {
-        if (m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID == m_currChallenge.CorrectImageID)
+        if (m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID == m_currACTChallenge.CorrectImageID)
         {
             //CORRECT
             m_challengeResponse.m_responseTime = (float)Math.Round((DateTime.Now - m_dtCurTrialStartTime).TotalSeconds, 4);
@@ -446,23 +348,11 @@ public class GameControlScriptACT : MonoBehaviour
             int coinsEarned = 1;
             if (m_challengeResponse.m_incorrect == 0)
                 coinsEarned++;
-
-            //PlaySound("Sounds/Challenge/AnswerCorrect");
-
-            //m_particleSyst.transform.position = hitInfo.collider.gameObject.transform.position;
-            //m_particleSyst.Play();
-            //ai.Play("Happy");
             StartCoroutine(WaitCorrect());
         }
         else {
             //WRONG
             //PlayFeedbackSnd(false);
-            // show feedback if user hasn't got a right answer
-            //m_particleSystIncorrect.transform.position = hitInfo.collider.gameObject.transform.position;
-            //m_particleSystIncorrect.Play();
-            //m_challengeResponse.m_incorrect++;
-            //StartCoroutine("WaitCorrect");  // move on straight to next trial
-            //ai.Play("Sad");
             StartCoroutine(WaitIncorrect()); // remain till user has got a right answer
 
         }
@@ -491,19 +381,9 @@ public class GameControlScriptACT : MonoBehaviour
     //----------------------------------------------------------------------------------------------------
     IEnumerator WaitIncorrect()
     {
-        //m_bIsCoroutineIncorrectRunning = true;
 
-        // Wait for 2 sec
-        //float animationDuration = ai.AnimationLength("Sad");
-        //PlaySound("Sounds/Challenge/PicturesDisappear");
-        //m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.ShowStimulus(false);
-        //yield return new WaitForSeconds(animationDuration);
         yield return new WaitForSeconds(0.1f);
-        // set selected stimuli to invisible
-        //m_bShowBtnRepeat = true;
-        //m_bIsCoroutineIncorrectRunning = false;
 
-        // set all stimuli to invisible
         ShowAllStimuli(false);
         PlaySound("Sounds/Challenge/PicturesDisappear");
         yield return new WaitForSeconds(0.5f);
@@ -514,31 +394,24 @@ public class GameControlScriptACT : MonoBehaviour
 
     private bool CheckBlockEnding()
     {
-        return (m_curChallengeIdx >= m_currListOfChallenges.Count || trialsCounter <= 0);
+        return (m_curChallengeIdx >= m_currListOfChallenges.Count);
     }
     private IEnumerator FinishTherapyBlock()
     {
-        yield return new WaitForSeconds(4);
-        ai.Play("JumpIn");
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
+        //ai.Play("JumpIn");
+        yield return new WaitForSeconds(2);
         UploadManager.Instance.EndOfTherapyClean();
     }
     void EndTherapySessionACT()
     {
         m_sound_manager.Stop(ChannelType.BackgroundNoise);
-        //		if (m_audioBackgroundNoise.isPlaying)
-        //			m_audioBackgroundNoise.Stop();
-
-        //StateChallenge.Instance.SetTotalTherapyTime(CUserTherapy.Instance.getTotalTherapyTimeMin());
-        //StateChallenge.Instance.SetTodayTherapyTime(CUserTherapy.Instance.getTodayTherapyTimeMin());
-        //DatabaseXML.Instance.ForcedTimerState = true;
-        ////Andrea: starting to change the animation
         StartCoroutine(FinishTherapyBlock());
     }
 
     void ShowAllStimuli(bool bShow)
     {
-        for (var i = 0; i < m_currChallenge.Foils.Count; ++i)
+        for (var i = 0; i < m_currACTChallenge.Foils.Count; ++i)
         {
             m_arrStimulusGO[i].stimulusScript.ShowStimulus(bShow);
         }
@@ -548,7 +421,7 @@ public class GameControlScriptACT : MonoBehaviour
             PlaySound("Sounds/Challenge/PicturesAppear");
         }
     }
-    private void RandomizeFoils(Challenge m_currChallenge)
+    private void RandomizeFoils(ACTChallenge m_currChallenge)
     {
         for (int i = 0; i < m_currChallenge.Foils.Count; i++)
         {
@@ -562,7 +435,7 @@ public class GameControlScriptACT : MonoBehaviour
     {
         for (int i = 0; i < m_currListOfChallenges.Count; i++)
         {
-            Challenge temp = m_currListOfChallenges[i];
+            ACTChallenge temp = m_currListOfChallenges[i];
             int intRandomIndex = UnityEngine.Random.Range(i, m_currListOfChallenges.Count);
             m_currListOfChallenges[i] = m_currListOfChallenges[intRandomIndex];
             m_currListOfChallenges[intRandomIndex] = temp;
@@ -572,76 +445,7 @@ public class GameControlScriptACT : MonoBehaviour
     //----------------------------------------------------------------------------------------------------
     // OnClickButtonLevel - to be called from MenuLevelsScript
     //----------------------------------------------------------------------------------------------------
-    public void OnClickButtonLevel(int intLevel)
-    {
-        // hide main menu
-        //m_menuLevels.goMenuLevels.SetActive (false);
-        //m_bShowMainMenu = false;
-
-        CleanPreviousTrial();
-
-        goPhoneModeIcon.SetActive(false);
-
-        // levels 14 & 15
-        if ((intLevel >= 14) && (intLevel <= 15))
-        {
-            goPhoneModeIcon.SetActive(true);
-            AudioClipInfo aci;
-            aci.delayAtStart = 0.0f;
-            aci.isLoop = false;
-            aci.useDefaultDBLevel = true;
-            aci.clipTag = string.Empty;
-            m_sound_manager.Play(Resources.Load("Audio/telephone_ring") as AudioClip, ChannelType.SoundFx, aci);
-        }
-
-        // levels 16, 17, 18, 19 with background noise
-        if (intLevel >= 16)
-        {
-            float fVoiceChannelDBlevel = m_sound_manager.GetChannelLevel(ChannelType.VoiceText);
-            string strAudio = "";
-            if (intLevel == 16)
-            {
-                strAudio = "cafe_short";  //"NOISE1_V2";
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 20);
-            }
-            else if (intLevel == 17)
-            {
-                strAudio = "darts_short"; //"NOISE2_V3";
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 15);
-            }
-            else if (intLevel == 18)
-            {
-                strAudio = "race_short";  //"NOISE3_A2";
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 10);
-            }
-            else if (intLevel == 19)
-            {
-                strAudio = "rugby_short"; //"NOISE4_N6";
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
-            }
-
-            m_sound_manager.Stop(ChannelType.BackgroundNoise);
-
-            AudioClipInfo aci;
-            aci.delayAtStart = 0.0f;
-            aci.isLoop = true;
-            aci.useDefaultDBLevel = false;
-            aci.clipTag = string.Empty;
-
-            m_sound_manager.Play(Resources.Load("Audio/" + strAudio) as AudioClip, ChannelType.BackgroundNoise, aci);
-
-            //			if (!m_audioBackgroundNoise.isPlaying) 
-            //			{
-            //				m_audioBackgroundNoise.clip = Resources.Load ("Audio/" + strAudio) as AudioClip;
-            //				m_audioBackgroundNoise.Play ();
-            //			}
-        }
-
-        //CTrialList.Instance.ConvertCsvToXml();
-
-        //CTrialList.Instance.LoadTrials(intLevel);
-        //PrepareNextTrial();
-    }
+    
     void DoCheatCodes()
     {
         Debug.Log(" *** DoCheatCodes ***");
@@ -675,12 +479,12 @@ public class GameControlScriptACT : MonoBehaviour
         if (m_bIsCoroutineIncorrectRunning)
             StopCoroutine("WaitIncorrect");
 
-        string strAudio = "Audio/phase1/" + m_currChallenge.FileAudioID;
+        //string audiofilelastpart = Path.Combine(m_currACTChallenge.ChallengeID.ToString(), m_currAudioFileName);
+        
+        string strAudio = "Images/LIRO/ACT/" + m_currACTChallenge.ChallengeID.ToString() + "/" + m_currAudioFileName;
+        strAudio = strAudio.Replace(".wav", "");
         Debug.Log(String.Format("GameControlScript: target audio = {0}", strAudio));
-        /*
-        string strFolder = CTrialList.Instance.getCurAudioFolder ();
-		string strAudio = "Audio/" + strFolder + m_curTrial.m_strTargetAudio;
-	    */
+
         AudioClip clip = null;
 
         if (goPhoneModeIcon.activeSelf)
@@ -843,14 +647,15 @@ public class GameControlScriptACT : MonoBehaviour
         // load from xml file all stimuli's images, audio and target index for all trials/challenges 
         //LoadTrials ();
 
+        //AndreaLIRO: getting rid of this bit in the ACT
         //GETTING THE Animator script
-        GameObject lepr = GameObject.FindGameObjectWithTag("Leprechaun");
-        if (lepr != null)
-        {
-            ai = lepr.GetComponent<AnimationInterface>();
-            Vector3 throwPosition = lepr.transform.FindChild("ThrowPos").position;
-            SetStimuliThrowPos(throwPosition);
-        }
+        //GameObject lepr = GameObject.FindGameObjectWithTag("Leprechaun");
+        //if (lepr != null)
+        //{
+        //    ai = lepr.GetComponent<AnimationInterface>();
+        //    Vector3 throwPosition = lepr.transform.FindChild("ThrowPos").position;
+        //    SetStimuliThrowPos(throwPosition);
+        //}
 
         // restart game
         RestartGameLIRO();

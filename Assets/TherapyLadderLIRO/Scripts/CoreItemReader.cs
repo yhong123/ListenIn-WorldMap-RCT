@@ -4,6 +4,61 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+
+public class ACTItemReader : ICsvReader<ACTChallenge>
+{
+    private int currStep;
+    int ICsvReader<ACTChallenge>.CurrentStep
+    {
+        get
+        {
+            return currStep;
+        }
+    }
+    public IEnumerable<ACTChallenge> ParseCsv(string path)
+    {
+        List<ACTChallenge> currList = new List<ACTChallenge>();
+
+        //Read a single file and extract the list of challenges
+        string currBlock = File.ReadAllText(path);
+
+        string[] lines = currBlock.Split(new char[] { '\n' });
+
+        foreach (string item in lines)
+        {
+            if (item != String.Empty)
+            {
+                ACTChallenge currChallenge = new ACTChallenge();
+                string[] sections = item.Replace("\r", String.Empty).Trim().Split(new char[] { ',' });
+                currChallenge.LexicalItem = sections[1];
+                currChallenge.FileAudioID_F = sections[8];
+                currChallenge.FileAudioID_M = sections[9];
+                long id = long.MaxValue;
+                //Recovering ChallengeID
+                long.TryParse(sections[0], out id);
+                currChallenge.ChallengeID = id;
+                long.TryParse(sections[2], out id);
+                currChallenge.CorrectImageID = id;
+                currChallenge.Foils.Add(id);
+                long.TryParse(sections[3], out id);
+                currChallenge.Foils.Add(id);
+                long.TryParse(sections[4], out id);
+                currChallenge.Foils.Add(id);
+                long.TryParse(sections[5], out id);
+                currChallenge.Foils.Add(id);
+                long.TryParse(sections[6], out id);
+                currChallenge.Foils.Add(id);
+                long.TryParse(sections[7], out id);
+                currChallenge.Foils.Add(id);
+                currList.Add(currChallenge);
+            }
+        }
+
+        return currList;
+
+    }
+}
+
 public class CoreItemReader : ICsvReader<Challenge>
 {
     private int currStep;

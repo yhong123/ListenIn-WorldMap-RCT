@@ -10,7 +10,7 @@ public class UploadManager : Singleton<UploadManager> {
     private float _currDeltaTime = 0;
     private float startUploadTime = 0;
     private float timeoutTimer = 0.0f;
-    private float waitTime = 5.0f;
+    private float waitTime = 3.0f;
     private bool startTimer = false;
 
     public void Initialize()
@@ -35,48 +35,12 @@ public class UploadManager : Singleton<UploadManager> {
         startUploadTime = Time.time;
         
         yield return new WaitForSeconds(1.0f);
-        //Saving the jisaw pieces locally
-        try
-        {
-            _currDeltaTime = Time.time - startUploadTime;
-            Debug.Log("UploadManager: " + _currDeltaTime + " saving jigsaw pieces locally.");
-            GameStateSaver.Instance.Save();
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError("UploadManager: " + ex.Message);
-        }
-
-        _currDeltaTime = Time.time - startUploadTime;
-        Debug.Log("UploadManager: " + _currDeltaTime + " upload history 2");
-        
-        if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-        {
-            //Andrea: previously we log all the history every block. Now upload will be done at the application startup
-            //yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
-
-            _currDeltaTime = Time.time - startUploadTime;
-            //Yean: this is where we do the safe upload
-            if (DatabaseXML.Instance.CheckUploadSafeCondition())
-            {
-                //Here put all the methods with Ienumrator in order to wait them to be completed
-                Debug.Log("UploadManager: " + _currDeltaTime + " sending data out to the DB.");
-                yield return StartCoroutine(DatabaseXML.Instance.ReadDatabaseXML());
-                
-            }
-            else
-            {
-                Debug.Log("UploadManager: " + _currDeltaTime + " battery level is critical for exporting.");
-            }
-        }
-
 
         _currDeltaTime = Time.time - startUploadTime;
         Debug.Log("UploadManager: " + _currDeltaTime + " saving the LIRO therapy");
         //AndreaLIRO: adding the LIRO therapy update
         yield return StartCoroutine(TherapyLIROManager.Instance.AdvanceCurrentBlockInSection());
-
-
+        
         _currDeltaTime = Time.time - startUploadTime;
         Debug.Log("UploadManager: " + _currDeltaTime + " collecting memory");
         //Collecting memory

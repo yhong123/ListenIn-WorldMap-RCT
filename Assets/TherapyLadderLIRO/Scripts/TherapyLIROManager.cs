@@ -55,9 +55,10 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             Debug.Log("LIRO User Profile not found, creating a new one");
             //Setting a new LIRO user profile
             m_UserProfileManager.LIROStep = (TherapyLadderStep)0;
+            m_UserProfileManager.m_userProfile.isFirstInit = true;
             m_UserProfileManager.m_userProfile.m_currIDUser = 1;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
-            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
+            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks =0;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_cycleNumber = 0;
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 8;
@@ -71,23 +72,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             try
             {
                 //Loading current profile
-
                 m_UserProfileManager.LoadFromDisk(currFullPath);
-                // If file exists load current profile, notify only if finding a mismatch
-                //XElement root = XElement.Load(currFullPath);
-                //m_UserProfileManager.m_userProfile.m_currIDUser = (int)root.Element("UserID");
-                //if (m_UserProfileManager.m_userProfile.m_currIDUser != DatabaseXML.Instance.PatientId)
-                //{
-                //    Debug.LogWarning("ID mismatch between database xml and therapy LIRO manager");
-                //}
-
-                //string currStageEnum = (string)root.Element("LadderStep");
-                //m_UserProfileManager.LIROStep = (TherapyLadderStep)Enum.Parse(typeof(TherapyLadderStep), currStageEnum);
-
-                //Debug.Log("Current player section: " + m_UserProfileManager.LIROStep.ToString());
-
-                //m_UserProfile.m_currentBlock = (int)root.Element("CurrentBlockNumber");
-                //m_UserProfile.m_current_Total_Blocks = (int)root.Element("CurrentTotalBlockNumber");
+                Debug.Log("Current player section: " + m_UserProfileManager.LIROStep.ToString());
 
             }
             catch (Exception ex)
@@ -121,35 +107,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         {
             //AndreaLIRO: switching to json
             m_UserProfileManager.SaveToDisk();
-            //string currUser = string.Format(GlobalVars.LiroProfileTemplate, DatabaseXML.Instance.PatientId);
-            //string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(), currUser);
-
-            //// save lsTrial to xml 
-            //XmlDocument doc = new XmlDocument();
-            //doc.LoadXml("<?xml version='1.0' encoding='utf-8'?>" +
-            //    "<root>" +
-            //    "</root>");
-
-            //// Save the document to a file. White space is preserved (no white space).
-            //string strXmlFile = System.IO.Path.Combine(currFullPath, currUser);
-
-            //XmlElement xmlChild = doc.CreateElement("UserID");
-            //xmlChild.InnerText = m_UserProfileManager.m_userProfile.m_currIDUser.ToString();
-            //doc.DocumentElement.AppendChild(xmlChild);
-
-            //xmlChild = doc.CreateElement("LadderStep");
-            //xmlChild.InnerText = m_UserProfileManager.LIROStep.ToString();
-            //doc.DocumentElement.AppendChild(xmlChild);
-
-            //xmlChild = doc.CreateElement("CurrentBlockNumber");
-            ////xmlChild.InnerText = m_UserProfileManager.m_currentBlock.ToString();
-            //doc.DocumentElement.AppendChild(xmlChild);
-
-            //xmlChild = doc.CreateElement("CurrentTotalBlockNumber");
-            ////xmlChild.InnerText = m_UserProfile.m_current_Total_Blocks.ToString();
-            //doc.DocumentElement.AppendChild(xmlChild);
-
-            //doc.Save(currFullPath);
         }
         catch (Exception ex)
         {
@@ -167,9 +124,18 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
     public int GetCurrentBlockNumber()
     {
-        //AndreaLiro must be separated according to section
-        //return m_UserProfile.m_currentBlock;
-        return 0;
+        switch (m_UserProfileManager.LIROStep)
+        {
+            case TherapyLadderStep.CORE:
+                return m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock;
+                break;
+            case TherapyLadderStep.ACT:
+                return m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
+                break;
+            default:
+                break;
+        }
+        return -1;
     }
     /// <summary>
     /// Checking the folder with the blocks if they match the current registered step of the algorithm.
@@ -183,61 +149,74 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         string[] currFiles = Directory.GetFiles(currFolder);
         //If folder is empty create the splitted file
 
+        //If we find any files
         if (currFiles != null && currFiles.Length != 0)
         {
-            //Check consistency
+            //We check consistency by looking at the filename in the section folder
             string full_filename = Path.GetFileName(currFiles[0]);
             string[] splittedElements = full_filename.Replace(".csv", string.Empty).Split(new char[] { '_' });
 
-            //Checking the name
-            if (splittedElements[0] == m_UserProfileManager.LIROStep.ToString())
-            {
-                Debug.Log("Being in " + m_UserProfileManager.LIROStep.ToString() + " section");
-                //AndreaLIRO: must be separated in sections
-                //if (m_UserProfile.m_currentBlock > m_UserProfile.m_current_Total_Blocks)
-                //{
-                //    Debug.Log("Therapy LIRO Manager detected end of current section");
-                //    ListenIn.Logger.Instance.Log(String.Format("ENDING OF LIRO SECTION: {0}", m_UserProfile.LIROStep.ToString()), ListenIn.LoggerMessageType.Info);
-                //    //Advancing the section
-                //    AdvanceCurrentSection();
-                //    StartCoroutine(CreateCurrentSection());
-                //    return;
-                //}
-                //else
-                //{
-                //    PrepareCurrentSection();
-                //}
-            }
-            else
+            //Checking the name is the same
+            if (splittedElements[0] != m_UserProfileManager.LIROStep.ToString())
             {
                 //AndreaLIRO: must decide how to act in this case
                 Debug.LogError("TherapyLIROManager: found a mismatch between file" + splittedElements[0] + " and current loaded user profile " + m_UserProfileManager.LIROStep.ToString());
             }
+            else
+            {
+                Debug.Log("Being in " + m_UserProfileManager.LIROStep.ToString() + " section, but found file in section folder with name: " + splittedElements[0]);
+                PrepareCurrentSection();
+            }
         }
         else
         {
-            //AndreaLIRO: must be separated according to sections
-            //if (m_UserProfile.m_current_Total_Blocks == -1)
-            //{
-            //    //Escape code for first initization - WE DO NOT HAVE TO ADVANCE
-            //    StartCoroutine(CreateCurrentSection());
-            //}
-            //else if (m_UserProfile.m_currentBlock > m_UserProfile.m_current_Total_Blocks)
-            //{
-            //    Debug.Log("TherapyLiroManager: creating current file sections");
-            //    AdvanceCurrentSection();
-            //    StartCoroutine(CreateCurrentSection());
-            //}
-            //else
-            //{
-            //    Debug.LogError("TherapyLiroManager: No more file, but no condition for advancing...");
-            //}
+            if (m_UserProfileManager.m_userProfile.isFirstInit)
+            {
+                //AndreaLIRO:
+                //First initalization, should start practice
+            }
+            else
+            {
+                bool advance = false;
+                switch (m_UserProfileManager.LIROStep)
+                {
+                    case TherapyLadderStep.CORE:
+                        advance = CheckTherapyCoreEscapeSection();
+                        break;
+                    case TherapyLadderStep.ACT:
+                        advance = CheckACTEscapeSection();
+                        break;
+                    default:
+                        break;
+                }
+
+                if (advance)
+                {
+                    AdvanceCurrentSection();
+                    StartCoroutine(CreateCurrentSection());
+                    return;
+                }
+                else
+                {
+                    Debug.LogError("TherapyLiroManager: No more file, but no condition for advancing...");
+                }
+            }
 
         }
     }
-    /// <summary>
-    /// Preparing visual for the current section
-    /// </summary>
+
+    private bool CheckTherapyCoreEscapeSection()
+    {
+        return (m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock > m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks);
+        
+    }
+
+    private bool CheckACTEscapeSection()
+    {
+        return (m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock > m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks);
+    }
+
+
     public void PrepareCurrentSection()
     {
         switch (m_UserProfileManager.LIROStep)
@@ -436,10 +415,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             yield return new WaitForEndOfFrame();
         }
 
-        //Updating UserProfile
-        //AndreaLIRO: must be separated according to section
-        //m_UserProfile.m_current_Total_Blocks = total_blocks - 1;
-        //m_UserProfile.m_currentBlock = 1;
+        //Updating UserProfile in the therapy section
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = total_blocks - 1;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = 1;
 
         yield return StartCoroutine(SaveCurrentUserProfile());
 
@@ -492,10 +470,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 currFilename = String.Format("{0}_{1}", m_UserProfileManager.LIROStep, total_blocks);
                 File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
                 currBlockLines.Clear();
+                currCount = 0;
                 total_blocks++;
             }
 
-            currAmount += 5;
+            currAmount = 30 + 30 * (i/ lines.Count);
             if (m_onFinishingSetupCurrentSection != null)
             {
                 m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, currAmount);
@@ -512,11 +491,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             total_blocks++;
         }
 
-        //AndreaLIRO: must be separated according to section
-        //m_UserProfile.m_current_Total_Blocks = total_blocks - 1;
-        //m_UserProfile.m_currentBlock = 1;
+        //Updating UserProfile in the ACT section
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = total_blocks - 1; //Should be always 8
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = 1;
 
-        currAmount += 3;
+        currAmount += 15;
         if (m_onFinishingSetupCurrentSection != null)
         {
             m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, currAmount);
@@ -537,9 +516,27 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     {
         try
         {
-            //AndreaLIRO: must be separated according to section
-            //string filefullpath = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), String.Format("{0}_{1}", m_UserProfile.LIROStep.ToString(), m_UserProfile.m_currentBlock));
-            //File.Delete(filefullpath);
+            string fullPathFile = String.Empty;
+            int currBlock = -1;
+            switch (m_UserProfileManager.LIROStep)
+            {
+                case TherapyLadderStep.CORE:
+                    currBlock = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock;
+                    break;
+                case TherapyLadderStep.ACT:
+                    currBlock = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
+                    break;
+                default:
+                    break;
+            }
+
+            if (currBlock == -1)
+            {
+                Debug.Log("Wrong registered block to delete: section is " + m_UserProfileManager.LIROStep.ToString());
+            }
+
+            fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), String.Format("{0}_{1}", m_UserProfileManager.LIROStep.ToString(), currBlock));
+            File.Delete(fullPathFile);
         }
         catch (Exception ex)
         {
@@ -549,8 +546,17 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
     internal void AdvanceBlock()
     {
-        //AndreaLIRO: must be separated according to section
-        //m_UserProfileManager.m_userProfile.m_currentBlock++;C:\Users\AndreaCastegnaro\Documents\Unity Projects\ListenIn-WorldMap-RCT\Assets\TherapyLadderLIRO\Scripts\ACTUiWorldMAp.cs
+        switch (m_UserProfileManager.LIROStep)
+        {
+            case TherapyLadderStep.CORE:
+                m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock++;
+                break;
+            case TherapyLadderStep.ACT:
+                m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock++;
+                break;
+            default:
+                break;
+        }
     }
     #endregion
 

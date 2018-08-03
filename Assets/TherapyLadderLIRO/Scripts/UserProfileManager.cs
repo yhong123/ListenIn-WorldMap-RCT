@@ -20,6 +20,7 @@ public class ACTLiroUserProfile
 public class UserProfile
 {
     #region User Properties
+    public bool isFirstInit;
     public int m_currIDUser;
     public TherapyLadderStep m_LIROTherapyStep;
     public int m_TherapyLadderStepID;

@@ -1,6 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
+public class ACTChallenge
+{
+    public long ChallengeID;
+    public string LexicalItem;
+    public string FileAudioID_F;
+    public string FileAudioID_M;
+    public long CorrectImageID;
+    public List<long> Foils = new List<long>();
+
+    public ACTChallenge()
+    {
+
+    }
+
+    public ACTChallenge(long chID, string lexicalItem, int untrained, string faID_F, string faID_M,long ciID, long f1, long f2, long f3, long f4, long f5)
+    {
+        ChallengeID = chID;
+        LexicalItem = lexicalItem;
+        FileAudioID_F = faID_F;
+        FileAudioID_M = faID_M;
+        CorrectImageID = ciID;
+        Foils.Add(ciID);
+        Foils.Add(f1);
+        Foils.Add(f2);
+        Foils.Add(f3);
+        Foils.Add(f4);
+        Foils.Add(f5);
+    }
+}
+
 public class Challenge {
     public long ChallengeID;
     public string LexicalItem;
