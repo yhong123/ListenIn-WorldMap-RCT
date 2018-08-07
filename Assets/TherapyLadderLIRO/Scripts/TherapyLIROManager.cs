@@ -28,10 +28,25 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     #region Delegates
     public delegate void OnUpdateProgress(int progressAmount);
     public OnUpdateProgress m_onUpdateProgress;
-    public delegate void OnAdvancingTherapyLadder(TherapyLadderStep newStep);
-    public OnAdvancingTherapyLadder m_onAdvancingTherapy;
-    public delegate void OnFinishingCurrentSectionSetup(TherapyLadderStep newStep, int amount);
-    public OnFinishingCurrentSectionSetup m_onFinishingSetupCurrentSection;
+
+    /// <summary>
+    /// This delegate is used to detect that a new section is currently being created
+    /// </summary>
+    public delegate void OnSwitchingSection(UserProfileManager currUserSection, int amount);
+    public OnSwitchingSection m_OnSwitchingSection;
+
+    /// <summary>
+    /// This delegate is used to update the current section, no chage detected
+    /// </summary>
+    public delegate void OnUpdatingCurrentSection(UserProfileManager currUserSection, int amount);
+    public OnUpdatingCurrentSection m_OnUpdatingCurrentSection;
+
+    /// <summary>
+    /// This delegate is used to trigger special animation when ending a particular section
+    /// </summary>
+    public delegate void OnEndingSection(UserProfileManager currUserSection);
+    public OnEndingSection m_OnEndingSection;
+
     #endregion
 
     #region Unity
@@ -143,6 +158,19 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// </summary>
     public void CheckCurrentSection()
     {
+        //AndreaLIRO: simplify this version. We switch between the sections and call separate methods
+
+        //We check for first initialization only as this is treated specially
+        if (m_UserProfileManager.m_userProfile.isFirstInit)
+        {
+            //AndreaLIRO:
+            //First initalization, should start practice
+            Debug.Log("Detected first initialization. Need to start tutorial section");
+            return;
+        }
+
+        //AdnreaLIRO: this will be removed, it s here just to check consistency with the game.
+        //************************************************************************************************************************
         string currFolder = GlobalVars.GetPathToLIROCurrentLadderSection();
 
         //Get a single item from the ladder section folder (any is fine since they should belonging to all of the same batch)
@@ -165,69 +193,72 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             else
             {
                 Debug.Log("Being in " + m_UserProfileManager.LIROStep.ToString() + " section, but found file in section folder with name: " + splittedElements[0]);
-                PrepareCurrentSection();
             }
+        }
+        //************************************************************************************************************************
+
+        bool advance = false;
+        switch (m_UserProfileManager.LIROStep)
+        {
+            case TherapyLadderStep.CORE:
+                advance = CheckTherapyCoreEscapeSection();
+                break;
+            case TherapyLadderStep.ACT:
+                advance = CheckACTEscapeSection();
+                break;
+            default:
+                break;
+        }
+
+        if (advance)
+        {
+            //We first do any rewarding animation
+            if (m_OnEndingSection != null)
+            {
+                m_OnEndingSection(m_UserProfileManager);
+            }
+            return;
         }
         else
         {
-            if (m_UserProfileManager.m_userProfile.isFirstInit)
-            {
-                //AndreaLIRO:
-                //First initalization, should start practice
-            }
-            else
-            {
-                bool advance = false;
-                switch (m_UserProfileManager.LIROStep)
-                {
-                    case TherapyLadderStep.CORE:
-                        advance = CheckTherapyCoreEscapeSection();
-                        break;
-                    case TherapyLadderStep.ACT:
-                        advance = CheckACTEscapeSection();
-                        break;
-                    default:
-                        break;
-                }
-
-                if (advance)
-                {
-                    AdvanceCurrentSection();
-                    StartCoroutine(CreateCurrentSection());
-                    return;
-                }
-                else
-                {
-                    Debug.LogError("TherapyLiroManager: No more file, but no condition for advancing...");
-                }
-            }
-
+            PrepareCurrentSection();
         }
     }
 
+    /// <summary>
+    /// Escaping condition for therapy core section
+    /// </summary>
+    /// <returns></returns>
     private bool CheckTherapyCoreEscapeSection()
     {
-        return (m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock > m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks);
-        
+        return (m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock > m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks);        
     }
-
+    /// <summary>
+    /// Escaping condition for ACT section
+    /// </summary>
+    /// <returns></returns>
     private bool CheckACTEscapeSection()
     {
         return (m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock > m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks);
     }
 
-
+    /// <summary>
+    /// Tis function is called from the UI to notify the manager to change the section
+    /// </summary>
+    public void GoToNextSection()
+    {
+        AdvanceCurrentSection();
+        StartCoroutine(CreateCurrentSection());
+    }
     public void PrepareCurrentSection()
     {
         switch (m_UserProfileManager.LIROStep)
         {
             case TherapyLadderStep.CORE:
-                //AndreaLIRO: 
-                //Activate button to go to the world map
                 PrepareTherapyScreen();
                 break;
             case TherapyLadderStep.ACT:
-                PrepareACTScreen(100);
+                PrepareACTScreen();
                 break;
             default:
                 break;
@@ -238,7 +269,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// </summary>
     public void AdvanceCurrentSection()
     {
-
         int currStep = (int)m_UserProfileManager.LIROStep;
         Array currValues = Enum.GetValues(typeof(TherapyLadderStep));
         int size = currValues.Length;
@@ -277,54 +307,162 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Saving profile
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
+
     #endregion
 
     #region Internal Functions
 
-    
+    //UPDATING
+    //*******************************************************
     internal void PrepareTherapyScreen()
     {
-        if (m_onFinishingSetupCurrentSection != null)
-            m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, 100);
+        if (m_OnUpdatingCurrentSection != null)
+            m_OnUpdatingCurrentSection(m_UserProfileManager, 100);
     }
-    internal void PrepareBasketSelectionScreen()
+    internal void PrepareACTScreen()
     {
         //Do eventually additional things here!
-        if (m_onAdvancingTherapy != null)
-            m_onAdvancingTherapy(m_UserProfileManager.LIROStep);
+        if (m_OnUpdatingCurrentSection != null)
+            m_OnUpdatingCurrentSection(m_UserProfileManager, 100);
     }
-    internal void PrepareACTScreen(int initialAmount)
-    {
-        //Do eventually additional things here!
-        if (m_onAdvancingTherapy != null)
-            m_onAdvancingTherapy(m_UserProfileManager.LIROStep);
-        if (m_onFinishingSetupCurrentSection != null)
-            m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, initialAmount);
-    }
+    //*******************************************************
+
+    //SWITCHING
+    //*******************************************************
     /// <summary>
-    /// Called every time a new preparation for the ladder step must be completed
+    /// Called once after the UI notify that the ending animation for current section is being done
     /// </summary>
     /// <returns></returns>
     internal IEnumerator CreateCurrentSection()
     {
         //AndreaLIRO
-        yield return new WaitForSeconds(2);
         switch (m_UserProfileManager.LIROStep)
         {
             case TherapyLadderStep.CORE:
                 PrepareBasketSelectionScreen();
                 break;
             case TherapyLadderStep.ACT:
-                PrepareACTScreen(0);
-                StartCoroutine(LoadACTFile());
+                LoadingACTScreen(0);
+                yield return StartCoroutine(LoadACTFile());
                 break;
             default:
                 Debug.LogError("This has not been found...");
                 break;
         }
-        
+
         yield return null;
     }
+    /// <summary>
+    /// Called once when switching to the therapy
+    /// </summary>
+    internal void PrepareBasketSelectionScreen()
+    {
+        if (m_OnSwitchingSection != null)
+            m_OnSwitchingSection(m_UserProfileManager,0);
+    }
+    /// <summary>
+    /// Called many time when switching to the ACT
+    /// </summary>
+    /// <param name="amount"></param>
+    internal void LoadingACTScreen(int amount)
+    {
+        if (m_OnSwitchingSection != null)
+            m_OnSwitchingSection(m_UserProfileManager, amount);
+    }
+    /// <summary>
+    /// Loading ACT file and generate splitted files
+    /// </summary>
+    /// <returns></returns>
+    internal IEnumerator LoadACTFile()
+    {
+        yield return new WaitForEndOfFrame();
+
+        int currAmount = 3;
+        if (m_OnSwitchingSection != null)
+        {
+            m_OnSwitchingSection(m_UserProfileManager, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        TextAsset ta = Resources.Load<TextAsset>(GlobalVars.LiroACT);
+
+        List<string> lines = ta.text.Split(new char[] { '\n' }).ToList();
+
+        currAmount = 16;
+        if (m_OnSwitchingSection != null)
+        {
+            m_OnSwitchingSection(m_UserProfileManager, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        ShuffleLines(ref lines);
+
+        currAmount = 27;
+        if (m_OnSwitchingSection != null)
+        {
+            m_OnSwitchingSection(m_UserProfileManager, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        int currCount = 0;
+        int total_blocks = 1;
+        List<string> currBlockLines = new List<string>();
+        string currFilename = String.Empty;
+        for (int i = 0; i < lines.Count; i++)
+        {
+            currBlockLines.Add(lines[i].Replace("\r", "").Trim());
+            currCount++;
+            if (currCount == GlobalVars.ActChallengeLength)
+            {
+                currFilename = String.Format("{0}_{1}", m_UserProfileManager.LIROStep, total_blocks);
+                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
+                currBlockLines.Clear();
+                currCount = 0;
+                total_blocks++;
+            }
+
+            currAmount = 30 + 30 * (i / lines.Count);
+            if (m_OnSwitchingSection != null)
+            {
+                m_OnSwitchingSection(m_UserProfileManager, currAmount);
+            }
+            yield return new WaitForEndOfFrame();
+        }
+
+        if (currBlockLines.Count != 0)
+        {
+            currFilename = String.Format("{0}_{1}", m_UserProfileManager.LIROStep, total_blocks);
+            File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
+            currBlockLines.Clear();
+            total_blocks++;
+        }
+
+        //Updating UserProfile in the ACT section
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = total_blocks - 1; //Should be always 8
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = 1;
+
+        currAmount += 15;
+        if (m_OnSwitchingSection != null)
+        {
+            m_OnSwitchingSection(m_UserProfileManager, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        yield return StartCoroutine(SaveCurrentUserProfile());
+
+        currAmount = 100;
+        if (m_OnSwitchingSection != null)
+        {
+            m_OnSwitchingSection(m_UserProfileManager, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+    }
+    //*******************************************************
+    /// <summary>
+    /// Called every time a new preparation for the ladder step must be completed
+    /// </summary>
+    /// <returns></returns>
+
     internal void ShuffleLines(ref List<string> lines)
     {
         List<string> shuffledLines = lines.OrderBy(x => Guid.NewGuid()).ToList();
@@ -428,90 +566,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
 
     }
-    internal IEnumerator LoadACTFile()
-    {
-        int currAmount = 3;
-        if (m_onFinishingSetupCurrentSection != null)
-        {
-            m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, currAmount);
-        }
-        yield return new WaitForEndOfFrame();
-
-        TextAsset ta = Resources.Load<TextAsset>(GlobalVars.LiroACT);
-
-        List<string> lines = ta.text.Split( new char[] { '\n' }).ToList();
-
-        currAmount = 16;
-        if (m_onFinishingSetupCurrentSection != null)
-        {
-            m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, currAmount);
-        }
-        yield return new WaitForEndOfFrame();
-
-        ShuffleLines(ref lines);
-
-        currAmount = 27;
-        if (m_onFinishingSetupCurrentSection != null)
-        {
-            m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, currAmount);
-        }
-        yield return new WaitForEndOfFrame();
-
-        int currCount = 0;
-        int total_blocks = 1;
-        List<string> currBlockLines = new List<string>();
-        string currFilename = String.Empty;
-        for (int i = 0; i < lines.Count; i++)
-        {
-            currBlockLines.Add(lines[i].Replace("\r","").Trim());
-            currCount++;
-            if (currCount == GlobalVars.ActChallengeLength)
-            {
-                currFilename = String.Format("{0}_{1}", m_UserProfileManager.LIROStep, total_blocks);
-                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
-                currBlockLines.Clear();
-                currCount = 0;
-                total_blocks++;
-            }
-
-            currAmount = 30 + 30 * (i/ lines.Count);
-            if (m_onFinishingSetupCurrentSection != null)
-            {
-                m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, currAmount);
-            }
-            yield return new WaitForEndOfFrame();
-
-        }
-
-        if (currBlockLines.Count != 0)
-        {
-            currFilename = String.Format("{0}_{1}", m_UserProfileManager.LIROStep, total_blocks);
-            File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
-            currBlockLines.Clear();
-            total_blocks++;
-        }
-
-        //Updating UserProfile in the ACT section
-        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = total_blocks - 1; //Should be always 8
-        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = 1;
-
-        currAmount += 15;
-        if (m_onFinishingSetupCurrentSection != null)
-        {
-            m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, currAmount);
-        }
-        yield return new WaitForEndOfFrame();
-
-        yield return StartCoroutine(SaveCurrentUserProfile());
-
-        currAmount = 100;
-        if (m_onFinishingSetupCurrentSection != null)
-        {
-            m_onFinishingSetupCurrentSection(m_UserProfileManager.LIROStep, currAmount);
-        }
-        yield return new WaitForEndOfFrame();
-    }
-
     internal IEnumerator CleanCurrentBlock()
     {
         try

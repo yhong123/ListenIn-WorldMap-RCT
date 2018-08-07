@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -60,6 +61,9 @@ public class GameControlScriptACT : MonoBehaviour
     public Transform m_root_4;
     public Transform m_root_5;
     public Transform m_root_6;
+
+    public Text m_couterText;
+    private string counterformat = "{0}/30";
 
     // feedback (ticks) to show correct answer
     ParticleSystem m_particleSyst;
@@ -273,9 +277,17 @@ public class GameControlScriptACT : MonoBehaviour
         //float delay = ai.AnimationLength("Throw");
         PlayAudioLIRO(3.0f);
         ResetStimulThrowPos();
+        SetCurrentCounter();
         // to keep track reaction time
         m_dtCurTrialStartTime = DateTime.Now;
 
+    }
+    void SetCurrentCounter()
+    {
+        if (m_couterText != null)
+        {
+            m_couterText.text = String.Format(counterformat, m_curChallengeIdx + 1);
+        }
     }
     private void CleanPreviousTrial()
     {
@@ -398,7 +410,6 @@ public class GameControlScriptACT : MonoBehaviour
     }
     private IEnumerator FinishTherapyBlock()
     {
-        yield return new WaitForSeconds(1);
         //ai.Play("JumpIn");
         yield return new WaitForSeconds(2);
         UploadManager.Instance.EndOfTherapyClean();
