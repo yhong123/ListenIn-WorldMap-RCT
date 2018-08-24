@@ -17,13 +17,9 @@ public class GameControlScriptACT : MonoBehaviour
 
     public int numberOfTrials;
     private bool enable_input = true;
-    AnimationInterface ai;
 
     // index of the current displayed trial/challenge
     int m_intCurIdx = -1;
-
-    // response to current trial
-    CResponse m_curResponse = new CResponse();
 
     // structure represent stimulus game object 
     public struct stStimulusGO
@@ -109,7 +105,8 @@ public class GameControlScriptACT : MonoBehaviour
     List<ACTChallenge> m_currListOfChallenges = new List<ACTChallenge>();
     private int m_curChallengeIdx = -1;
     private ACTChallenge m_currACTChallenge;
-    private ChallengeResponse m_challengeResponse;
+    private ChallengeResponseACT m_challengeResponse;
+    private List<ChallengeResponseACT> m_responseList = new List<ChallengeResponseACT>();
     private string m_currAudioFileName;
     // trial start time, this is to keep track how long does the patient take to get a correct response 
     DateTime m_dtCurTrialStartTime;
@@ -181,6 +178,9 @@ public class GameControlScriptACT : MonoBehaviour
         goPhoneModeIcon.SetActive(false);
 
         LoadCurrentBlock();
+        //Saving basic information
+        m_challengeResponse.m_block = TherapyLIROManager.Instance.GetCurrentBlockNumber();
+        m_challengeResponse.m_cycle = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
         PrepareNextTrialLIRO();
     }
     //----------------------------------------------------------------------------------------------------
@@ -188,9 +188,7 @@ public class GameControlScriptACT : MonoBehaviour
     //----------------------------------------------------------------------------------------------------
     void RestartGameLIRO()
     {
-
         CleanPreviousTrial();
-
         StartTherapyACT();
     }
 
@@ -231,7 +229,7 @@ public class GameControlScriptACT : MonoBehaviour
         m_currAudioFileName = (UnityEngine.Random.Range(0.0f, 1.0f) < 0.5f) ? m_currACTChallenge.FileAudioID_F : m_currACTChallenge.FileAudioID_M;
 
         // preparing response
-        m_challengeResponse = new ChallengeResponse();
+        m_challengeResponse = new ChallengeResponseACT();
         m_challengeResponse.m_challengeID = m_currACTChallenge.ChallengeID;
         RandomizeFoils(m_currACTChallenge);
 
@@ -243,10 +241,6 @@ public class GameControlScriptACT : MonoBehaviour
     }
     public void ShowNextTrialLIRO()
     {
-        //yield return new WaitForSeconds(2.0f);
-
-        //ai.Play("Throw");
-
         for (var i = 0; i < m_currACTChallenge.Foils.Count; ++i)
         {
             switch (m_currACTChallenge.Foils.Count)
@@ -267,19 +261,19 @@ public class GameControlScriptACT : MonoBehaviour
                     print("Incorrect intelligence level.");
                     break;
             }
-            //m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/" + m_lsTrial [m_intCurIdx].m_lsStimulus[i].m_strImage);
             m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/LIRO/ACT/" + m_currACTChallenge.ChallengeID.ToString() +  "/" + m_currACTChallenge.Foils[i].ToString());
             m_arrStimulusGO[i].stimulusScript.m_registeredID = m_currACTChallenge.Foils[i];
 
         }
 
         ShowAllStimuli(true);
-        //float delay = ai.AnimationLength("Throw");
+
         PlayAudioLIRO(3.0f);
         ResetStimulThrowPos();
         SetCurrentCounter();
+
         // to keep track reaction time
-        m_dtCurTrialStartTime = DateTime.Now;
+        m_challengeResponse.m_timeStamp = m_dtCurTrialStartTime = DateTime.Now;
 
     }
     void SetCurrentCounter()
@@ -306,7 +300,6 @@ public class GameControlScriptACT : MonoBehaviour
         m_bIsCoroutineIncorrectRunning = false;
         m_intCurIdx = -1;
     }
-
     //----------------------------------------------------------------------------------------------------
     // ConvertStimulusTagToIdx
     //----------------------------------------------------------------------------------------------------
@@ -348,23 +341,20 @@ public class GameControlScriptACT : MonoBehaviour
 
         m_bShowBtnRepeat = false;
 
-        //if (ConvertStimulusTagToIdx (hitInfo.collider.gameObject.tag) == m_arrTrial [m_intCurIdx].intTargetIdx) {
         m_intSelectedStimulusIdx = ConvertStimulusTagToIdx(hitInfo.collider.gameObject.tag);
+        m_challengeResponse.m_reactionTime = (float)Math.Round((DateTime.Now - m_dtCurTrialStartTime).TotalSeconds, 4);
 
-        //if (m_intSelectedStimulusIdx == m_lsTrial [m_intCurIdx].m_intTargetIdx) {
         if (m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID == m_currACTChallenge.CorrectImageID)
         {
-            //CORRECT
-            m_challengeResponse.m_responseTime = (float)Math.Round((DateTime.Now - m_dtCurTrialStartTime).TotalSeconds, 4);
-
-            int coinsEarned = 1;
-            if (m_challengeResponse.m_incorrect == 0)
-                coinsEarned++;
+            //CORRECT            
+            m_challengeResponse.m_accuracy = 1;
             StartCoroutine(WaitCorrect());
         }
-        else {
+        else
+        {
             //WRONG
             //PlayFeedbackSnd(false);
+            m_challengeResponse.m_accuracy = 0;
             StartCoroutine(WaitIncorrect()); // remain till user has got a right answer
 
         }
@@ -562,7 +552,6 @@ public class GameControlScriptACT : MonoBehaviour
         if (isRepeatOn)
         {
             isRepeatOn = false;
-            m_curResponse.m_intReplayBtnCtr++;
             m_challengeResponse.m_repeat++;
             return PlayAudioLIRO(0);
         }

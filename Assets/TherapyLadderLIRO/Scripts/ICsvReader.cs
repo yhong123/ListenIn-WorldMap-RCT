@@ -13,3 +13,9 @@ public interface ICsvReader<T> {
     IEnumerable<T> ParseCsv(string path);
 
 }
+
+public interface ICsvWriter<T> {
+
+    IEnumerable<T> WriteCsv(string path);
+
+}

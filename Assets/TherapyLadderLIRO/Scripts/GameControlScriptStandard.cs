@@ -424,10 +424,10 @@ public class GameControlScriptStandard : MonoBehaviour
         if (m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID == m_currChallenge.CorrectImageID)
         {
 
-            m_challengeResponse.m_responseTime = (float)Math.Round((DateTime.Now - m_dtCurTrialStartTime).TotalSeconds, 4);
+            m_challengeResponse.m_reactionTime = (float)Math.Round((DateTime.Now - m_dtCurTrialStartTime).TotalSeconds, 4);
 
             int coinsEarned = 1;
-            if (m_challengeResponse.m_incorrect == 0)
+            if (m_challengeResponse.m_accuracy == 0)
                 coinsEarned++;
 
             StateChallenge.Instance.AddCoin(coinsEarned);
@@ -445,7 +445,8 @@ public class GameControlScriptStandard : MonoBehaviour
             // show feedback if user hasn't got a right answer
             m_particleSystIncorrect.transform.position = hitInfo.collider.gameObject.transform.position;
             m_particleSystIncorrect.Play();
-            m_challengeResponse.m_incorrect++;
+            //AndreaLIRO: adjust the accuracy with the 
+            m_challengeResponse.m_accuracy++;
             //StartCoroutine("WaitCorrect");  // move on straight to next trial
             ai.Play("Sad");
             StartCoroutine(WaitIncorrect()); // remain till user has got a right answer

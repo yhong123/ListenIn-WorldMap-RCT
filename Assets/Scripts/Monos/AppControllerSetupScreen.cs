@@ -83,32 +83,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         yield return new WaitForEndOfFrame();
 
-        //AndreaLIRO: commenting out Yean code
         percentage = 18;
-        //m_textScreen.text = String.Format(m_textStringFormat, percentage);
-        //try
-        //{
-        //    //AndreaLIRO: this will have to be removed (YEAN)
-        //    CUserTherapy.Instance.LoadDataset_UserProfile();
-        //}
-        //catch (System.Exception ex)
-        //{
-        //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
-        //}
-        //yield return new WaitForEndOfFrame();
-
-        //percentage = 33;
-        //m_textScreen.text = String.Format(m_textStringFormat, percentage);
-        //try
-        //{
-        //    StartCoroutine(UploadProfileHistory());
-        //    //UploadManager.Instance.Initialize();
-        //}
-        //catch (System.Exception ex)
-        //{
-        //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
-        //}
-        //yield return new WaitForEndOfFrame();
 
         //AndreaLIRO: Insert therapy ladder new algorithm
         percentage = 47;

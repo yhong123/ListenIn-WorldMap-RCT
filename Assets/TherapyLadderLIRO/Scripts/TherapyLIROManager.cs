@@ -71,6 +71,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //Setting a new LIRO user profile
             m_UserProfileManager.LIROStep = (TherapyLadderStep)0;
             m_UserProfileManager.m_userProfile.isFirstInit = true;
+            m_UserProfileManager.m_userProfile.m_currCycle = 0;
             m_UserProfileManager.m_userProfile.m_currIDUser = 1;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks =0;
@@ -147,6 +148,18 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.ACT:
                 return m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
                 break;
+            default:
+                break;
+        }
+        return -1;
+    }
+    public int GetCurrentTherapyCycle() {
+        switch (m_UserProfileManager.LIROStep)
+        {
+            case TherapyLadderStep.CORE:
+            case TherapyLadderStep.ACT:
+                return m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_cycleNumber;
+                break;            
             default:
                 break;
         }
@@ -556,6 +569,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Updating UserProfile in the therapy section
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = total_blocks - 1;
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = 1;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_cycleNumber++;
 
         yield return StartCoroutine(SaveCurrentUserProfile());
 
