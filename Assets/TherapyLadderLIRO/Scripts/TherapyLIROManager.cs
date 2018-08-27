@@ -75,7 +75,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.m_userProfile.m_currIDUser = 1;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks =0;
-            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_cycleNumber = 0;
+            m_UserProfileManager.m_userProfile.m_cycleNumber = 0;
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 8;
             //Wait for the data to be saved
@@ -158,7 +158,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         {
             case TherapyLadderStep.CORE:
             case TherapyLadderStep.ACT:
-                return m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_cycleNumber;
+                return m_UserProfileManager.m_userProfile.m_cycleNumber;
                 break;            
             default:
                 break;
@@ -207,6 +207,15 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             {
                 Debug.Log("Being in " + m_UserProfileManager.LIROStep.ToString() + " section, but found file in section folder with name: " + splittedElements[0]);
             }
+        }
+        //************************************************************************************************************************
+
+        //AndreaLIRO: Create an escape for when having finished the tutorial
+        //************************************************************************************************************************
+        if (m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock == -1 && m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock == -1)
+        {
+            StartCoroutine(CreateCurrentSection());
+            return;
         }
         //************************************************************************************************************************
 
@@ -569,7 +578,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Updating UserProfile in the therapy section
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = total_blocks - 1;
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = 1;
-        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_cycleNumber++;
+        m_UserProfileManager.m_userProfile.m_cycleNumber++;
 
         yield return StartCoroutine(SaveCurrentUserProfile());
 

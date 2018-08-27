@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 
 public class TherapyLiroUserProfile
 {
-    public int m_cycleNumber = 0;
     public int m_currentBlock = -1;
     public int m_totalBlocks = 0;
 }
@@ -23,6 +22,7 @@ public class UserProfile
     public bool isFirstInit;
     public int m_currCycle;
     public int m_currIDUser;
+    public int m_cycleNumber;
     public TherapyLadderStep m_LIROTherapyStep;
     public int m_TherapyLadderStepID;
     public TherapyLiroUserProfile m_TherapyLiroUserProfile = new TherapyLiroUserProfile();

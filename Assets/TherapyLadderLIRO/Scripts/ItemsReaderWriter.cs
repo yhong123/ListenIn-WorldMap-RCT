@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEngine;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -56,6 +57,44 @@ public class ACTItemReader : ICsvReader<ACTChallenge>
 
         return currList;
 
+    }
+}
+
+public class ACTItemWriter : ICsvWriter<ChallengeResponseACT>
+{
+    public void WriteCsv(string path, string filename, IEnumerable<ChallengeResponseACT> listToWrite)
+    {
+        string fullPath = Path.Combine(path, filename);
+        List <string> listString = new List<string>();
+
+        foreach (var item in listToWrite)
+        {
+            listString.Add(String.Join(",", new string[] {
+
+                  item.m_challengeID.ToString(), 
+                  item.m_timeStamp.ToString("dd/MM/yyyy"),
+                  item.m_timeStamp.ToString("HH:mm:ss"),
+                  item.m_number.ToString(),
+                  item.m_block.ToString(),
+                  item.m_cycle.ToString(),
+                  item.m_accuracy.ToString(),
+                  item.m_reactionTime.ToString(),
+                  item.m_repeat.ToString(),
+                  item.m_pictureID.ToString()
+    }));
+
+
+        }
+
+        try
+        {
+            File.WriteAllLines(fullPath, listString.ToArray());
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+            throw;
+        }
     }
 }
 

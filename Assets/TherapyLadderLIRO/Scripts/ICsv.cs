@@ -16,6 +16,6 @@ public interface ICsvReader<T> {
 
 public interface ICsvWriter<T> {
 
-    IEnumerable<T> WriteCsv(string path);
+    void WriteCsv(string path,string filename, IEnumerable<T> listToWrite);
 
 }

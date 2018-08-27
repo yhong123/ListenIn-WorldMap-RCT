@@ -112,6 +112,8 @@ public class GameControlScriptACT : MonoBehaviour
     DateTime m_dtCurTrialStartTime;
     LayerMask currMask;
     private bool isRepeatOn = true;
+
+    private ACTItemWriter m_actWriter = new ACTItemWriter();
     #endregion
 
     public void SetEnable(bool enable)
@@ -178,9 +180,6 @@ public class GameControlScriptACT : MonoBehaviour
         goPhoneModeIcon.SetActive(false);
 
         LoadCurrentBlock();
-        //Saving basic information
-        m_challengeResponse.m_block = TherapyLIROManager.Instance.GetCurrentBlockNumber();
-        m_challengeResponse.m_cycle = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
         PrepareNextTrialLIRO();
     }
     //----------------------------------------------------------------------------------------------------
@@ -221,8 +220,6 @@ public class GameControlScriptACT : MonoBehaviour
             EndTherapySessionACT();
             return;
         }
-
-
         // fetch the next trial
         m_currACTChallenge = m_currListOfChallenges[m_curChallengeIdx];
         //Selecting curr audio to play
@@ -230,7 +227,11 @@ public class GameControlScriptACT : MonoBehaviour
 
         // preparing response
         m_challengeResponse = new ChallengeResponseACT();
+        //Saving basic information
+        m_challengeResponse.m_block = TherapyLIROManager.Instance.GetCurrentBlockNumber();
+        m_challengeResponse.m_cycle = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
         m_challengeResponse.m_challengeID = m_currACTChallenge.ChallengeID;
+        m_challengeResponse.m_number = m_curChallengeIdx + 1;
         RandomizeFoils(m_currACTChallenge);
 
         ShowAllStimuli(false);
@@ -342,6 +343,7 @@ public class GameControlScriptACT : MonoBehaviour
         m_bShowBtnRepeat = false;
 
         m_intSelectedStimulusIdx = ConvertStimulusTagToIdx(hitInfo.collider.gameObject.tag);
+        m_challengeResponse.m_pictureID = (int)m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID;
         m_challengeResponse.m_reactionTime = (float)Math.Round((DateTime.Now - m_dtCurTrialStartTime).TotalSeconds, 4);
 
         if (m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID == m_currACTChallenge.CorrectImageID)
@@ -375,6 +377,7 @@ public class GameControlScriptACT : MonoBehaviour
         PlaySound("Sounds/Challenge/PicturesDisappear");
         yield return new WaitForSeconds(0.5f);
         // continue next trial/challenge
+        SaveCurrentChallenge();
         PrepareNextTrialLIRO();
     }
 
@@ -390,6 +393,7 @@ public class GameControlScriptACT : MonoBehaviour
         PlaySound("Sounds/Challenge/PicturesDisappear");
         yield return new WaitForSeconds(0.5f);
         // continue next trial/challenge
+        SaveCurrentChallenge();
         PrepareNextTrialLIRO();
 
     }
@@ -398,10 +402,27 @@ public class GameControlScriptACT : MonoBehaviour
     {
         return (m_curChallengeIdx >= m_currListOfChallenges.Count);
     }
+    private void SaveCurrentChallenge()
+    {
+        m_responseList.Add(m_challengeResponse);
+    }
+    private void SaveCurrentBlockResponse()
+    {
+        try
+        {
+            string filemane = String.Format("ACT_{0}_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
+            string pathFolder = GlobalVars.GetPathToLIROOutput();
+            m_actWriter.WriteCsv(pathFolder, filemane, m_responseList);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+    }
     private IEnumerator FinishTherapyBlock()
     {
-        //ai.Play("JumpIn");
-        yield return new WaitForSeconds(2);
+        SaveCurrentBlockResponse();
+        yield return new WaitForEndOfFrame();
         UploadManager.Instance.EndOfTherapyClean();
     }
     void EndTherapySessionACT()
@@ -675,6 +696,10 @@ public class GameControlScriptACT : MonoBehaviour
     }
     void Update()
     {
+#if UNITY_EDITOR
+        if(Input.GetKeyDown(KeyCode.Space))
+            EndTherapySessionACT();
+#endif
         //if (Input.GetKey("up"))
         //    DoCheatCodes();
 
