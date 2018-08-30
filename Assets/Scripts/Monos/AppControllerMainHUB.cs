@@ -10,6 +10,7 @@ public class AppControllerMainHUB : MonoBehaviour {
     public Text m_currentSectionText;
     public ACT_UI m_ACT_ui;
     public Therapy_UI m_Therapy_ui;
+    public SART_UI m_SART_ui;
 
     private TherapyLadderStep currLadderStep;
     private string currLevelToLoad = "";
@@ -49,6 +50,16 @@ public class AppControllerMainHUB : MonoBehaviour {
     {
         MadLevel.LoadLevelByName(currLevelToLoad);
     }
+    public void sartPracticeTestClicked()
+    {
+        //AndreaLIRO: need to prepare the tutorial
+    }
+    public void sartTestClicked()
+    {
+        currLevelToLoad = "SART";
+        MadLevel.LoadLevelByName(currLevelToLoad);
+
+    }
     #endregion
 
     #region DelegateMethods
@@ -70,6 +81,13 @@ public class AppControllerMainHUB : MonoBehaviour {
                 currLevelToLoad = "ACT";
                 m_continueButton.interactable = true;
                 break;
+            case TherapyLadderStep.SART_TEST:
+                m_currentSectionText.text = "SART";
+                m_SART_ui.gameObject.SetActive(true);
+                m_continueButton.enabled = false;
+                m_continueButton.gameObject.SetActive(false);
+                //currLevelToLoad = "SART";
+                break;
             default:
                 break;
         }
@@ -79,8 +97,7 @@ public class AppControllerMainHUB : MonoBehaviour {
     {
         if (amount == 0)
         {
-            m_ACT_ui.gameObject.SetActive(false);
-            m_Therapy_ui.gameObject.SetActive(false);
+            HideAllMenus();
             //Activate the current UI
             switch (currProfile.LIROStep)
             {
@@ -94,6 +111,12 @@ public class AppControllerMainHUB : MonoBehaviour {
                     m_currentSectionText.text = "ACT";
                     m_ACT_ui.gameObject.SetActive(true);
                     currLevelToLoad = "ACT";
+                    break;
+                case TherapyLadderStep.SART_TEST:
+                    m_currentSectionText.text = "SART";
+                    m_SART_ui.gameObject.SetActive(true);
+                    m_continueButton.gameObject.SetActive(false);
+                    currLevelToLoad = "";
                     break;
                 default:
                     break;
@@ -128,6 +151,11 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_ACT_ui.gameObject.SetActive(true);
                 StartCoroutine(EndACT(currProfile));
                 break;
+            case TherapyLadderStep.SART_TEST:
+                m_currentSectionText.text = "SART";
+                m_SART_ui.gameObject.SetActive(true);
+                StartCoroutine(EndSART(currProfile));
+                break;
             default:
                 break;
         }
@@ -148,6 +176,18 @@ public class AppControllerMainHUB : MonoBehaviour {
         TherapyLIROManager.Instance.GoToNextSection();
 
     }
+    private IEnumerator EndSART(UserProfileManager currProfile)
+    {
+        yield return new WaitForSeconds(2);
+        TherapyLIROManager.Instance.GoToNextSection();
+    }
     #endregion
+
+    private void HideAllMenus()
+    {
+        m_ACT_ui.gameObject.SetActive(false);
+        m_Therapy_ui.gameObject.SetActive(false);
+        m_SART_ui.gameObject.SetActive(false);
+}
 
 }

@@ -338,6 +338,18 @@ MonoBehaviour:
     groupId: 0
     extensionGUID: 
     lockedByDefault: 1
+  - _sceneObject: {fileID: 102900000, guid: e9297c4b0e70c3a4d8cb7f795b75c11f, type: 3}
+    _scenePath: Assets/SART/SART.unity
+    _sceneName: SART
+    scene: 
+    parent: {fileID: 11400000}
+    order: 270
+    name: SART
+    type: 0
+    arguments: 
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
   groups: []
   extensions: []
   version: 1

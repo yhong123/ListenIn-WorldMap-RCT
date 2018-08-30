@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { CORE = 0, ACT = 1};
+public enum TherapyLadderStep { CORE = 0, ACT = 1, SART_TEST = 2};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -154,16 +154,10 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         return -1;
     }
     public int GetCurrentTherapyCycle() {
-        switch (m_UserProfileManager.LIROStep)
-        {
-            case TherapyLadderStep.CORE:
-            case TherapyLadderStep.ACT:
-                return m_UserProfileManager.m_userProfile.m_cycleNumber;
-                break;            
-            default:
-                break;
-        }
-        return -1;
+
+        //AndreaLIRO: therapy cycle ID will be held only in the userProfile, so switch is not necessary
+        return m_UserProfileManager.m_userProfile.m_cycleNumber;
+
     }
     /// <summary>
     /// Checking the folder with the blocks if they match the current registered step of the algorithm.
@@ -227,6 +221,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 break;
             case TherapyLadderStep.ACT:
                 advance = CheckACTEscapeSection();
+                break;
+            case TherapyLadderStep.SART_TEST:
+                advance = true;
                 break;
             default:
                 break;
@@ -367,6 +364,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 LoadingACTScreen(0);
                 yield return StartCoroutine(LoadACTFile());
                 break;
+            case TherapyLadderStep.SART_TEST:
+                LoadingSARTSCreen();
+                break;
             default:
                 Debug.LogError("This has not been found...");
                 break;
@@ -478,6 +478,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_OnSwitchingSection(m_UserProfileManager, currAmount);
         }
         yield return new WaitForEndOfFrame();
+    }
+
+    internal void LoadingSARTSCreen()
+    {
+        if (m_OnSwitchingSection != null)
+            m_OnSwitchingSection(m_UserProfileManager, 0);
     }
     //*******************************************************
     /// <summary>
