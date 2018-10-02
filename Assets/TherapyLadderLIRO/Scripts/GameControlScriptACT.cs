@@ -59,7 +59,8 @@ public class GameControlScriptACT : MonoBehaviour
     public Transform m_root_6;
 
     public Text m_couterText;
-    private string counterformat = "{0}/30";
+    public Slider m_Slider;
+    private string counterformat = "{0}";
 
     // feedback (ticks) to show correct answer
     ParticleSystem m_particleSyst;
@@ -282,6 +283,7 @@ public class GameControlScriptACT : MonoBehaviour
         if (m_couterText != null)
         {
             m_couterText.text = String.Format(counterformat, m_curChallengeIdx + 1);
+            m_Slider.value = m_curChallengeIdx + 1;
         }
     }
     private void CleanPreviousTrial()
