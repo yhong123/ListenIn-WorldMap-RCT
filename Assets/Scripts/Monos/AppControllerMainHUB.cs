@@ -76,7 +76,7 @@ public class AppControllerMainHUB : MonoBehaviour {
         switch (currProfile.LIROStep)
         {
             case TherapyLadderStep.CORE:
-                m_currentSectionText.text = "Therapy cycle";
+                m_currentSectionText.text = "Therapy";
                 m_Therapy_ui.gameObject.SetActive(true);
                 m_continueButtonTherapy.enabled = true;
                 //currLevelToLoad = "World Map Select";
@@ -110,7 +110,7 @@ public class AppControllerMainHUB : MonoBehaviour {
             switch (currProfile.LIROStep)
             {
                 case TherapyLadderStep.CORE:
-                    m_currentSectionText.text = "Therapy cycle";
+                    m_currentSectionText.text = "Therapy";
                     m_Therapy_ui.gameObject.SetActive(true);
                     currLevelToLoad = "Basket Selection";
                     m_continueButtonTherapy.interactable = true;
@@ -150,7 +150,7 @@ public class AppControllerMainHUB : MonoBehaviour {
         switch (currProfile.LIROStep)
         {
             case TherapyLadderStep.CORE:
-                m_currentSectionText.text = "Therapy cycle";
+                m_currentSectionText.text = "Therapy";
                 m_Therapy_ui.gameObject.SetActive(true);
                 StartCoroutine(EndTherapy(currProfile));
                 break;
