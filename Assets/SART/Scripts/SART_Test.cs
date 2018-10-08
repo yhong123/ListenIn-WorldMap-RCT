@@ -36,6 +36,7 @@ public class SART_Test : MonoBehaviour {
 	private float firstHitReactionTime;
 	private bool trialValueToWrite;
 
+    private bool endOfSart = false;
 
 	void Awake(){
 		blockGenerator = GameObject.FindObjectOfType<BlockGenerator> ();
@@ -52,6 +53,8 @@ public class SART_Test : MonoBehaviour {
 	}
 
 	void Update(){
+
+        if (endOfSart) return;
 
 		if(showingTrial == true){
 
@@ -72,7 +75,9 @@ public class SART_Test : MonoBehaviour {
 				if(allTrialsDone){ //If this was the last trial, exit test, output CSV, and return to Main Menu
 					MainMenuManager.testCompleted = true;
 					csvMaker.CreateCSVFile (csvMaker.path, csvMaker.dataCollected);
-					SceneManager.LoadScene ("MainHUB");
+                    endOfSart = true;
+                    StartCoroutine(FinishSART());
+                    MadLevel.LoadLevelByName("MainHUB");
 				}
 
 			} else if (HitButton.buttonPressed == true && (Time.time - lastButtonPressTime < 0.3f)){ //Check for second press within same trial. Deletes last row of CSV and rewrites it with both the first and second reaction time.
@@ -121,9 +126,10 @@ public class SART_Test : MonoBehaviour {
 		showingTrial = false;
 
 		if(allTrialsDone){
-			MainMenuManager.testCompleted = true;
+            endOfSart = true;
+            MainMenuManager.testCompleted = true;
 			csvMaker.CreateCSVFile (csvMaker.path, csvMaker.dataCollected);
-			MadLevel.LoadLevelByName ("MainHUB");
+            StartCoroutine(FinishSART());
 		} else {
 			
 			StartCoroutine (WaitForNextStimulus ());
@@ -137,6 +143,12 @@ public class SART_Test : MonoBehaviour {
 		lastRoutine = StartCoroutine (ShowTrial (SelectTrial ()));
 	}
 
+    IEnumerator FinishSART()
+    {
+        yield return StartCoroutine(TherapyLIROManager.Instance.SaveSARTFinished());
+        MadLevel.LoadLevelByName("MainHUB");
+    }
+
 	bool SelectTrial(){//Selects the next trial based on what was determiend by the blockgenerator.
 		List<bool> block = blockGenerator.allBlocks [currentBlock];
 		bool trial = block [currentTrial];
@@ -146,7 +158,7 @@ public class SART_Test : MonoBehaviour {
 
 		currentTrial++;
 
-		if(currentTrial == block.Count && currentBlock == blockGenerator.allBlocks.Length - 1){
+		if(currentTrial == block.Count && currentBlock == blockGenerator.allBlocks.Count - 1){
 			allTrialsDone = true;
 		}
 

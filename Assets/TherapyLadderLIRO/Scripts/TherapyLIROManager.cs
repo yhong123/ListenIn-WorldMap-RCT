@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { CORE = 0, ACT = 1, SART_TEST = 2};
+public enum TherapyLadderStep { BASKET = 0, CORE = 1, ACT = 2, SART_PRACTICE = 3, SART_TEST = 4};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -74,10 +74,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.m_userProfile.m_currCycle = 0;
             m_UserProfileManager.m_userProfile.m_currIDUser = 1;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
-            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks =0;
+            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
             m_UserProfileManager.m_userProfile.m_cycleNumber = 0;
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 8;
+            m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = false;
+
             //Wait for the data to be saved
             yield return StartCoroutine(SaveCurrentUserProfile());
         }
@@ -195,7 +197,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             if (splittedElements[0] != m_UserProfileManager.LIROStep.ToString())
             {
                 //AndreaLIRO: must decide how to act in this case
-                Debug.LogError("TherapyLIROManager: found a mismatch between file" + splittedElements[0] + " and current loaded user profile " + m_UserProfileManager.LIROStep.ToString());
+                Debug.LogWarning("TherapyLIROManager: found a mismatch between file" + splittedElements[0] + " and current loaded user profile " + m_UserProfileManager.LIROStep.ToString());
             }
             else
             {
@@ -216,14 +218,20 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         bool advance = false;
         switch (m_UserProfileManager.LIROStep)
         {
+            case TherapyLadderStep.BASKET:
+                advance = CheckTherapyBasketEscapeSection();
+                break;
             case TherapyLadderStep.CORE:
                 advance = CheckTherapyCoreEscapeSection();
                 break;
             case TherapyLadderStep.ACT:
                 advance = CheckACTEscapeSection();
                 break;
+            case TherapyLadderStep.SART_PRACTICE:
+                advance = CheckSARTEscapeSection();
+                break;
             case TherapyLadderStep.SART_TEST:
-                advance = true;
+                advance = CheckSARTTESTEscapeSection();
                 break;
             default:
                 break;
@@ -245,6 +253,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
 
     /// <summary>
+    /// Escape condition for the basket section (bool in user profile)
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckTherapyBasketEscapeSection()
+    {
+        return m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.isBasketDone;
+    }
+    /// <summary>
     /// Escaping condition for therapy core section
     /// </summary>
     /// <returns></returns>
@@ -260,6 +276,22 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     {
         return (m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock > m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks);
     }
+    /// <summary>
+    /// Escaping condition for the SART PRACTICE
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckSARTEscapeSection()
+    {
+        return m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted;
+    }
+    /// <summary>
+    /// Escaping condition for the SART
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckSARTTESTEscapeSection()
+    {
+        return m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted;
+    }
 
     /// <summary>
     /// Tis function is called from the UI to notify the manager to change the section
@@ -273,11 +305,16 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     {
         switch (m_UserProfileManager.LIROStep)
         {
+            case TherapyLadderStep.BASKET:
             case TherapyLadderStep.CORE:
                 PrepareTherapyScreen();
                 break;
             case TherapyLadderStep.ACT:
                 PrepareACTScreen();
+                break;
+            case TherapyLadderStep.SART_PRACTICE:
+            case TherapyLadderStep.SART_TEST:            
+                PrepareSARTScreen();
                 break;
             default:
                 break;
@@ -326,7 +363,42 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Saving profile
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
+    /// <summary>
+    /// This function is called at the end of the SART practice to update the current state before going back to the mainHub
+    /// </summary>
+    /// <param name="isCompleted"></param>
+    /// <returns></returns>
+    public IEnumerator SaveCurrentSARTPractice(bool isCompleted)
+    {
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = isCompleted;
+        yield return SaveCurrentUserProfile();
+    }
+    public IEnumerator SaveSARTFinished()
+    {
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = true;
+        yield return SaveCurrentUserProfile();
+    }
+    public IEnumerator SaveBasketCompletedInfo()
+    {
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.isBasketDone = true;
+        yield return SaveCurrentUserProfile();
+    }
+    /// <summary>
+    /// Called by the UploadManager to update the current score in the ACT
+    /// </summary>
+    /// <param name="currScore"></param>
+    /// <returns></returns>
+    public IEnumerator UpdateACTScore(int currScore)
+    {
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currScore = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currScore + currScore;
+        yield return StartCoroutine(SaveCurrentUserProfile());
+    }
 
+    public IEnumerator SaveACTPreviousScore()
+    {
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_previousScore = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currScore;
+        yield return StartCoroutine(SaveCurrentUserProfile());
+    }
     #endregion
 
     #region Internal Functions
@@ -344,6 +416,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if (m_OnUpdatingCurrentSection != null)
             m_OnUpdatingCurrentSection(m_UserProfileManager, 100);
     }
+    internal void PrepareSARTScreen()
+    {
+        if (m_OnUpdatingCurrentSection != null)
+            m_OnUpdatingCurrentSection(m_UserProfileManager, 100);
+    }
     //*******************************************************
 
     //SWITCHING
@@ -357,12 +434,27 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //AndreaLIRO
         switch (m_UserProfileManager.LIROStep)
         {
+            case TherapyLadderStep.BASKET:
+                m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.isBasketDone = false;
+                yield return StartCoroutine(SaveCurrentUserProfile());
+                PrepareBasketSelectionScreen();
+                break;
             case TherapyLadderStep.CORE:
+                yield return StartCoroutine(SaveCurrentUserProfile());
                 PrepareBasketSelectionScreen();
                 break;
             case TherapyLadderStep.ACT:
+                m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currScore = 0;
+                yield return StartCoroutine(SaveCurrentUserProfile());
                 LoadingACTScreen(0);
                 yield return StartCoroutine(LoadACTFile());
+                break;
+            case TherapyLadderStep.SART_PRACTICE:
+                //AndreaLIRO: resetting completed state
+                m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = false;
+                m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = false;
+                yield return StartCoroutine(SaveCurrentUserProfile());
+                LoadingSARTSCreen();
                 break;
             case TherapyLadderStep.SART_TEST:
                 LoadingSARTSCreen();
@@ -479,7 +571,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
         yield return new WaitForEndOfFrame();
     }
-
+    /// <summary>
+    /// Just loading the sart screen calling the event in the main HUB
+    /// </summary>
     internal void LoadingSARTSCreen()
     {
         if (m_OnSwitchingSection != null)

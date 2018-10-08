@@ -23,14 +23,14 @@ public class UploadManager : Singleton<UploadManager> {
         }
     }
 
-    public void EndOfTherapyClean()
+    public void EndOfTherapyClean(int correctAnswer = 0)
     {
         backToLevelSelection = false;
-        StartCoroutine(CleanUp());
+        StartCoroutine(CleanUp(correctAnswer));
     }
 
 
-    private IEnumerator CleanUp()
+    private IEnumerator CleanUp(int correctAnswer)
     {
         startUploadTime = Time.time;
         
@@ -40,7 +40,7 @@ public class UploadManager : Singleton<UploadManager> {
         Debug.Log("UploadManager: " + _currDeltaTime + " saving the LIRO therapy");
         //AndreaLIRO: adding the LIRO therapy update
         yield return StartCoroutine(TherapyLIROManager.Instance.AdvanceCurrentBlockInSection());
-        
+        yield return StartCoroutine(TherapyLIROManager.Instance.UpdateACTScore(correctAnswer));
         _currDeltaTime = Time.time - startUploadTime;
         Debug.Log("UploadManager: " + _currDeltaTime + " collecting memory");
         //Collecting memory

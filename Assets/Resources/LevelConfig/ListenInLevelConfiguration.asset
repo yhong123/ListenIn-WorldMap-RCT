@@ -350,6 +350,18 @@ MonoBehaviour:
     groupId: 0
     extensionGUID: 
     lockedByDefault: 1
+  - _sceneObject: {fileID: 102900000, guid: 7ab76775c73b58741b4bbdcbfc5e6d30, type: 3}
+    _scenePath: Assets/SART/SART_Practice.unity
+    _sceneName: SART_Practice
+    scene: 
+    parent: {fileID: 11400000}
+    order: 280
+    name: SART_PRACTICE
+    type: 0
+    arguments: 
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
   groups: []
   extensions: []
   version: 1

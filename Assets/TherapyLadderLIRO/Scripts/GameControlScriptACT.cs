@@ -16,6 +16,7 @@ public class GameControlScriptACT : MonoBehaviour
     //List<CTrial> m_lsTrial = new List
 
     public int numberOfTrials;
+    public int numberOfCorrectTrials = 0;
     private bool enable_input = true;
 
     // index of the current displayed trial/challenge
@@ -273,7 +274,7 @@ public class GameControlScriptACT : MonoBehaviour
         PlayAudioLIRO(3.0f);
         ResetStimulThrowPos();
         SetCurrentCounter();
-
+        SetEnable(true);
         // to keep track reaction time
         m_challengeResponse.m_timeStamp = m_dtCurTrialStartTime = DateTime.Now;
 
@@ -343,6 +344,7 @@ public class GameControlScriptACT : MonoBehaviour
             StopCoroutine("WaitIncorrect");
 
         m_bShowBtnRepeat = false;
+        SetEnable(false);
 
         m_intSelectedStimulusIdx = ConvertStimulusTagToIdx(hitInfo.collider.gameObject.tag);
         m_challengeResponse.m_pictureID = (int)m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID;
@@ -352,6 +354,7 @@ public class GameControlScriptACT : MonoBehaviour
         {
             //CORRECT            
             m_challengeResponse.m_accuracy = 1;
+            numberOfCorrectTrials++;
             StartCoroutine(WaitCorrect());
         }
         else
@@ -425,7 +428,7 @@ public class GameControlScriptACT : MonoBehaviour
     {
         SaveCurrentBlockResponse();
         yield return new WaitForEndOfFrame();
-        UploadManager.Instance.EndOfTherapyClean();
+        UploadManager.Instance.EndOfTherapyClean(numberOfCorrectTrials);
     }
     void EndTherapySessionACT()
     {
@@ -480,7 +483,7 @@ public class GameControlScriptACT : MonoBehaviour
             m_intCheatCtr = 0;
             StateChallenge.Instance.AddCoin(5);
             StateChallenge.Instance.CorrectAnswer();
-            EndTherapySessionACT();
+            //EndTherapySessionACT();
         }
     }
 
@@ -700,7 +703,11 @@ public class GameControlScriptACT : MonoBehaviour
     {
 #if UNITY_EDITOR
         if(Input.GetKeyDown(KeyCode.Space))
+        {
             EndTherapySessionACT();
+            return;
+        }
+            
 #endif
         //if (Input.GetKey("up"))
         //    DoCheatCodes();

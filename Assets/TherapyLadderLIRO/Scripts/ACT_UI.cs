@@ -7,13 +7,40 @@ public class ACT_UI : MonoBehaviour {
 
     public Text m_baseText;
     public GameObject m_Icon;
+    public GameObject standardAct;
+    public GameObject scoreAct;
+    public Text currScoreText;
+    public Text prevScoreText;
     public List<RectTransform> m_iconTransformList = new List<RectTransform>();
     public Button m_continueButton;
+    public Button m_closeScoreButton;
 
     private string text_format = "Loading... {0}%";
 
     private int currAmount = 0;
     private int previousAmount = 0;
+
+    public IEnumerator HideBoard()
+    {
+        m_closeScoreButton.interactable = false;
+        yield return new WaitForSeconds(1);
+        standardAct.SetActive(false);
+        scoreAct.SetActive(false);
+        yield return new WaitForSeconds(2);
+    }
+
+    public IEnumerator SetScore(int currScore, int previousScore)
+    {
+        m_closeScoreButton.interactable = false;
+        standardAct.SetActive(false);
+        scoreAct.SetActive(true);
+        currScoreText.text = currScore.ToString();
+        prevScoreText.text = previousScore.ToString();
+
+        yield return new WaitForSeconds(3);
+
+        m_closeScoreButton.interactable = true;
+    }
 
     public void UpdateText(int amount)
     {

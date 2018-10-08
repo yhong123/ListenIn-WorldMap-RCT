@@ -88,6 +88,7 @@ public class BasketManager : MonoBehaviour {
 
     private IEnumerator BackToWorldMap()
     {
+        yield return StartCoroutine(TherapyLIROManager.Instance.SaveBasketCompletedInfo());
         yield return new WaitForSeconds(2);
         MadLevel.LoadLevelByName("MainHUB");
     }

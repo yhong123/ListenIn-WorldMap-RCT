@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 public class TherapyLiroUserProfile
 {
+    public bool isBasketDone = false;
     public int m_currentBlock = -1;
     public int m_totalBlocks = 0;
 }
@@ -12,8 +13,15 @@ public class TherapyLiroUserProfile
 public class ACTLiroUserProfile
 {
     public int m_previousScore = 0;
+    public int m_currScore = 0;
     public int m_currentBlock = -1;
     public int m_totalBlocks = 0;
+}
+
+public class SARTLiroUserProfile
+{
+    public bool practiceCompleted;
+    public bool testCompleted;
 }
 
 public class UserProfile
@@ -27,6 +35,7 @@ public class UserProfile
     public int m_TherapyLadderStepID;
     public TherapyLiroUserProfile m_TherapyLiroUserProfile = new TherapyLiroUserProfile();
     public ACTLiroUserProfile m_ACTLiroUserProfile = new ACTLiroUserProfile();
+    public SARTLiroUserProfile m_SartLiroUserProfile = new SARTLiroUserProfile();
     #endregion
 }
 
