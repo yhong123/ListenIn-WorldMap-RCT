@@ -105,6 +105,7 @@ public class GameControlScriptStandard : MonoBehaviour
     List<Challenge> m_currListOfChallenges = new List<Challenge>();
     private int m_curChallengeIdx = -1;
     private Challenge m_currChallenge;
+    private string m_currAudio;
     private ChallengeResponse m_challengeResponse;
     // trial start time, this is to keep track how long does the patient take to get a correct response 
     DateTime m_dtCurTrialStartTime;
@@ -286,6 +287,7 @@ public class GameControlScriptStandard : MonoBehaviour
             RandomizeChallenges();
         }
     }
+
     void PrepareNextTrialLIRO()
     {
         m_intSelectedStimulusIdx = -1;
@@ -301,15 +303,13 @@ public class GameControlScriptStandard : MonoBehaviour
             EndTherapySessionLIRO();
             return;
         }
-
-
         // fetch the next trial
         m_currChallenge = m_currListOfChallenges[m_curChallengeIdx];
         // preparing response
         m_challengeResponse = new ChallengeResponse();
         m_challengeResponse.m_challengeID = m_currChallenge.ChallengeID;
         RandomizeFoils(m_currChallenge);
-
+        m_currAudio = GetRandomizedAudio(m_currChallenge);
         trialsCounter--;
 
         ShowAllStimuli(false);
@@ -321,12 +321,15 @@ public class GameControlScriptStandard : MonoBehaviour
     public void ShowNextTrialLIRO()
     {
         //yield return new WaitForSeconds(2.0f);
+        List<long> availableFoils = new List<long>();
+
+        availableFoils = m_currChallenge.Foils.Where(x => x != 0).ToList();
 
         ai.Play("Throw");
 
-        for (var i = 0; i < m_currChallenge.Foils.Count; ++i)
+        for (var i = 0; i < availableFoils.Count; ++i)
         {
-            switch (m_currChallenge.Foils.Count)
+            switch (availableFoils.Count)
             {
                 case 3:
                     m_arrStimulusGO[i].stimulusScript.SetFinalPosition(m_arr3StimuliPos[i]);
@@ -344,9 +347,16 @@ public class GameControlScriptStandard : MonoBehaviour
                     print("Incorrect intelligence level.");
                     break;
             }
+            try
+            {
+                m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/phase1/" + availableFoils[i].ToString());
+                m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
+            }
+            catch (Exception ex)
+            {
+                ListenIn.Logger.Instance.Log(String.Format("Challenge ID: {0}; Cannot load: {0}", m_currChallenge.ChallengeID.ToString(),availableFoils[i].ToString()), ListenIn.LoggerMessageType.Error);
+            }
             //m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/" + m_lsTrial [m_intCurIdx].m_lsStimulus[i].m_strImage);
-            m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/phase1/" + m_currChallenge.Foils[i].ToString());
-            m_arrStimulusGO[i].stimulusScript.m_registeredID = m_currChallenge.Foils[i];
 
         }
 
@@ -541,6 +551,11 @@ public class GameControlScriptStandard : MonoBehaviour
             m_currChallenge.Foils[intRandomIndex] = temp;
         }
     }
+    private string GetRandomizedAudio(Challenge m_currChallenge)
+    {
+        string[] audios = m_currChallenge.FileAudioIDs.Where(x => x.Length > 1).ToArray();
+        return audios[UnityEngine.Random.Range(0,audios.Count())];
+    }
     private void RandomizeChallenges()
     {
         for (int i = 0; i < m_currListOfChallenges.Count; i++)
@@ -658,7 +673,7 @@ public class GameControlScriptStandard : MonoBehaviour
         if (m_bIsCoroutineIncorrectRunning)
             StopCoroutine("WaitIncorrect");
 
-        string strAudio = "Audio/phase1/" + m_currChallenge.FileAudioID;
+        string strAudio = "Audio/phase1/" + m_currAudio;
         Debug.Log(String.Format("GameControlScript: target audio = {0}", strAudio));
         /*
         string strFolder = CTrialList.Instance.getCurAudioFolder ();
@@ -692,7 +707,14 @@ public class GameControlScriptStandard : MonoBehaviour
             aci.clipTag = string.Empty;
 
             clip = Resources.Load(strAudio) as AudioClip;
-            m_sound_manager.Play(clip, ChannelType.VoiceText, aci);
+            if (clip != null)
+            {
+                m_sound_manager.Play(clip, ChannelType.VoiceText, aci);
+            }
+            else
+            {
+                ListenIn.Logger.Instance.Log(String.Format("Challenge ID: {0}; Cannot load audio: {1}", m_currChallenge.ChallengeID.ToString(), m_currAudio.ToString()), ListenIn.LoggerMessageType.Error);
+            }
         }
 
         m_bShowBtnRepeat = true;

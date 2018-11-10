@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UI;
 using MadLevelManager;
 
 public class BasketManager : MonoBehaviour {
 
-    private List<int> m_selectedBasket;
-    public int max_number_of_selected_basket = 2;
+    private List<BasketUI> m_SelectedBaskets;
+    //TO BE ADJUSTED IN EDITOR
+    public int max_number_of_selected_basket = 1;
 
     [SerializeField]
     private Button m_startButton;
@@ -20,8 +22,8 @@ public class BasketManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        
-        m_selectedBasket = new List<int>();
+
+        m_SelectedBaskets = new List<BasketUI>();
         if (m_startButton == null || m_progressScreen == null || m_progressTherapy == null)
             Debug.LogError("Please attach the components to BasketManager");
         m_startButton.interactable = false;
@@ -33,9 +35,9 @@ public class BasketManager : MonoBehaviour {
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            m_selectedBasket.Clear();
-            m_selectedBasket.Add(1);
-            m_selectedBasket.Add(2);
+            m_SelectedBaskets.Clear();
+            m_SelectedBaskets.Add(new BasketUI() { basketId = 1, hardMode = false });
+            m_SelectedBaskets.Add(new BasketUI() { basketId = 2, hardMode = false });
             PrepareTherapy();
         }
 #endif
@@ -49,21 +51,24 @@ public class BasketManager : MonoBehaviour {
 
     public void RegisterBasket(BasketController bc)
     {
-        int indexInList = m_selectedBasket.IndexOf(bc.m_basketNumber);
-        if (indexInList != -1)
+        BasketUI basketInList = m_SelectedBaskets.FirstOrDefault(x => x.basketId == bc.m_basketNumber);
+        if (basketInList != null)
         {
             //Remove
             bc.SetHighlightColor(false);
-            m_selectedBasket.RemoveAt(indexInList);
+            m_SelectedBaskets.Remove(basketInList);
             m_startButton.interactable = false;
         }
         else
         {
-            if (m_selectedBasket.Count < max_number_of_selected_basket)
+            if (m_SelectedBaskets.Count < max_number_of_selected_basket)
             {
                 bc.SetHighlightColor(true);
-                m_selectedBasket.Add(bc.m_basketNumber);
-                if(m_selectedBasket.Count == max_number_of_selected_basket)
+                BasketUI newBasket = new BasketUI();
+                newBasket.basketId = bc.m_basketNumber;
+                newBasket.hardMode = bc.m_hardMode;
+                m_SelectedBaskets.Add(newBasket);
+                if(m_SelectedBaskets.Count == max_number_of_selected_basket)
                     m_startButton.interactable = true;
             }                    
         }
@@ -73,7 +78,7 @@ public class BasketManager : MonoBehaviour {
     {
         m_progressScreen.SetActive(true);
         TherapyLIROManager.Instance.m_onUpdateProgress += UpdateProgressBar;
-        TherapyLIROManager.Instance.StartCoreTherapy(m_selectedBasket);        
+        TherapyLIROManager.Instance.StartCoreTherapy(m_SelectedBaskets);        
     }
 
     private void UpdateProgressBar(int amount)

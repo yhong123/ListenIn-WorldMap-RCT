@@ -332,7 +332,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         currStep = (currStep + 1) % size;
         m_UserProfileManager.LIROStep = (TherapyLadderStep)currStep;
     }
-    public void StartCoreTherapy(List<int> selectedBasket)
+    public void StartCoreTherapy(List<BasketUI> selectedBasket)
     {
         StartCoroutine(LoadTherapyFromBasketFiles(selectedBasket));
     }
@@ -591,12 +591,13 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         lines.Clear();
         lines.AddRange(shuffledLines);
     }
-    internal IEnumerator LoadTherapyFromBasketFiles(List<int> baskets)
+    internal IEnumerator LoadTherapyFromBasketFiles(List<BasketUI> basketsInfos)
     {
         int currAmount = 2;
 
         string currBasketsPath;
         List<Challenge> curr_basket_list_read = new List<Challenge>();
+        List<Challenge> curr_Selected_Challenges = new List<Challenge>();
         List<string> curr_basket_lexical_item_list = new List<string>();
         List<Challenge> curr_basket_list_write = new List<Challenge>();
 
@@ -604,7 +605,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         string currFilename;
         int total_blocks = 1;
 
-        for (int i = 0; i < baskets.Count; i++)
+        for (int i = 0; i < basketsInfos.Count; i++)
         {
             curr_basket_list_read.Clear();
             curr_basket_lexical_item_list.Clear();
@@ -613,11 +614,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             yield return new WaitForEndOfFrame();
 
             CoreItemReader cir = new CoreItemReader();
-            string basketName = String.Format("Basket_{0}.csv", baskets[i]);
+            string basketName = String.Format("Basket_{0}.csv", basketsInfos[i].basketId);
             currBasketsPath = Path.Combine(GlobalVars.GetPathToLIROBaskets(), basketName);
 
             //Loading all the basket challenges excluding the untrained items
-            curr_basket_list_read = cir.ParseCsv(currBasketsPath).Where(x => x.Untrained == 0).ToList();
+            curr_basket_list_read = cir.ParseCsv(currBasketsPath).ToList();
             currAmount += 4;
             if (m_onUpdateProgress != null)
             {
@@ -625,15 +626,52 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             }
             yield return new WaitForEndOfFrame();
 
+            //Geting current difficulty
+            //int currDifficulty = basketsInfos[i].hardMode ? 3 : 1;
+            
             //select distinct lexical item for this batch
             curr_basket_lexical_item_list = curr_basket_list_read.Select(x => x.LexicalItem).Distinct().ToList();
-
+            int countChallenges = 0;
+            int currentStep = 0;
             //For each distinct lexical item choose a set number of random challenges
             foreach (string lexical_item in curr_basket_lexical_item_list)
             {
-                curr_basket_list_write.AddRange(
-                    curr_basket_list_read.Where(x => x.LexicalItem == lexical_item).OrderBy(y => RandomGenerator.GetRandom()).Take(m_numberSelectedPerLexicalItem).ToList()
-                    );
+                currentStep = 0;
+                countChallenges = 0;
+                //Filling up with hard mode first if it s selected
+                if (basketsInfos[i].hardMode)
+                {
+                    curr_Selected_Challenges.Clear();
+                    curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty > 1).ToList();
+                    curr_Selected_Challenges.Shuffle();
+                                        
+                    //Until reaching desired number or finishing challenges
+                    while (countChallenges < m_numberSelectedPerLexicalItem && currentStep < curr_Selected_Challenges.Count)
+                    {
+                        curr_basket_list_write.Add(curr_Selected_Challenges[0]);
+                        //curr_challenges_lexical_item.RemoveAt(0);
+                        countChallenges++;
+                        currentStep++;
+                    }
+                    curr_Selected_Challenges.Clear();
+                }
+
+                curr_Selected_Challenges.Clear();
+                curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty == 1).OrderBy(y => RandomGenerator.GetRandom()).ToList();
+                currentStep = 0;
+
+                //populating until reaching the final number of items
+                while (countChallenges < m_numberSelectedPerLexicalItem)
+                {
+                    curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                    currentStep++;
+                    currentStep = currentStep % curr_Selected_Challenges.Count;
+                    countChallenges++;
+                }
+
+                //curr_basket_list_write.AddRange(
+                //  curr_basket_list_read.Where(x => x.LexicalItem == lexical_item).OrderBy(y => RandomGenerator.GetRandom()).Take(m_numberSelectedPerLexicalItem).ToList()
+                //);
             }
 
             currAmount += 6;
@@ -643,19 +681,39 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             }
             yield return new WaitForEndOfFrame();
 
+            //Shuffling challenges
+            curr_basket_list_write.Shuffle();
+
             List<string> currLines = new List<string>();
             int challengeCounter = 0;
             //Selected all the items for this basket, allocating them to blocks
             for (int j = 0; j < curr_basket_list_write.Count; j++)
             {
-                currLines.Add(String.Join(",", new string[] { curr_basket_list_write[j].ChallengeID.ToString(), curr_basket_list_write[j].LexicalItem.ToString(), curr_basket_list_write[j].Untrained.ToString(), curr_basket_list_write[j].FileAudioID.ToString(), curr_basket_list_write[j].CorrectImageID.ToString(), curr_basket_list_write[j].Foils[1].ToString(), curr_basket_list_write[j].Foils[2].ToString(), curr_basket_list_write[j].Foils[3].ToString(), curr_basket_list_write[j].Foils[4].ToString(), curr_basket_list_write[j].Foils[5].ToString() }));
+                currLines.Add(String.Join(",", new string[] { curr_basket_list_write[j].ChallengeID.ToString(),
+                                                              curr_basket_list_write[j].Difficulty.ToString(),
+                                                              curr_basket_list_write[j].LexicalItem.ToString(),
+                                                              curr_basket_list_write[j].FileAudioIDs[0].ToString(),
+                                                              curr_basket_list_write[j].FileAudioIDs[1].ToString(),
+                                                              curr_basket_list_write[j].FileAudioIDs[2].ToString(),
+                                                              curr_basket_list_write[j].FileAudioIDs[3].ToString(),
+                                                              curr_basket_list_write[j].FileAudioIDs[4].ToString(),
+                                                              curr_basket_list_write[j].CorrectImageID.ToString(),
+                                                              curr_basket_list_write[j].Foils[1].ToString(),
+                                                              curr_basket_list_write[j].Foils[2].ToString(),
+                                                              curr_basket_list_write[j].Foils[3].ToString(),
+                                                              curr_basket_list_write[j].Foils[4].ToString(),
+                                                              curr_basket_list_write[j].Foils[5].ToString()
+                }));
+
                 challengeCounter++;
+
                 if (challengeCounter == GlobalVars.ChallengeLength)
                 {
                     currFilename = String.Format(coreFormat, total_blocks); ; 
                     File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currLines.ToArray());
                     currLines.Clear();
                     total_blocks++;
+                    challengeCounter = 0;
                 }
             }
             //Save the remaining in the last file

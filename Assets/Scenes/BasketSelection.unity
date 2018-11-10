@@ -219,6 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 2
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}
@@ -429,6 +430,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 5
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}
@@ -712,6 +714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 3
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}
@@ -849,6 +852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 10
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}
@@ -1408,6 +1412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 4
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}
@@ -1545,6 +1550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 6
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}
@@ -1828,6 +1834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 9
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}
@@ -2145,6 +2152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 7
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}
@@ -2523,6 +2531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 8
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}
@@ -2626,7 +2635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09983658324fb3240b484f41437ae9bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_number_of_selected_basket: 2
+  max_number_of_selected_basket: 1
   m_startButton: {fileID: 954680404}
   m_progressScreen: {fileID: 878491851}
   m_progressTherapy: {fileID: 1644965125}
@@ -3070,6 +3079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_basketNumber: 1
+  m_hardMode: 0
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_HighlightColor: {r: 0.47794116, g: 1, b: 0.9783975, a: 0.6862745}
   m_Image: {fileID: 0}

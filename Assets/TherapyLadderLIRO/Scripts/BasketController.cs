@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class BasketController : MonoBehaviour {
 
     public int m_basketNumber;
+    public bool m_hardMode;
 
     public Color m_NormalColor;
     public Color m_HighlightColor;

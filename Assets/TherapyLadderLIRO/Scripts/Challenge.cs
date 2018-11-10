@@ -33,9 +33,9 @@ public class ACTChallenge
 
 public class Challenge {
     public long ChallengeID;
+    public int Difficulty;
     public string LexicalItem;
-    public int Untrained;
-    public string FileAudioID;
+    public List<string> FileAudioIDs = new List<string>();
     public long CorrectImageID;
     public List<long> Foils = new List<long>();
 
@@ -44,12 +44,16 @@ public class Challenge {
 
     }
 
-    public Challenge(long chID, string lexicalItem, int untrained, string faID, long ciID, long f1, long f2, long f3, long f4, long f5)
+    public Challenge(long chID, string lexicalItem, int difficulty, int untrained, string faID1, string faID2, string faID3, string faID4, string faID5, long ciID, long f1, long f2, long f3, long f4, long f5)
     {
         ChallengeID = chID;
         LexicalItem = lexicalItem;
-        Untrained = untrained; 
-        FileAudioID = faID;
+        Difficulty = difficulty;
+        FileAudioIDs.Add(faID1);
+        FileAudioIDs.Add(faID2);
+        FileAudioIDs.Add(faID3);
+        FileAudioIDs.Add(faID4);
+        FileAudioIDs.Add(faID5);
         CorrectImageID = ciID;
         Foils.Add(ciID);
         Foils.Add(f1);
