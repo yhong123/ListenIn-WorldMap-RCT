@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using MadLevelManager;
 
 public class LoginManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private Button loginButton;
     [SerializeField] private InputField passwordInput;
     [SerializeField] private InputField emailInput;
+    [SerializeField] private Animator loginMessage;
 
     public void LoginButton()
     {
@@ -28,6 +30,7 @@ public class LoginManager : MonoBehaviour
             if (!string.IsNullOrEmpty(www.error))
             {
                 Debug.LogError("ERROR CONNECTING TO THE DATABSE: "+ www.error);
+                loginMessage.Play("LoginMessage");
                 loginButton.interactable = true;
                 yield break;
             }
@@ -36,10 +39,13 @@ public class LoginManager : MonoBehaviour
                 if (www.text == "true")
                 {
                     Debug.Log("LOG IN SUCCESFUL");
+                    NetworkManager.UserId = emailInput.text;
+                    MadLevel.LoadLevelByName("Setup Screen");
                 }
                 else
                 {
                     Debug.Log("LOG IN ERROR");
+                    loginMessage.Play("LoginMessage");
                 }
                 loginButton.interactable = true;
             }

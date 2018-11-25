@@ -28,28 +28,35 @@ public static class Tuple
 
 public class NetworkManager : MonoBehaviour
 {
-    public static NetworkManager Instance = null;
+    public static string UserId;
     //root folder of the project
-    [SerializeField] private static string serverURL = "http://softvtech.website/ListenIn/";
-    public static string ServerURLDataInput = string.Concat(serverURL, "php/data_input.php");
+    private const string serverURL = "http://softvtech.website/ListenIn/";
+    public static string ServerURLDataInput = string.Concat(serverURL, "php/data_input_no_header.php");
     public static string ServerURLFileCheck = string.Concat(serverURL, "php/file_check.php");
     public static string ServerURLFileConsistencyCheck = string.Concat(serverURL, "php/file_consistency_check.php");
     private int remoteAttempts = 0;
-    public static bool HasInternet = false;
-    private bool isDoneTestingInternet = false;
     private bool isInit = false;
 
- #region CSV
+    #region INTERNET CHECK
+    [SerializeField] private float timeToCheckInternet = 3f;
+    public static bool HasInternet = false;
+    public static bool IsDoneTestingInternet = false;
+    private float timeToCheckInternetCurrent = 0;
+    #endregion
+
+    #region CSV
     public static char LineSeparatorCSV = '\n';
     private static char fieldSeparatorCSV = ',';
     public static char FileNameSeparator = '/';
     public static string FilePathCSV;
+    [SerializeField] private bool isLocal = false;
 #endregion
 
 #region FILE NAME
     public enum FileType { InsertLevelData, InsertSequenceData };
     public List<FileTypeHolder> ListOfFileNames;
     public static List<FileTypeHolder> ListOfFileNamesStatic;
+
     [System.Serializable]
     public struct FileTypeHolder
     {
@@ -104,30 +111,43 @@ public class NetworkManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
         DontDestroyOnLoad(gameObject);
         FilePathCSV = string.Concat(Application.persistentDataPath, FileNameSeparator, "files");
         ListOfFileNamesStatic = ListOfFileNames;
 
         TestInternetConnection();
-        Debug.Log("HasInternet:"+ HasInternet);
     }
 
     private void Update()
     {
-        if (!isInit && isDoneTestingInternet)
+        if (IsDoneTestingInternet)
         {
-            StartCoroutine(SendDataToServer());
-            isInit = true;
+            if (timeToCheckInternetCurrent > timeToCheckInternet)
+            {
+                TestInternetConnection();
+                timeToCheckInternetCurrent = 0;
+            }
+
+            if (HasInternet)
+            {
+                if(!isInit)
+                {
+                    StartCoroutine(SendDataToServer());
+                    isInit = true;
+                }
+            }
+            else
+            {
+                Debug.LogError("<color=red><b>NO INTERNET</b></color>");
+            }
+            timeToCheckInternetCurrent += Time.deltaTime;
         }
     }
 
     IEnumerator SendDataToServer()
     {
+        Debug.Log("<color=green><b>SendDataToServer initialized</b></color>");
+
         for (;;)
         {
             if (DataToSend.Count != 0)
@@ -140,6 +160,7 @@ public class NetworkManager : MonoBehaviour
             {
                 if (HasInternet)
                 {
+                    Debug.Log(DataToSend[0].First.ServerURL);
                     using (WWW www = new WWW(DataToSend[0].First.ServerURL, DataToSend[0].First.DataForm))
                     {
                         yield return www;
@@ -158,7 +179,7 @@ public class NetworkManager : MonoBehaviour
                             remoteAttempts = 0;
                             Debug.Log("<color=green>SUCCESS: </color>SendDataServer()");
                             //CSV
-                            if (DataToSend[0].First.ServerURL == ServerURLDataInput)
+                            if (isLocal && DataToSend[0].First.ServerURL == ServerURLDataInput)
                             {
                                 AppendDataCSV(DataToSend[0].Second);
                             }
@@ -180,7 +201,7 @@ public class NetworkManager : MonoBehaviour
                         }
                     }
                 }
-                else if(!HasInternet)
+                else if(isLocal && !HasInternet)
                 {
                     Debug.Log("<color=green>SUCCESS: </color>LocalDataServer()");
                     //CSV
@@ -198,7 +219,6 @@ public class NetworkManager : MonoBehaviour
                     DataToSend.RemoveAt(0);
                     Debug.Log("QUERY SUCCESSFUL AND REMOVED FROM QUEUE");
                 }
-
             }
         }
     }
@@ -283,18 +303,20 @@ public class NetworkManager : MonoBehaviour
 
     private void TestInternetConnection()
     {
+        Debug.Log("<b>testing internet connection</b>");
+        IsDoneTestingInternet = false;
         switch (Application.internetReachability)
         {
             case NetworkReachability.ReachableViaLocalAreaNetwork:
-                isDoneTestingInternet = true;
+                IsDoneTestingInternet = true;
                 HasInternet = true;
                 break;
             case NetworkReachability.ReachableViaCarrierDataNetwork:
-                isDoneTestingInternet = true;
+                IsDoneTestingInternet = true;
                 HasInternet = true;
                 break;
             default:
-                isDoneTestingInternet = true;
+                IsDoneTestingInternet = true;
                 HasInternet = false;
                 break;
         }

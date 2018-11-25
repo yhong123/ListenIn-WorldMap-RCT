@@ -362,6 +362,18 @@ MonoBehaviour:
     groupId: 0
     extensionGUID: 
     lockedByDefault: 1
+  - _sceneObject: {fileID: 102900000, guid: 19374a8a74b27fd499767e711d6c4b7e, type: 3}
+    _scenePath: Assets/Scenes/Login.unity
+    _sceneName: Login
+    scene: 
+    parent: {fileID: 11400000}
+    order: 290
+    name: Login
+    type: 0
+    arguments: 
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
   groups: []
   extensions: []
   version: 1
