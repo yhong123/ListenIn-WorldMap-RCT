@@ -74,6 +74,16 @@ public class BasketManager : MonoBehaviour {
         }
     }
 
+    public void UpdateBasketType(BasketController bc)
+    {
+        BasketUI basketInList = m_SelectedBaskets.FirstOrDefault(x => x.basketId == bc.m_basketNumber);
+        if (basketInList != null)
+        {
+            //Change current hard mode
+            basketInList.hardMode = bc.m_hardMode;
+        }
+    }
+
     public void PrepareTherapy()
     {
         m_progressScreen.SetActive(true);

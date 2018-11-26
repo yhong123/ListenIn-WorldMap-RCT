@@ -61,12 +61,13 @@ public class AppControllerSetupScreen : MonoBehaviour
         int percentage = 1;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
+        //AndreaLIRO: disabling logger 
         //Setting the logger
-        GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI_Canvas_Debug"));
-        Text debug_text = go.GetComponentInChildren<Text>();
-        ListenIn.Logger.Instance.SetLoggerUIFrame(debug_text);
-        ListenIn.Logger.Instance.SetLoggerLogToExternal(true);
-        ListenIn.Logger.Instance.Log("AppControllerSetup: Logger started", ListenIn.LoggerMessageType.Info);
+        //GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI_Canvas_Debug"));
+        //Text debug_text = go.GetComponentInChildren<Text>();
+        //ListenIn.Logger.Instance.SetLoggerUIFrame(debug_text);
+        //ListenIn.Logger.Instance.SetLoggerLogToExternal(true);
+        //ListenIn.Logger.Instance.Log("AppControllerSetup: Logger started", ListenIn.LoggerMessageType.Info);
         yield return new WaitForEndOfFrame();
 
         percentage = 3;
