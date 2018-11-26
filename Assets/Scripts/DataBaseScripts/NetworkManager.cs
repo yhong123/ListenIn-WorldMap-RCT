@@ -26,7 +26,7 @@ public static class Tuple
     }
 }
 
-public class NetworkManager : MonoBehaviour
+public class NetworkManager : Singleton<MonoBehaviour>
 {
     public static string UserId;
     //root folder of the project
