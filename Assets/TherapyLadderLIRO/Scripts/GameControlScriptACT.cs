@@ -418,6 +418,33 @@ public class GameControlScriptACT : MonoBehaviour
             string filemane = String.Format("ACT_{0}_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
             string pathFolder = GlobalVars.GetPathToLIROOutput();
             m_actWriter.WriteCsv(pathFolder, filemane, m_responseList);
+
+            string content = string.Empty;
+            foreach (var item in m_responseList)
+            {
+                content = String.Concat(content,
+
+                    String.Join(",", new string[] {
+                      item.m_challengeID.ToString(),
+                      item.m_timeStamp.ToString("dd/MM/yyyy"),
+                      item.m_timeStamp.ToString("HH:mm:ss"),
+                      item.m_number.ToString(),
+                      item.m_block.ToString(),
+                      item.m_cycle.ToString(),
+                      item.m_accuracy.ToString(),
+                      item.m_reactionTime.ToString(),
+                      item.m_repeat.ToString(),
+                      item.m_pictureID.ToString()
+                    }), @"\n");
+            }
+            Debug.Log(content);
+
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", filemane);
+            form.AddField("content", content);
+
+            NetworkManager.SendDataServer(form, NetworkManager.ServerURLDataInput, content, filemane);
         }
         catch (Exception ex)
         {
