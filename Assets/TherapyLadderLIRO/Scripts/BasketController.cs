@@ -12,11 +12,9 @@ public class BasketController : MonoBehaviour {
 
     public Image m_Image;
 
-    public Image m_imageEasy;
-    public Button m_easyButton;
-
-    public Image m_imageHard;
-    public Button m_hardButton;
+    public GameObject m_slider;
+    public Vector3 positionEasy;
+    public Vector3 positionHard;
 
     // Use this for initialization
     void Start () {
@@ -38,19 +36,18 @@ public class BasketController : MonoBehaviour {
         }
     }
 
-    public void SetHardMode(bool isEasy)
+    public void SetHardMode()
     {
-        if (isEasy)
+        if (!m_hardMode)
         {
-            m_hardMode = false;
-            m_hardButton.interactable = true;
-            m_easyButton.interactable = false;
+            m_hardMode = true;
+            m_slider.GetComponent<RectTransform>().localPosition = positionHard;
+            
         }
         else
         {
-            m_hardMode = true;
-            m_hardButton.interactable = false;
-            m_easyButton.interactable = true;
+            m_hardMode = false;
+            m_slider.GetComponent<RectTransform>().localPosition = positionEasy;
         }
     }
 
