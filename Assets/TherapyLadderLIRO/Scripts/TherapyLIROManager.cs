@@ -70,7 +70,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             Debug.Log("LIRO User Profile not found, creating a new one");
             //Setting a new LIRO user profile
             m_UserProfileManager.LIROStep = (TherapyLadderStep)0;
-            m_UserProfileManager.m_userProfile.isFirstInit = true;
+            m_UserProfileManager.m_userProfile.isFirstInit = true; //This is to make the first initialization 
+            m_UserProfileManager.m_userProfile.isTutorialDone = false; //This is used to make sure the initial tutorial has been done
             m_UserProfileManager.m_userProfile.m_currCycle = 0;
             m_UserProfileManager.m_userProfile.m_currIDUser = 1;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
@@ -136,6 +137,52 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
 
     #region API
+    public IEnumerator LIROInitializationACTPairChoose()
+    {
+        List<string> list_A = new List<string>();
+        List<string> list_B = new List<string>();
+
+        //Final List
+        //AndreaLiro: to be sent the backend as well
+        List<string> personalized_List = new List<string>();
+
+        if (m_UserProfileManager.m_userProfile.isFirstInit)
+        {
+            //AndreaLIRO: need to go on on this.
+            //Loading list of ACT_A
+            yield return StartCoroutine(LoadInitialACTFile(GlobalVars.LiroACT_A, value => list_A = value));
+            //Loading list of ACT_B
+            yield return StartCoroutine(LoadInitialACTFile(GlobalVars.LiroACT_B, value => list_B = value));
+            int randomNumber = 0;
+            for (int i = 0; i < list_A.Count; i++)
+            {
+                //Choose random between 0 and 1
+                randomNumber = RandomGenerator.GetRandomInRange(0, 2);
+                if (randomNumber == 0)
+                {
+                    personalized_List.Add(list_A[i].Replace("\r", "").Trim());
+                }
+                else if (randomNumber == 1)
+                {
+                    personalized_List.Add(list_B[i].Replace("\r", "").Trim());
+                }
+            }
+
+            //Saving to the local folder
+            string filename = "GEN_ACT";
+            File.WriteAllLines(GlobalVars.GetPathToLIROACTGenerated(), personalized_List.ToArray());
+
+            //AndreaLIRO: add the file to be sent online
+            m_UserProfileManager.m_userProfile.isFirstInit = false;
+
+            //Saving user profile info
+            yield return StartCoroutine(SaveCurrentUserProfile());
+        }
+        else
+        {
+            yield return null;
+        }
+    }
     public TherapyLadderStep GetCurrentLadderStep()
     {
         return m_UserProfileManager.LIROStep;
@@ -251,7 +298,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             PrepareCurrentSection();
         }
     }
-
     /// <summary>
     /// Escape condition for the basket section (bool in user profile)
     /// </summary>
@@ -338,7 +384,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
     public void StartACT()
     {
-        StartCoroutine(LoadACTFile());
+        //AndreaLIRO: need to check if this is created 
+        StartCoroutine(LoadACTFile(GlobalVars.GetPathToLIROACTGenerated()));
     }
 
     /// <summary>
@@ -447,7 +494,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currScore = 0;
                 yield return StartCoroutine(SaveCurrentUserProfile());
                 LoadingACTScreen(0);
-                yield return StartCoroutine(LoadACTFile());
+                yield return StartCoroutine(LoadACTFile(GlobalVars.GetPathToLIROACTGenerated()));
                 break;
             case TherapyLadderStep.SART_PRACTICE:
                 //AndreaLIRO: resetting completed state
@@ -483,11 +530,26 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if (m_OnSwitchingSection != null)
             m_OnSwitchingSection(m_UserProfileManager, amount);
     }
+    internal IEnumerator LoadInitialACTFile(string fileToLoad, System.Action<List<string>> result)
+    {
+        //Loading asset
+        TextAsset ta = Resources.Load<TextAsset>(fileToLoad);
+
+        List<string> lines = ta.text.Split(new char[] { '\n' }).ToList();
+        //Removing last line if empty
+        if (lines[lines.Count - 1] == String.Empty)
+        {
+            lines.RemoveAt(lines.Count - 1);
+        }
+        result(lines);
+
+        yield return null;
+    }
     /// <summary>
     /// Loading ACT file and generate splitted files
     /// </summary>
     /// <returns></returns>
-    internal IEnumerator LoadACTFile()
+    internal IEnumerator LoadACTFile(string fileToLoad)
     {
         yield return new WaitForEndOfFrame();
 
@@ -498,10 +560,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
         yield return new WaitForEndOfFrame();
 
-        TextAsset ta = Resources.Load<TextAsset>(GlobalVars.LiroACT);
+        //Loading asset
+        TextAsset ta = Resources.Load<TextAsset>(fileToLoad);
 
         List<string> lines = ta.text.Split(new char[] { '\n' }).ToList();
 
+        //External notify
         currAmount = 16;
         if (m_OnSwitchingSection != null)
         {
@@ -518,13 +582,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
         yield return new WaitForEndOfFrame();
 
+        //Reading list and writing to files
         int currCount = 0;
         int total_blocks = 1;
         List<string> currBlockLines = new List<string>();
         string currFilename = String.Empty;
         for (int i = 0; i < lines.Count; i++)
         {
-            currBlockLines.Add(lines[i].Replace("\r", "").Trim());
+            currBlockLines.Add(lines[i].Replace("\r","").Trim());
             currCount++;
             if (currCount == GlobalVars.ActChallengeLength)
             {
@@ -542,7 +607,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             }
             yield return new WaitForEndOfFrame();
         }
-
+        //Writing remaining lines
         if (currBlockLines.Count != 0)
         {
             currFilename = String.Format("{0}_{1}", m_UserProfileManager.LIROStep, total_blocks);
@@ -584,7 +649,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// Called every time a new preparation for the ladder step must be completed
     /// </summary>
     /// <returns></returns>
-
     internal void ShuffleLines(ref List<string> lines)
     {
         List<string> shuffledLines = lines.OrderBy(x => Guid.NewGuid()).ToList();

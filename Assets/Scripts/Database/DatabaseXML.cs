@@ -122,6 +122,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Baskets"); // 2018-20-06
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Section"); //2018-23-04
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Output"); // 2018-20-06
+            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/ACT"); // 2019-03-01
 
             //create an xml from the local sample one
             if (database_xml_file == null)
@@ -147,40 +148,6 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         //create the file route by the current xml file
         xml_file = Path.Combine(pathToXMLs, String.Format("{0}.xml", currSplittedFiles.ToString()));// Application.persistentDataPath + @"/ListenIn/Database/" + currSplittedFiles + ".xml";
 
-        // check database.xml file length - if the file corrupted with length 0kb, then recreate the using setting from PlayerPrefs
-        //AndreaLIRO: no execption anymore for this part
-
-        //{
-        //    try
-        //    {
-        //        FileInfo info = new FileInfo(xml_file);
-        //        if (info.Length == 0)
-        //        {
-        //            Debug.Log("DatabaseXML: ********** database.xml is EMPTY!!!");
-
-        //            if (!LoadCurrentUserFromPlayerPrefs())
-        //                return;
-        //        }
-        //        else
-        //        {
-        //            //load the xml from the path
-        //            database_xml.LoadXml(File.ReadAllText(xml_file));
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.Log(String.Format("DatabaseXML: {0}", ex.Message));
-
-        //        CleanXMLSplitting();                
-        //    }
-
-        //}
-
-        //load the xml from the path
-        //database_xml.LoadXml(File.ReadAllText(xml_file));
-
-        //Debug.Log(Application.persistentDataPath);
-
         if (!Directory.Exists(Application.persistentDataPath + @"/ListenIn/Therapy/"))
             Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/Therapy/");
 
@@ -196,10 +163,6 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         }
         
         Debug.Log("DatabseXML: *** PatientId = " + PatientId + ", DatasetId = " + DatasetId);               
-
-        //AndreaLIRO: no need to fix anything anymore
-        // check if there is any therapy corrupted files
-        //fixTherapyCorruptedFiles();
     }
 
     private bool LoadCurrentUserFromPlayerPrefs()

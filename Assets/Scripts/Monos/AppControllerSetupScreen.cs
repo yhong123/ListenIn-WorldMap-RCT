@@ -36,7 +36,15 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_playButton.interactable = false;
         m_playButton.gameObject.SetActive(false);
         switchPatient.gameObject.SetActive(false);
-        StartCoroutine(SetupInitialization());
+        try
+        {
+            StartCoroutine(SetupInitialization());
+        }
+        catch (Exception ex)
+        {
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+        }
+        
     }
 
     private void UpdateFeedbackLog(String message, bool canContinue)
@@ -60,6 +68,9 @@ public class AppControllerSetupScreen : MonoBehaviour
 
         int percentage = 1;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
+
+        //Assigning a Random seed at the    
+        UnityEngine.Random.seed = System.Environment.TickCount;
 
         //AndreaLIRO: disabling logger 
         //Setting the logger
@@ -90,18 +101,35 @@ public class AppControllerSetupScreen : MonoBehaviour
         percentage = 47;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
-        try
-        {
-            StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
-        }
-        catch (Exception ex)
-        {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
-        }
+        yield return StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
+
+        //try
+        //{
+        //    StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
+        //}
+        //catch (Exception ex)
+        //{
+        //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+        //}
 
         percentage = 55;
-        //AndreaLIRO: Preparing the jigsaw pieces
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        yield return new WaitForEndOfFrame();
+        //AndreaLIRO: Checking first ever initialization for ACT pair randomization
+        yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
+        //try
+        //{
+        //    StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
+        //}
+        //catch (Exception ex)
+        //{
+        //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+        //}
+
+        //AndreaLIRO: Preparing the jigsaw pieces
+        percentage = 77;
+        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        yield return new WaitForEndOfFrame();
         try
         {
             StateJigsawPuzzle.Instance.OnGameLoadedInitialization();

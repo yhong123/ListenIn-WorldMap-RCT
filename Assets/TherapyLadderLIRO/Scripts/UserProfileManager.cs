@@ -28,6 +28,7 @@ public class UserProfile
 {
     #region User Properties
     public bool isFirstInit;
+    public bool isTutorialDone;
     public int m_currCycle;
     public int m_currIDUser;
     public int m_cycleNumber;
