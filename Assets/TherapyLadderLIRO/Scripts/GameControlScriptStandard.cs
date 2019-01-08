@@ -21,9 +21,6 @@ public class GameControlScriptStandard : MonoBehaviour
     // index of the current displayed trial/challenge
     int m_intCurIdx = -1;
 
-    // response to current trial
-    CResponse m_curResponse = new CResponse();
-
     // structure represent stimulus game object 
     public struct stStimulusGO
     {
@@ -107,9 +104,14 @@ public class GameControlScriptStandard : MonoBehaviour
     private Challenge m_currChallenge;
     private string m_currAudio;
     private ChallengeResponse m_challengeResponse;
+    private List<ChallengeResponse> m_responseList = new List<ChallengeResponse>();
     // trial start time, this is to keep track how long does the patient take to get a correct response 
     DateTime m_dtCurTrialStartTime;
+    DateTime m_dtStartingBlock;
+    DateTime m_dtEndingBlock;
     LayerMask currMask;
+
+    private CoreItemWriter m_coreWriter = new CoreItemWriter();
     #endregion
 
     public void SetEnable(bool enable)
@@ -171,6 +173,7 @@ public class GameControlScriptStandard : MonoBehaviour
     //----------------------------------------------------------------------------------------------------
     public void StartTherapyLIRO()
     {
+        m_dtStartingBlock = DateTime.Now;
         CleanPreviousTrial();
 
         goPhoneModeIcon.SetActive(false);
@@ -477,9 +480,9 @@ public class GameControlScriptStandard : MonoBehaviour
         ShowAllStimuli(false);
         PlaySound("Sounds/Challenge/PicturesDisappear");
         // continue next trial/challenge
+        SaveCurrentChallenge();
         PrepareNextTrialLIRO();
     }
-
     //----------------------------------------------------------------------------------------------------
     // WaitIncorrect: user has an incorrect answer, stay on current trial until user has got a correct answer
     //----------------------------------------------------------------------------------------------------
@@ -511,9 +514,10 @@ public class GameControlScriptStandard : MonoBehaviour
     }
     private IEnumerator FinishTherapyBlock()
     {
-        yield return new WaitForSeconds(4);
-        ai.Play("JumpIn");
         yield return new WaitForSeconds(3);
+        ai.Play("JumpIn");
+        SaveCurrentBlockResponse();
+        yield return new WaitForSeconds(2.5f);
         GameController.Instance.ChangeState(GameController.States.StateInitializePinball);
     }
     void EndTherapySessionLIRO()
@@ -527,6 +531,50 @@ public class GameControlScriptStandard : MonoBehaviour
         DatabaseXML.Instance.ForcedTimerState = true;
         //Andrea: starting to change the animation
         StartCoroutine(FinishTherapyBlock());
+    }
+    private void SaveCurrentChallenge()
+    {
+        m_responseList.Add(m_challengeResponse);
+    }
+    private void SaveCurrentBlockResponse()
+    {
+        try
+        {
+            string filemane = String.Format("THERAPY_{0}_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
+            string pathFolder = GlobalVars.GetPathToLIROOutput();
+            m_coreWriter.WriteCsv(pathFolder, filemane, m_responseList);
+
+            //string content = string.Empty;
+            //foreach (var item in m_responseList)
+            //{
+            //    content = String.Concat(content,
+
+            //        String.Join(",", new string[] {
+            //          item.m_challengeID.ToString(),
+            //          item.m_timeStamp.ToString("dd/MM/yyyy"),
+            //          item.m_timeStamp.ToString("HH:mm:ss"),
+            //          item.m_number.ToString(),
+            //          item.m_block.ToString(),
+            //          item.m_cycle.ToString(),
+            //          item.m_accuracy.ToString(),
+            //          item.m_reactionTime.ToString(),
+            //          item.m_repeat.ToString(),
+            //          item.m_pictureID.ToString()
+            //        }), @"\n");
+            //}
+            //Debug.Log(content);
+
+            //WWWForm form = new WWWForm();
+            //form.AddField("id_user", NetworkManager.UserId);
+            //form.AddField("file_name", filemane);
+            //form.AddField("content", content);
+
+            //NetworkManager.SendDataServer(form, NetworkManager.ServerURLDataInput, content, filemane);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
     }
 
     void ShowAllStimuli(bool bShow)
@@ -749,7 +797,7 @@ public class GameControlScriptStandard : MonoBehaviour
 
     public float OnClickReplayButton()
     {
-        m_curResponse.m_intReplayBtnCtr++;
+        //m_curResponse.m_intReplayBtnCtr++;
         m_challengeResponse.m_repeat++;
         return PlayAudioLIRO(0);
     }

@@ -86,6 +86,7 @@ public class AppControllerMainHUB : MonoBehaviour {
             case TherapyLadderStep.BASKET:
                 m_currentSectionText.text = "Therapy";
                 m_Therapy_ui.gameObject.SetActive(true);
+                m_Therapy_ui.UpdateUserStats(currProfile);
                 m_continueButtonTherapy.enabled = true;
                 currLevelToLoad = "Basket Selection";
                 m_continueButtonTherapy.interactable = true;
@@ -93,6 +94,7 @@ public class AppControllerMainHUB : MonoBehaviour {
             case TherapyLadderStep.CORE:
                 m_currentSectionText.text = "Therapy";
                 m_Therapy_ui.gameObject.SetActive(true);
+                m_Therapy_ui.UpdateUserStats(currProfile);
                 m_continueButtonTherapy.enabled = true;
                 currLevelToLoad = "World Map Select";
                 m_continueButtonTherapy.interactable = true;
@@ -134,12 +136,14 @@ public class AppControllerMainHUB : MonoBehaviour {
                 case TherapyLadderStep.BASKET:
                     m_currentSectionText.text = "Therapy";
                     m_Therapy_ui.gameObject.SetActive(true);
+                    m_Therapy_ui.UpdateUserStats(currProfile);
                     currLevelToLoad = "Basket Selection";
                     m_continueButtonTherapy.interactable = true;
                     break;
                 case TherapyLadderStep.CORE:
                     m_currentSectionText.text = "Therapy";
                     m_Therapy_ui.gameObject.SetActive(true);
+                    m_Therapy_ui.UpdateUserStats(currProfile);
                     currLevelToLoad = "World Map Select";
                     m_continueButtonTherapy.interactable = true;
                     break;

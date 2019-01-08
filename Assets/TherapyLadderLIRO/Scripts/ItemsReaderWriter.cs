@@ -16,7 +16,7 @@ public class ACTItemReader : ICsvReader<ACTChallenge>
             return currStep;
         }
     }
-    public IEnumerable<ACTChallenge> ParseCsv(string path)
+    public IEnumerable<ACTChallenge> ParseCsv(string path, bool loadFromResources = false)
     {
         List<ACTChallenge> currList = new List<ACTChallenge>();
 
@@ -108,12 +108,22 @@ public class CoreItemReader : ICsvReader<Challenge>
             return currStep;
         }
     }
-    public IEnumerable<Challenge> ParseCsv(string path)
+    public IEnumerable<Challenge> ParseCsv(string path, bool loadFromResources = false)
     {
         List<Challenge> currList = new List<Challenge>();
-        
+
         //Read a single file and extract the list of challenges
-        string currBlock = File.ReadAllText(path);
+        string currBlock;
+        if (!loadFromResources)
+        {
+            currBlock = File.ReadAllText(path);
+        }
+        else
+        {
+            TextAsset ta = Resources.Load<TextAsset>(path);
+            currBlock = ta.text;
+        }
+       
         string currFileName = Path.GetFileName(path);
 
         //AndreaLIRO: don t put this here, have who call this when preparing the block, register the information 
@@ -182,5 +192,41 @@ public class CoreItemReader : ICsvReader<Challenge>
 
         return currList;
 
+    }
+}
+
+public class CoreItemWriter : ICsvWriter<ChallengeResponse>
+{
+    public void WriteCsv(string path, string filename, IEnumerable<ChallengeResponse> listToWrite)
+    {
+        string fullPath = Path.Combine(path, filename);
+        List<string> listString = new List<string>();
+
+        foreach (var item in listToWrite)
+        {
+            listString.Add(String.Join(",", new string[] {
+
+                  item.m_challengeID.ToString(),
+                  item.m_timeStamp.ToString("dd/MM/yyyy"),
+                  item.m_timeStamp.ToString("HH:mm:ss"),
+                  item.m_cycle.ToString(),
+                  item.m_block.ToString(),
+                  item.m_accuracy.ToString(),
+                  item.m_reactionTime.ToString(),
+                  item.m_repeat.ToString()
+    }));
+
+
+        }
+
+        try
+        {
+            File.WriteAllLines(fullPath, listString.ToArray());
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+            throw;
+        }
     }
 }

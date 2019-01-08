@@ -10,8 +10,7 @@ public interface ICsvReader<T> {
         get;
     }
 
-    IEnumerable<T> ParseCsv(string path);
-
+    IEnumerable<T> ParseCsv(string path, bool loadFromResources);
 }
 
 public interface ICsvWriter<T> {

@@ -33,7 +33,7 @@ return Application.dataPath;// +"/"+ fileName;
 
     public static string GetPathToLIROBaskets()
     {
-        return Path.Combine(GetPath(), @"ListenIn/LIRO/Baskets");
+        return @"DocLiro";
     }
     public static string GetPathToLIROUserProfile()
     {

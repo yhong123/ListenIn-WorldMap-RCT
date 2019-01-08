@@ -8,6 +8,8 @@ public class TherapyLiroUserProfile
     public bool isBasketDone = false;
     public int m_currentBlock = -1;
     public int m_totalBlocks = 0;
+    public int m_totalTherapyMinutes = 0;
+    public int m_totalGameMinutes = 0;
 }
 
 public class ACTLiroUserProfile

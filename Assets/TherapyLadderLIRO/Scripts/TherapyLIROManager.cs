@@ -76,6 +76,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.m_userProfile.m_currIDUser = 1;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
+            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = 0;
+            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = 0;
             m_UserProfileManager.m_userProfile.m_cycleNumber = 0;
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 8;
@@ -169,7 +171,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             }
 
             //Saving to the local folder
-            string filename = "GEN_ACT";
             File.WriteAllLines(GlobalVars.GetPathToLIROACTGenerated(), personalized_List.ToArray());
 
             //AndreaLIRO: add the file to be sent online
@@ -678,11 +679,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             yield return new WaitForEndOfFrame();
 
             CoreItemReader cir = new CoreItemReader();
-            string basketName = String.Format("Basket_{0}.csv", basketsInfos[i].basketId);
+            string basketName = String.Format("Basket_{0}", basketsInfos[i].basketId);
             currBasketsPath = Path.Combine(GlobalVars.GetPathToLIROBaskets(), basketName);
 
             //Loading all the basket challenges excluding the untrained items
-            curr_basket_list_read = cir.ParseCsv(currBasketsPath).ToList();
+            curr_basket_list_read = cir.ParseCsv(currBasketsPath, true).ToList();
             currAmount += 4;
             if (m_onUpdateProgress != null)
             {
@@ -692,51 +693,64 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             //Geting current difficulty
             //int currDifficulty = basketsInfos[i].hardMode ? 3 : 1;
-            
-            //select distinct lexical item for this batch
-            curr_basket_lexical_item_list = curr_basket_list_read.Select(x => x.LexicalItem).Distinct().ToList();
-            int countChallenges = 0;
-            int currentStep = 0;
-            //For each distinct lexical item choose a set number of random challenges
-            foreach (string lexical_item in curr_basket_lexical_item_list)
+            try
             {
-                currentStep = 0;
-                countChallenges = 0;
-                //Filling up with hard mode first if it s selected
-                if (basketsInfos[i].hardMode)
+                //select distinct lexical item for this batch
+                curr_basket_lexical_item_list = curr_basket_list_read.Select(x => x.LexicalItem).Distinct().ToList();
+                int countChallenges = 0;
+                int currentStep = 0;
+                //For each distinct lexical item choose a set number of random challenges
+                foreach (string lexical_item in curr_basket_lexical_item_list)
                 {
-                    curr_Selected_Challenges.Clear();
-                    curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty > 1).ToList();
-                    curr_Selected_Challenges.Shuffle();
-                                        
-                    //Until reaching desired number or finishing challenges
-                    while (countChallenges < m_numberSelectedPerLexicalItem && currentStep < curr_Selected_Challenges.Count)
+
+                    //Filling up with hard mode first if it s selected
+                    if (basketsInfos[i].hardMode)
                     {
-                        curr_basket_list_write.Add(curr_Selected_Challenges[0]);
-                        //curr_challenges_lexical_item.RemoveAt(0);
-                        countChallenges++;
-                        currentStep++;
+                        curr_Selected_Challenges.Clear();
+                        curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty > 1).ToList();
+                        if (curr_Selected_Challenges != null || curr_Selected_Challenges.Count != 0)
+                        {
+                            curr_Selected_Challenges.Shuffle();
+
+                            currentStep = 0;
+                            countChallenges = 0;
+                            //Until reaching desired number or finishing challenges
+                            while (countChallenges < m_numberSelectedPerLexicalItem && currentStep < curr_Selected_Challenges.Count)
+                            {
+                                curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                                //curr_challenges_lexical_item.RemoveAt(0);
+                                countChallenges++;
+                                currentStep++;
+                            }
+                        }
+
+                        curr_Selected_Challenges.Clear();
                     }
+
                     curr_Selected_Challenges.Clear();
+                    curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty == 1).OrderBy(y => RandomGenerator.GetRandom()).ToList();
+                    currentStep = 0;
+
+                    //populating until reaching the final number of items
+                    while (countChallenges < m_numberSelectedPerLexicalItem)
+                    {
+                        curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                        currentStep++;
+                        currentStep = currentStep % curr_Selected_Challenges.Count;
+                        countChallenges++;
+                    }
+
+                    currentStep = 0;
+                    //curr_basket_list_write.AddRange(
+                    //  curr_basket_list_read.Where(x => x.LexicalItem == lexical_item).OrderBy(y => RandomGenerator.GetRandom()).Take(m_numberSelectedPerLexicalItem).ToList()
+                    //);
                 }
-
-                curr_Selected_Challenges.Clear();
-                curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty == 1).OrderBy(y => RandomGenerator.GetRandom()).ToList();
-                currentStep = 0;
-
-                //populating until reaching the final number of items
-                while (countChallenges < m_numberSelectedPerLexicalItem)
-                {
-                    curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
-                    currentStep++;
-                    currentStep = currentStep % curr_Selected_Challenges.Count;
-                    countChallenges++;
-                }
-
-                //curr_basket_list_write.AddRange(
-                //  curr_basket_list_read.Where(x => x.LexicalItem == lexical_item).OrderBy(y => RandomGenerator.GetRandom()).Take(m_numberSelectedPerLexicalItem).ToList()
-                //);
             }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
+           
 
             currAmount += 6;
             if (m_onUpdateProgress != null)
