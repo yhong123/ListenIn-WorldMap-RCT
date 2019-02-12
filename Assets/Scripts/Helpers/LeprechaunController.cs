@@ -46,7 +46,6 @@ public class LeprechaunController : MonoBehaviour, AnimationInterface {
 		float length = 0;
 		if(clips != null && clips.ContainsKey(animationName))
 		{
-
 			clips.TryGetValue(animationName, out ac);
 			length = ac.length;
 		}

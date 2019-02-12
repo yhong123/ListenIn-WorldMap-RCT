@@ -46,6 +46,7 @@ public class CardBucketController : MonoBehaviour {
         progressionFiller = image;
         initVal = (int)(currentProgress * threshold);
     }
+
     void Start()
     {
         GetChildComponents();

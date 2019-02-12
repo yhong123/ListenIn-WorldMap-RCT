@@ -230,8 +230,6 @@ public class StateJigsawPuzzle : State
             returnToSelectScreen = false;
             startTimer = true;
             initialTime = Time.time;
-            //Andrea: 30/10 moved to upload manager
-            //m_chapterSelectMono.SavePinballGame();
         }
         else if (startTimer)
         {
@@ -241,8 +239,7 @@ public class StateJigsawPuzzle : State
             {
                 startTimer = false;
                 m_chapterSelectMono.OpenUploadScreen();
-                UploadManager.Instance.EndOfTherapyClean();
-                //MadLevel.LoadLevelByName("World Map Select");
+                UploadManager.Instance.CollectAndBackToMainHub();
             }
         }
     }   

@@ -85,7 +85,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
-            //AndreaLIRO: potentially the trained and untrained items can be inserted in here
+            //AndreaLIRO: check if this part can be removed.
             DatabaseXML.Instance.InitializeDatabase();
             DatabaseXML.Instance.OnSwitchedPatient += UpdateFeedbackLog;
         }

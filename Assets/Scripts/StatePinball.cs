@@ -227,16 +227,6 @@ public class StatePinball : State
         time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         time_insert.Add("totaltime", dGameTimeMin.ToString());
 
-        //AndreaLIRO: removing writing to database xml
-        //DatabaseXML.Instance.WriteDatabaseXML(time_insert, DatabaseXML.Instance.game_time_insert);
-
-        //Andrea: 30/10 move it for later
-
-        //if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-        //{
-        //    //read the xml
-        //    DatabaseXML.Instance.ReadDatabaseXML();
-        //}
     }
 
 	public void InitLevelPinball()
@@ -260,7 +250,6 @@ public class StatePinball : State
         }        
 
         ILevel lvlManager = m_PinballMono.transform.GetChild(0).gameObject.GetComponent<ILevel>();
-        //ILevel lvlManager = m_PinballMono.Levels[ID].GetComponent<ILevel>();
 
         if (lvlManager != null)
 		{
@@ -270,7 +259,6 @@ public class StatePinball : State
 		else
 		{
             ListenIn.Logger.Instance.Log("StatePinball: InitLevelPinball() missing level manager", LoggerMessageType.Warning);
-            //Debug.LogWarning("Missing level manager");
 		}
 		startGame = endGame = DateTime.UtcNow;
 	}
@@ -292,11 +280,6 @@ public class StatePinball : State
 		m_PinballMono.DuplicateEarnedJigsaw();
 		m_PinballMono.DisableOriginals();
         m_PinballMono.SetToAlphaFading(1.0f, true, false);
-        //m_PinballMono.SetFade();
-
-        //UnityEngine.Object.Destroy(m_PinballMono.gameObject);
-        //ListenIn.Logger.Instance.Log(String.Format("Mono : [ {0} ]; Name : [ {1} ]" ,m_PinballMono, m_PinballMono.name), LoggerMessageType.Info);
-        //Debug.Log("Mono : [" + m_PinballMono + "]; Name : [" + m_PinballMono.name + "];");
 		
 		StateChallenge.Instance.ResetCoins();
         StateChallenge.Instance.ResetCorrectAnswers();
@@ -307,6 +290,5 @@ public class StatePinball : State
             thisChapter.CurrPlayedTime += endGame - startGame;
         }
 
-        //Debug.Log(thisChapter.CurrPlayedTime.ToString());
 	}
 }

@@ -198,9 +198,9 @@ public class GameControlScriptACT : MonoBehaviour
         try
         {
             m_currListOfChallenges = air.ParseCsv(Path.Combine
-                    (GlobalVars.GetPathToLIROCurrentLadderSection(), 
-                        String.Format(
-                            "{0}_{1}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), TherapyLIROManager.Instance.GetCurrentBlockNumber()
+                    (GlobalVars.GetPathToLIROCurrentLadderSection(),
+            String.Format(
+                            "{0}_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), TherapyLIROManager.Instance.GetCurrentBlockNumber(), TherapyLIROManager.Instance.GetCurrentTherapyCycle()
                         )
                     )
                 ).ToList();
@@ -261,7 +261,7 @@ public class GameControlScriptACT : MonoBehaviour
                     m_arrStimulusGO[i].stimulusScript.SetFinalPosition(m_arr6StimuliPos[i]);
                     break;
                 default:
-                    print("Incorrect intelligence level.");
+                    print("Incorrect number of foils.");
                     break;
             }
             m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/LIRO/ACT/" + m_currACTChallenge.ChallengeID.ToString() +  "/" + m_currACTChallenge.Foils[i].ToString());
@@ -415,7 +415,7 @@ public class GameControlScriptACT : MonoBehaviour
     {
         try
         {
-            string filemane = String.Format("ACT_{0}_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
+            string filemane = String.Format("ACT_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
             string pathFolder = GlobalVars.GetPathToLIROOutput();
             m_actWriter.WriteCsv(pathFolder, filemane, m_responseList);
 
@@ -455,7 +455,7 @@ public class GameControlScriptACT : MonoBehaviour
     {
         SaveCurrentBlockResponse();
         yield return new WaitForEndOfFrame();
-        UploadManager.Instance.EndOfTherapyClean(numberOfCorrectTrials);
+        StartCoroutine(UploadManager.Instance.EndOfACTClean(numberOfCorrectTrials));
     }
     void EndTherapySessionACT()
     {
@@ -550,9 +550,16 @@ public class GameControlScriptACT : MonoBehaviour
             aci.delayAtStart = fDelay;
             aci.useDefaultDBLevel = true;
             aci.clipTag = string.Empty;
+            try
+            {
+                clip = Resources.Load(strAudio) as AudioClip;
+                m_sound_manager.Play(clip, ChannelType.PhoneVoice, aci);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log("GameControlScriptACT: unable to load audio");
+            }
 
-            clip = Resources.Load(strAudio) as AudioClip;
-            m_sound_manager.Play(clip, ChannelType.PhoneVoice, aci);
         }
         else
         {
@@ -565,9 +572,15 @@ public class GameControlScriptACT : MonoBehaviour
             aci.delayAtStart = fDelay;
             aci.useDefaultDBLevel = true;
             aci.clipTag = string.Empty;
-
-            clip = Resources.Load(strAudio) as AudioClip;
-            m_sound_manager.Play(clip, ChannelType.VoiceText, aci);
+            try
+            {
+                clip = Resources.Load(strAudio) as AudioClip;
+                m_sound_manager.Play(clip, ChannelType.VoiceText, aci);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log("GameControlScriptACT: unable to load audio");
+            }
         }
 
         m_bShowBtnRepeat = true;

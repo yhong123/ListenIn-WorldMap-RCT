@@ -230,19 +230,16 @@ public class AppControllerMainHUB : MonoBehaviour {
         //AndreaLIRO: add other animations here... then back to the Therapy Manager to change section
         //Maybe wait for a button to be pressed in order to go back to the 
     }
-
     public IEnumerator EndACTScore()
     {
         yield return StartCoroutine(TherapyLIROManager.Instance.SaveACTPreviousScore());
         TherapyLIROManager.Instance.GoToNextSection();
     }
-
     private IEnumerator EndSART(UserProfileManager currProfile)
     {
         yield return new WaitForSeconds(2);
         TherapyLIROManager.Instance.GoToNextSection();
     }
-
     private IEnumerator CloseActScore()
     {
         yield return StartCoroutine(m_ACT_ui.HideBoard());

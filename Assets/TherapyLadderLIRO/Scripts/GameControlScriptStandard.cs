@@ -64,7 +64,6 @@ public class GameControlScriptStandard : MonoBehaviour
     ParticleSystem m_particleSystIncorrect;
 
     // show phone mode icon on the top right corner during levels with phone voice
-    GameObject goPhoneModeIcon;
     GameObject repeatButton;
     SoundManager m_sound_manager;
     #endregion
@@ -86,13 +85,8 @@ public class GameControlScriptStandard : MonoBehaviour
         public GameObject goMenuLevels;  // menu levels gameobject
         public MenuLevelsScript scriptMenuLevels;   // reference to stimulus's script
     }
+
     stMenuLevel m_menuLevels = new stMenuLevel();
-
-    // is currently in admin mode?
-    bool m_bIsAdminMode = false;
-
-    // tap the admin btn three times and the it will turn into admin mode
-    int m_intClickButtonAdminCtr = 0;
 
     // cheat code - tap the side panel 5 times and the therapy session will be terminated and move to pinball session
     int m_intCheatCtr = 0;
@@ -171,136 +165,80 @@ public class GameControlScriptStandard : MonoBehaviour
     //----------------------------------------------------------------------------------------------------
     // StartTherapy
     //----------------------------------------------------------------------------------------------------
-    public void StartTherapyLIRO()
+    private IEnumerator StartTherapy()
     {
-        m_dtStartingBlock = DateTime.Now;
-        CleanPreviousTrial();
-
-        goPhoneModeIcon.SetActive(false);
-
         LoadCurrentBlock();
-        //CUserTherapy.Instance.LoadTrials();
-
-        // set background noise
-        int intNoiseLevel = 0;//CUserTherapy.Instance.GetCurNoiseLevel();
-        //intNoiseLevel = 5;
-        //Debug.Log("*** intNoiseLevel = " + intNoiseLevel);
-
-        if (intNoiseLevel == 1)
-        {
-            goPhoneModeIcon.SetActive(true);
-            AudioClipInfo aci;
-            aci.delayAtStart = 0.0f;
-            aci.isLoop = false;
-            aci.useDefaultDBLevel = true;
-            aci.clipTag = string.Empty;
-            m_sound_manager.Play(Resources.Load("Audio/telephone_ring") as AudioClip, ChannelType.SoundFx, aci);
-        }
-        else if (intNoiseLevel > 1)
-        {
-            List<string> lsNoiseFile = new List<string>();
-            lsNoiseFile.Add("bar_pub");
-            lsNoiseFile.Add("birds_forest");
-            lsNoiseFile.Add("city_traffic");
-            lsNoiseFile.Add("office");
-            lsNoiseFile.Add("shopping_mall");
-            lsNoiseFile.Add("supermarket");
-            lsNoiseFile.Add("swings_playground");
-            lsNoiseFile.Add("train_station");
-            System.Random rnd = new System.Random();
-            int intIdx = rnd.Next(0, lsNoiseFile.Count);
-            string strAudio = lsNoiseFile[intIdx];
-
-            float fVoiceChannelDBlevel = m_sound_manager.GetChannelLevel(ChannelType.VoiceText);
-            Debug.Log("fVoiceChannelDBlevel = '" + fVoiceChannelDBlevel + "'");
-
-            if (intNoiseLevel == 2)
-            {
-                //strAudio = "cafe_short";  
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 20);
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 15);  // noise1 = -5db
-            }
-            else if (intNoiseLevel == 3)
-            {
-                //strAudio = "darts_short"; 
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 15);
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 10); // noise2 = 0db
-            }
-            else if (intNoiseLevel == 4)
-            {
-                //strAudio = "race_short";  
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 10);
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5); // noise3 = 5db
-            }
-            else if (intNoiseLevel == 5)
-            {
-                //strAudio = "rugby_short"; 
-                //m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 0); // noise4 = 10db               
-            }
-            else if (intNoiseLevel >= 6)
-            {
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel + 5); // noise5 = 15db
-            }
-            m_sound_manager.Stop(ChannelType.BackgroundNoise);
-
-            AudioClipInfo aci;
-            aci.delayAtStart = 0.0f;
-            aci.isLoop = true;
-            aci.useDefaultDBLevel = false;
-            aci.clipTag = string.Empty;
-            m_sound_manager.Play(Resources.Load("Audio/" + strAudio) as AudioClip, ChannelType.BackgroundNoise, aci);
-        }
-
-        //CUserTherapy.Instance.LoadTrials();
-        PrepareNextTrialLIRO();
+        yield return new WaitForSeconds(2.0f);
+        m_dtStartingBlock = DateTime.Now;
+        PrepareNextTrialLIRO();        
     }
     //----------------------------------------------------------------------------------------------------
     // RestartGame: restart game
     //----------------------------------------------------------------------------------------------------
-    void RestartGameLIRO()
+    void InitializeGameLIRO()
     {
-
         CleanPreviousTrial();
 
-        // load patient profile
-        //CTrialList.Instance.LoadUserProfile();
-
-        // avoid long time holding, call this function in GameController-Init() instead
-        //CUserTherapy.Instance.LoadUserProfile();
-
         trialsCounter = numberOfTrials;
-
-        //m_bShowMainMenu = true;
-
-        m_bIsAdminMode = false;
-        m_intClickButtonAdminCtr = 0;
         m_intCheatCtr = 0;
 
-        //OnClickButtonLevel(CTrialList.Instance.getCurLevel());
-        StartTherapyLIRO();
+        StartCoroutine(StartTherapy());
     }
-
     private void LoadCurrentBlock()
     {
-        string currfile = Directory.GetFiles(GlobalVars.GetPathToLIROCurrentLadderSection()).OrderBy(x => Path.GetFileName(x)).FirstOrDefault();
-        if (currfile != null)
+        bool error = false;
+        try
         {
-            m_currListOfChallenges = cir.ParseCsv(currfile).ToList();
-            RandomizeChallenges();
+            m_currListOfChallenges = cir.ParseCsv(Path.Combine
+                    (GlobalVars.GetPathToLIROCurrentLadderSection(),
+            String.Format(
+                            "THERAPY_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), TherapyLIROManager.Instance.GetCurrentBlockNumber(), TherapyLIROManager.Instance.GetCurrentTherapyCycle()
+                        )
+                    )
+                ).ToList();
         }
+        catch (Exception ex)
+        {
+            error = true;
+            Debug.LogError("GCTACT: " + ex.Message);
+        }
+
+        if (error)
+        {
+            try
+            {
+                error = false;
+                string currfile = Directory.GetFiles(GlobalVars.GetPathToLIROCurrentLadderSection()).Where(x => Path.GetFileName(x).Contains("CORE")).OrderBy(x => Path.GetFileName(x)).FirstOrDefault();
+                if (currfile != null)
+                {
+                    m_currListOfChallenges = cir.ParseCsv(currfile).ToList();
+                }
+                else
+                {
+                    error = true;
+                    Debug.LogError("GCTACT: cannot load the current block... fatal error");
+                }
+            }
+            catch (Exception ex)
+            {
+                error = true;
+                Debug.LogError("GCTACT: " + ex.Message);
+            }
+        }
+
+        if (!error)
+        {
+            //AndreaLIRO: removed for debugging purposes
+            //RandomizeChallenges();
+        }
+            
     }
 
     void PrepareNextTrialLIRO()
     {
         m_intSelectedStimulusIdx = -1;
         m_curChallengeIdx++;
-        // update CTrialList with current response
-        //CTrialList.Instance.UpdateResponseList (m_curResponse);
-        //CUserTherapy.Instance.UpdateResponseList(m_curResponse);
 
-        // check end of level
-        //if (CTrialList.Instance.IsEndOfLevel(m_bIsAdminMode) || trialsCounter == 0)
         if (CheckBlockEnding())
         {
             EndTherapySessionLIRO();
@@ -315,10 +253,10 @@ public class GameControlScriptStandard : MonoBehaviour
         m_currAudio = GetRandomizedAudio(m_currChallenge);
         trialsCounter--;
 
-        ShowAllStimuli(false);
+        //ShowAllStimuli(false);
 
         // show stimuli's images and play target audio
-        Invoke("ShowNextTrialLIRO", 2.0f);
+        ShowNextTrialLIRO();
         //Invoke("ShowNextTrial", 2.0f);
     }
     public void ShowNextTrialLIRO()
@@ -327,8 +265,6 @@ public class GameControlScriptStandard : MonoBehaviour
         List<long> availableFoils = new List<long>();
 
         availableFoils = m_currChallenge.Foils.Where(x => x != 0).ToList();
-
-        ai.Play("Throw");
 
         for (var i = 0; i < availableFoils.Count; ++i)
         {
@@ -362,7 +298,7 @@ public class GameControlScriptStandard : MonoBehaviour
             //m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/" + m_lsTrial [m_intCurIdx].m_lsStimulus[i].m_strImage);
 
         }
-
+        ai.Play("Throw");
         ShowAllStimuli(true);
         float delay = ai.AnimationLength("Throw");
         PlayAudioLIRO(delay);
@@ -374,10 +310,7 @@ public class GameControlScriptStandard : MonoBehaviour
     private void CleanPreviousTrial()
     {
         // stop background noise
-        m_sound_manager.Stop(ChannelType.BackgroundNoise);
-
-        //if (m_audioBackgroundNoise.isPlaying)
-        //	m_audioBackgroundNoise.Stop();
+        //m_sound_manager.Stop(ChannelType.BackgroundNoise);
 
         // hide all stimuli
         for (var i = 0; i < m_arrStimulusGO.Count(); i++)
@@ -474,13 +407,16 @@ public class GameControlScriptStandard : MonoBehaviour
     {
         // Wait for 2 sec
         float animationDuration = ai.AnimationLength("Happy");
+        if (animationDuration == 0.0f)
+            Debug.LogError("Animation found with zero lenght");
         yield return new WaitForSeconds(animationDuration);
 
         // set all stimuli to invisible
         ShowAllStimuli(false);
         PlaySound("Sounds/Challenge/PicturesDisappear");
-        // continue next trial/challenge
         SaveCurrentChallenge();
+        // continue next trial/challenge
+        yield return new WaitForSeconds(2.0f);
         PrepareNextTrialLIRO();
     }
     //----------------------------------------------------------------------------------------------------
@@ -517,14 +453,13 @@ public class GameControlScriptStandard : MonoBehaviour
         yield return new WaitForSeconds(3);
         ai.Play("JumpIn");
         SaveCurrentBlockResponse();
-        yield return new WaitForSeconds(2.5f);
+        yield return StartCoroutine(UploadManager.Instance.EndOfTherapyClean());
+        yield return new WaitForSeconds(0.2f);
         GameController.Instance.ChangeState(GameController.States.StateInitializePinball);
     }
     void EndTherapySessionLIRO()
     {
         m_sound_manager.Stop(ChannelType.BackgroundNoise);
-        //		if (m_audioBackgroundNoise.isPlaying)
-        //			m_audioBackgroundNoise.Stop();
 
         StateChallenge.Instance.SetTotalTherapyTime(CUserTherapy.Instance.getTotalTherapyTimeMin());
         StateChallenge.Instance.SetTodayTherapyTime(CUserTherapy.Instance.getTodayTherapyTimeMin());
@@ -576,10 +511,13 @@ public class GameControlScriptStandard : MonoBehaviour
             Debug.LogError(ex.Message);
         }
     }
-
     void ShowAllStimuli(bool bShow)
     {
-        for (var i = 0; i < m_currChallenge.Foils.Count; ++i)
+        List<long> availableFoils = new List<long>();
+
+        availableFoils = m_currChallenge.Foils.Where(x => x != 0).ToList();
+
+        for (var i = 0; i < availableFoils.Count; ++i)
         {
             m_arrStimulusGO[i].stimulusScript.ShowStimulus(bShow);
         }
@@ -618,76 +556,6 @@ public class GameControlScriptStandard : MonoBehaviour
     //----------------------------------------------------------------------------------------------------
     // OnClickButtonLevel - to be called from MenuLevelsScript
     //----------------------------------------------------------------------------------------------------
-    public void OnClickButtonLevel(int intLevel)
-    {
-        // hide main menu
-        //m_menuLevels.goMenuLevels.SetActive (false);
-        //m_bShowMainMenu = false;
-
-        CleanPreviousTrial();
-
-        goPhoneModeIcon.SetActive(false);
-
-        // levels 14 & 15
-        if ((intLevel >= 14) && (intLevel <= 15))
-        {
-            goPhoneModeIcon.SetActive(true);
-            AudioClipInfo aci;
-            aci.delayAtStart = 0.0f;
-            aci.isLoop = false;
-            aci.useDefaultDBLevel = true;
-            aci.clipTag = string.Empty;
-            m_sound_manager.Play(Resources.Load("Audio/telephone_ring") as AudioClip, ChannelType.SoundFx, aci);
-        }
-
-        // levels 16, 17, 18, 19 with background noise
-        if (intLevel >= 16)
-        {
-            float fVoiceChannelDBlevel = m_sound_manager.GetChannelLevel(ChannelType.VoiceText);
-            string strAudio = "";
-            if (intLevel == 16)
-            {
-                strAudio = "cafe_short";  //"NOISE1_V2";
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 20);
-            }
-            else if (intLevel == 17)
-            {
-                strAudio = "darts_short"; //"NOISE2_V3";
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 15);
-            }
-            else if (intLevel == 18)
-            {
-                strAudio = "race_short";  //"NOISE3_A2";
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 10);
-            }
-            else if (intLevel == 19)
-            {
-                strAudio = "rugby_short"; //"NOISE4_N6";
-                m_sound_manager.SetChannelLevel(ChannelType.BackgroundNoise, fVoiceChannelDBlevel - 5);
-            }
-
-            m_sound_manager.Stop(ChannelType.BackgroundNoise);
-
-            AudioClipInfo aci;
-            aci.delayAtStart = 0.0f;
-            aci.isLoop = true;
-            aci.useDefaultDBLevel = false;
-            aci.clipTag = string.Empty;
-
-            m_sound_manager.Play(Resources.Load("Audio/" + strAudio) as AudioClip, ChannelType.BackgroundNoise, aci);
-
-            //			if (!m_audioBackgroundNoise.isPlaying) 
-            //			{
-            //				m_audioBackgroundNoise.clip = Resources.Load ("Audio/" + strAudio) as AudioClip;
-            //				m_audioBackgroundNoise.Play ();
-            //			}
-        }
-
-        //CTrialList.Instance.ConvertCsvToXml();
-
-        //CTrialList.Instance.LoadTrials(intLevel);
-        //PrepareNextTrial();
-    }
     void DoCheatCodes()
     {
         Debug.Log(" *** DoCheatCodes ***");
@@ -722,47 +590,36 @@ public class GameControlScriptStandard : MonoBehaviour
             StopCoroutine("WaitIncorrect");
 
         string strAudio = "Audio/phase1/" + m_currAudio;
+        strAudio = strAudio.Replace(".wav", "");
         Debug.Log(String.Format("GameControlScript: target audio = {0}", strAudio));
-        /*
-        string strFolder = CTrialList.Instance.getCurAudioFolder ();
-		string strAudio = "Audio/" + strFolder + m_curTrial.m_strTargetAudio;
-	    */
         AudioClip clip = null;
-
-        if (goPhoneModeIcon.activeSelf)
+                
         {
-            // play phone voice
-            m_sound_manager.SetChannelLevel(ChannelType.PhoneVoice, 0.0f);
-            AudioClipInfo aci;
-            aci.isLoop = false;
-            aci.delayAtStart = fDelay;
-            aci.useDefaultDBLevel = true;
-            aci.clipTag = string.Empty;
-
-            clip = Resources.Load(strAudio) as AudioClip;
-            m_sound_manager.Play(clip, ChannelType.PhoneVoice, aci);
-        }
-        else
-        {
-            // play normal voice
-            //This is an example of use
-            m_sound_manager.SetChannelLevel(ChannelType.VoiceText, 0.0f);
-
-            AudioClipInfo aci;
-            aci.isLoop = false;
-            aci.delayAtStart = fDelay;
-            aci.useDefaultDBLevel = true;
-            aci.clipTag = string.Empty;
-
-            clip = Resources.Load(strAudio) as AudioClip;
-            if (clip != null)
+            try
             {
-                m_sound_manager.Play(clip, ChannelType.VoiceText, aci);
+                m_sound_manager.SetChannelLevel(ChannelType.VoiceText, 0.0f);
+
+                AudioClipInfo aci;
+                aci.isLoop = false;
+                aci.delayAtStart = fDelay;
+                aci.useDefaultDBLevel = true;
+                aci.clipTag = string.Empty;
+
+                clip = Resources.Load(strAudio) as AudioClip;
+                if (clip != null)
+                {
+                    m_sound_manager.Play(clip, ChannelType.VoiceText, aci);
+                }
+                else
+                {
+                     Debug.LogError(String.Format("Challenge ID: {0}; Cannot load audio: {1}", m_currChallenge.ChallengeID.ToString(), m_currAudio.ToString()));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ListenIn.Logger.Instance.Log(String.Format("Challenge ID: {0}; Cannot load audio: {1}", m_currChallenge.ChallengeID.ToString(), m_currAudio.ToString()), ListenIn.LoggerMessageType.Error);
+                Debug.LogError("GameControlScriptStandard: unable to load " + strAudio);
             }
+
         }
 
         m_bShowBtnRepeat = true;
@@ -827,7 +684,6 @@ public class GameControlScriptStandard : MonoBehaviour
         repeatButton = GameObject.FindGameObjectWithTag("RepeatButton") as GameObject;
 
         m_sound_manager = GameObject.Find("Main Camera").GetComponent<SoundManager>() as SoundManager;
-        goPhoneModeIcon = GameObject.FindGameObjectWithTag("PhoneModeIcon") as GameObject;
 
         // retrieve audio sources
         m_arrAudioSource = GetComponents<AudioSource>();
@@ -850,7 +706,6 @@ public class GameControlScriptStandard : MonoBehaviour
         m_arrStimulusGO[5].stimulusScript = GameObject.Find("Stimulus6").GetComponent<StimulusScript>();
 
         // each trial will have 3 / 4 / 5 / 6 stimuli
-        //SetupStimuliPosMap ();
         SetupStimuliPosMapTransforms();
 
         Vector3 scale = new Vector3(2, 2, 2);
@@ -862,22 +717,24 @@ public class GameControlScriptStandard : MonoBehaviour
         GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").transform.localScale = scale;
 
         // set stimulus's layer orders - for images overlapping
-        GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 4;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 3;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 52;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 51;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 6;// GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 5;// GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 54;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 53;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 8;// GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 7;// GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 56;// GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 55;// GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 10;// GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 9;// GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 58;// GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 57;// GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 12;// GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 11;// GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 60;// GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 59;// GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-
+        GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 62;// GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 61;// GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        
         // set particlesystem layer's order
         m_particleSyst = GameObject.Find("ParticleFeedback").GetComponent<ParticleSystem>();
         m_particleSyst.GetComponent<Renderer>().sortingLayerID = GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingLayerID;
@@ -887,9 +744,6 @@ public class GameControlScriptStandard : MonoBehaviour
         m_particleSystIncorrect.GetComponent<Renderer>().sortingLayerID = GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingLayerID;
         m_particleSystIncorrect.GetComponent<Renderer>().sortingOrder = GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        // load from xml file all stimuli's images, audio and target index for all trials/challenges 
-        //LoadTrials ();
-
         //GETTING THE Animator script
         GameObject lepr = GameObject.FindGameObjectWithTag("Leprechaun");
         if (lepr != null)
@@ -898,23 +752,22 @@ public class GameControlScriptStandard : MonoBehaviour
             Vector3 throwPosition = lepr.transform.FindChild("ThrowPos").position;
             SetStimuliThrowPos(throwPosition);
         }
-
-        // restart game
-        RestartGameLIRO();
-
+        
         GameObject.FindGameObjectWithTag("PauseMenu").GetComponent<CircleCollider2D>().enabled = true;
         Camera.main.GetComponent<SoundManager>().SetChannelLevel(ChannelType.LevelEffects, 5.0f);
 
-        Dictionary<string, string> block_start = new Dictionary<string, string>();
+        //AndreaLIRO: DatabaseXML will have to be scrapped
+        //Dictionary<string, string> block_start = new Dictionary<string, string>();
 
-        int patient = DatabaseXML.Instance.PatientId;
-        DateTime now = System.DateTime.Now;
+        //int patient = DatabaseXML.Instance.PatientId;
+        //DateTime now = System.DateTime.Now;
 
-        block_start.Add("patient", patient.ToString());
-        block_start.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
+        //block_start.Add("patient", patient.ToString());
+        //block_start.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
+        
+        // restart game
+        InitializeGameLIRO();
 
-        //AndreaLIRO: removing writing to database xml
-        //DatabaseXML.Instance.WriteDatabaseXML(block_start, DatabaseXML.Instance.therapy_block_insert);
     }
     void Update()
     {

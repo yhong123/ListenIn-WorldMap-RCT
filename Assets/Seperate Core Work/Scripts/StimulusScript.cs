@@ -104,10 +104,8 @@ public class StimulusScript : MonoBehaviour {
         }
         catch (System.Exception ex)
         {
-            Debug.Log(ex.Message);
+            Debug.Log("StumulusScript: " + ex.Message);
         }
-		
-
 	}
 
 	//----------------------------------------------------------------------------------------------------

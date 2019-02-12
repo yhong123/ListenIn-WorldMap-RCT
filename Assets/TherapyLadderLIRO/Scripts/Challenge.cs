@@ -44,7 +44,7 @@ public class Challenge {
 
     }
 
-    public Challenge(long chID, string lexicalItem, int difficulty, int untrained, string faID1, string faID2, string faID3, string faID4, string faID5, long ciID, long f1, long f2, long f3, long f4, long f5)
+    public Challenge(long chID, string lexicalItem, int difficulty, string faID1, string faID2, string faID3, string faID4, string faID5, long ciID, long f1, long f2, long f3, long f4, long f5)
     {
         ChallengeID = chID;
         LexicalItem = lexicalItem;

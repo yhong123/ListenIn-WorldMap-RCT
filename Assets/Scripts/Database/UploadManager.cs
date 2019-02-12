@@ -22,34 +22,41 @@ public class UploadManager : Singleton<UploadManager> {
             //StartCoroutine(DatabaseXML.Instance.ReadDatabaseXML());
         }
     }
-
-    public void EndOfTherapyClean(int correctAnswer = 0)
+    #region THERAPY
+    public IEnumerator EndOfTherapyClean(int correctAnswer = 0)
     {
         backToLevelSelection = false;
-        StartCoroutine(CleanUp(correctAnswer));
+        yield return StartCoroutine(CleanUp(correctAnswer));
     }
-
-
     private IEnumerator CleanUp(int correctAnswer)
     {
         startUploadTime = Time.time;
-        
-        yield return new WaitForSeconds(1.0f);
+        //AndreaLIRO: adding the LIRO therapy update
+        yield return StartCoroutine(TherapyLIROManager.Instance.AdvanceCurrentBlockInSection());
+        Debug.Log("UploadManager: " + startUploadTime + " saving the LIRO therapy");
+    }
+    #endregion THERAPY
 
-        _currDeltaTime = Time.time - startUploadTime;
-        Debug.Log("UploadManager: " + _currDeltaTime + " saving the LIRO therapy");
+    #region ACT
+    public IEnumerator EndOfACTClean(int correctAnswer = 0)
+    {
+        backToLevelSelection = false;
+        yield return StartCoroutine(CleanUpACT(correctAnswer));
+    }
+    private IEnumerator CleanUpACT(int correctAnswer)
+    {
+        startUploadTime = Time.time;
+        Debug.Log("UploadManager: " + startUploadTime + " saving ACT");
         //AndreaLIRO: adding the LIRO therapy update
         yield return StartCoroutine(TherapyLIROManager.Instance.AdvanceCurrentBlockInSection());
         yield return StartCoroutine(TherapyLIROManager.Instance.UpdateACTScore(correctAnswer));
+
         _currDeltaTime = Time.time - startUploadTime;
         Debug.Log("UploadManager: " + _currDeltaTime + " collecting memory");
-        //Collecting memory
-        Resources.UnloadUnusedAssets();
-        System.GC.Collect();
-        System.GC.WaitForPendingFinalizers();
-        
-        backToLevelSelection = true;
+
+        CollectAndBackToMainHub();
     }
+    #endregion ACT
 
     #region Battery Level
     public float GetBatteryLevel()
@@ -110,4 +117,17 @@ public class UploadManager : Singleton<UploadManager> {
         }
     }
 
+    public void CollectAndBackToMainHub()
+    {
+        CollectMemory();
+        backToLevelSelection = true;
+    }
+
+    private void CollectMemory()
+    {
+        //Collecting memory
+        Resources.UnloadUnusedAssets();
+        System.GC.Collect();
+        System.GC.WaitForPendingFinalizers();
+    }
 }

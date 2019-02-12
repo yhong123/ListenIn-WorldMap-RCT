@@ -218,7 +218,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //AndreaLIRO: simplify this version. We switch between the sections and call separate methods
 
         //We check for first initialization only as this is treated specially
-        if (m_UserProfileManager.m_userProfile.isFirstInit)
+        if (m_UserProfileManager.m_userProfile.isTutorialDone)
         {
             //AndreaLIRO:
             //First initalization, should start practice
@@ -228,30 +228,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         //AdnreaLIRO: this will be removed, it s here just to check consistency with the game.
         //************************************************************************************************************************
-        string currFolder = GlobalVars.GetPathToLIROCurrentLadderSection();
-
-        //Get a single item from the ladder section folder (any is fine since they should belonging to all of the same batch)
-        string[] currFiles = Directory.GetFiles(currFolder);
-        //If folder is empty create the splitted file
-
-        //If we find any files
-        if (currFiles != null && currFiles.Length != 0)
-        {
-            //We check consistency by looking at the filename in the section folder
-            string full_filename = Path.GetFileName(currFiles[0]);
-            string[] splittedElements = full_filename.Replace(".csv", string.Empty).Split(new char[] { '_' });
-
-            //Checking the name is the same
-            if (splittedElements[0] != m_UserProfileManager.LIROStep.ToString())
-            {
-                //AndreaLIRO: must decide how to act in this case
-                Debug.LogWarning("TherapyLIROManager: found a mismatch between file" + splittedElements[0] + " and current loaded user profile " + m_UserProfileManager.LIROStep.ToString());
-            }
-            else
-            {
-                Debug.Log("Being in " + m_UserProfileManager.LIROStep.ToString() + " section, but found file in section folder with name: " + splittedElements[0]);
-            }
-        }
         //************************************************************************************************************************
 
         //AndreaLIRO: Create an escape for when having finished the tutorial
@@ -383,11 +359,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     {
         StartCoroutine(LoadTherapyFromBasketFiles(selectedBasket));
     }
-    public void StartACT()
-    {
-        //AndreaLIRO: need to check if this is created 
-        StartCoroutine(LoadACTFile(GlobalVars.GetPathToLIROACTGenerated()));
-    }
+    //public void StartACT()
+    //{
+    //    //AndreaLIRO: need to check if this is created 
+    //    StartCoroutine(LoadACTFile(GlobalVars.GetPathToLIROACTGenerated()));
+    //}
 
     /// <summary>
     /// Called at the end of the section cycle (core and ACT)
@@ -495,7 +471,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currScore = 0;
                 yield return StartCoroutine(SaveCurrentUserProfile());
                 LoadingACTScreen(0);
-                yield return StartCoroutine(LoadACTFile(GlobalVars.GetPathToLIROACTGenerated()));
+                yield return StartCoroutine(LoadACTFile());
                 break;
             case TherapyLadderStep.SART_PRACTICE:
                 //AndreaLIRO: resetting completed state
@@ -550,7 +526,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// Loading ACT file and generate splitted files
     /// </summary>
     /// <returns></returns>
-    internal IEnumerator LoadACTFile(string fileToLoad)
+    internal IEnumerator LoadACTFile()
     {
         yield return new WaitForEndOfFrame();
 
@@ -561,22 +537,42 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
         yield return new WaitForEndOfFrame();
 
-        //Loading asset
-        TextAsset ta = Resources.Load<TextAsset>(fileToLoad);
+        List<string> list_A = new List<string>();
+        List<string> list_B = new List<string>();
 
-        List<string> lines = ta.text.Split(new char[] { '\n' }).ToList();
-
-        //External notify
-        currAmount = 16;
+        //Loading assets list A and B
+        //Loading list of ACT_A
+        yield return StartCoroutine(LoadInitialACTFile(GlobalVars.LiroACT_A, value => list_A = value));
+        currAmount = 9;
+        if (m_OnSwitchingSection != null)
+        {
+            m_OnSwitchingSection(m_UserProfileManager, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+        //Loading list of ACT_B
+        yield return StartCoroutine(LoadInitialACTFile(GlobalVars.LiroACT_B, value => list_B = value));
+        currAmount = 17;
         if (m_OnSwitchingSection != null)
         {
             m_OnSwitchingSection(m_UserProfileManager, currAmount);
         }
         yield return new WaitForEndOfFrame();
 
-        ShuffleLines(ref lines);
+        List<string> list_AB = new List<string>();
+        list_AB.AddRange(list_A);
+        list_AB.AddRange(list_B);
 
-        currAmount = 27;
+        //External notify
+        currAmount = 19;
+        if (m_OnSwitchingSection != null)
+        {
+            m_OnSwitchingSection(m_UserProfileManager, currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        ShuffleLines(ref list_AB);
+
+        currAmount = 30;
         if (m_OnSwitchingSection != null)
         {
             m_OnSwitchingSection(m_UserProfileManager, currAmount);
@@ -588,20 +584,20 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         int total_blocks = 1;
         List<string> currBlockLines = new List<string>();
         string currFilename = String.Empty;
-        for (int i = 0; i < lines.Count; i++)
+        for (int i = 0; i < list_AB.Count; i++)
         {
-            currBlockLines.Add(lines[i].Replace("\r","").Trim());
+            currBlockLines.Add(list_AB[i].Replace("\r","").Trim());
             currCount++;
             if (currCount == GlobalVars.ActChallengeLength)
             {
-                currFilename = String.Format("{0}_{1}", m_UserProfileManager.LIROStep, total_blocks);
+                currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
                 File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
                 currBlockLines.Clear();
                 currCount = 0;
                 total_blocks++;
             }
 
-            currAmount = 30 + 30 * (i / lines.Count);
+            currAmount = 30 + 30 * (i / list_AB.Count);
             if (m_OnSwitchingSection != null)
             {
                 m_OnSwitchingSection(m_UserProfileManager, currAmount);
@@ -611,7 +607,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Writing remaining lines
         if (currBlockLines.Count != 0)
         {
-            currFilename = String.Format("{0}_{1}", m_UserProfileManager.LIROStep, total_blocks);
+            currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks);
             File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
             currBlockLines.Clear();
             total_blocks++;
@@ -621,7 +617,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = total_blocks - 1; //Should be always 8
         m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = 1;
 
-        currAmount += 15;
+        currAmount += 2;
         if (m_OnSwitchingSection != null)
         {
             m_OnSwitchingSection(m_UserProfileManager, currAmount);
@@ -658,7 +654,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
     internal IEnumerator LoadTherapyFromBasketFiles(List<BasketUI> basketsInfos)
     {
-        int currAmount = 2;
+        //AndreaLIRO: increasing number of cycle
+        m_UserProfileManager.m_userProfile.m_cycleNumber++;
+
+        int currAmount = 1;
+
+        //Loading ACT GEN file
+        ACTItemReader air = new ACTItemReader();
+        List<ACTChallenge> listTrainedItems = air.ParseCsv(GlobalVars.GetPathToLIROACTGenerated(), false).ToList();
 
         string currBasketsPath;
         List<Challenge> curr_basket_list_read = new List<Challenge>();
@@ -666,7 +669,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         List<string> curr_basket_lexical_item_list = new List<string>();
         List<Challenge> curr_basket_list_write = new List<Challenge>();
 
-        string coreFormat = String.Concat( m_UserProfileManager.LIROStep.ToString(), "_{0}");
+        string coreFormat = String.Concat( "THERAPY_{0}_Cycle_{1}");
         string currFilename;
         int total_blocks = 1;
 
@@ -697,12 +700,13 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             {
                 //select distinct lexical item for this batch
                 curr_basket_lexical_item_list = curr_basket_list_read.Select(x => x.LexicalItem).Distinct().ToList();
-                int countChallenges = 0;
+                int countChallengesLexicalItem = 0;
                 int currentStep = 0;
                 //For each distinct lexical item choose a set number of random challenges
                 foreach (string lexical_item in curr_basket_lexical_item_list)
                 {
-
+                    //Resetting challenges count
+                    countChallengesLexicalItem = 0;
                     //Filling up with hard mode first if it s selected
                     if (basketsInfos[i].hardMode)
                     {
@@ -711,46 +715,50 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                         if (curr_Selected_Challenges != null || curr_Selected_Challenges.Count != 0)
                         {
                             curr_Selected_Challenges.Shuffle();
-
                             currentStep = 0;
-                            countChallenges = 0;
-                            //Until reaching desired number or finishing challenges
-                            while (countChallenges < m_numberSelectedPerLexicalItem && currentStep < curr_Selected_Challenges.Count)
+                            
+                            //Until reaching desired number for lexical item or finishing challenges for this difficulty
+                            while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem && currentStep < curr_Selected_Challenges.Count)
                             {
                                 curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
                                 //curr_challenges_lexical_item.RemoveAt(0);
-                                countChallenges++;
+                                countChallengesLexicalItem++;
                                 currentStep++;
                             }
                         }
-
                         curr_Selected_Challenges.Clear();
                     }
 
                     curr_Selected_Challenges.Clear();
-                    curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty == 1).OrderBy(y => RandomGenerator.GetRandom()).ToList();
-                    currentStep = 0;
+                    curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty == 1).ToList();
 
-                    //populating until reaching the final number of items
-                    while (countChallenges < m_numberSelectedPerLexicalItem)
+                    if (curr_Selected_Challenges != null && curr_Selected_Challenges.Count != 0)
                     {
-                        curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
-                        currentStep++;
-                        currentStep = currentStep % curr_Selected_Challenges.Count;
-                        countChallenges++;
-                    }
+                        curr_Selected_Challenges = curr_Selected_Challenges.OrderBy(y => RandomGenerator.GetRandom()).ToList();
 
-                    currentStep = 0;
-                    //curr_basket_list_write.AddRange(
-                    //  curr_basket_list_read.Where(x => x.LexicalItem == lexical_item).OrderBy(y => RandomGenerator.GetRandom()).Take(m_numberSelectedPerLexicalItem).ToList()
-                    //);
+                        //Resetting counter to cycle through challenges
+                        currentStep = 0;
+
+                        //populating until reaching the final number of items
+                        while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem)
+                        {
+                            curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                            currentStep++;
+                            //This should make sure that challenges are always cycled through the current list
+                            currentStep = currentStep % curr_Selected_Challenges.Count;
+                            countChallengesLexicalItem++;
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError(String.Format("Could not find easy challenges for {0}", lexical_item));
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogError(ex.Message);
-            }
-           
+            }          
 
             currAmount += 6;
             if (m_onUpdateProgress != null)
@@ -758,6 +766,32 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 m_onUpdateProgress(currAmount);
             }
             yield return new WaitForEndOfFrame();
+
+            int countACTITems = 0;
+            Challenge currACTtoCoreChallenge;
+            //AndreaLIRO: adding trained items: may be adjusted when I have the final version
+            while (countACTITems < 30 && listTrainedItems.Count > 0)
+            {
+                currACTtoCoreChallenge = new Challenge(
+                        listTrainedItems[0].ChallengeID,
+                        listTrainedItems[0].LexicalItem,
+                        0,
+                        listTrainedItems[0].FileAudioID_F,
+                        listTrainedItems[0].FileAudioID_M,
+                        "0",
+                        "0",
+                        "0",
+                        listTrainedItems[0].Foils[0],
+                        listTrainedItems[0].Foils[1],
+                        listTrainedItems[0].Foils[2],
+                        listTrainedItems[0].Foils[3],
+                        listTrainedItems[0].Foils[4],
+                        listTrainedItems[0].Foils[5]
+                    );
+                curr_basket_list_write.Add(currACTtoCoreChallenge);
+                listTrainedItems.RemoveAt(0);
+                countACTITems++;
+            }
 
             //Shuffling challenges
             curr_basket_list_write.Shuffle();
@@ -787,7 +821,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
                 if (challengeCounter == GlobalVars.ChallengeLength)
                 {
-                    currFilename = String.Format(coreFormat, total_blocks); ; 
+                    currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber); ; 
                     File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currLines.ToArray());
                     currLines.Clear();
                     total_blocks++;
@@ -797,7 +831,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //Save the remaining in the last file
             if (currLines.Count != 0)
             {
-                currFilename = String.Format(coreFormat, total_blocks); ;
+                currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber); ;
                 File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currLines.ToArray());
                 currLines.Clear();
                 total_blocks++;
@@ -814,7 +848,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Updating UserProfile in the therapy section
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = total_blocks - 1;
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = 1;
-        m_UserProfileManager.m_userProfile.m_cycleNumber++;
 
         yield return StartCoroutine(SaveCurrentUserProfile());
 
@@ -825,7 +858,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
 
     }
-    internal IEnumerator CleanCurrentBlock()
+    public IEnumerator CleanCurrentBlock()
     {
         try
         {
@@ -835,25 +868,27 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             {
                 case TherapyLadderStep.CORE:
                     currBlock = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock;
+                    fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
                     break;
                 case TherapyLadderStep.ACT:
                     currBlock = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
-                    break;
+                    fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
+                break;
                 default:
                     break;
             }
 
             if (currBlock == -1)
             {
-                Debug.Log("Wrong registered block to delete: section is " + m_UserProfileManager.LIROStep.ToString());
+                Debug.Log("TLM: Wrong registered block to delete; section is " + m_UserProfileManager.LIROStep.ToString());
             }
 
-            fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), String.Format("{0}_{1}", m_UserProfileManager.LIROStep.ToString(), currBlock));
             File.Delete(fullPathFile);
+
         }
         catch (Exception ex)
         {
-            Debug.LogError("Could not delete curr block file: " + ex.Message);
+            Debug.LogError("TLM: Could not delete curr block file; " + ex.Message);
         }
         yield return null;
     }

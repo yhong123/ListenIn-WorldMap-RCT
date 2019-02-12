@@ -37,11 +37,11 @@ public class Therapy_UI : MonoBehaviour {
         gameText.text = string.Format(GameFormat, hours, mins);
 
         //Calculating percentage
-        float perc = (float)profile.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock / (float)profile.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks * 100.0f;
+        float perc = (float)(profile.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock - 1) / (float)profile.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks * 100.0f;
         if (perc > 100.0f || perc == -Mathf.Infinity)
             perc = 0.0f;
 
-        percentageText.text = string.Format(PercentageFormat, perc);
+        percentageText.text = string.Format(PercentageFormat, perc.ToString("f2"));
 
     }
 }

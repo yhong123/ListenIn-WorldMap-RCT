@@ -66,10 +66,6 @@ public class StateInitializePinball : State
 			UnityEngine.GameObject.Destroy(m_challenge_go);
 			StatePinball.Instance.Init();
             pm.SetToAlphaFading(0.0f, false, true);
-			//pm = StatePinball.Instance.m_PinballMono;
-			//pm.SetCannonState(false);
-			//pm.SetFrameParent(false);
-			//pm.ActivateAnimationIn();
 		}
 	}
 	
