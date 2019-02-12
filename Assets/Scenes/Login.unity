@@ -1280,57 +1280,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000030517578, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1001 &624580693
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 11462164, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: ListOfFileNames.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 425602, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 425602, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 425602, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 425602, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 425602, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 425602, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 425602, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 425602, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 11462164, guid: 97077796677a2b34d88df9d056902773, type: 2}
-      propertyPath: ListOfFileNames.Array.data[0].FileName
-      value: block.csv
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 11430646, guid: 97077796677a2b34d88df9d056902773, type: 2}
-  m_ParentPrefab: {fileID: 100100000, guid: 97077796677a2b34d88df9d056902773, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &685231091
 GameObject:
   m_ObjectHideFlags: 0
@@ -1534,6 +1483,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 856175775}
   - 114: {fileID: 856175776}
+  - 114: {fileID: 856175777}
   m_Layer: 0
   m_Name: LoginManager
   m_TagString: Untagged
@@ -1578,6 +1528,19 @@ MonoBehaviour:
   reenterPasswordInputRegister: {fileID: 536836689}
   logInForm: {fileID: 67577977}
   registerForm: {fileID: 592845213}
+--- !u!114 &856175777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 856175774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9efcc8b544585e4aa4a59651e18ab01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkManagerInstance: {fileID: 157052, guid: 97077796677a2b34d88df9d056902773,
+    type: 2}
 --- !u!1 &873750591
 GameObject:
   m_ObjectHideFlags: 0

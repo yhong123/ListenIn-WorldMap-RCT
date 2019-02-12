@@ -19,13 +19,29 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private InputField reenterPasswordInputRegister;
     [SerializeField] private GameObject logInForm;
     [SerializeField] private GameObject registerForm;
-    private const string usernamePlayerPref = "username";
+    private bool isInit = false;
 
-    public void Awake()
+    private void Update()
     {
-        if(!PlayerPrefs.HasKey(usernamePlayerPref))
+        if(NetworkManager.IsInitialInternetCheckDone && !isInit)
         {
-            SetPlayerPref(string.Empty);
+            if(NetworkManager.HasInternet)
+            {
+                Init();
+            }
+            else
+            {
+                PlayerPrefManager.LogOut();
+            }
+            isInit = true;
+        }
+    }
+
+    private void Init()
+    {
+        if(!PlayerPrefManager.IsLogged())
+        {
+            PlayerPrefManager.SetPlayerPref(string.Empty);
         }
 
         ClearInputs();
@@ -33,7 +49,7 @@ public class LoginManager : MonoBehaviour
         registerForm.SetActive(false);
 
         
-        if(PlayerPrefs.GetString(usernamePlayerPref) != string.Empty)
+        if(PlayerPrefManager.GetUsername() != string.Empty && NetworkManager.HasInternet)
         {
             //START GAME, USER ALREADY EXIST
             MadLevel.LoadLevelByName("Setup Screen");
@@ -84,7 +100,7 @@ public class LoginManager : MonoBehaviour
                 {
                     Debug.Log("LOG IN SUCCESFUL");
                     NetworkManager.UserId = emailInputLogin.text;
-                    SetPlayerPref(NetworkManager.UserId);
+                    PlayerPrefManager.SetPlayerPref(NetworkManager.UserId);
                     MadLevel.LoadLevelByName("Setup Screen");
                 }
                 else
@@ -95,17 +111,6 @@ public class LoginManager : MonoBehaviour
                 ToggleButtons(true);
             }
         }
-    }
-
-    public void LogOut()
-    {
-        SetPlayerPref(string.Empty);
-    }
-
-    private void SetPlayerPref(string value)
-    {
-        PlayerPrefs.SetString(usernamePlayerPref, value);
-        PlayerPrefs.Save();
     }
 
     public void Register()
