@@ -19,6 +19,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     [SerializeField]
     private UserProfileManager m_UserProfileManager = new UserProfileManager();
+    public UserProfileManager GetUserProfile { get{ return m_UserProfileManager; } }
+
 
     private int m_currSectionCounter;
     public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }
@@ -60,7 +62,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// </summary>
     public IEnumerator LoadCurrentUserProfile()
     {
-        string currUser = string.Format(GlobalVars.LiroProfileTemplate, DatabaseXML.Instance.PatientId);
+        string currUser = string.Format(GlobalVars.LiroProfileTemplate, UploadManager.Instance.PatientId);
         string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(), currUser);
 
         FileInfo info = new FileInfo(currFullPath);
@@ -354,6 +356,16 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         currStep = (currStep + 1) % size;
         m_UserProfileManager.LIROStep = (TherapyLadderStep)currStep;
     }
+    public IEnumerator AddTherapyMinutes(int minutes)
+    {
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes += minutes;
+        yield return SaveCurrentUserProfile();
+    }
+    public IEnumerator AddGameMinutes(int minutes)
+    {
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes += minutes;
+        yield return SaveCurrentUserProfile();
+    }
     public void StartCoreTherapy(List<BasketUI> selectedBasket)
     {
         StartCoroutine(LoadTherapyFromBasketFiles(selectedBasket));
@@ -386,6 +398,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Saving profile
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
+
     /// <summary>
     /// This function is called at the end of the SART practice to update the current state before going back to the mainHub
     /// </summary>
@@ -606,14 +619,13 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Writing remaining lines
         if (currBlockLines.Count != 0)
         {
-            currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks);
+            currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
             File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
             currBlockLines.Clear();
-            total_blocks++;
         }
 
         //Updating UserProfile in the ACT section
-        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = total_blocks - 1; //Should be always 8
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = total_blocks; //Should be always 8
         m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = 1;
 
         currAmount += 2;

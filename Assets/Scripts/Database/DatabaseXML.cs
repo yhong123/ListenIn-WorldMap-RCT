@@ -89,7 +89,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     public bool SetIsMenu { get { return isMenuPaused; } set { isMenuPaused = value; } }
     private int reasonToExit = 0;
     public int ReasonToExit { get { return reasonToExit; } set { reasonToExit = value; } }
-    //iddle time
+    //idle time
     float idle_time = 0;
     bool count_iddle_time = false;
     //insert daily threapy once
@@ -306,89 +306,7 @@ public class DatabaseXML : Singleton<DatabaseXML> {
 
     protected void Update()
     {
-        //get fingers on screen android only 
-        int fingerCount = 0;
-
-#if UNITY_ANDROID
-        foreach (Touch touch in Input.touches)
-        {
-            if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
-                fingerCount++;
-
-        }
-#endif
-
-#if UNITY_EDITOR
-        fingerCount = Input.GetMouseButtonDown(0) ? 1 : 0;
-#endif
-
-        if (fingerCount > 0)
-        {
-            //if finger, reset the timer
-            count_iddle_time = false;
-            idle_time = 0;
-        }
-        else
-        {
-            //if no finger, then run the counter
-            count_iddle_time = true;
-        }
-
-        //block timer
-        if (count_therapy_time)
-        {
-            therapy_time += Time.deltaTime;
-            m_fTotal_therapy_time_sec += Time.deltaTime;
-        }
-
-        if (count_pinball_time)
-        {
-            therapy_pinball_time += Time.deltaTime;
-        }
-
-        if (count_worldmap_time)
-        {
-            therapy_worldmap_time += Time.deltaTime;
-        }
-
-        //iddle timer
-        if (count_iddle_time)
-        {
-            idle_time += Time.unscaledDeltaTime;
-            //Debug.Log((int)therapy_block_time);
-        }
-
-        if (isMenuPaused)
-            m_fTherapy_block_idle_time_sec += Time.unscaledDeltaTime;
-
-        //TODO: unify the menu system
-//        #region TimeoutGame
-//        if (isMenuPaused && idle_time > 60 * 1)
-//        {
-//            Debug.Log("DatabaseXML: Update() Forcing ListenIn to quit due to timeout (99)");
-//            reasonToExit = 99;
-//            Application.Quit();
-
-//            //If we are running in the editor
-//#if UNITY_EDITOR
-//            //Stop playing the scene
-//            UnityEditor.EditorApplication.isPlaying = false;
-//#endif
-//        }
-//        else if (!isMenuPaused && idle_time > 60 * 1 && !m_stop_forcetimer_routine)
-//        {
-//            if (OpenPauseMenu())
-//            {
-//                ResetTimer(TimerType.Idle);
-//            }
-//            else
-//            {
-//                Debug.LogWarning("DatabaseXML: preventing force idle menu. Could be setup screen, uploading screen or a transition");
-//                ResetTimer(TimerType.Idle);
-//            }
-//        }
-
-//        #endregion
+        
     }
 
     private bool OpenPauseMenu()
@@ -1222,7 +1140,8 @@ public class DatabaseXML : Singleton<DatabaseXML> {
         yield return StartCoroutine(get_patient_progress());
 
         //CUserTherapy.Instance.LoadUserProfile();
-        CUserTherapy.Instance.LoadDataset_UserProfile();
+        //AndreaLIRO: scrapping unwanted profiles
+        //CUserTherapy.Instance.LoadDataset_UserProfile();
 
         if (OnSwitchedPatient != null)
         {
@@ -1357,7 +1276,6 @@ public class DatabaseXML : Singleton<DatabaseXML> {
     }    
 
     #region TimerUpdates
-    public enum TimerType { Idle, WorldMap, Therapy, Pinball }
 
 #if UNITY_EDITOR
     void OnGUI()

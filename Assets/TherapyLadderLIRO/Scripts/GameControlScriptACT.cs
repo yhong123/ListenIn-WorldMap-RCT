@@ -69,7 +69,6 @@ public class GameControlScriptACT : MonoBehaviour
     ParticleSystem m_particleSystIncorrect;
 
     // show phone mode icon on the top right corner during levels with phone voice
-    GameObject goPhoneModeIcon;
     GameObject repeatButton;
     SoundManager m_sound_manager;
     #endregion
@@ -175,13 +174,11 @@ public class GameControlScriptACT : MonoBehaviour
     //----------------------------------------------------------------------------------------------------
     // StartTherapy
     //----------------------------------------------------------------------------------------------------
-    public void StartTherapyACT()
+    public IEnumerator StartTherapyACT()
     {
-        CleanPreviousTrial();
-
-        goPhoneModeIcon.SetActive(false);
-
+        //CleanPreviousTrial();
         LoadCurrentBlock();
+        yield return new WaitForSeconds(2);
         PrepareNextTrialLIRO();
     }
     //----------------------------------------------------------------------------------------------------
@@ -190,7 +187,7 @@ public class GameControlScriptACT : MonoBehaviour
     void RestartGameLIRO()
     {
         CleanPreviousTrial();
-        StartTherapyACT();
+        StartCoroutine(StartTherapyACT());
     }
 
     private void LoadCurrentBlock()
@@ -236,10 +233,10 @@ public class GameControlScriptACT : MonoBehaviour
         m_challengeResponse.m_number = m_curChallengeIdx + 1;
         RandomizeFoils(m_currACTChallenge);
 
-        ShowAllStimuli(false);
+        //ShowAllStimuli(false);
 
         // show stimuli's images and play target audio
-        Invoke("ShowNextTrialLIRO", 2.0f);
+        ShowNextTrialLIRO();
         //Invoke("ShowNextTrial", 2.0f);
     }
     public void ShowNextTrialLIRO()
@@ -290,7 +287,7 @@ public class GameControlScriptACT : MonoBehaviour
     private void CleanPreviousTrial()
     {
         // stop background noise
-        m_sound_manager.Stop(ChannelType.BackgroundNoise);
+        //m_sound_manager.Stop(ChannelType.BackgroundNoise);
 
         //if (m_audioBackgroundNoise.isPlaying)
         //	m_audioBackgroundNoise.Stop();
@@ -380,9 +377,9 @@ public class GameControlScriptACT : MonoBehaviour
         // set all stimuli to invisible
         ShowAllStimuli(false);
         PlaySound("Sounds/Challenge/PicturesDisappear");
-        yield return new WaitForSeconds(0.5f);
         // continue next trial/challenge
         SaveCurrentChallenge();
+        yield return new WaitForSeconds(2.0f);
         PrepareNextTrialLIRO();
     }
 
@@ -396,9 +393,9 @@ public class GameControlScriptACT : MonoBehaviour
 
         ShowAllStimuli(false);
         PlaySound("Sounds/Challenge/PicturesDisappear");
-        yield return new WaitForSeconds(0.5f);
         // continue next trial/challenge
         SaveCurrentChallenge();
+        yield return new WaitForSeconds(2.0f);
         PrepareNextTrialLIRO();
 
     }
@@ -459,12 +456,16 @@ public class GameControlScriptACT : MonoBehaviour
     }
     void EndTherapySessionACT()
     {
-        m_sound_manager.Stop(ChannelType.BackgroundNoise);
+        //m_sound_manager.Stop(ChannelType.BackgroundNoise);
         StartCoroutine(FinishTherapyBlock());
     }
 
     void ShowAllStimuli(bool bShow)
     {
+        List<long> availableFoils = new List<long>();
+
+        availableFoils = m_currACTChallenge.Foils.Where(x => x != 0).ToList();
+
         for (var i = 0; i < m_currACTChallenge.Foils.Count; ++i)
         {
             m_arrStimulusGO[i].stimulusScript.ShowStimulus(bShow);
@@ -500,20 +501,6 @@ public class GameControlScriptACT : MonoBehaviour
     // OnClickButtonLevel - to be called from MenuLevelsScript
     //----------------------------------------------------------------------------------------------------
     
-    void DoCheatCodes()
-    {
-        Debug.Log(" *** DoCheatCodes ***");
-        m_intCheatCtr++;
-        // if m_intCheatCtr >= 5, terminate the game
-        if (m_intCheatCtr >= 5)
-        {
-            m_intCheatCtr = 0;
-            StateChallenge.Instance.AddCoin(5);
-            StateChallenge.Instance.CorrectAnswer();
-            //EndTherapySessionACT();
-        }
-    }
-
     #region Audio API
 
     void PlaySound(string resource)
@@ -541,27 +528,6 @@ public class GameControlScriptACT : MonoBehaviour
 
         AudioClip clip = null;
 
-        if (goPhoneModeIcon.activeSelf)
-        {
-            // play phone voice
-            m_sound_manager.SetChannelLevel(ChannelType.PhoneVoice, 0.0f);
-            AudioClipInfo aci;
-            aci.isLoop = false;
-            aci.delayAtStart = fDelay;
-            aci.useDefaultDBLevel = true;
-            aci.clipTag = string.Empty;
-            try
-            {
-                clip = Resources.Load(strAudio) as AudioClip;
-                m_sound_manager.Play(clip, ChannelType.PhoneVoice, aci);
-            }
-            catch (Exception ex)
-            {
-                Debug.Log("GameControlScriptACT: unable to load audio");
-            }
-
-        }
-        else
         {
             // play normal voice
             //This is an example of use
@@ -650,7 +616,6 @@ public class GameControlScriptACT : MonoBehaviour
         repeatButton = GameObject.FindGameObjectWithTag("RepeatButton") as GameObject;
 
         m_sound_manager = GameObject.Find("Main Camera").GetComponent<SoundManager>() as SoundManager;
-        goPhoneModeIcon = GameObject.FindGameObjectWithTag("PhoneModeIcon") as GameObject;
 
         // retrieve audio sources
         m_arrAudioSource = GetComponents<AudioSource>();
@@ -731,7 +696,7 @@ public class GameControlScriptACT : MonoBehaviour
 
         Dictionary<string, string> block_start = new Dictionary<string, string>();
 
-        int patient = DatabaseXML.Instance.PatientId;
+        int patient = UploadManager.Instance.PatientId;
         DateTime now = System.DateTime.Now;
 
         block_start.Add("patient", patient.ToString());
@@ -749,9 +714,6 @@ public class GameControlScriptACT : MonoBehaviour
         }
             
 #endif
-        //if (Input.GetKey("up"))
-        //    DoCheatCodes();
-
         if (enable_input)
         {
             repeatButton.SetActive(m_bShowBtnRepeat);

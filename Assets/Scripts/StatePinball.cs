@@ -199,7 +199,7 @@ public class StatePinball : State
 
         lvlManager.currDifficulty = this.currDifficulty;
 
-        DatabaseXML.Instance.SetTimerState(DatabaseXML.TimerType.Pinball, true);
+        //UploadManager.Instance.SetTimerState(TimerType.Pinball, true);
 
     }
 	
@@ -222,17 +222,17 @@ public class StatePinball : State
 
         Debug.Log("StatePinball: ExitLevelPinball() adding game_time_insert query");
 
-        Dictionary<string, string> time_insert = new Dictionary<string, string>();
-        time_insert.Add("patientid", DatabaseXML.Instance.PatientId.ToString());
-        time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-        time_insert.Add("totaltime", dGameTimeMin.ToString());
+        //Dictionary<string, string> time_insert = new Dictionary<string, string>();
+        //time_insert.Add("patientid", UploadManager.Instance.PatientId.ToString());
+        //time_insert.Add("date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        //time_insert.Add("totaltime", dGameTimeMin.ToString());
 
     }
 
 	public void InitLevelPinball()
 	{
         //Debug.Log("");
-        DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
+        UploadManager.Instance.ResetTimer(TimerType.Idle);
         m_PinballMono.UIHolder.SetActive(true);
         //m_PinballMono.FireButton.SetActive(true);
         m_PinballMono.Frame.SetActive(true);

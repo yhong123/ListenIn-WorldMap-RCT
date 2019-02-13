@@ -21,6 +21,9 @@ public class StateInitializePinball : State
 	// Use this for initialization
 	public override void Init()
 	{
+        UploadManager.Instance.ResetTimer(TimerType.Pinball);
+        UploadManager.Instance.SetTimerState(TimerType.Pinball, true);
+
         Debug.Log("StateInitializePinball: Init() Starting pinball transition");
         m_challenge_go = GameObject.FindGameObjectWithTag("Challenge");
         m_pinball_go = GameObject.FindGameObjectWithTag("PinballPrefab");

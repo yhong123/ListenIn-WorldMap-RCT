@@ -38,7 +38,7 @@ public class Therapy_UI : MonoBehaviour {
 
         //Calculating percentage
         float perc = (float)(profile.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock - 1) / (float)profile.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks * 100.0f;
-        if (perc > 100.0f || perc == -Mathf.Infinity)
+        if (perc > 100.0f || perc == -Mathf.Infinity || profile.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock > profile.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks)
             perc = 0.0f;
 
         percentageText.text = string.Format(PercentageFormat, perc.ToString("f2"));

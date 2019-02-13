@@ -88,9 +88,6 @@ public class GameControlScriptStandard : MonoBehaviour
 
     stMenuLevel m_menuLevels = new stMenuLevel();
 
-    // cheat code - tap the side panel 5 times and the therapy session will be terminated and move to pinball session
-    int m_intCheatCtr = 0;
-
     #region CurrentBlock Variables
     private string m_loadedFile = String.Empty; //AndreaLIRO: added as an escape for the therapy if there is a mismatch between current recorded stats
     CoreItemReader cir = new CoreItemReader();
@@ -106,6 +103,10 @@ public class GameControlScriptStandard : MonoBehaviour
     DateTime m_dtCurTrialStartTime;
     DateTime m_dtStartingBlock;
     DateTime m_dtEndingBlock;
+    int m_totalPlayedMinutes = 0;
+
+    private bool m_cheatOn = false;
+
     LayerMask currMask;
 
     private CoreItemWriter m_coreWriter = new CoreItemWriter();
@@ -183,7 +184,6 @@ public class GameControlScriptStandard : MonoBehaviour
         CleanPreviousTrial();
 
         trialsCounter = numberOfTrials;
-        m_intCheatCtr = 0;
 
         StartCoroutine(StartTherapy());
     }
@@ -461,6 +461,7 @@ public class GameControlScriptStandard : MonoBehaviour
         yield return new WaitForSeconds(3);
         ai.Play("JumpIn");
         SaveCurrentBlockResponse();
+        StartCoroutine(TherapyLIROManager.Instance.AddTherapyMinutes(m_totalPlayedMinutes));
         yield return StartCoroutine(UploadManager.Instance.EndOfTherapyClean(0, m_loadedFile));
         yield return new WaitForSeconds(0.2f);
         GameController.Instance.ChangeState(GameController.States.StateInitializePinball);
@@ -469,9 +470,7 @@ public class GameControlScriptStandard : MonoBehaviour
     {
         m_sound_manager.Stop(ChannelType.BackgroundNoise);
 
-        StateChallenge.Instance.SetTotalTherapyTime(CUserTherapy.Instance.getTotalTherapyTimeMin());
-        StateChallenge.Instance.SetTodayTherapyTime(CUserTherapy.Instance.getTodayTherapyTimeMin());
-        DatabaseXML.Instance.ForcedTimerState = true;
+        UploadManager.Instance.ForcedTimerState = true;
         //Andrea: starting to change the animation
         StartCoroutine(FinishTherapyBlock());
     }
@@ -483,6 +482,9 @@ public class GameControlScriptStandard : MonoBehaviour
             m_challengeResponse.incorrectPicturesIDs.Add("0");
         }
         m_responseList.Add(m_challengeResponse);
+
+        //AndreaLIRO: adding times
+        m_totalPlayedMinutes += Mathf.CeilToInt((float)(m_challengeResponse.m_dateTimeEnd - m_challengeResponse.m_dateTimeStart).TotalMinutes);
 
     }
     private void SaveCurrentBlockResponse()
@@ -569,20 +571,20 @@ public class GameControlScriptStandard : MonoBehaviour
     }
 
     //----------------------------------------------------------------------------------------------------
-    // OnClickButtonLevel - to be called from MenuLevelsScript
+    // 
     //----------------------------------------------------------------------------------------------------
-    void DoCheatCodes()
+    IEnumerator DoCheatCodes()
     {
-        Debug.Log(" *** DoCheatCodes ***");
-        m_intCheatCtr++;
-        // if m_intCheatCtr >= 5, terminate the game
-        if (m_intCheatCtr >= 5)
-        {
-            m_intCheatCtr = 0;
-            StateChallenge.Instance.AddCoin(5);
-            StateChallenge.Instance.CorrectAnswer();
-            EndTherapySessionLIRO();
-        }
+        SaveCurrentBlockResponse();
+        TherapyLIROManager.Instance.AddTherapyMinutes(m_totalPlayedMinutes);
+        yield return StartCoroutine(UploadManager.Instance.EndOfTherapyClean(0, m_loadedFile));
+        //AndreaLIRO: when cheating for starting the timer. Do not remove
+        UploadManager.Instance.SetTimerState(TimerType.Pinball, true);
+        StateChallenge.Instance.AddCoin(10);
+        StateChallenge.Instance.cheatActivated = true;
+        StatePinball.Instance.initialize = false;
+        GameController.Instance.ChangeState(GameController.States.StatePinball);
+        StatePinball.Instance.InitLevelPinball();        
     }
 
     #region Audio API
@@ -786,8 +788,15 @@ public class GameControlScriptStandard : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKey("up"))
-            DoCheatCodes();
+
+#if UNITY_EDITOR
+        //AndreaLIRO: putting this on the GameControlScriptStandard to control normal process of closing the challenge therapy
+        if (Input.GetKeyDown(KeyCode.Space) && !m_cheatOn)
+        {
+            m_cheatOn = true;
+            StartCoroutine(DoCheatCodes());
+        }
+#endif
 
         if (enable_input)
         {

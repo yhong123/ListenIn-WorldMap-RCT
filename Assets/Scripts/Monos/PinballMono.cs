@@ -194,7 +194,6 @@ public class PinballMono : MonoBehaviour {
     private IEnumerator WaitForPinballEntering()
     {
         yield return new WaitForSeconds(4);
-
     }
 
     public void SetEarnedCoins()
@@ -323,16 +322,6 @@ public class PinballMono : MonoBehaviour {
 			startFading = false;
 			StartCoroutine("FadePlane");
 		}
-		//else if(startAnimationIn)
-		//{
-		//	startAnimationIn = false;
-		//	StartCoroutine("FadePinballIn");
-		//}
-		//else if(startLoadingCannon)
-		//{
-		//	startLoadingCannon = false;
-		//	StartCoroutine("LoadCannon");
-		//}
 		else if(changeState)
 		{
 			changeState = false;

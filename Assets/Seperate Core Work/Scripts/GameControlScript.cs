@@ -208,7 +208,7 @@ public class GameControlScript : MonoBehaviour
 
         Dictionary<string, string> block_start = new Dictionary<string, string>();
 
-        int patient = DatabaseXML.Instance.PatientId;
+        int patient = UploadManager.Instance.PatientId;
         DateTime now = System.DateTime.Now;
 
         block_start.Add("patient", patient.ToString());
@@ -784,7 +784,7 @@ public class GameControlScript : MonoBehaviour
         
         StateChallenge.Instance.SetTotalTherapyTime(CUserTherapy.Instance.getTotalTherapyTimeMin());
         StateChallenge.Instance.SetTodayTherapyTime(CUserTherapy.Instance.getTodayTherapyTimeMin());
-        DatabaseXML.Instance.ForcedTimerState = true;
+        UploadManager.Instance.ForcedTimerState = true;
         //Andrea: starting to change the animation
         StartCoroutine(FinishChallenge());        
     }

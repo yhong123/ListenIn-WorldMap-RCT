@@ -199,7 +199,7 @@ public class GameStateSaver : MonoBehaviour {
 
 	public static string FilePath()
 	{
-        return Application.persistentDataPath + "/user_" + DatabaseXML.Instance.PatientId.ToString() + "_SavedState.xml";
+        return Application.persistentDataPath + "/user_" + TherapyLIROManager.Instance.GetUserProfile.m_userProfile.m_currIDUser.ToString() + "_SavedState.xml";
 	}
 
 }

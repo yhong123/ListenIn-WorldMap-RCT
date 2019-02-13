@@ -179,7 +179,7 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 			if(!isDebugging)
 			{
                 //Andrea: insert here the forced stop timer
-                DatabaseXML.Instance.ForcedTimerState = true;
+                UploadManager.Instance.ForcedTimerState = true;
                 gameOver = true;
 			}
         }

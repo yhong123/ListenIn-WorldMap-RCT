@@ -84,10 +84,11 @@ public class AppControllerSetupScreen : MonoBehaviour
         percentage = 3;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
-        {
-            //AndreaLIRO: check if this part can be removed.
-            DatabaseXML.Instance.InitializeDatabase();
-            DatabaseXML.Instance.OnSwitchedPatient += UpdateFeedbackLog;
+        {            
+            UploadManager.Instance.Initialize();
+            //AndreaLIRO: check if DatabaseXML can be stripped off.
+            //DatabaseXML.Instance.InitializeDatabase();
+            //DatabaseXML.Instance.OnSwitchedPatient += UpdateFeedbackLog;
         }
         catch (System.Exception ex)
         {
@@ -194,7 +195,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         //switchPatient.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(2);
-        DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
+        //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
         MadLevel.LoadLevelByName("MainHUB");
 
     }
@@ -223,17 +224,17 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
     }
 
-    private IEnumerator UploadProfileHistory()
-    {
-        yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
-    }
+    //private IEnumerator UploadProfileHistory()
+    //{
+    //    yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
+    //}
 
-    public void GoToWorldMap()
-    {
-        //Debug.Log("PressedButton");
-        DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
-        MadLevel.LoadLevelByName("MainHUB");
-    }
+    //public void GoToWorldMap()
+    //{
+    //    //Debug.Log("PressedButton");
+    //    //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
+    //    MadLevel.LoadLevelByName("MainHUB");
+    //}
 
     private IEnumerator SendLogs()
     {
@@ -270,7 +271,7 @@ public class AppControllerSetupScreen : MonoBehaviour
                         logsFile = File.ReadAllBytes(singleFile.FullName);
 
                         WWWForm form = new WWWForm();
-                        form.AddField("patient_id", DatabaseXML.Instance.PatientId.ToString());
+                        form.AddField("patient_id", UploadManager.Instance.PatientId.ToString());
                         form.AddField("file_log", "file_log");
                         form.AddBinaryData("file_log", logsFile, singleFile.Name);
 
@@ -320,7 +321,7 @@ public class AppControllerSetupScreen : MonoBehaviour
                 if (topFiles != null)
                 {
                     string fromEmail = "listeninlog@gmail.com";
-                    string subject = "Patient id " + DatabaseXML.Instance.PatientId.ToString();
+                    string subject = "Patient id " + UploadManager.Instance.PatientId.ToString();
 
                     using (MailMessage mailMessage = new MailMessage())
                     {

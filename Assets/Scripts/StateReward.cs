@@ -187,6 +187,6 @@ public class StateReward : State
 		{
 			UnityEngine.Object.Destroy(m_jigsaw_earned);
 		}
-        DatabaseXML.Instance.SetTimerState(DatabaseXML.TimerType.Pinball, false);
+        //UploadManager.Instance.SetTimerState(TimerType.Pinball, false);
     }
 }

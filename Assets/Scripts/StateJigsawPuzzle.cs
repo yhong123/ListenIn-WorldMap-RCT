@@ -123,7 +123,7 @@ public class StateJigsawPuzzle : State
 
             currChapter.Mono.PlayButton.GetComponent<PlayButtonAnimator>().ActivePlay = true;
 
-            m_chapterSelectMono.DemoButton.SetActive(MadLevel.arguments.Equals("Great Canyon"));
+            //m_chapterSelectMono.DemoButton.SetActive(MadLevel.arguments.Equals("Great Canyon"));
 
         }
         else
@@ -152,7 +152,7 @@ public class StateJigsawPuzzle : State
     {
         InitializeChapters();
         //LoadSavedJigsaw();
-        m_patientId = DatabaseXML.Instance.PatientId;
+        m_patientId = UploadManager.Instance.PatientId;
         m_Init = true;
     }
 
@@ -196,7 +196,8 @@ public class StateJigsawPuzzle : State
             }
             //Hiding demo and play button
             currChapter.Mono.PlayButton.SetActive(false);
-            m_chapterSelectMono.DemoButton.SetActive(false);
+            //AndreaLIRO: eliminating demo from here
+            //m_chapterSelectMono.DemoButton.SetActive(false);
         }    
 
     }
@@ -253,7 +254,7 @@ public class StateJigsawPuzzle : State
                 jigsawObject.SetActive(false);
         }
 
-        DatabaseXML.Instance.SetTimerState(DatabaseXML.TimerType.WorldMap, false);
+        //UploadManager.Instance.SetTimerState(TimerType.WorldMap, false);
     }
 
     #region properties
@@ -448,13 +449,13 @@ public class StateJigsawPuzzle : State
         m_chapterSelectMono.EndPuzzleEffect.SetActive(false);
     }
 
-    private IEnumerator BackToSelectScreen()
-    {
-        yield return new WaitForSeconds(15);
-        Debug.Log("Going back to select screen");
-        //AndreaLiro: we go back to the main hub after finishing the old li loop
-        MadLevel.LoadLevelByName("MainHUB");
-    }
+    //private IEnumerator BackToSelectScreen()
+    //{
+    //    yield return new WaitForSeconds(15);
+    //    Debug.Log("Going back to select screen");
+    //    //AndreaLiro: we go back to the main hub after finishing the old li loop
+    //    MadLevel.LoadLevelByName("MainHUB");
+    //}
 
     private void CleanLerpers()
     {
@@ -477,7 +478,7 @@ public class StateJigsawPuzzle : State
 
         Dictionary<string, string> dailyTherapy = new Dictionary<string, string>();
 
-        int patient = DatabaseXML.Instance.PatientId;
+        int patient = UploadManager.Instance.PatientId;
         DateTime now = System.DateTime.Now;
         
         dailyTherapy.Add("patient", patient.ToString());

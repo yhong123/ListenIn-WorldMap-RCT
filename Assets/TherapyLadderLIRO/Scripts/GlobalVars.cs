@@ -3,6 +3,8 @@ using System.IO;
 using System;
 using System.Collections;
 
+public enum TimerType { Idle, WorldMap, Therapy, Pinball }
+
 public static class GlobalVars {
 
     public static int ChallengeLength = 20;

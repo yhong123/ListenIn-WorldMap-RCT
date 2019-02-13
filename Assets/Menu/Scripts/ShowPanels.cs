@@ -79,8 +79,8 @@ public class ShowPanels : MonoBehaviour {
 	public void ShowInitialMenu(bool inChallengeState)
 	{
         Time.timeScale = 0.0f;
-        DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
-        DatabaseXML.Instance.SetIsMenu = true;
+        UploadManager.Instance.ResetTimer(TimerType.Idle);
+        UploadManager.Instance.SetIsMenu = true;
 		gameObject.GetComponent<CanvasGroup>().alpha = 1;
 		challengePanel.GetComponent<CanvasGroup>().alpha = 1;
 		challengePanel.SetActive(true);
@@ -94,8 +94,8 @@ public class ShowPanels : MonoBehaviour {
 
 	public void HideInitialMenu()
 	{
-        DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
-        DatabaseXML.Instance.SetIsMenu = false;
+        UploadManager.Instance.ResetTimer(TimerType.Idle);
+        UploadManager.Instance.SetIsMenu = false;
         Time.timeScale = 1.0f;
 		challengePanel.SetActive(true);
 		menuPanel.SetActive(false);
@@ -104,7 +104,7 @@ public class ShowPanels : MonoBehaviour {
     public void ShowUploadUI()
     {
         //DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
-        DatabaseXML.Instance.SetIsMenu = false;
+        UploadManager.Instance.SetIsMenu = false;
         Time.timeScale = 1.0f;
         challengePanel.SetActive(false);
         menuPanel.SetActive(false);
@@ -124,8 +124,8 @@ public class ShowPanels : MonoBehaviour {
         try
         {
             Time.timeScale = 1.0f;
-            DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
-            DatabaseXML.Instance.SetIsMenu = false;
+            UploadManager.Instance.ResetTimer(TimerType.Idle);
+            UploadManager.Instance.SetIsMenu = false;
             GameObject challenge = GameObject.Find("Challenge(Clone)");
 
             if (challenge != null)
@@ -182,8 +182,8 @@ public class ShowPanels : MonoBehaviour {
         try
         {
             Time.timeScale = 1.0f;
-            DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
-            DatabaseXML.Instance.SetIsMenu = false;
+            UploadManager.Instance.ResetTimer(TimerType.Idle);
+            UploadManager.Instance.SetIsMenu = false;
         }
         catch (Exception ex)
         {
@@ -217,8 +217,8 @@ public class ShowPanels : MonoBehaviour {
         try
         {
             Time.timeScale = 1.0f;
-            DatabaseXML.Instance.ResetTimer(DatabaseXML.TimerType.Idle);
-            DatabaseXML.Instance.SetIsMenu = false;
+            UploadManager.Instance.ResetTimer(TimerType.Idle);
+            UploadManager.Instance.SetIsMenu = false;
             challengePanel.SetActive(false);
             menuPanel.SetActive(false);
             optionsTint.SetActive(false);
