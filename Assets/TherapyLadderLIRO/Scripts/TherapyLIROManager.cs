@@ -72,7 +72,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.LIROStep = (TherapyLadderStep)0;
             m_UserProfileManager.m_userProfile.isFirstInit = true; //This is to make the first initialization 
             m_UserProfileManager.m_userProfile.isTutorialDone = false; //This is used to make sure the initial tutorial has been done
-            m_UserProfileManager.m_userProfile.m_currCycle = 0;
             m_UserProfileManager.m_userProfile.m_currIDUser = 1;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
@@ -369,16 +368,16 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// Called at the end of the section cycle (core and ACT)
     /// </summary>
     /// <returns></returns>
-    public IEnumerator AdvanceCurrentBlockInSection()
+    public IEnumerator AdvanceCurrentBlockInSection(string fileToDelete = "")
     {
         switch (m_UserProfileManager.LIROStep)
         {
             case TherapyLadderStep.CORE:
-                yield return StartCoroutine(CleanCurrentBlock());
+                yield return StartCoroutine(CleanCurrentBlock(fileToDelete));
                 AdvanceBlock();
                 break;
             case TherapyLadderStep.ACT:
-                yield return StartCoroutine(CleanCurrentBlock());
+                yield return StartCoroutine(CleanCurrentBlock(fileToDelete));
                 AdvanceBlock();
                 break;
             default:
@@ -858,7 +857,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
 
     }
-    public IEnumerator CleanCurrentBlock()
+    public IEnumerator CleanCurrentBlock(string fileToDelete = "")
     {
         try
         {
@@ -883,8 +882,15 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 Debug.Log("TLM: Wrong registered block to delete; section is " + m_UserProfileManager.LIROStep.ToString());
             }
 
+            if (fileToDelete != String.Empty)
+            {
+                Debug.LogWarning("TLM: Deleting automatic captured therapy block");
+                File.Delete(fileToDelete);
+            }
+
             File.Delete(fullPathFile);
 
+            
         }
         catch (Exception ex)
         {

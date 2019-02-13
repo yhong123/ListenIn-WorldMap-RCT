@@ -92,9 +92,12 @@ public class GameControlScriptStandard : MonoBehaviour
     int m_intCheatCtr = 0;
 
     #region CurrentBlock Variables
+    private string m_loadedFile = String.Empty; //AndreaLIRO: added as an escape for the therapy if there is a mismatch between current recorded stats
     CoreItemReader cir = new CoreItemReader();
     List<Challenge> m_currListOfChallenges = new List<Challenge>();
     private int m_curChallengeIdx = -1;
+    private int m_currBlockNumberFromManager = -1;
+    private int m_currCycleNumber = -1;
     private Challenge m_currChallenge;
     private string m_currAudio;
     private ChallengeResponse m_challengeResponse;
@@ -189,10 +192,12 @@ public class GameControlScriptStandard : MonoBehaviour
         bool error = false;
         try
         {
+            m_currBlockNumberFromManager = TherapyLIROManager.Instance.GetCurrentBlockNumber();
+            m_currCycleNumber = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
             m_currListOfChallenges = cir.ParseCsv(Path.Combine
                     (GlobalVars.GetPathToLIROCurrentLadderSection(),
             String.Format(
-                            "THERAPY_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), TherapyLIROManager.Instance.GetCurrentBlockNumber(), TherapyLIROManager.Instance.GetCurrentTherapyCycle()
+                            "THERAPY_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), m_currBlockNumberFromManager, TherapyLIROManager.Instance.GetCurrentTherapyCycle()
                         )
                     )
                 ).ToList();
@@ -208,10 +213,11 @@ public class GameControlScriptStandard : MonoBehaviour
             try
             {
                 error = false;
-                string currfile = Directory.GetFiles(GlobalVars.GetPathToLIROCurrentLadderSection()).Where(x => Path.GetFileName(x).Contains("CORE")).OrderBy(x => Path.GetFileName(x)).FirstOrDefault();
-                if (currfile != null)
+                m_loadedFile = Directory.GetFiles(GlobalVars.GetPathToLIROCurrentLadderSection()).Where(x => Path.GetFileName(x).Contains("CORE")).OrderBy(x => Path.GetFileName(x)).FirstOrDefault();
+                if (m_loadedFile != null || m_loadedFile != String.Empty)
                 {
-                    m_currListOfChallenges = cir.ParseCsv(currfile).ToList();
+                    Debug.LogWarning("Loading therapy file from the folder, but found a mismatch between ");
+                    m_currListOfChallenges = cir.ParseCsv(m_loadedFile).ToList();
                 }
                 else
                 {
@@ -249,6 +255,8 @@ public class GameControlScriptStandard : MonoBehaviour
         // preparing response
         m_challengeResponse = new ChallengeResponse();
         m_challengeResponse.m_challengeID = m_currChallenge.ChallengeID;
+        m_challengeResponse.m_block = m_currBlockNumberFromManager;
+        m_challengeResponse.m_cycle = m_currCycleNumber;
         RandomizeFoils(m_currChallenge);
         m_currAudio = GetRandomizedAudio(m_currChallenge);
         trialsCounter--;
@@ -305,6 +313,7 @@ public class GameControlScriptStandard : MonoBehaviour
         ResetStimulThrowPos();
         // to keep track reaction time
         m_dtCurTrialStartTime = DateTime.Now;
+        m_challengeResponse.m_dateTimeStart = DateTime.Now;
 
     }
     private void CleanPreviousTrial()
@@ -370,7 +379,7 @@ public class GameControlScriptStandard : MonoBehaviour
         if (m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID == m_currChallenge.CorrectImageID)
         {
 
-            m_challengeResponse.m_reactionTime = (float)Math.Round((DateTime.Now - m_dtCurTrialStartTime).TotalSeconds, 4);
+            m_challengeResponse.m_dateTimeEnd = DateTime.Now;
 
             int coinsEarned = 1;
             if (m_challengeResponse.m_accuracy == 0)
@@ -425,7 +434,7 @@ public class GameControlScriptStandard : MonoBehaviour
     IEnumerator WaitIncorrect()
     {
         m_bIsCoroutineIncorrectRunning = true;
-
+        m_challengeResponse.incorrectPicturesIDs.Add(m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID.ToString());
         // Wait for 2 sec
         float animationDuration = ai.AnimationLength("Sad");
         PlaySound("Sounds/Challenge/PicturesDisappear");
@@ -434,7 +443,6 @@ public class GameControlScriptStandard : MonoBehaviour
 
         // set selected stimuli to invisible
         m_bShowBtnRepeat = true;
-
 
         // Wait for 3 sec, if "repeat" is not pressed, the word is automatically played following hte pause
         yield return new WaitForSeconds(0.5f);
@@ -453,7 +461,7 @@ public class GameControlScriptStandard : MonoBehaviour
         yield return new WaitForSeconds(3);
         ai.Play("JumpIn");
         SaveCurrentBlockResponse();
-        yield return StartCoroutine(UploadManager.Instance.EndOfTherapyClean());
+        yield return StartCoroutine(UploadManager.Instance.EndOfTherapyClean(0, m_loadedFile));
         yield return new WaitForSeconds(0.2f);
         GameController.Instance.ChangeState(GameController.States.StateInitializePinball);
     }
@@ -469,7 +477,13 @@ public class GameControlScriptStandard : MonoBehaviour
     }
     private void SaveCurrentChallenge()
     {
+        //adding zeros to pictures
+        while (m_challengeResponse.incorrectPicturesIDs.Count < 5)
+        {
+            m_challengeResponse.incorrectPicturesIDs.Add("0");
+        }
         m_responseList.Add(m_challengeResponse);
+
     }
     private void SaveCurrentBlockResponse()
     {
@@ -477,6 +491,7 @@ public class GameControlScriptStandard : MonoBehaviour
         {
             string filemane = String.Format("THERAPY_{0}_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
             string pathFolder = GlobalVars.GetPathToLIROOutput();
+
             m_coreWriter.WriteCsv(pathFolder, filemane, m_responseList);
 
             //string content = string.Empty;

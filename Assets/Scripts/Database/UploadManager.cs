@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 using MadLevelManager;
 
@@ -23,16 +24,16 @@ public class UploadManager : Singleton<UploadManager> {
         }
     }
     #region THERAPY
-    public IEnumerator EndOfTherapyClean(int correctAnswer = 0)
+    public IEnumerator EndOfTherapyClean(int correctAnswer = 0, string fileToDelete = "")
     {
         backToLevelSelection = false;
-        yield return StartCoroutine(CleanUp(correctAnswer));
+        yield return StartCoroutine(CleanUp(correctAnswer, fileToDelete));
     }
-    private IEnumerator CleanUp(int correctAnswer)
+    private IEnumerator CleanUp(int correctAnswer, string fileToDelete = "")
     {
         startUploadTime = Time.time;
         //AndreaLIRO: adding the LIRO therapy update
-        yield return StartCoroutine(TherapyLIROManager.Instance.AdvanceCurrentBlockInSection());
+        yield return StartCoroutine(TherapyLIROManager.Instance.AdvanceCurrentBlockInSection(fileToDelete));
         Debug.Log("UploadManager: " + startUploadTime + " saving the LIRO therapy");
     }
     #endregion THERAPY

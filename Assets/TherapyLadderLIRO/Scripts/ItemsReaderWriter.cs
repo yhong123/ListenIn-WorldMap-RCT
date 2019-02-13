@@ -207,13 +207,23 @@ public class CoreItemWriter : ICsvWriter<ChallengeResponse>
             listString.Add(String.Join(",", new string[] {
 
                   item.m_challengeID.ToString(),
-                  item.m_timeStamp.ToString("dd/MM/yyyy"),
-                  item.m_timeStamp.ToString("HH:mm:ss"),
                   item.m_cycle.ToString(),
                   item.m_block.ToString(),
+
+                  item.m_dateTimeStart.ToString("dd/MM/yyyy"),
+                  item.m_dateTimeStart.ToString("HH:mm:ss"),
+                  item.m_dateTimeEnd.ToString("dd/MM/yyyy"),
+                  item.m_dateTimeEnd.ToString("HH:mm:ss"),
+                  
                   item.m_accuracy.ToString(),
-                  item.m_reactionTime.ToString(),
-                  item.m_repeat.ToString()
+                  item.m_repeat.ToString(),
+
+                  item.incorrectPicturesIDs[0],
+                  item.incorrectPicturesIDs[1],
+                  item.incorrectPicturesIDs[2],
+                  item.incorrectPicturesIDs[3],
+                  item.incorrectPicturesIDs[4]
+
     }));
 
 

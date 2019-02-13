@@ -25,7 +25,7 @@ public class Therapy_UI : MonoBehaviour {
 
     public void UpdateUserStats(UserProfileManager profile)
     {
-        cycleText.text = string.Format(CycleFormat, profile.m_userProfile.m_currCycle);
+        cycleText.text = string.Format(CycleFormat, profile.m_userProfile.m_cycleNumber);
 
         int hours, mins;
         hours = profile.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes / 60;
