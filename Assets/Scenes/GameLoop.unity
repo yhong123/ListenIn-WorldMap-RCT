@@ -3062,6 +3062,10 @@ Prefab:
       propertyPath: m_Text
       value: Back to the main hub...
       objectReference: {fileID: 0}
+    - target: {fileID: 101118, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e42af69f3bad8744e92b8611e7b2e447, type: 2}
   m_IsPrefabParent: 0

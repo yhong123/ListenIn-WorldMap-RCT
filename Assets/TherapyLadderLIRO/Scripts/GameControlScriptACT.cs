@@ -92,12 +92,6 @@ public class GameControlScriptACT : MonoBehaviour
     }
     stMenuLevel m_menuLevels = new stMenuLevel();
 
-    // is currently in admin mode?
-    bool m_bIsAdminMode = false;
-
-    // tap the admin btn three times and the it will turn into admin mode
-    int m_intClickButtonAdminCtr = 0;
-
     // cheat code - tap the side panel 5 times and the therapy session will be terminated and move to pinball session
     int m_intCheatCtr = 0;
 
@@ -184,7 +178,7 @@ public class GameControlScriptACT : MonoBehaviour
     //----------------------------------------------------------------------------------------------------
     // RestartGame: restart game
     //----------------------------------------------------------------------------------------------------
-    void RestartGameLIRO()
+    void StartACT()
     {
         CleanPreviousTrial();
         StartCoroutine(StartTherapyACT());
@@ -434,7 +428,7 @@ public class GameControlScriptACT : MonoBehaviour
                       item.m_pictureID.ToString()
                     }), @"\n");
             }
-            Debug.Log(content);
+            //Debug.Log(content);
 
             WWWForm form = new WWWForm();
             form.AddField("id_user", NetworkManager.UserId);
@@ -675,34 +669,10 @@ public class GameControlScriptACT : MonoBehaviour
         m_particleSystIncorrect.GetComponent<Renderer>().sortingLayerID = GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingLayerID;
         m_particleSystIncorrect.GetComponent<Renderer>().sortingOrder = GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        // load from xml file all stimuli's images, audio and target index for all trials/challenges 
-        //LoadTrials ();
-
-        //AndreaLIRO: getting rid of this bit in the ACT
-        //GETTING THE Animator script
-        //GameObject lepr = GameObject.FindGameObjectWithTag("Leprechaun");
-        //if (lepr != null)
-        //{
-        //    ai = lepr.GetComponent<AnimationInterface>();
-        //    Vector3 throwPosition = lepr.transform.FindChild("ThrowPos").position;
-        //    SetStimuliThrowPos(throwPosition);
-        //}
-
         // restart game
-        RestartGameLIRO();
+        StartACT();
 
         GameObject.FindGameObjectWithTag("PauseMenu").GetComponent<CircleCollider2D>().enabled = true;
-        Camera.main.GetComponent<SoundManager>().SetChannelLevel(ChannelType.LevelEffects, 5.0f);
-
-        Dictionary<string, string> block_start = new Dictionary<string, string>();
-
-        int patient = UploadManager.Instance.PatientId;
-        DateTime now = System.DateTime.Now;
-
-        block_start.Add("patient", patient.ToString());
-        block_start.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-
-        //DatabaseXML.Instance.WriteDatabaseXML(block_start, DatabaseXML.Instance.therapy_block_insert);
     }
     void Update()
     {
@@ -716,7 +686,7 @@ public class GameControlScriptACT : MonoBehaviour
 #endif
         if (enable_input)
         {
-            repeatButton.SetActive(m_bShowBtnRepeat);
+            repeatButton.SetActive(m_bShowBtnRepeat && isRepeatOn);
             // when user touches / clicks on one of the stimuli
             // touch screen
             if (Input.touchCount > 0)

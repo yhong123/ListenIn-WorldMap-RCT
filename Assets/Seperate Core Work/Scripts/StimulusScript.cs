@@ -14,6 +14,7 @@ public class StimulusScript : MonoBehaviour {
 
 	public Vector3 throwPosition;
 	public Vector3 endPosition;
+    private float scaleSize;
 	float throwingSpeed = 1.5f;
 
     private bool initialize = false;
@@ -23,8 +24,9 @@ public class StimulusScript : MonoBehaviour {
 	void Start () 
 	{
 		m_goImage = transform.FindChild("PictureFrame").gameObject;
-		//m_goRectangle = transform.FindChild("Rectangle").gameObject;
-		m_anim = GetComponent<Animator> ();
+        scaleSize = m_goImage.transform.localScale.x;
+        //m_goRectangle = transform.FindChild("Rectangle").gameObject;
+        m_anim = GetComponent<Animator> ();
 
 		currState = StimulusState.Idle;
 	}
@@ -99,7 +101,7 @@ public class StimulusScript : MonoBehaviour {
             m_goImage.GetComponent<SpriteRenderer>().sprite = currSprite;
 
             // scale sprite to smaller size
-            Vector3 scale = new Vector3(2, 2, 1);   // new Vector3(0.65f, 0.65f, 1);
+            Vector3 scale = new Vector3(scaleSize, scaleSize, 1);   // new Vector3(0.65f, 0.65f, 1);
             m_goImage.transform.localScale = scale;
         }
         catch (System.Exception ex)
