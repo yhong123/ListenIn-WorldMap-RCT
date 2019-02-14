@@ -36,6 +36,9 @@ public class NetworkManager : Singleton<MonoBehaviour>
     public static string ServerURLFileConsistencyCheck = string.Concat(serverURL, "php/file_consistency_check.php");
     private int remoteAttempts = 0;
     private bool isInit = false;
+    public static bool IsInitialInternetCheckDone = false;
+
+    [SerializeField] private FreezeGameplayController freezeGameplayController;
 
     #region INTERNET CHECK
     [SerializeField] private float timeToCheckInternet = 3f;
@@ -138,9 +141,10 @@ public class NetworkManager : Singleton<MonoBehaviour>
             }
             else
             {
-                Debug.LogError("<color=red><b>NO INTERNET</b></color>");
+                //Debug.LogError("<color=red><b>NO INTERNET</b></color>");
             }
-            timeToCheckInternetCurrent += Time.deltaTime;
+            freezeGameplayController.FreezeGameplay(HasInternet);
+            timeToCheckInternetCurrent += Time.unscaledDeltaTime;
         }
     }
 
@@ -303,7 +307,7 @@ public class NetworkManager : Singleton<MonoBehaviour>
 
     private void TestInternetConnection()
     {
-        Debug.Log("<b>testing internet connection</b>");
+        Debug.Log("<b>Testing Internet Connection</b>");
         IsDoneTestingInternet = false;
         switch (Application.internetReachability)
         {
@@ -320,6 +324,7 @@ public class NetworkManager : Singleton<MonoBehaviour>
                 HasInternet = false;
                 break;
         }
+        IsInitialInternetCheckDone = true;
     }
 
     public static string GenerateFormContent(params object[] dataContent)
