@@ -428,7 +428,7 @@ public class GameControlScriptACT : MonoBehaviour
                       item.m_pictureID.ToString()
                     }), @"\n");
             }
-            //Debug.Log(content);
+            Debug.Log(content);
 
             WWWForm form = new WWWForm();
             form.AddField("id_user", NetworkManager.UserId);

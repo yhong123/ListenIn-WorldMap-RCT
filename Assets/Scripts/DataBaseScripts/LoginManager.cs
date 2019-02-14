@@ -52,6 +52,8 @@ public class LoginManager : MonoBehaviour
         if(PlayerPrefManager.GetUsername() != string.Empty && NetworkManager.HasInternet)
         {
             //START GAME, USER ALREADY EXIST
+            //AndreaLIRO: assign user id from player prefs
+            NetworkManager.UserId = "1";
             MadLevel.LoadLevelByName("Setup Screen");
         }
     }
@@ -99,7 +101,8 @@ public class LoginManager : MonoBehaviour
                 if (www.text == "true")
                 {
                     Debug.Log("LOG IN SUCCESFUL");
-                    NetworkManager.UserId = emailInputLogin.text;
+                    //AndreaLIRO: need to add a number
+                    NetworkManager.UserId = "1";
                     PlayerPrefManager.SetPlayerPref(NetworkManager.UserId);
                     MadLevel.LoadLevelByName("Setup Screen");
                 }

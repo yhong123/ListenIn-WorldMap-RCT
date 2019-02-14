@@ -257,7 +257,7 @@ public class NetworkManager : Singleton<MonoBehaviour>
 
     public void AppendDataCSV(CSVDataObject csvDataObject)
     {
-        string fileLocation = string.Concat(FilePathCSV, FileNameSeparator, 1, FileNameSeparator, csvDataObject.FileName);
+        string fileLocation = string.Concat(FilePathCSV, FileNameSeparator, UserId, FileNameSeparator, csvDataObject.FileName);
         Debug.Log(fileLocation);
         if (File.Exists(fileLocation))
         {
@@ -270,7 +270,7 @@ public class NetworkManager : Singleton<MonoBehaviour>
         else
         {
             //IF NOT HERE CREATE
-            string pathLocation = string.Concat(FilePathCSV, FileNameSeparator, 1);
+            string pathLocation = string.Concat(FilePathCSV, FileNameSeparator, UserId);
             Directory.CreateDirectory(pathLocation);
             using (StreamWriter TherapyFile = File.CreateText(fileLocation))
             {
@@ -283,7 +283,7 @@ public class NetworkManager : Singleton<MonoBehaviour>
     public static void AppendServerDataCSV(string content)
     {
         string[] contentArray = content.Split('#');
-        string fileLocation = string.Concat(FilePathCSV, FileNameSeparator, 1, FileNameSeparator, contentArray[0]);
+        string fileLocation = string.Concat(FilePathCSV, FileNameSeparator, UserId, FileNameSeparator, contentArray[0]);
         Debug.Log("<b>APPENDING LOCAL DATA TO:</b> " + contentArray[0]);
 
         if (File.Exists(fileLocation))
@@ -307,7 +307,8 @@ public class NetworkManager : Singleton<MonoBehaviour>
 
     private void TestInternetConnection()
     {
-        Debug.Log("<b>Testing Internet Connection</b>");
+        //AndreaLIRO: 
+        //Debug.Log("<b>Testing Internet Connection</b>");
         IsDoneTestingInternet = false;
         switch (Application.internetReachability)
         {

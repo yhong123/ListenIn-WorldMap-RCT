@@ -61,6 +61,7 @@ public class UploadManager : Singleton<UploadManager> {
     public string GetPatient()
     {
         //AndreaLIRO: need to get this fro the network manager
+        return NetworkManager.UserId;
         return "1";
     }
 

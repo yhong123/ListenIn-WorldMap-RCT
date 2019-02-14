@@ -159,7 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   freezeGameplayController: {fileID: 11488686}
   timeToCheckInternet: 1
-  isLocal: 0
+  isLocal: 1
   ListOfFileNames: []
 --- !u!114 &11476252
 MonoBehaviour:
