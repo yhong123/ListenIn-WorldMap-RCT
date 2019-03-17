@@ -85,12 +85,12 @@ public class GameControlScriptACT : MonoBehaviour
     bool m_bShowBtnRepeat = false;
 
     // structure represent menu levels
-    struct stMenuLevel
-    {
-        public GameObject goMenuLevels;  // menu levels gameobject
-        public MenuLevelsScript scriptMenuLevels;   // reference to stimulus's script
-    }
-    stMenuLevel m_menuLevels = new stMenuLevel();
+    //struct stMenuLevel
+    //{
+    //    public GameObject goMenuLevels;  // menu levels gameobject
+    //    public MenuLevelsScript scriptMenuLevels;   // reference to stimulus's script
+    //}
+    //stMenuLevel m_menuLevels = new stMenuLevel();
 
     // cheat code - tap the side panel 5 times and the therapy session will be terminated and move to pinball session
     int m_intCheatCtr = 0;

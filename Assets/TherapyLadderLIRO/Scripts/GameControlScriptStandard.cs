@@ -80,13 +80,14 @@ public class GameControlScriptStandard : MonoBehaviour
     bool m_bShowBtnRepeat = false;
 
     // structure represent menu levels
-    struct stMenuLevel
-    {
-        public GameObject goMenuLevels;  // menu levels gameobject
-        public MenuLevelsScript scriptMenuLevels;   // reference to stimulus's script
-    }
+    //AndreaLIRO: to check for further delete
+    //struct stMenuLevel
+    //{
+    //    public GameObject goMenuLevels;  // menu levels gameobject
+    //    public MenuLevelsScript scriptMenuLevels;   // reference to stimulus's script
+    //}
 
-    stMenuLevel m_menuLevels = new stMenuLevel();
+    //stMenuLevel m_menuLevels = new stMenuLevel();
 
     #region CurrentBlock Variables
     private string m_loadedFile = String.Empty; //AndreaLIRO: added as an escape for the therapy if there is a mismatch between current recorded stats
