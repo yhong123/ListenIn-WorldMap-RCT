@@ -37,7 +37,7 @@ public class StateJigsawPuzzle : State
     private float secToWait = 1.5f;
     private ParticleSystem endSystemEffect;
 
-    private int m_patientId = -1;
+    private string m_patientId = "-1";
 
     public Dictionary<string, Chapter> Chapters;
 
@@ -152,7 +152,7 @@ public class StateJigsawPuzzle : State
     {
         InitializeChapters();
         //LoadSavedJigsaw();
-        m_patientId = UploadManager.Instance.PatientId;
+        m_patientId = NetworkManager.UserId;
         m_Init = true;
     }
 
@@ -475,26 +475,6 @@ public class StateJigsawPuzzle : State
         //{
         //    return;
         //}
-
-        Dictionary<string, string> dailyTherapy = new Dictionary<string, string>();
-
-        int patient = UploadManager.Instance.PatientId;
-        DateTime now = System.DateTime.Now;
-        
-        dailyTherapy.Add("patient", patient.ToString());
-        dailyTherapy.Add("level_start", currLevelPinball.ToString());        
-        dailyTherapy.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-
-        //AndreaLIRO: removing writing to database xml
-        //DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy,DatabaseXML.Instance.therapy_daily_insert);
-
-        dailyTherapy.Clear();
-
-        dailyTherapy.Add("patient", patient.ToString());
-        dailyTherapy.Add("date", now.ToString("yyyy-MM-dd HH:mm:ss"));
-
-        //AndreaLIRO: removing writing to database xml
-        //DatabaseXML.Instance.WriteDatabaseXML(dailyTherapy, DatabaseXML.Instance.therapy_session_insert);
 
         StatePinball.Instance.ID = currLevelPinball;//m_Chapters[ID].LevelNumber;
         GameController.Instance.ChangeState(GameController.States.StateChallenge);

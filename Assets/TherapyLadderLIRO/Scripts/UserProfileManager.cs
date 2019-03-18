@@ -59,7 +59,7 @@ public class UserProfileManager
     public void SaveToDisk()
     {
         string currUser = string.Format(GlobalVars.LiroProfileTemplate, m_userProfile.m_currIDUser);
-        string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(), currUser);
+        string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(NetworkManager.UserId), currUser);
         File.WriteAllText(currFullPath, JsonConvert.SerializeObject(m_userProfile));
     }
     public void LoadFromDisk(string fullpath)

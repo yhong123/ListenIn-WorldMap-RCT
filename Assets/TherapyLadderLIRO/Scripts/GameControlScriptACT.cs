@@ -189,7 +189,7 @@ public class GameControlScriptACT : MonoBehaviour
         try
         {
             m_currListOfChallenges = air.ParseCsv(Path.Combine
-                    (GlobalVars.GetPathToLIROCurrentLadderSection(),
+                    (GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId),
             String.Format(
                             "{0}_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), TherapyLIROManager.Instance.GetCurrentBlockNumber(), TherapyLIROManager.Instance.GetCurrentTherapyCycle()
                         )
@@ -407,7 +407,7 @@ public class GameControlScriptACT : MonoBehaviour
         try
         {
             string filemane = String.Format("ACT_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
-            string pathFolder = GlobalVars.GetPathToLIROOutput();
+            string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
             m_actWriter.WriteCsv(pathFolder, filemane, m_responseList);
 
             string content = string.Empty;

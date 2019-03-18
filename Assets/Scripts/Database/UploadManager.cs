@@ -8,7 +8,7 @@ using System.IO;
 public class UploadManager : Singleton<UploadManager> {
 
 
-    public int PatientId = 1;
+    private string PatientId = "1";
 
     public float currentBatteryLevel = 0.0f;
     private bool backToLevelSelection = false;
@@ -46,15 +46,27 @@ public class UploadManager : Singleton<UploadManager> {
         {
             //if it doesn't, create it
             Debug.Log("UploadManager: first initialization - creating directories"); // 2016-12-06
-            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO"); // 2018-23-04
-            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Baskets"); // 2018-20-06
-            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Section"); //2018-23-04
-            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/Output"); // 2018-20-06
-            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO/ACT"); // 2019-03-01
+            Directory.CreateDirectory(Application.persistentDataPath + @"/ListenIn/LIRO");
         }
 
-        PatientId = int.Parse(GetPatient());
+        OnPatientChange();
 
+    }
+
+    /// <summary>
+    /// Every time this function is called it checks if it has the folder structure for the current patient ID, if not it will create directories.
+    /// </summary>
+    public void OnPatientChange()
+    {
+        PatientId = GetPatient();
+        string patientPath = Application.persistentDataPath + @"/ListenIn/LIRO";
+        patientPath = Path.Combine(patientPath, PatientId);
+        if (!Directory.Exists(patientPath))
+        {
+            Directory.CreateDirectory(patientPath + @"/Output");
+            Directory.CreateDirectory(patientPath + @"/Section");
+            Directory.CreateDirectory(patientPath + @"/ACT");
+        }
     }
 
     //return lenght

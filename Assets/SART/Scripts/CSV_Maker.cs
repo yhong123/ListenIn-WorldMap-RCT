@@ -13,7 +13,7 @@ public class CSV_Maker : MonoBehaviour {
 	[HideInInspector]
     public string path { get
         {
-            string folder = GlobalVars.GetPathToLIROOutput();
+            string folder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
             string filename = String.Format("SART_{0}.csv", TherapyLIROManager.Instance.GetCurrentTherapyCycle());
             return Path.Combine(folder, filename);
         }

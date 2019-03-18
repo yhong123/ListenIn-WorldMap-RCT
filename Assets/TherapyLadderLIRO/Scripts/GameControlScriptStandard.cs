@@ -196,7 +196,7 @@ public class GameControlScriptStandard : MonoBehaviour
             m_currBlockNumberFromManager = TherapyLIROManager.Instance.GetCurrentBlockNumber();
             m_currCycleNumber = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
             m_currListOfChallenges = cir.ParseCsv(Path.Combine
-                    (GlobalVars.GetPathToLIROCurrentLadderSection(),
+                    (GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId),
             String.Format(
                             "THERAPY_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), m_currBlockNumberFromManager, TherapyLIROManager.Instance.GetCurrentTherapyCycle()
                         )
@@ -214,7 +214,7 @@ public class GameControlScriptStandard : MonoBehaviour
             try
             {
                 error = false;
-                m_loadedFile = Directory.GetFiles(GlobalVars.GetPathToLIROCurrentLadderSection()).Where(x => Path.GetFileName(x).Contains("CORE")).OrderBy(x => Path.GetFileName(x)).FirstOrDefault();
+                m_loadedFile = Directory.GetFiles(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId)).Where(x => Path.GetFileName(x).Contains("CORE")).OrderBy(x => Path.GetFileName(x)).FirstOrDefault();
                 if (m_loadedFile != null || m_loadedFile != String.Empty)
                 {
                     Debug.LogWarning("Loading therapy file from the folder, but found a mismatch between ");
@@ -493,7 +493,7 @@ public class GameControlScriptStandard : MonoBehaviour
         try
         {
             string filemane = String.Format("THERAPY_{0}_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
-            string pathFolder = GlobalVars.GetPathToLIROOutput();
+            string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
 
             m_coreWriter.WriteCsv(pathFolder, filemane, m_responseList);
 

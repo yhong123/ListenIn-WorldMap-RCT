@@ -236,6 +236,10 @@ public class AppControllerSetupScreen : MonoBehaviour
     //    MadLevel.LoadLevelByName("MainHUB");
     //}
 
+    /// <summary>
+    /// AndreaLIRO: must be changed to be consistent with new database
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator SendLogs()
     {
         if (!lockEmailSending)
@@ -271,7 +275,7 @@ public class AppControllerSetupScreen : MonoBehaviour
                         logsFile = File.ReadAllBytes(singleFile.FullName);
 
                         WWWForm form = new WWWForm();
-                        form.AddField("patient_id", UploadManager.Instance.PatientId.ToString());
+                        form.AddField("patient_id", NetworkManager.UserId);
                         form.AddField("file_log", "file_log");
                         form.AddBinaryData("file_log", logsFile, singleFile.Name);
 
@@ -321,7 +325,7 @@ public class AppControllerSetupScreen : MonoBehaviour
                 if (topFiles != null)
                 {
                     string fromEmail = "listeninlog@gmail.com";
-                    string subject = "Patient id " + UploadManager.Instance.PatientId.ToString();
+                    string subject = "Patient id " + NetworkManager.UserId;
 
                     using (MailMessage mailMessage = new MailMessage())
                     {

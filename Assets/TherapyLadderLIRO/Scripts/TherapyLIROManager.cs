@@ -62,8 +62,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// </summary>
     public IEnumerator LoadCurrentUserProfile()
     {
-        string currUser = string.Format(GlobalVars.LiroProfileTemplate, UploadManager.Instance.PatientId);
-        string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(), currUser);
+        string currUser = string.Format(GlobalVars.LiroProfileTemplate, NetworkManager.UserId);
+        string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(NetworkManager.UserId), currUser);
 
         FileInfo info = new FileInfo(currFullPath);
 
@@ -172,7 +172,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             }
 
             //Saving to the local folder
-            File.WriteAllLines(GlobalVars.GetPathToLIROACTGenerated(), personalized_List.ToArray());
+            File.WriteAllLines(GlobalVars.GetPathToLIROACTGenerated(NetworkManager.UserId), personalized_List.ToArray());
 
             //AndreaLIRO: add the file to be sent online
             m_UserProfileManager.m_userProfile.isFirstInit = false;
@@ -603,7 +603,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             if (currCount == GlobalVars.ActChallengeLength)
             {
                 currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
-                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
+                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currBlockLines.ToArray());
                 currBlockLines.Clear();
                 currCount = 0;
                 total_blocks++;
@@ -620,7 +620,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if (currBlockLines.Count != 0)
         {
             currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
-            File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currBlockLines.ToArray());
+            File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currBlockLines.ToArray());
             currBlockLines.Clear();
         }
 
@@ -672,7 +672,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         //Loading ACT GEN file
         ACTItemReader air = new ACTItemReader();
-        List<ACTChallenge> listTrainedItems = air.ParseCsv(GlobalVars.GetPathToLIROACTGenerated(), false).ToList();
+        List<ACTChallenge> listTrainedItems = air.ParseCsv(GlobalVars.GetPathToLIROACTGenerated(NetworkManager.UserId   ), false).ToList();
 
         string currBasketsPath;
         List<Challenge> curr_basket_list_read = new List<Challenge>();
@@ -833,7 +833,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 if (challengeCounter == GlobalVars.ChallengeLength)
                 {
                     currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber); ; 
-                    File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currLines.ToArray());
+                    File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currLines.ToArray());
                     currLines.Clear();
                     total_blocks++;
                     challengeCounter = 0;
@@ -843,7 +843,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             if (currLines.Count != 0)
             {
                 currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber); ;
-                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), currFilename), currLines.ToArray());
+                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currLines.ToArray());
                 currLines.Clear();
                 total_blocks++;
             }
@@ -879,11 +879,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             {
                 case TherapyLadderStep.CORE:
                     currBlock = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock;
-                    fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
+                    fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
                     break;
                 case TherapyLadderStep.ACT:
                     currBlock = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
-                    fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(), String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
+                    fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
                 break;
                 default:
                     break;
