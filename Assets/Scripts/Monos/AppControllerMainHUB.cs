@@ -86,7 +86,7 @@ public class AppControllerMainHUB : MonoBehaviour {
             case TherapyLadderStep.BASKET:
                 m_currentSectionText.text = "Therapy";
                 m_Therapy_ui.gameObject.SetActive(true);
-                m_Therapy_ui.UpdateUserStats(currProfile);
+                m_Therapy_ui.PrepareBasketScreen(currProfile);
                 m_continueButtonTherapy.enabled = true;
                 currLevelToLoad = "Basket Selection";
                 m_continueButtonTherapy.interactable = true;
@@ -136,7 +136,7 @@ public class AppControllerMainHUB : MonoBehaviour {
                 case TherapyLadderStep.BASKET:
                     m_currentSectionText.text = "Therapy";
                     m_Therapy_ui.gameObject.SetActive(true);
-                    m_Therapy_ui.UpdateUserStats(currProfile);
+                    m_Therapy_ui.PrepareBasketScreen(currProfile);
                     currLevelToLoad = "Basket Selection";
                     m_continueButtonTherapy.interactable = true;
                     break;
