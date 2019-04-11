@@ -581,7 +581,7 @@ public class GameControlScriptStandard : MonoBehaviour
         yield return StartCoroutine(UploadManager.Instance.EndOfTherapyClean(0, m_loadedFile));
         //AndreaLIRO: when cheating for starting the timer. Do not remove
         UploadManager.Instance.SetTimerState(TimerType.Pinball, true);
-        StateChallenge.Instance.AddCoin(10);
+        StateChallenge.Instance.AddCoin(40);
         StateChallenge.Instance.cheatActivated = true;
         StatePinball.Instance.initialize = false;
         GameController.Instance.ChangeState(GameController.States.StatePinball);
