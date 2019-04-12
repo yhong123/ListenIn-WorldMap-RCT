@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using MadLevelManager;
 
 public enum QuestionType { InputText, Slider};
 
@@ -12,7 +13,6 @@ public class QuestionStructure
     public string text;
     public Text uiText;
 }
-
 public class QuestionaireManager : MonoBehaviour
 {
 
@@ -40,6 +40,11 @@ public class QuestionaireManager : MonoBehaviour
     [SerializeField]
     private Slider slider;
 
+    [SerializeField]
+    private Button endButton;
+
+    private bool endSaving = false;
+
     private int questionsTotal;
     private int questionsCounter = 0;
 
@@ -59,38 +64,51 @@ public class QuestionaireManager : MonoBehaviour
 
     public void PrepareNextQuestion()
     {
-        if (questionsCounter == questionsTotal)
+        if (questionsCounter >= questionsTotal && !endSaving)
         {
             //End of questions.
             Debug.Log("Reached end of the questionaire");
-            SaveToFile();
+            endSaving = true;
+            thankyouGO.SetActive(true);
+            StartCoroutine(FinishAndSave());
             return;
         }
-
-        QuestionStructure currQuest = listQS[questionsCounter];
-
-        currQuest.uiText.text = currQuest.text;
-        currResponse = "";
-
-        switch (currQuest.qt)
+        else
         {
-            case QuestionType.InputText:
-                inputTextGO.SetActive(true);
-                break;
-            case QuestionType.Slider:
-                sliderGO.SetActive(true);
-                break;
-            default:
-                break;
-        }
+            QuestionStructure currQuest = listQS[questionsCounter];
 
+            currQuest.uiText.text = currQuest.text;
+            currResponse = "";
+
+            switch (currQuest.qt)
+            {
+                case QuestionType.InputText:
+                    inputTextGO.SetActive(true);
+                    break;
+                case QuestionType.Slider:
+                    sliderGO.SetActive(true);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private IEnumerator FinishAndSave()
+    {
+        yield return new WaitForEndOfFrame();
+        SaveToFile();
+        yield return StartCoroutine(TherapyLIROManager.Instance.SaveCurrentQuestionaire(true));
+        endButton.interactable = true;
     }
 
     private void ClearCurrentQuestion()
     {
-        slider.value = 5;
+        slider.value = 4;
         inputText.text = "";
-        
+        inputTextGO.SetActive(false);
+        sliderGO.SetActive(true);
+
     }
 
     private void SaveResponse()
@@ -125,6 +143,7 @@ public class QuestionaireManager : MonoBehaviour
     {
         currResponse = slider.value.ToString();
         SaveResponse();
+        ClearCurrentQuestion();
         PrepareNextQuestion();
     }
 
@@ -132,7 +151,13 @@ public class QuestionaireManager : MonoBehaviour
     {
         currResponse = inputText.text;
         SaveResponse();
+        ClearCurrentQuestion();
         PrepareNextQuestion();
+    }
+
+    public void onEndQuestionaireClicked()
+    {
+        MadLevel.LoadLevelByName("MainHUB");
     }
 
 }

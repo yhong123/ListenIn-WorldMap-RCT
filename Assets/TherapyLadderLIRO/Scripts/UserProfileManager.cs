@@ -26,6 +26,11 @@ public class SARTLiroUserProfile
     public bool testCompleted;
 }
 
+public class QuestionnaireUserProfile
+{
+    public bool questionaireCompleted;
+}
+
 public class UserProfile
 {
     #region User Properties
@@ -38,6 +43,7 @@ public class UserProfile
     public TherapyLiroUserProfile m_TherapyLiroUserProfile = new TherapyLiroUserProfile();
     public ACTLiroUserProfile m_ACTLiroUserProfile = new ACTLiroUserProfile();
     public SARTLiroUserProfile m_SartLiroUserProfile = new SARTLiroUserProfile();
+    public QuestionnaireUserProfile m_QuestionaireUserProfile = new QuestionnaireUserProfile();
     #endregion
 }
 

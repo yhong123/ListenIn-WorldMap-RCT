@@ -9,10 +9,12 @@ public class AppControllerMainHUB : MonoBehaviour {
     public Button m_continueButtonACT;
     public Button m_continueButtonTherapy;
     public Button[] m_continueButtonSart;
+    public Button m_questionaireStart;
     public Text m_currentSectionText;
     public ACT_UI m_ACT_ui;
     public Therapy_UI m_Therapy_ui;
     public SART_UI m_SART_ui;
+    public Questionaire_UI m_Questionaire_ui;
 
     private TherapyLadderStep currLadderStep;
     private string currLevelToLoad = "";
@@ -76,6 +78,13 @@ public class AppControllerMainHUB : MonoBehaviour {
         MadLevel.LoadLevelByName(currLevelToLoad);
 
     }
+
+    public void questionaireButtonClicked()
+    {
+        currLevelToLoad = "Questionaire";
+        MadLevel.LoadLevelByName(currLevelToLoad);
+        //AndreaLIRO: need to implement
+    }
     #endregion
 
     #region DelegateMethods
@@ -120,6 +129,11 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_continueButtonSart[1].interactable = true;
                 //currLevelToLoad = "SART";
                 break;
+            case TherapyLadderStep.QUESTIONAIRE:
+                m_currentSectionText.text = "Questionnaire";
+                m_Questionaire_ui.gameObject.SetActive(true);
+                m_questionaireStart.interactable = true;
+                break;
             default:
                 break;
         }
@@ -163,6 +177,11 @@ public class AppControllerMainHUB : MonoBehaviour {
                     m_SART_ui.gameObject.SetActive(true);
                     m_continueButtonSart[0].interactable = false;
                     m_continueButtonSart[1].interactable = true;
+                    break;
+                case TherapyLadderStep.QUESTIONAIRE:
+                    m_currentSectionText.text = "Questionnaire";
+                    m_Questionaire_ui.gameObject.SetActive(true);
+                    m_questionaireStart.interactable = true;
                     break;
                 default:
                     break;
@@ -212,6 +231,12 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_continueButtonSart[1].interactable = false;
                 StartCoroutine(EndSART(currProfile));
                 break;
+            case TherapyLadderStep.QUESTIONAIRE:
+                m_currentSectionText.text = "Questionaire";
+                m_Questionaire_ui.gameObject.SetActive(true);
+                m_questionaireStart.interactable = false;
+                StartCoroutine(EndQuestionaire(currProfile));
+                break;
             default:
                 break;
         }
@@ -240,6 +265,11 @@ public class AppControllerMainHUB : MonoBehaviour {
         yield return new WaitForSeconds(2);
         TherapyLIROManager.Instance.GoToNextSection();
     }
+    private IEnumerator EndQuestionaire(UserProfileManager currProfile)
+    {
+        yield return new WaitForSeconds(2);
+        TherapyLIROManager.Instance.GoToNextSection();
+    }
     private IEnumerator CloseActScore()
     {
         yield return StartCoroutine(m_ACT_ui.HideBoard());
@@ -253,6 +283,7 @@ public class AppControllerMainHUB : MonoBehaviour {
         m_ACT_ui.gameObject.SetActive(false);
         m_Therapy_ui.gameObject.SetActive(false);
         m_SART_ui.gameObject.SetActive(false);
+        m_Questionaire_ui.gameObject.SetActive(false);
     }
 
 }

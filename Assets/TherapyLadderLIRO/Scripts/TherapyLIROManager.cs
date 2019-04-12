@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { BASKET = 0, CORE = 1, ACT = 2, SART_PRACTICE = 3, SART_TEST = 4};
+public enum TherapyLadderStep { BASKET = 0, CORE = 1, ACT = 2, SART_PRACTICE = 3, SART_TEST = 4, QUESTIONAIRE = 5};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -83,6 +83,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 8;
             m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = false;
+            m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = false;
 
             //Wait for the data to be saved
             yield return StartCoroutine(SaveCurrentUserProfile());
@@ -258,6 +259,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.SART_TEST:
                 advance = CheckSARTTESTEscapeSection();
                 break;
+            case TherapyLadderStep.QUESTIONAIRE:
+                advance = CheckQuestionaireEscapeSection();
+                break;
             default:
                 break;
         }
@@ -316,6 +320,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     {
         return m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted;
     }
+    /// <summary>
+    /// Escaping condition for the questionaire
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckQuestionaireEscapeSection()
+    {
+        return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted;
+    }
 
     /// <summary>
     /// Tis function is called from the UI to notify the manager to change the section
@@ -339,6 +351,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.SART_PRACTICE:
             case TherapyLadderStep.SART_TEST:            
                 PrepareSARTScreen();
+                break;
+            case TherapyLadderStep.QUESTIONAIRE:
+                PrepareQuestionaireScreen();
                 break;
             default:
                 break;
@@ -409,6 +424,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = isCompleted;
         yield return SaveCurrentUserProfile();
     }
+    public IEnumerator SaveCurrentQuestionaire(bool isCompleted)
+    {
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = isCompleted;
+        yield return SaveCurrentUserProfile();
+    }
+
     public IEnumerator SaveSARTFinished()
     {
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = true;
@@ -457,6 +478,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if (m_OnUpdatingCurrentSection != null)
             m_OnUpdatingCurrentSection(m_UserProfileManager, 100);
     }
+    internal void PrepareQuestionaireScreen()
+    {
+        if (m_OnUpdatingCurrentSection != null)
+            m_OnUpdatingCurrentSection(m_UserProfileManager, 100);
+    }
     //*******************************************************
 
     //SWITCHING
@@ -494,6 +520,20 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 break;
             case TherapyLadderStep.SART_TEST:
                 LoadingSARTSCreen();
+                break;
+            case TherapyLadderStep.QUESTIONAIRE:
+                //For questionaire only, if cycle == 0 skip
+                if (m_UserProfileManager.m_userProfile.m_cycleNumber == 0)
+                {
+                    GoToNextSection();
+                }
+                else
+                {
+                    m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = false;
+                    yield return StartCoroutine(SaveCurrentUserProfile());
+                    LoadingQuestionaireScreen();
+                }
+
                 break;
             default:
                 Debug.LogError("This has not been found...");
@@ -648,6 +688,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// Just loading the sart screen calling the event in the main HUB
     /// </summary>
     internal void LoadingSARTSCreen()
+    {
+        if (m_OnSwitchingSection != null)
+            m_OnSwitchingSection(m_UserProfileManager, 0);
+    }
+    internal void LoadingQuestionaireScreen()
     {
         if (m_OnSwitchingSection != null)
             m_OnSwitchingSection(m_UserProfileManager, 0);
