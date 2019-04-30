@@ -1484,6 +1484,7 @@ GameObject:
   - 4: {fileID: 856175775}
   - 114: {fileID: 856175776}
   - 114: {fileID: 856175777}
+  - 114: {fileID: 856175778}
   m_Layer: 0
   m_Name: LoginManager
   m_TagString: Untagged
@@ -1520,7 +1521,7 @@ MonoBehaviour:
   - {fileID: 944162534}
   - {fileID: 557210141}
   passwordInputLogin: {fileID: 387381417}
-  emailInputLogin: {fileID: 1011979307}
+  idInputLogin: {fileID: 1011979307}
   loginMessageAnimator: {fileID: 421799969}
   loginMessageText: {fileID: 421799970}
   emailInputRegister: {fileID: 1056792103}
@@ -1541,6 +1542,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkManagerInstance: {fileID: 157052, guid: 97077796677a2b34d88df9d056902773,
     type: 2}
+--- !u!114 &856175778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 856175774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdc6bd5ba585e5a419e394e32ace9fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &873750591
 GameObject:
   m_ObjectHideFlags: 0
@@ -1941,7 +1953,7 @@ GameObject:
   - 114: {fileID: 1011979308}
   - 114: {fileID: 1011979307}
   m_Layer: 5
-  m_Name: EmailInput
+  m_Name: IdInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2912,7 +2924,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -147.4, y: -19.8}
+  m_AnchoredPosition: {x: -84.2, y: -19.8}
   m_SizeDelta: {x: 12.58, y: 71.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2000117918
@@ -2941,13 +2953,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 56
-    m_Alignment: 0
+    m_Alignment: 2
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Email
+  m_Text: ID
 --- !u!222 &2000117919
 CanvasRenderer:
   m_ObjectHideFlags: 0
