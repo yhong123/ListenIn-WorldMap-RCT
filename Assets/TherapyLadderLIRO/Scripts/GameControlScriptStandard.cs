@@ -104,7 +104,7 @@ public class GameControlScriptStandard : MonoBehaviour
     DateTime m_dtCurTrialStartTime;
     DateTime m_dtStartingBlock;
     DateTime m_dtEndingBlock;
-    int m_totalPlayedMinutes = 0;
+    double m_totalPlayedMinutes = 0;
 
     private bool m_cheatOn = false;
 
@@ -174,7 +174,7 @@ public class GameControlScriptStandard : MonoBehaviour
     {
         LoadCurrentBlock();
         yield return new WaitForSeconds(2.0f);
-        m_dtStartingBlock = DateTime.Now;
+        m_dtStartingBlock = DateTime.UtcNow;
         PrepareNextTrialLIRO();        
     }
     //----------------------------------------------------------------------------------------------------
@@ -380,7 +380,7 @@ public class GameControlScriptStandard : MonoBehaviour
         if (m_arrStimulusGO[m_intSelectedStimulusIdx].stimulusScript.m_registeredID == m_currChallenge.CorrectImageID)
         {
 
-            m_challengeResponse.m_dateTimeEnd = DateTime.Now;
+            m_challengeResponse.m_dateTimeEnd = DateTime.UtcNow;
 
             int coinsEarned = 1;
             if (m_challengeResponse.m_accuracy == 0)
@@ -459,10 +459,12 @@ public class GameControlScriptStandard : MonoBehaviour
     }
     private IEnumerator FinishTherapyBlock()
     {
+        m_dtEndingBlock = DateTime.UtcNow;
+        m_totalPlayedMinutes = Mathf.CeilToInt((float)(m_dtEndingBlock - m_dtStartingBlock).TotalMinutes);
         yield return new WaitForSeconds(3);
         ai.Play("JumpIn");
         SaveCurrentBlockResponse();
-        StartCoroutine(TherapyLIROManager.Instance.AddTherapyMinutes(m_totalPlayedMinutes));
+        StartCoroutine(TherapyLIROManager.Instance.AddTherapyMinutes(Mathf.CeilToInt((float)m_totalPlayedMinutes)));
         yield return StartCoroutine(UploadManager.Instance.EndOfTherapyClean(0, m_loadedFile));
         yield return new WaitForSeconds(0.2f);
         GameController.Instance.ChangeState(GameController.States.StateInitializePinball);
@@ -485,8 +487,7 @@ public class GameControlScriptStandard : MonoBehaviour
         m_responseList.Add(m_challengeResponse);
 
         //AndreaLIRO: adding times
-        m_totalPlayedMinutes += Mathf.CeilToInt((float)(m_challengeResponse.m_dateTimeEnd - m_challengeResponse.m_dateTimeStart).TotalMinutes);
-
+        m_totalPlayedMinutes += (m_challengeResponse.m_dateTimeEnd - m_challengeResponse.m_dateTimeStart).TotalMinutes;
     }
     private void SaveCurrentBlockResponse()
     {
@@ -577,9 +578,10 @@ public class GameControlScriptStandard : MonoBehaviour
     IEnumerator DoCheatCodes()
     {
         SaveCurrentBlockResponse();
-        TherapyLIROManager.Instance.AddTherapyMinutes(m_totalPlayedMinutes);
+        //TherapyLIROManager.Instance.AddTherapyMinutes(m_totalPlayedMinutes);
         yield return StartCoroutine(UploadManager.Instance.EndOfTherapyClean(0, m_loadedFile));
         //AndreaLIRO: when cheating for starting the timer. Do not remove
+        UploadManager.Instance.ResetTimer(TimerType.Pinball);
         UploadManager.Instance.SetTimerState(TimerType.Pinball, true);
         StateChallenge.Instance.AddCoin(40);
         StateChallenge.Instance.cheatActivated = true;
