@@ -40,6 +40,7 @@ public class LoginManager : MonoBehaviour
 
     private void Init()
     {
+        PlayerPrefs.DeleteAll();
         if(!PlayerPrefManager.IsLogged())
         {
             PlayerPrefManager.SetPlayerPref(string.Empty);
