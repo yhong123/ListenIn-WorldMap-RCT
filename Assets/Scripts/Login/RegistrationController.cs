@@ -35,6 +35,32 @@ public class RegistrationController : MonoBehaviour
 
     public GameObject RegistrationObject;
 
+    [SerializeField] private Dropdown dayOfBirth;
+    [SerializeField] private Dropdown monthOfBirth;
+    [SerializeField] private Dropdown yearOfBirth;
+
+    [SerializeField] private Dropdown monthOfOnset;
+    [SerializeField] private Dropdown yearOfOnset;
+
+    //REGISTRATION VALUES
+    [HideInInspector] public string RegistrationGenre;
+    [HideInInspector] public string RegistrationDateOfBirth;
+    [HideInInspector] public string RegistrationCause;
+    [HideInInspector] public string RegistrationDateOfOnset;
+    //REGISTRATION VALUES
+
+    public void GenreSelect(string genre)
+    {
+        RegistrationGenre = genre;
+        NextRegistrationStep();
+    }
+
+    public void CauseSelect(string cause)
+    {
+        RegistrationCause = cause;
+        NextRegistrationStep();
+    }
+
     public void NextRegistrationStep()
     {
         CurrentRegistrationStep++;
@@ -65,6 +91,8 @@ public class RegistrationController : MonoBehaviour
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
                 break;
             case RegistrationStep.Cause:
+                //register DOB
+                RegistrationDateOfBirth = string.Concat(dayOfBirth.options[dayOfBirth.value].text, "/", monthOfBirth.options[monthOfBirth.value].text, "/", yearOfBirth.options[yearOfBirth.value].text);
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.DateOfBirth).Single().RegistrationObject.SetActive(false);
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
                 break;
@@ -73,6 +101,8 @@ public class RegistrationController : MonoBehaviour
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
                 break;
             case RegistrationStep.Registration:
+                //register date of onset
+                RegistrationDateOfOnset = string.Concat(monthOfOnset.options[monthOfOnset.value].text, "/", yearOfOnset.options[yearOfOnset.value].text);
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.DateOfOnset).Single().RegistrationObject.SetActive(false);
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
                 break;

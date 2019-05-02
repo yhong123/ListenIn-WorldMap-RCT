@@ -20,6 +20,7 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private InputField reenterPasswordInputRegister;
     [SerializeField] private GameObject logInForm;
     [SerializeField] private GameObject registerForm;
+    [SerializeField] private RegistrationController registrationController;
     private bool isInit = false;
 
     private void Update()
@@ -70,6 +71,7 @@ public class LoginManager : MonoBehaviour
         ClearInputs();
         logInForm.SetActive(true);
         registerForm.SetActive(false);
+        registrationController.BackToLogin();
     }
 
     public void LoginButton()
@@ -143,6 +145,10 @@ public class LoginManager : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("email", StringCipher.Encrypt(emailInputRegister.text, encryptionKey));
         form.AddField("password", StringCipher.Encrypt(passwordInputRegister.text, encryptionKey));
+        form.AddField("genre", registrationController.RegistrationGenre);
+        form.AddField("date_of_birth", registrationController.RegistrationDateOfBirth);
+        form.AddField("cause", registrationController.RegistrationCause);
+        form.AddField("date_of_onset", registrationController.RegistrationDateOfOnset);
 
         using (WWW www = new WWW(registernURL, form))
         {
