@@ -1,17 +1,17 @@
 <?php
 include 'conn.php'; 
 
-$email = $_POST["email"];
-$password = $_POST["password"];
+$id = $_POST["id"];
 
 //ASK FOR THE SITES
-$preparedStatement = $dbConnection->prepare('SELECT * FROM user WHERE email = :email and password = :password');
+$preparedStatement = $dbConnection->prepare('SELECT * FROM user WHERE id = :id');
 
-$preparedStatement->execute(array('email' => $email, 'password' => $password));
+$preparedStatement->execute(array('id' => $id));
 
 if($preparedStatement->rowCount() > 0)
 {
-	echo "true";
+	$row = $preparedStatement -> fetch();
+	echo $row['password'];
 }
 else
 {
