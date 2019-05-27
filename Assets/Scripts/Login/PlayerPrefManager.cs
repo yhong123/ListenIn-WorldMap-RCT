@@ -4,27 +4,35 @@ using MadLevelManager;
 
 public class PlayerPrefManager : MonoBehaviour
 {
-    private const string usernamePlayerPref = "username";
-    
+    private const string idUserPlayerPref = "IdUser";
+    private const string emailPlayerPref = "Email";
+
     public static bool IsLogged()
     {
-        return PlayerPrefs.HasKey(usernamePlayerPref);
+        return PlayerPrefs.HasKey(idUserPlayerPref);
     }
 
-    public static string GetUsername()
+    public static string GetIdUser()
     {
-        return PlayerPrefs.GetString(usernamePlayerPref);
+        return PlayerPrefs.GetString(idUserPlayerPref);
     }
-    
-    public static void SetPlayerPref(string value)
+
+    public static string GetEmail()
     {
-        PlayerPrefs.SetString(usernamePlayerPref, value);
+        return PlayerPrefs.GetString(emailPlayerPref);
+    }
+
+    public static void SetPlayerPrefData(string email, string idUser)
+    {
+        PlayerPrefs.SetString(idUserPlayerPref, idUser);
+        PlayerPrefs.SetString(emailPlayerPref, email);
         PlayerPrefs.Save();
     }
 
     public static void LogOut()
     {
-        PlayerPrefs.SetString(usernamePlayerPref, string.Empty);
+        PlayerPrefs.SetString(idUserPlayerPref, string.Empty);
+        PlayerPrefs.SetString(emailPlayerPref, string.Empty);
         PlayerPrefs.Save();
         MadLevel.LoadLevelByName("Login");
     }

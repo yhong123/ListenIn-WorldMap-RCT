@@ -307,7 +307,7 @@ public class NetworkManager : MonoBehaviour
 
     private void TestInternetConnection()
     {
-        Debug.Log("<b>Testing Internet Connection</b>");
+        //Debug.Log("<b>Testing Internet Connection</b>");
         IsDoneTestingInternet = false;
         switch (Application.internetReachability)
         {
