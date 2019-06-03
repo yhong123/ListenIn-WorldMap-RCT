@@ -42,7 +42,7 @@ public class LoginManager : MonoBehaviour
 
     private void Init()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
 
         if(!PlayerPrefManager.IsLogged()) //if it doesn't exist, create
         {

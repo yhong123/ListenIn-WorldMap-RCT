@@ -36,4 +36,33 @@ public class PlayerPrefManager : MonoBehaviour
         PlayerPrefs.Save();
         MadLevel.LoadLevelByName("Login");
     }
+
+    public static string GetHiddenEmail()
+    {
+        string email = GetEmail();
+        char[] firstPart = email.Split('@')[0].ToCharArray();
+        string secondPart = email.Split('@')[1];
+        char[] emailPart = secondPart.Split('.')[0].ToCharArray();
+
+        return string.Concat(HideString(firstPart), "@", HideString(emailPart), ".", secondPart.Split('.')[1]);
+    }
+
+    private static string HideString(char[] word)
+    {
+        if (word.Length > 5)
+        {
+            for (int i = 3; i < word.Length; i++)
+            {
+                word[i] = '*';
+            }
+        }
+        else
+        {
+            for (int i = 2; i < word.Length; i++)
+            {
+                word[i] = '*';
+            }
+        }
+        return new string(word);
+    }
 }
