@@ -46,6 +46,7 @@ public class RegistrationController : MonoBehaviour
     [HideInInspector] public string RegistrationGenre;
     [HideInInspector] public string RegistrationDateOfBirth;
     [HideInInspector] public string RegistrationCause;
+    [HideInInspector] public string HasConcent;
     [HideInInspector] public string RegistrationDateOfOnset;
     //REGISTRATION VALUES
 
@@ -58,6 +59,12 @@ public class RegistrationController : MonoBehaviour
     public void CauseSelect(string cause)
     {
         RegistrationCause = cause;
+        NextRegistrationStep();
+    }
+
+    public void ConcentSelect(string concent)
+    {
+        HasConcent = concent;
         NextRegistrationStep();
     }
 
