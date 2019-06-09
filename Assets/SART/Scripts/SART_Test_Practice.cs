@@ -29,6 +29,8 @@ public class SART_Test_Practice : MonoBehaviour {
     private SpriteRenderer goHandRenderer;
     private SpriteRenderer rewardHandRenderer;
 
+    private Button buttonB;
+
     private PracticeStructure m_currStep;
 
     /// <summary>
@@ -62,6 +64,7 @@ public class SART_Test_Practice : MonoBehaviour {
         InitializeNoGOTrials();
 		Reset ();
         m_currStep = PracticeStructure.Practice;
+        buttonB = button.GetComponent<Button>();
         StartCoroutine(PracticeLoop());
 	}
 
@@ -132,10 +135,13 @@ public class SART_Test_Practice : MonoBehaviour {
                     iTween.MoveTo(hand, iTween.Hash("position", new Vector3(2, -3.5f, -15), "time", 1.0f, "looptype", iTween.LoopType.pingPong, "easetype", iTween.EaseType.easeInOutCubic));
                     yield return new WaitForSeconds(4.0f);
                     hand.transform.position = handInitialiPosition;
+                    buttonB.interactable = true;
                     iTween.Init(hand);
                     iTween.MoveTo(hand, iTween.Hash("position", new Vector3(1, -3.5f, -15), "time", 2.0f, "looptype", iTween.LoopType.none, "easetype", iTween.EaseType.linear));
                     yield return new WaitForSeconds(2.0f);
                     Debug.Log("SART - Pressing the button");
+                    
+                    yield return new WaitForEndOfFrame();
                     button.GetComponent<Button>().onClick.Invoke();
                     break;
                 case ButtonPromptType.Prompt1:
@@ -180,6 +186,7 @@ public class SART_Test_Practice : MonoBehaviour {
         {
             if (GOCoroutine != null)
             {
+                ResetButton();
                 isButtonEnabled = false;
                 showPositiveFeedback = true;
                 currCorrectGoTrial++;
@@ -191,12 +198,14 @@ public class SART_Test_Practice : MonoBehaviour {
         {
             if (currNOGOTrialType == TrialType.NoGo)
             {
+                ResetButton();
                 isButtonEnabled = false;
                 showPositiveFeedback = false;
                 canStopCoroutine = true;
             }
             else if (currNOGOTrialType == TrialType.Go)
             {
+                ResetButton();
                 isButtonEnabled = false;
                 showPositiveFeedback = true;
                 
@@ -309,6 +318,7 @@ public class SART_Test_Practice : MonoBehaviour {
         SetCharacter(true);
         yield return new WaitForSeconds(2.0f);
         button.SetActive(true);
+        buttonB.interactable = false;
         isButtonEnabled = false;
         yield return new WaitForEndOfFrame();
         yield return StartCoroutine(ShowHand(true, false, ButtonPromptType.Demo));
@@ -326,15 +336,16 @@ public class SART_Test_Practice : MonoBehaviour {
         SetCharacter(false);
         yield return new WaitForSeconds(2.0f);
         button.SetActive(true);
+        buttonB.interactable = false;
         isButtonEnabled = false;
         yield return new WaitForEndOfFrame();
         yield return StartCoroutine(ShowHand(true, true, ButtonPromptType.Prompt1));
         yield return new WaitForSeconds(3.0f);
         CleanTrial();
+        buttonB.interactable = true;
         yield return new WaitForEndOfFrame();
         yield return StartCoroutine(ShowRewardHandFeedback(true));
     }
-
     /// <summary>
     /// Single Go trial
     /// </summary>
@@ -399,5 +410,10 @@ public class SART_Test_Practice : MonoBehaviour {
         isButtonEnabled = false;
         showPositiveFeedback = true;
         currCorrectNOGoSession++;
+    }
+
+    private void ResetButton()
+    {
+        button.GetComponent<ColorLerper>().StopLerp();
     }
 }
