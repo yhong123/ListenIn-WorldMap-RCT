@@ -19,6 +19,14 @@ public class CSV_Maker : MonoBehaviour {
         }
     }
    
+    [HideInInspector]
+    public string filenameSart
+    {
+        get
+        {
+            return String.Format("SART_{0}.csv", TherapyLIROManager.Instance.GetCurrentTherapyCycle());
+        }
+    }
 	private bool created = false;
 
 	void Awake(){
@@ -80,9 +88,20 @@ public class CSV_Maker : MonoBehaviour {
                 sb.AppendLine(string.Join(delimeter, output[index]));
             }
 
-            StreamWriter outStream = System.IO.File.CreateText(directory);
-            outStream.WriteLine(sb);
-            outStream.Close();
+            using (StreamWriter outStream = System.IO.File.CreateText(directory))
+            {
+                outStream.WriteLine(sb);
+                outStream.Close();
+            }
+
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", filenameSart);
+            form.AddField("content", sb.ToString());
+
+            NetworkManager.SendDataServer(form, NetworkManager.ServerURLDataInput, sb.ToString(), filenameSart);
+
+            
         }
         catch (Exception ex)
         {

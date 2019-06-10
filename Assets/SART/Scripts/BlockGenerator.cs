@@ -8,23 +8,21 @@ public class BlockGenerator : MonoBehaviour {
 	private int maxNoGo = 3;
 	public int maxBlocks;
 
-	[HideInInspector]
 	public List<bool> generatedBlock;
 
 	public List<List<bool>> allBlocks;
 
 	void Awake(){
         allBlocks = new List<List<bool>>();
-        StartCoroutine(PrepareBlocks());
+        PrepareBlocks();
     }
 
-    public IEnumerator PrepareBlocks()
+    public void PrepareBlocks()
     {
         for (int i = 0; i < maxBlocks; i++)
         {
             List<bool> singleBlock = GenerateSingleBlock();
             allBlocks.Add(singleBlock);
-            yield return null;
         }
     }
 
@@ -47,6 +45,8 @@ public class BlockGenerator : MonoBehaviour {
         trials[currPosNogo[0]] = false;
         trials[currPosNogo[1]] = false;
         trials[currPosNogo[2]] = false;
+
+        generatedBlock = trials;
 
         return trials;
 	}

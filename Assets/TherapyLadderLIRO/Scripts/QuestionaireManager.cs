@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using MadLevelManager;
+using System.Text;
 
 public enum QuestionType { InputText, Slider};
 
@@ -124,14 +125,24 @@ public class QuestionaireManager : MonoBehaviour
         string fullPath = Path.Combine(directory, filename);
         try
         {
+            StringBuilder sb = new StringBuilder();
             using (StreamWriter sw = System.IO.File.CreateText(fullPath))
             {
                 foreach (string line in responses)
                 {
                     sw.WriteLine(line);
+                    sb.AppendLine(line);
                 }
                 sw.Close();
             }
+
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", filename);
+            form.AddField("content", sb.ToString());
+
+            NetworkManager.SendDataServer(form, NetworkManager.ServerURLDataInput, sb.ToString(), filename);
+
         }
         catch (System.Exception ex)
         {

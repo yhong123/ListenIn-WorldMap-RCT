@@ -28,7 +28,7 @@ public static class Tuple
 
 public class NetworkManager : MonoBehaviour
 {
-    public static string UserId;
+    public static string UserId = "1";
     //root folder of the project
     private const string serverURL = "http://softvtech.website/ListenIn/";
     public static string ServerURLDataInput = string.Concat(serverURL, "php/data_input_no_header.php");

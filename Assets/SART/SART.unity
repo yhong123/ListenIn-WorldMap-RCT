@@ -156,8 +156,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1857351356}
-  m_RootOrder: 1
+  m_Father: {fileID: 1187345398}
+  m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -1.0999999, y: 47.800003}
@@ -223,8 +223,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1857351356}
-  m_RootOrder: 4
+  m_Father: {fileID: 1187345398}
+  m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.000019757, y: 95}
@@ -424,8 +424,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1857351356}
-  m_RootOrder: 2
+  m_Father: {fileID: 1187345398}
+  m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 19.7, y: 10.3}
@@ -496,7 +496,8 @@ MonoBehaviour:
   noGo: {fileID: 1955709645}
   counter: {fileID: 578571548}
   csvMaker: {fileID: 1727101506}
-  waitTime: 1.5
+  trialWaitTime: 1.5
+  doorCloseTime: 0.5
 --- !u!4 &1026008444
 Transform:
   m_ObjectHideFlags: 0
@@ -535,7 +536,12 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 305511541}
+  - {fileID: 751660317}
+  - {fileID: 1955709646}
+  - {fileID: 578571547}
+  - {fileID: 1943176751}
   m_Father: {fileID: 1857351356}
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -739,8 +745,8 @@ Canvas:
   m_GameObject: {fileID: 1857351352}
   m_Enabled: 1
   serializedVersion: 2
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 600484073}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -760,11 +766,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1187345398}
-  - {fileID: 305511541}
-  - {fileID: 751660317}
-  - {fileID: 1955709646}
-  - {fileID: 578571547}
-  - {fileID: 1943176751}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
@@ -783,7 +784,6 @@ GameObject:
   - 222: {fileID: 1943176755}
   - 114: {fileID: 1943176754}
   - 114: {fileID: 1943176753}
-  - 114: {fileID: 1943176752}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -799,63 +799,16 @@ RectTransform:
   m_GameObject: {fileID: 1943176750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.23790568, y: 0.23790577, z: 0.23790577}
+  m_LocalScale: {x: 0.2379057, y: 0.23790577, z: 0.23790577}
   m_Children:
   - {fileID: 263450932}
-  m_Father: {fileID: 1857351356}
-  m_RootOrder: 5
+  m_Father: {fileID: 1187345398}
+  m_RootOrder: 4
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 31.3}
+  m_AnchoredPosition: {x: 0, y: 56.233345}
   m_SizeDelta: {x: 411, y: 341}
   m_Pivot: {x: 0.5, y: 0}
---- !u!114 &1943176752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1943176750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 263450933}
-          m_MethodName: Press
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  - eventID: 3
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 263450933}
-          m_MethodName: Release
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
 --- !u!114 &1943176753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -895,8 +848,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 1026008443}
+        m_MethodName: OnButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -968,8 +921,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1857351356}
-  m_RootOrder: 3
+  m_Father: {fileID: 1187345398}
+  m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 23.3, y: 10.3}

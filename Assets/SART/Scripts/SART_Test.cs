@@ -15,26 +15,32 @@ public class SART_Test : MonoBehaviour {
     public CSV_Maker csvMaker;
 
 
-    public float waitTime;
+    public float trialWaitTime;
+    public float doorCloseTime = 0.5f;
+    private float remainingWaitTime;
 
 	private BlockGenerator blockGenerator;
 
 	private string blockType = "Test";
-	private bool allTrialsDone;
 	private int currentBlock;
+    private int previousBlock;
 	private int currentTrial;
-	private bool showingTrial = false;
-	private Coroutine lastRoutine;
-	private float lastButtonPressTime = 0;
+    private int previousTrial;
+
+    private bool isButtonEnabled = true;
+    private bool isButtonPressed = false;
+    private int countHits = 0;
 
 	//For writing CSV
 	private float testStartTime;
 	private float presentationTime;
+    private float unityPresentationTime;
+    private bool isGo;
 	private int blockToWrite;
 	private int trialNumberToWrite;
 	private float firstHitTime;
-	private float firstHitReactionTime;
-	private bool trialValueToWrite;
+	private float secondHitTime;
+	private bool isBeingHit;
 
     private bool endOfSart = false;
 
@@ -42,55 +48,19 @@ public class SART_Test : MonoBehaviour {
 		blockGenerator = GameObject.FindObjectOfType<BlockGenerator> ();
 		csvMaker = GameObject.FindObjectOfType<CSV_Maker> ();
 
-		currentBlock = 0;
-		currentTrial = 0;
+		previousBlock = currentBlock = 0;
+		previousTrial = currentTrial = 0;
 	}
 
 	void Start(){
 
-		Reset ();
-		lastRoutine = StartCoroutine(StartGame());
+        remainingWaitTime = 0.0f;
+        Reset ();
+        StartCoroutine(StartGame());
 	}
 
 	void Update(){
-
-        if (endOfSart) return;
-
-		if(showingTrial == true){
-
-			if(HitButton.buttonPressed == true && (Time.time - lastButtonPressTime > 0.3f)){ //When the player presses the button, we record the reaction time and write to CSV
-
-				lastButtonPressTime = Time.time;
-
-				firstHitTime = (Time.time - testStartTime) - presentationTime;
-
-				firstHitReactionTime = firstHitTime + presentationTime;
-
-				csvMaker.Write (blockType, blockToWrite, trialNumberToWrite, trialValueToWrite, presentationTime * 1000, firstHitReactionTime * 1000, 0, true);
-
-				HitButton.buttonPressed = false;
-				StopCoroutine (lastRoutine);
-				StartCoroutine (WaitForNextStimulus ());
-
-				if(allTrialsDone){ //If this was the last trial, exit test, output CSV, and return to Main Menu
-					MainMenuManager.testCompleted = true;
-					csvMaker.CreateCSVFile (csvMaker.path, csvMaker.dataCollected);
-                    endOfSart = true;
-                    StartCoroutine(FinishSART());
-                    MadLevel.LoadLevelByName("MainHUB");
-				}
-
-			} else if (HitButton.buttonPressed == true && (Time.time - lastButtonPressTime < 0.3f)){ //Check for second press within same trial. Deletes last row of CSV and rewrites it with both the first and second reaction time.
-				csvMaker.dataCollected.RemoveAt(csvMaker.dataCollected.Count - 1);
-
-				float secondHitTime = (Time.time - testStartTime) - presentationTime;
-				float secondHitReactionTime = secondHitTime + presentationTime;
-
-				csvMaker.Write (blockType, blockToWrite, trialNumberToWrite, trialValueToWrite, presentationTime * 1000, firstHitReactionTime * 1000, secondHitReactionTime * 1000, true);
-
-				HitButton.buttonPressed = false;
-			}
-		}
+        
 	}
 
 	IEnumerator StartGame(){ //Shows timer and then starts test
@@ -100,51 +70,80 @@ public class SART_Test : MonoBehaviour {
 		}
 
 		counter.gameObject.SetActive (false);
-		testStartTime = Time.time;
 
-		StartCoroutine (WaitForNextStimulus ());
+        testStartTime = Time.time;
+
+        StartCoroutine(TestLoop());
 	}
 
-	IEnumerator ShowTrial(bool trial){//Shows trial based on next item of block. If the player doesn't answer then write a CSV line with 0 as reaction time.
+    private IEnumerator TestLoop()
+    {
+        while (!endOfSart)
+        {
+            isGo = SelectTrial();
 
-		trialValueToWrite = trial;
+            if (isGo)
+                ShowGo();
+            else
+                ShowNoGo();
 
-		presentationTime = Time.time - testStartTime;
+            yield return new WaitForEndOfFrame();
+            presentationTime = Time.time - testStartTime;
+            unityPresentationTime = Time.time;
 
-		showingTrial = true;
+            firstHitTime = 0;
+            secondHitTime = 0;
+            isBeingHit = false;
+            isButtonPressed = false;
 
-		if(trial == true){
-			ShowGo ();
-		} else if (trial == false){
-			ShowNoGo ();
-		}
-			
-		yield return new WaitForSeconds (waitTime);
 
-		csvMaker.Write (blockType, blockToWrite, trialNumberToWrite, trialValueToWrite, presentationTime * 1000, 0, 0, false);
+            while (trialWaitTime - (Time.time - unityPresentationTime) > 0.0f)
+            {
+                if (isButtonPressed)
+                {
+                    isButtonPressed = false;
+                    if (countHits < 2)
+                    {
+                        if (countHits == 0)
+                        {
+                            if (isGo)
+                                isBeingHit = true;
+                            firstHitTime = Time.time - testStartTime;
+                        }
+                        else if (countHits == 1)
+                        {
+                            secondHitTime = Time.time - testStartTime;
+                        }
+                        
+                        countHits++;
+                    }
+                }
+                
+                yield return new WaitForEndOfFrame();
 
-		showingTrial = false;
+            }
 
-		if(allTrialsDone){
-            endOfSart = true;
-            MainMenuManager.testCompleted = true;
-			csvMaker.CreateCSVFile (csvMaker.path, csvMaker.dataCollected);
-            StartCoroutine(FinishSART());
-		} else {
-			
-			StartCoroutine (WaitForNextStimulus ());
-		}
-	}
+            if (countHits == 0 && !isGo)
+                isBeingHit = true;
 
-	IEnumerator WaitForNextStimulus(){//Closes door and waits. After waiting shows next trial.
-		
-		Reset ();
-		yield return new WaitForSeconds (waitTime);
-		lastRoutine = StartCoroutine (ShowTrial (SelectTrial ()));
-	}
+            countHits = 0;
+
+            csvMaker.Write(blockType, previousBlock, previousTrial, isGo, presentationTime, firstHitTime, secondHitTime, isBeingHit);
+
+            Reset();
+            yield return new WaitForSeconds(doorCloseTime);
+            isButtonPressed = false;
+        }
+
+        StartCoroutine(FinishSART());
+
+    }
 
     IEnumerator FinishSART()
     {
+        Reset();
+        yield return new WaitForEndOfFrame();
+        csvMaker.CreateCSVFile(csvMaker.path, csvMaker.dataCollected);
         yield return StartCoroutine(TherapyLIROManager.Instance.SaveSARTFinished());
         MadLevel.LoadLevelByName("MainHUB");
     }
@@ -156,20 +155,36 @@ public class SART_Test : MonoBehaviour {
 		blockToWrite = currentBlock;
 		trialNumberToWrite = currentTrial;
 
+        previousTrial = currentTrial;
 		currentTrial++;
 
 		if(currentTrial == block.Count && currentBlock == blockGenerator.allBlocks.Count - 1){
-			allTrialsDone = true;
+            endOfSart = true;
 		}
 
 		if(currentTrial == block.Count){
 			currentTrial = 0;
+            previousBlock = currentBlock;
 			currentBlock++;
 		}
 	
 		return trial;
 			
 	}
+
+    private IEnumerator ButtonPressed()
+    {
+        isButtonEnabled = false;
+        isButtonPressed = true;
+        yield return new WaitForSeconds(0.3f);
+        isButtonEnabled = true;
+    }
+
+    public void OnButtonClicked()
+    {
+        if (isButtonEnabled)
+            StartCoroutine(ButtonPressed());
+    }
 
 	//These functions just choose which character to show or the door.
 	void ShowGo(){
@@ -185,7 +200,8 @@ public class SART_Test : MonoBehaviour {
 	}
 
 	void Reset(){
-		go.SetActive (false);
+        isButtonPressed = false;
+        go.SetActive (false);
 		noGo.SetActive (false);
 		door.SetActive (true);
 	}

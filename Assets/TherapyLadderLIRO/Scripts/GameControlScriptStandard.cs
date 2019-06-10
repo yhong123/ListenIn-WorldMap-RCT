@@ -493,37 +493,46 @@ public class GameControlScriptStandard : MonoBehaviour
     {
         try
         {
-            string filemane = String.Format("THERAPY_{0}_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
+            string filemane = String.Format("THERAPY_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
             string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
 
             m_coreWriter.WriteCsv(pathFolder, filemane, m_responseList);
 
-            //string content = string.Empty;
-            //foreach (var item in m_responseList)
-            //{
-            //    content = String.Concat(content,
+            string content = string.Empty;
+            foreach (var item in m_responseList)
+            {
+                content = String.Concat(content,
 
-            //        String.Join(",", new string[] {
-            //          item.m_challengeID.ToString(),
-            //          item.m_timeStamp.ToString("dd/MM/yyyy"),
-            //          item.m_timeStamp.ToString("HH:mm:ss"),
-            //          item.m_number.ToString(),
-            //          item.m_block.ToString(),
-            //          item.m_cycle.ToString(),
-            //          item.m_accuracy.ToString(),
-            //          item.m_reactionTime.ToString(),
-            //          item.m_repeat.ToString(),
-            //          item.m_pictureID.ToString()
-            //        }), @"\n");
-            //}
-            //Debug.Log(content);
+                    String.Join(",", new string[] {
 
-            //WWWForm form = new WWWForm();
-            //form.AddField("id_user", NetworkManager.UserId);
-            //form.AddField("file_name", filemane);
-            //form.AddField("content", content);
+                        item.m_challengeID.ToString(),
+                        item.m_cycle.ToString(),
+                        item.m_block.ToString(),
 
-            //NetworkManager.SendDataServer(form, NetworkManager.ServerURLDataInput, content, filemane);
+                        item.m_dateTimeStart.ToString("dd/MM/yyyy"),
+                        item.m_dateTimeStart.ToString("HH:mm:ss"),
+                        item.m_dateTimeEnd.ToString("dd/MM/yyyy"),
+                        item.m_dateTimeEnd.ToString("HH:mm:ss"),
+
+                        item.m_accuracy.ToString(),
+                        item.m_repeat.ToString(),
+
+                        item.incorrectPicturesIDs[0],
+                        item.incorrectPicturesIDs[1],
+                        item.incorrectPicturesIDs[2],
+                        item.incorrectPicturesIDs[3],
+                        item.incorrectPicturesIDs[4]
+
+                    }), @"\n");
+            }
+            Debug.Log(content);
+
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", filemane);
+            form.AddField("content", content);
+
+            NetworkManager.SendDataServer(form, NetworkManager.ServerURLDataInput, content, filemane);
         }
         catch (Exception ex)
         {
