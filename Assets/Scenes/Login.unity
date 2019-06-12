@@ -810,7 +810,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: male
+  m_Text: Male
 --- !u!222 &136783073
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5817,17 +5817,18 @@ MonoBehaviour:
   ConcentNext: {fileID: 724413991}
   ConcentAcceptCurrent: {fileID: 1067053480}
   ListOfConcentText:
-  - chupame el pico 1
-  - chupame el pico 1chupame el pico 1chupame el pico 1chupame el pico 1chupame el
-    pico 1chupame el pico 1chupame el pico 1
-  - asdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd
-    aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd
-    aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd
-    aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfsasdasd aa sfs
-  - asdfq34534534534534 345345 345345
-  - ijsadifjaposdjfpoadsj pogsapdg asdihgoisahgpiosah dpgu sadughsaodihg 'sai dhgi;ash
-    jglahslghas;lkjgh a;lksh glk;ahgsadlkgh a;lkshg;lksahg lisahg8ahsg;has;lighsa;lkhgsa;lkgh
-    lk;sahglkgajshlgkjha sd;lkjgh;lsadjh g;lksahdglksah
+  - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+    deserunt mollit anim id est laborum.
+  - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+    deserunt mollit anim id est laborum.
   ConcentText: {fileID: 993101646}
   RegistrationObject: {fileID: 488714410}
   dayOfBirth: {fileID: 137005658}
