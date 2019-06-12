@@ -496,7 +496,7 @@ MonoBehaviour:
   noGo: {fileID: 1955709645}
   counter: {fileID: 578571548}
   csvMaker: {fileID: 1727101506}
-  trialWaitTime: 1.5
+  trialWaitTime: 1
   doorCloseTime: 0.5
 --- !u!4 &1026008444
 Transform:
@@ -807,7 +807,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 56.233345}
-  m_SizeDelta: {x: 411, y: 341}
+  m_SizeDelta: {x: 600, y: 341}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1943176753
 MonoBehaviour:
