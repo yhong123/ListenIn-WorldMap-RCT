@@ -49,7 +49,7 @@ else
 	------------------------
 	 
 	Please click this link to activate your account:
-	http://softvtech.website/ListenIn/php/verify.php?hash_e='.$email_hash.'&hash_p='.$password_hash.'
+	http://softvtech.website/ListenIn/php/verify.php?hash_e='.$email_hash.'
 	 
 	';
 						 

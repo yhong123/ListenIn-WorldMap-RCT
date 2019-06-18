@@ -9,8 +9,9 @@ using System.Security.Cryptography;
 public class LoginManager : MonoBehaviour
 {
     private const string encryptionKey = "Softv01**";
-    private const string loginURL = "http://softvtech.website/ListenIn/php/login.php";
-    private const string registernURL = "http://softvtech.website/ListenIn/php/register.php";
+    private const string loginUrl = "http://softvtech.website/ListenIn/php/login.php";
+    private const string registernUrl = "http://softvtech.website/ListenIn/php/register.php";
+    private const string reSendEmailUrl = "http://softvtech.website/ListenIn/php/resend_email.php";
     [SerializeField] private List<Button> listOfButtons;
     [SerializeField] private InputField passwordInputLogin;
     [SerializeField] private InputField emailInputLogin;
@@ -22,13 +23,15 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private GameObject logInForm;
     [SerializeField] private GameObject registerForm;
     [SerializeField] private RegistrationController registrationController;
+    [SerializeField] private GameObject reSendEmailButton;
+    [SerializeField] private GameObject startVerificationEmailPanel;
     private bool isInit = false;
 
     private void Update()
     {
-        if(NetworkManager.IsInitialInternetCheckDone && !isInit)
+        if (NetworkManager.IsInitialInternetCheckDone && !isInit)
         {
-            if(NetworkManager.HasInternet)
+            if (NetworkManager.HasInternet)
             {
                 Init();
             }
@@ -44,7 +47,7 @@ public class LoginManager : MonoBehaviour
     {
         //PlayerPrefs.DeleteAll();
 
-        if(!PlayerPrefManager.IsLogged()) //if it doesn't exist, create
+        if (!PlayerPrefManager.IsLogged()) //if it doesn't exist, create
         {
             PlayerPrefManager.SetPlayerPrefData(string.Empty, string.Empty);
         }
@@ -53,14 +56,14 @@ public class LoginManager : MonoBehaviour
         logInForm.SetActive(true);
         registerForm.SetActive(false);
 
-        
-        if(PlayerPrefManager.GetIdUser() != string.Empty && NetworkManager.HasInternet)
+
+        if (PlayerPrefManager.GetIdUser() != string.Empty && NetworkManager.HasInternet)
         {
-            //START GAME, USER ALREADY EXIST
-            MadLevel.LoadLevelByName("Setup Screen");
+            //SHOW EMAIL VERIFICATION
+            startVerificationEmailPanel.SetActive(true);
         }
     }
-    
+
     public void RegisterButton()
     {
         ClearInputs();
@@ -89,14 +92,14 @@ public class LoginManager : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("email_hash", GetHashString(emailInputLogin.text));
 
-        using (WWW www = new WWW(loginURL, form))
+        using (WWW www = new WWW(loginUrl, form))
         {
             yield return www;
             Debug.Log(www.text);
             if (!string.IsNullOrEmpty(www.error))
             {
-                Debug.LogError("ERROR CONNECTING TO THE DATABSE: "+ www.error);
-                TriggerLoginMessage("Error 404. Contact support.");
+                Debug.LogError("ERROR CONNECTING TO THE DATABSE: " + www.error);
+                TriggerLoginMessage("Error 404. Contact support.", Color.red);
                 ToggleButtons(true);
                 yield break;
             }
@@ -105,18 +108,19 @@ public class LoginManager : MonoBehaviour
                 if (www.text == "email_not_verified")
                 {
                     Debug.Log("EMAIL NOT VERIFIED");
-                    TriggerLoginMessage("Email not verified, please check your inbox.");
+                    TriggerLoginMessage("Email not verified, please check your email inbox/spam folder.", Color.red);
+                    reSendEmailButton.SetActive(true);
                 }
                 else if (www.text == "no_user")
                 {
                     Debug.Log("LOG IN ERROR");
-                    TriggerLoginMessage("Wrong ID/password.");
+                    TriggerLoginMessage("Wrong ID/password.", Color.red);
                 }
                 else
                 {
                     string password = www.text.Split(' ')[0];
                     string idUser = www.text.Split(' ')[1];
-                    Debug.Log(password + " + " +GetHashString(passwordInputLogin.text));
+                    Debug.Log(password + " + " + GetHashString(passwordInputLogin.text));
                     if (GetHashString(passwordInputLogin.text) == password)
                     {
                         Debug.Log("LOG IN SUCCESFUL");
@@ -127,7 +131,7 @@ public class LoginManager : MonoBehaviour
                     else
                     {
                         Debug.Log("LOG IN ERROR");
-                        TriggerLoginMessage("Wrong ID/password.");
+                        TriggerLoginMessage("Wrong ID/password.", Color.red);
                     }
                 }
                 ToggleButtons(true);
@@ -144,7 +148,7 @@ public class LoginManager : MonoBehaviour
         }
         if (passwordInputRegister.text != reenterPasswordInputRegister.text)
         {
-            TriggerLoginMessage("Passwords don't match.");
+            TriggerLoginMessage("Passwords don't match.", Color.red);
             return;
         }
         ToggleButtons(false);
@@ -165,13 +169,13 @@ public class LoginManager : MonoBehaviour
         form.AddField("date_of_onset", registrationController.RegistrationDateOfOnset);
         form.AddField("concent", registrationController.HasConcent);
 
-        using (WWW www = new WWW(registernURL, form))
+        using (WWW www = new WWW(registernUrl, form))
         {
             yield return www;
             if (!string.IsNullOrEmpty(www.error))
             {
                 Debug.LogError("ERROR CONNECTING TO THE DATABSE: " + www.error);
-                TriggerLoginMessage("Error 404. Contact support.");
+                TriggerLoginMessage("Error 404. Contact support.", Color.red);
                 ToggleButtons(true);
                 yield break;
             }
@@ -182,20 +186,21 @@ public class LoginManager : MonoBehaviour
                     Debug.Log("REGISTER SUCCESFUL");
                     BackButton();
                 }
-                else if(www.text == "used")
+                else if (www.text == "used")
                 {
                     Debug.Log("ERROR EMAIL EXIST");
-                    TriggerLoginMessage("Email already exist.");
+                    TriggerLoginMessage("Email already exist.", Color.red);
                 }
                 ToggleButtons(true);
             }
         }
     }
 
-    private void TriggerLoginMessage(string message)
+    private void TriggerLoginMessage(string message, Color textColor)
     {
+        loginMessageText.color = textColor;
         loginMessageText.text = message;
-        loginMessageAnimator.Play("LoginMessage");
+        loginMessageAnimator.Play("LoginMessage", -1, 0f);
     }
 
     private void ToggleButtons(bool isInteractible)
@@ -215,6 +220,58 @@ public class LoginManager : MonoBehaviour
         reenterPasswordInputRegister.text = string.Empty;
     }
 
+    public void ReSendVerificationEmail()
+    {
+        StartCoroutine(ReSendVerificationEmailCoroutine());
+    }
+
+    private IEnumerator ReSendVerificationEmailCoroutine()
+    {
+        reSendEmailButton.SetActive(false);
+        WWWForm form = new WWWForm();
+        form.AddField("email", emailInputLogin.text);
+        form.AddField("email_hash", GetHashString(emailInputLogin.text));
+
+        using (WWW www = new WWW(reSendEmailUrl, form))
+        {
+            yield return www;
+            if (!string.IsNullOrEmpty(www.error))
+            {
+                Debug.LogError("ERROR CONNECTING TO THE DATABSE: " + www.error);
+                TriggerLoginMessage("Error 404. Contact support.", Color.red);
+                yield break;
+            }
+            else
+            {
+                if (www.text == "bien")
+                {
+                    Debug.Log("REGISTER SUCCESFUL");
+                    TriggerLoginMessage("Please check your email inbox/spam folder .", Color.green);
+                }
+                else if (www.text == "mal")
+                {
+                    Debug.Log("ERROR EMAIL EXIST");
+                    TriggerLoginMessage("Email doesn't exist.", Color.red);
+                }
+                ToggleButtons(true);
+            }
+        }
+    }
+
+    public void IsThisThePatientEmail(bool positive)
+    {
+        if(positive)
+        {
+            //START GAME, USER ALREADY EXIST
+            MadLevel.LoadLevelByName("Setup Screen");
+        }
+        else
+        {
+            PlayerPrefManager.LogOut();
+        }
+    }
+
+    #region Utilities
     public static byte[] GetHash(string inputString)
     {
         HashAlgorithm algorithm = SHA256.Create();
@@ -229,4 +286,5 @@ public class LoginManager : MonoBehaviour
 
         return sb.ToString();
     }
+    #endregion
 }

@@ -4,6 +4,9 @@ using MadLevelManager;
 
 public class PlayerPrefManager : MonoBehaviour
 {
+    public delegate void OnLogOut();
+    public static event OnLogOut OnLogOutEvent;
+
     private const string idUserPlayerPref = "IdUser";
     private const string emailPlayerPref = "Email";
 
@@ -34,6 +37,12 @@ public class PlayerPrefManager : MonoBehaviour
         PlayerPrefs.SetString(idUserPlayerPref, string.Empty);
         PlayerPrefs.SetString(emailPlayerPref, string.Empty);
         PlayerPrefs.Save();
+         
+        if(OnLogOutEvent != null)
+        {
+            OnLogOutEvent();
+        }
+
         MadLevel.LoadLevelByName("Login");
     }
 

@@ -49,6 +49,7 @@ public class RegistrationController : MonoBehaviour
     [HideInInspector] public string HasConcent;
     [HideInInspector] public string RegistrationDateOfOnset;
     //REGISTRATION VALUES
+    private bool noOnsetDate = false;
 
     public void GenreSelect(string genre)
     {
@@ -73,6 +74,12 @@ public class RegistrationController : MonoBehaviour
         CurrentRegistrationStep++;
     }
 
+    public void NextRegistrationStepNoDateOnset()
+    {
+        noOnsetDate = true;
+        CurrentRegistrationStep++;
+    }
+
     private void CheckRegistrationStepStatus()
     {
         switch (CurrentRegistrationStep)
@@ -85,7 +92,7 @@ public class RegistrationController : MonoBehaviour
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
                 break;
             case RegistrationStep.Concent:
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep ==  RegistrationStep.ParticipationConcent).Single().RegistrationObject.SetActive(false);
+                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.ParticipationConcent).Single().RegistrationObject.SetActive(false);
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
                 SetConcentText();
                 break;
@@ -109,7 +116,15 @@ public class RegistrationController : MonoBehaviour
                 break;
             case RegistrationStep.Registration:
                 //register date of onset
-                RegistrationDateOfOnset = string.Concat(monthOfOnset.options[monthOfOnset.value].text, "/", yearOfOnset.options[yearOfOnset.value].text);
+                if (!noOnsetDate)
+                {
+                    RegistrationDateOfOnset = string.Concat(monthOfOnset.options[monthOfOnset.value].text, "/", yearOfOnset.options[yearOfOnset.value].text);
+                }
+                else
+                {
+                    RegistrationDateOfOnset = "not sure";
+                }
+
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.DateOfOnset).Single().RegistrationObject.SetActive(false);
                 ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
                 break;
@@ -125,11 +140,12 @@ public class RegistrationController : MonoBehaviour
             item.RegistrationObject.SetActive(false);
         }
         currentConcentTextIndex = 0;
+        noOnsetDate = false;
     }
 
     public void SetConcentText()
     {
-        if(currentConcentTextIndex == ListOfConcentText.Count)
+        if (currentConcentTextIndex == ListOfConcentText.Count)
         {
             NextRegistrationStep();
             return;
