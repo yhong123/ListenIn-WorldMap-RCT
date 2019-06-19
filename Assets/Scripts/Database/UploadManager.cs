@@ -66,6 +66,9 @@ public class UploadManager : Singleton<UploadManager> {
             Directory.CreateDirectory(patientPath + @"/Output");
             Directory.CreateDirectory(patientPath + @"/Section");
             Directory.CreateDirectory(patientPath + @"/ACT");
+            //Resetting JigsawState
+            //Used to communicate inside the initialization of the setup controller
+            GlobalVars.isProfileNewOrChanged = true;
         }
     }
 

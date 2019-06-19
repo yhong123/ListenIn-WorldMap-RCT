@@ -94,16 +94,14 @@ public class AppControllerSetupScreen : MonoBehaviour
         {
             ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
-        yield return new WaitForEndOfFrame();
-
-        percentage = 18;
+        yield return new WaitForSeconds(2);
 
         //AndreaLIRO: Insert therapy ladder new algorithm
         percentage = 47;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
         yield return StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
-
+        yield return new WaitForSeconds(2);
         //try
         //{
         //    StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
@@ -115,9 +113,9 @@ public class AppControllerSetupScreen : MonoBehaviour
 
         percentage = 55;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
-        yield return new WaitForEndOfFrame();
         //AndreaLIRO: Checking first ever initialization for ACT pair randomization
         yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
+        yield return new WaitForSeconds(2);
         //try
         //{
         //    StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
@@ -130,7 +128,6 @@ public class AppControllerSetupScreen : MonoBehaviour
         //AndreaLIRO: Preparing the jigsaw pieces
         percentage = 77;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
-        yield return new WaitForEndOfFrame();
         try
         {
             StateJigsawPuzzle.Instance.OnGameLoadedInitialization();
@@ -139,9 +136,24 @@ public class AppControllerSetupScreen : MonoBehaviour
         {
             ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
-        yield return new WaitForEndOfFrame();
 
-        percentage = 63;
+        try
+        {
+            if (GlobalVars.isProfileNewOrChanged)
+            {
+                GlobalVars.isProfileNewOrChanged = false;
+            }
+            GameStateSaver.Instance.ResetListenIn();       
+
+        }
+        catch (Exception ex)
+        {
+            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+        }
+
+        yield return new WaitForSeconds(2);
+
+        percentage = 85;
         //AndreaLIRO: Loading current world map configuration
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
@@ -156,7 +168,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         yield return new WaitForEndOfFrame();
 
-        percentage = 78;
+        percentage = 92;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
         try
         {
@@ -168,14 +180,14 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         yield return new WaitForEndOfFrame();
 
-        percentage = 85;
+        percentage = 95;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
         //AndreaLIRO: Commenting out the last three log files
         // yield return SendLogs();
         yield return new WaitForEndOfFrame();
 
-        percentage = 90;
+        percentage = 99;
         m_textScreen.text = String.Format(m_textStringFormat, percentage);
 
         try

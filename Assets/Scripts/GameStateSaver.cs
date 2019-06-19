@@ -27,17 +27,17 @@ public class GameSaveState
 	}
 }
 
-public class GameStateSaver : MonoBehaviour {
+public class GameStateSaver : Singleton<GameStateSaver> {
 
 	#region singleton
-	private static readonly GameStateSaver instance = new GameStateSaver();
-	public static GameStateSaver Instance
-	{
-		get
-		{
-			return instance;
-		}
-	}
+	//private static readonly GameStateSaver instance = new GameStateSaver();
+	//public static GameStateSaver Instance
+	//{
+	//	get
+	//	{
+	//		return instance;
+	//	}
+	//}
 	#endregion
     
 	public void Load()
@@ -92,7 +92,7 @@ public class GameStateSaver : MonoBehaviour {
 		else
 		{
             ListenIn.Logger.Instance.Log("GameStateSaver: First initialization", ListenIn.LoggerMessageType.Info);
-            GameStateSaver.Instance.ResetListenIn();
+            ResetListenIn();
 		}
 
 	}
@@ -101,7 +101,7 @@ public class GameStateSaver : MonoBehaviour {
 	{
         //TODO now there is StateJigsawPuzzle
 		XmlSerializer serializer = 	new XmlSerializer(typeof(GameSaveState));
-		using(TextWriter writer = new StreamWriter(GameStateSaver.FilePath()))
+		using(TextWriter writer = new StreamWriter(FilePath()))
 		{			
 			GameSaveState gss = new GameSaveState();
 
@@ -157,7 +157,7 @@ public class GameStateSaver : MonoBehaviour {
 
             //Unlocking partially tutorial level
             XmlSerializer serializer = new XmlSerializer(typeof(GameSaveState));
-            using (TextWriter writer = new StreamWriter(GameStateSaver.FilePath()))
+            using (TextWriter writer = new StreamWriter(FilePath()))
             {
                 GameSaveState gss = new GameSaveState();
 
@@ -197,9 +197,11 @@ public class GameStateSaver : MonoBehaviour {
         
 	}
 
-	public static string FilePath()
+	public string FilePath()
 	{
-        return Application.persistentDataPath + "/user_" + TherapyLIROManager.Instance.GetUserProfile.m_userProfile.m_currIDUser.ToString() + "_SavedState.xml";
+        string patientFolder = GlobalVars.GetPath(NetworkManager.UserId);
+        string fileName = String.Format("user_{0}_SavedState.xml", NetworkManager.UserId);
+        return Path.Combine(patientFolder, fileName);
 	}
 
 }
