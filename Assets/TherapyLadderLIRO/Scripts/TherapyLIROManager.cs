@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { BASKET = 0, CORE = 1, ACT = 2, SART_PRACTICE = 3, SART_TEST = 4, QUESTIONAIRE = 5};
+public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 1, SART_TEST = 2, BASKET = 3, CORE = 4, QUESTIONAIRE = 5};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -21,6 +21,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     private UserProfileManager m_UserProfileManager = new UserProfileManager();
     public UserProfileManager GetUserProfile { get{ return m_UserProfileManager; } }
 
+
+    [Header("Debug Settings")]
+    public int m_maxACTChallenges = 8;
 
     private int m_currSectionCounter;
     public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }
@@ -302,6 +305,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// <returns></returns>
     private bool CheckACTEscapeSection()
     {
+#if DEBUGGING
+        return (m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock > m_maxACTChallenges);
+#endif
         return (m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock > m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks);
     }
     /// <summary>
@@ -456,9 +462,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_previousScore = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currScore;
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
-    #endregion
+#endregion
 
-    #region Internal Functions
+#region Internal Functions
 
     //UPDATING
     //*******************************************************
@@ -969,6 +975,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 break;
         }
     }
-    #endregion
+#endregion
 
 }

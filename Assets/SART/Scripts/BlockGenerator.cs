@@ -8,6 +8,8 @@ public class BlockGenerator : MonoBehaviour {
 	private int maxNoGo = 3;
 	public int maxBlocks;
 
+    public int debugMaxBlocks = 2;
+
 	public List<bool> generatedBlock;
 
 	public List<List<bool>> allBlocks;
@@ -19,7 +21,13 @@ public class BlockGenerator : MonoBehaviour {
 
     public void PrepareBlocks()
     {
-        for (int i = 0; i < maxBlocks; i++)
+        int blocksToGenerate;
+#if DEBUGGING
+        blocksToGenerate = debugMaxBlocks;
+#else
+        blocksToGenerate = maxBlocks;
+#endif
+        for (int i = 0; i < blocksToGenerate; i++)
         {
             List<bool> singleBlock = GenerateSingleBlock();
             allBlocks.Add(singleBlock);
