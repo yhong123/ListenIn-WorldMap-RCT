@@ -60,6 +60,8 @@ public class LoginManager : MonoBehaviour
         if (PlayerPrefManager.GetIdUser() != string.Empty && NetworkManager.HasInternet)
         {
             //SHOW EMAIL VERIFICATION
+            NetworkManager.UserId = PlayerPrefManager.GetIdUser();
+            startVerificationEmailPanel.transform.GetChild(0).GetComponent<Text>().text = PlayerPrefManager.GetHiddenEmail();
             startVerificationEmailPanel.SetActive(true);
         }
     }

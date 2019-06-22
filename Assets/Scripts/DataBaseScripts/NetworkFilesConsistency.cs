@@ -85,7 +85,7 @@ public class NetworkFilesConsistency : MonoBehaviour
 
             NetworkManager.SendDataServer(
                 form,
-                NetworkManager.ServerURLFileConsistencyCheck,
+                NetworkManager.ServerUrlFileConsistencyCheck,
                 content,
                 nameOfFile.FileName,
                 callBack
@@ -130,7 +130,7 @@ public class NetworkFilesConsistency : MonoBehaviour
 
             NetworkManager.SendDataServer(
                 form,
-                NetworkManager.ServerURLFileCheck,
+                NetworkManager.ServerUrlFileCheck,
                 content,
                 nameOfFile.FileName,
                 callBack

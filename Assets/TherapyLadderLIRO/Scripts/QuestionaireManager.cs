@@ -141,7 +141,7 @@ public class QuestionaireManager : MonoBehaviour
             form.AddField("file_name", filename);
             form.AddField("content", sb.ToString());
 
-            NetworkManager.SendDataServer(form, NetworkManager.ServerURLDataInput, sb.ToString(), filename);
+            NetworkManager.SendDataServer(form, NetworkManager.ServerUrlDataInput, sb.ToString(), filename);
 
         }
         catch (System.Exception ex)

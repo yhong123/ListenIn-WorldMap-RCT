@@ -30,10 +30,11 @@ public class NetworkManager : MonoBehaviour
 {
     public static string UserId = "1";
     //root folder of the project
-    private const string serverURL = "http://softvtech.website/ListenIn/";
-    public static string ServerURLDataInput = string.Concat(serverURL, "php/data_input_no_header.php");
-    public static string ServerURLFileCheck = string.Concat(serverURL, "php/file_check.php");
-    public static string ServerURLFileConsistencyCheck = string.Concat(serverURL, "php/file_consistency_check.php");
+    private const string serverUrl = "http://softvtech.website/ListenIn/";
+    public static string ServerUrlDataInput = string.Concat(serverUrl, "php/data_input_no_header.php");
+    public static string ServerUrlFileCheck = string.Concat(serverUrl, "php/file_check.php");
+    public static string ServerUrlFileConsistencyCheck = string.Concat(serverUrl, "php/file_consistency_check.php");
+    public static string ServerUrlSubscriptionCheck = string.Concat(serverUrl, "php/check_subscription.php");
     private int remoteAttempts = 0;
     private bool isInit = false;
     public static bool IsInitialInternetCheckDone = false;
@@ -183,7 +184,7 @@ public class NetworkManager : MonoBehaviour
                             remoteAttempts = 0;
                             Debug.Log("<color=green>SUCCESS: </color>SendDataServer()");
                             //CSV
-                            if (isLocal && DataToSend[0].First.ServerURL == ServerURLDataInput)
+                            if (isLocal && DataToSend[0].First.ServerURL == ServerUrlDataInput)
                             {
                                 AppendDataCSV(DataToSend[0].Second);
                             }
@@ -209,7 +210,7 @@ public class NetworkManager : MonoBehaviour
                 {
                     Debug.Log("<color=green>SUCCESS: </color>LocalDataServer()");
                     //CSV
-                    if (DataToSend[0].First.ServerURL == ServerURLDataInput)
+                    if (DataToSend[0].First.ServerURL == ServerUrlDataInput)
                     {
                         AppendDataCSV(DataToSend[0].Second);
                     }
@@ -225,6 +226,20 @@ public class NetworkManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public static void SendDataServer(WWWForm form, string serverURL, string contentCrc, Action<string> callBackMethod = null)
+    {
+        byte[] bytes = new byte[contentCrc.Length * sizeof(char)];
+        System.Buffer.BlockCopy(contentCrc.ToCharArray(), 0, bytes, 0, bytes.Length);
+        uint checksum = crc32(contentCrc);
+
+        form.AddField("checksum", checksum.ToString());
+
+        //add form to the 'queue'
+        DataObject dataObject = new DataObject(form, serverURL, callBackMethod);
+        CSVDataObject csvDataObject = new CSVDataObject();
+        DataToSend.Add(new Tuple<DataObject, CSVDataObject>(dataObject, csvDataObject));
     }
 
     public static void SendDataServer(WWWForm form, string serverURL, string CSVContent, string CSVHeader, string CSVFileName, Action<string> callBackMethod = null)
