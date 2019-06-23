@@ -12,7 +12,7 @@ public class LoginManager : MonoBehaviour
     private const string loginUrl = "http://softvtech.website/ListenIn/php/login.php";
     private const string registernUrl = "http://softvtech.website/ListenIn/php/register.php";
     private const string reSendEmailUrl = "http://softvtech.website/ListenIn/php/resend_email.php";
-    [SerializeField] private List<Button> listOfButtons;
+    [SerializeField] private List<Image> listOfButtons;
     [SerializeField] private InputField passwordInputLogin;
     [SerializeField] private InputField emailInputLogin;
     [SerializeField] private Animator loginMessageAnimator;
@@ -207,9 +207,12 @@ public class LoginManager : MonoBehaviour
 
     private void ToggleButtons(bool isInteractible)
     {
-        foreach (Button item in listOfButtons)
+        foreach (Image item in listOfButtons)
         {
-            item.interactable = isInteractible;
+            Color temp = item.color;
+            temp.a = isInteractible ? 1f : 0.2f;
+            item.color = temp;
+            item.transform.parent.GetComponent<Image>().enabled = isInteractible;
         }
     }
 
