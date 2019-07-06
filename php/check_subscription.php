@@ -10,24 +10,47 @@ $preparedStatement->execute(array('id_user' => $id_user));
 
 if($preparedStatement->rowCount() > 0)
 {
-	$result = $preparedStatement->fetch();
+	//CHECK IF A CODE HAS BEEN ASSIGNED TO THE USER
+	$preparedStatementCode = $dbConnection->prepare('SELECT * FROM redeem_code WHERE id_user_assigned = :id_user LIMIT 1');
+	$preparedStatementCode->execute(array('id_user' => $id_user));
 	
-	$subscription_time = date_create($result["subscription_end"]);
-	
-	$time = s_datediff("d", $current_time, $subscription_time, true);
-	
-	if($time >= 0)
+	if($preparedStatementCode->rowCount() > 0) //IF YES, THEN LET THEM PLAY
 	{
 		echo "true";
 	}
-	else
+	else //ELSE CHECK SUBSCRIPTION DATE
 	{
-		echo "false";
+		$result = $preparedStatement->fetch();
+	
+		if($result["has_logged"] == 1) //IF THE USER HAS LOGGED ONCE BEFORE, CHECK DATES
+		{
+			$subscription_time = date_create($result["subscription_end"]);
+		
+			$time = s_datediff("d", $current_time, $subscription_time, true);
+			
+			if($time >= 0)
+			{
+				echo "true";
+			}
+			else
+			{
+				echo "false";
+			}
+		}
+		else // ELSE ADD THE 7 FREE DAYS
+		{
+			$current_time = $current_time->format('Y-m-d h:i:s');
+			$subscription = date('Y-m-d h:i:s', strtotime($current_time . ' + 7 days'));
+			
+			$preparedStatement = $dbConnection->prepare('UPDATE user SET subscription_end = :subscription_end, has_logged = 1 WHERE id = :id_user LIMIT 1');
+			$preparedStatement->execute(array('subscription_end' => $subscription, 'id_user' => $id_user));
+			echo "true";
+		}
 	}
 }
 else
 {
-	echo "false";
+	echo "error";
 }
 
 
