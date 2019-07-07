@@ -35,6 +35,9 @@ public class NetworkManager : MonoBehaviour
     public static string ServerUrlFileCheck = string.Concat(serverUrl, "php/file_check.php");
     public static string ServerUrlFileConsistencyCheck = string.Concat(serverUrl, "php/file_consistency_check.php");
     public static string ServerUrlSubscriptionCheck = string.Concat(serverUrl, "php/check_subscription.php");
+    public static string ServerUrlRedeemCode = string.Concat(serverUrl, "php/redeem_code.php");
+    public static string ServerUrlExtendSubscription = string.Concat(serverUrl, "php/extend_subscription.php");
+
     private int remoteAttempts = 0;
     private bool isInit = false;
     public static bool IsInitialInternetCheckDone = false;

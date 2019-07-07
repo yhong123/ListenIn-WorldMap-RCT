@@ -4,14 +4,16 @@ using System.Collections;
 
 public class SubscriptionUi : MonoBehaviour
 {
-    [SerializeField] private GameObject subcriptionPanel;
+    [SerializeField] private GameObject subscriptionPanel;
     [SerializeField] private GameObject errorPanel;
     [SerializeField] private GameObject blockGame;
+    [SerializeField] private GameObject subcriptionFinish;
+    [SerializeField] private GameObject errorSubscribing;
     [SerializeField] private Text redeemResultText;
     [SerializeField] private Button redeemButton;
     [SerializeField] private Button backButton;
     [SerializeField] private InputField redeemCodeInput;
-    private const string redeemUrl = "http://softvtech.website/ListenIn/php/redeem_code.php";
+    private Coroutine displayMessage = null;
 
     private void Awake()
     {
@@ -25,19 +27,19 @@ public class SubscriptionUi : MonoBehaviour
 
     public void RequestSubscriptionCallback(string result)
     {
-        if(result == "true")
+        if (result == "true")
         {
             //continue gameplay
             Debug.Log("<b>SUBSCRIPTION:<color=green>VALID</color></b>");
         }
-        else if(result == "false")
+        else if (result == "false")
         {
             //no subscription left
             //subcriptionPanel.SetActive(true);
             Debug.Log("<b>SUBSCRIPTION:<color=red>INVALID</color></b>");
-            subcriptionPanel.SetActive(true);
+            subscriptionPanel.SetActive(true);
         }
-        else if(result == "error")
+        else if (result == "error")
         {
             errorPanel.SetActive(true);
         }
@@ -47,52 +49,83 @@ public class SubscriptionUi : MonoBehaviour
 
     public void RedeemCode(InputField input)
     {
-        StartCoroutine(RedeemCodeCoroutine(input.text));
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("code", input.text);
+        
+        NetworkManager.SendDataServer(form, NetworkManager.ServerUrlRedeemCode, "test", RedeemCodeCallback);
     }
 
-    private IEnumerator RedeemCodeCoroutine(string code)
+    public void RedeemCodeCallback(string result)
+    {
+        if (result == "bien")
+        {
+            Debug.Log("CODE REMDEEMed");
+            subscriptionPanel.SetActive(false);
+        }
+        else if (result == "in_use")
+        {
+            Debug.Log("CODE IN USE");
+            redeemCodeInput.interactable = true;
+            redeemButton.interactable = true;
+            backButton.interactable = true;
+
+            if(displayMessage != null)
+            {
+                StopCoroutine(displayMessage);
+            }
+            displayMessage = StartCoroutine(DisplayMessageAndWait("Code already in use. Try another."));
+        }
+        else if (result == "code_not_exist")
+        {
+            Debug.Log("CODE doesnt exist");
+            redeemCodeInput.interactable = true;
+            redeemButton.interactable = true;
+            backButton.interactable = true;
+
+            if (displayMessage != null)
+            {
+                StopCoroutine(displayMessage);
+            }
+            displayMessage = StartCoroutine(DisplayMessageAndWait("Code invalid. Try another."));
+        }
+    }
+
+    private IEnumerator DisplayMessageAndWait(string text)
+    {
+        redeemResultText.text = text;
+        redeemResultText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4);
+        redeemResultText.gameObject.SetActive(false);
+        displayMessage = null;
+    }
+
+    public void ExtendSubscription(int period)
     {
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
-        form.AddField("code", code);
+        form.AddField("period", period);
 
-        using (WWW www = new WWW(redeemUrl, form))
+        NetworkManager.SendDataServer(form, NetworkManager.ServerUrlExtendSubscription, "test", ExtendSubscription);
+    }
+
+    private void ExtendSubscription(string result)
+    {
+        if(result == "error")
         {
-            yield return www;
-            if (!string.IsNullOrEmpty(www.error))
-            {
-                Debug.LogError("ERROR CONNECTING TO THE DATABSE: " + www.error);
-            }
-            else
-            {
-                if (www.text == "bien")
-                {
-                    Debug.Log("CODE REMDEEMed");
-                    subcriptionPanel.SetActive(false);
-                }
-                else if (www.text == "in_use")
-                {
-                    Debug.Log("CODE IN USE");
-                    redeemCodeInput.interactable = true;
-                    redeemButton.interactable = true;
-                    backButton.interactable = true;
-                    redeemResultText.text = "Code already in use. Try another.";
-                    redeemResultText.gameObject.SetActive(true);
-                    yield return new WaitForSeconds(4);
-                    redeemResultText.gameObject.SetActive(false);
-                }
-                else if (www.text == "code_not_exist")
-                {
-                    Debug.Log("CODE doesnt exist");
-                    redeemCodeInput.interactable = true;
-                    redeemButton.interactable = true;
-                    backButton.interactable = true;
-                    redeemResultText.text = "Code invalid. Try another.";
-                    redeemResultText.gameObject.SetActive(true);
-                    yield return new WaitForSeconds(4);
-                    redeemResultText.gameObject.SetActive(false);
-                }
-            }
+            errorSubscribing.SetActive(true);
         }
+        else if(result == "bien")
+        {
+            subscriptionPanel.SetActive(false);
+            StartCoroutine(FinishSubscription());
+        }
+    }
+
+    private IEnumerator FinishSubscription()
+    {
+        subcriptionFinish.SetActive(true);
+        yield return new WaitForSeconds(4);
+        subcriptionFinish.SetActive(false);
     }
 }
