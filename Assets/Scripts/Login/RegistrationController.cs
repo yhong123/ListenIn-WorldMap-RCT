@@ -27,13 +27,14 @@ public class RegistrationController : MonoBehaviour
         }
     }
 
-    public Button ConcentNext;
+    [SerializeField] private Image concentNext;
     public Toggle ConcentAcceptCurrent;
     public List<string> ListOfConcentText;
     public Text ConcentText;
     private int currentConcentTextIndex = 0;
 
     public GameObject RegistrationObject;
+    [SerializeField] private GameObject loginObject;
 
     [SerializeField] private Dropdown dayOfBirth;
     [SerializeField] private Dropdown monthOfBirth;
@@ -41,6 +42,7 @@ public class RegistrationController : MonoBehaviour
 
     [SerializeField] private Dropdown monthOfOnset;
     [SerializeField] private Dropdown yearOfOnset;
+    [SerializeField] private Toggle concentToggle;
 
     //REGISTRATION VALUES
     [HideInInspector] public string RegistrationGenre;
@@ -151,7 +153,7 @@ public class RegistrationController : MonoBehaviour
             return;
         }
 
-        ConcentNext.interactable = false;
+        DisableConcentNextButtonInteractable();
         ConcentAcceptCurrent.isOn = false;
 
         ConcentText.text = ListOfConcentText[currentConcentTextIndex];
@@ -163,12 +165,30 @@ public class RegistrationController : MonoBehaviour
     {
         Restart();
         CurrentRegistrationStep = RegistrationStep.AgeConcent;
+        loginObject.SetActive(false);
         RegistrationObject.SetActive(true);
     }
 
     public void BackToLogin()
     {
         RegistrationObject.SetActive(false);
+        loginObject.SetActive(true);
+    }
+
+    public void SetConcentNextButtonInteractable()
+    {
+        Color temp = concentNext.color; 
+        temp.a = concentToggle.isOn ? 1f : 0.2f;
+        concentNext.color = temp;
+        concentNext.transform.parent.GetComponent<Image>().enabled = concentToggle.isOn;
+    }
+
+    public void DisableConcentNextButtonInteractable()
+    {
+        Color temp = concentNext.color;
+        temp.a = 0.2f;
+        concentNext.color = temp;
+        concentNext.transform.parent.GetComponent<Image>().enabled = false;
     }
 }
 

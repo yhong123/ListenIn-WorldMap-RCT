@@ -99,7 +99,7 @@ public class CSV_Maker : MonoBehaviour {
             form.AddField("file_name", filenameSart);
             form.AddField("content", sb.ToString());
 
-            NetworkManager.SendDataServer(form, NetworkManager.ServerURLDataInput, sb.ToString(), filenameSart);
+            NetworkManager.SendDataServer(form, NetworkManager.ServerUrlDataInput, sb.ToString(), filenameSart);
 
             
         }

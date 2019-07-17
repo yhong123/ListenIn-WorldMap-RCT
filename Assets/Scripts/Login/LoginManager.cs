@@ -5,6 +5,7 @@ using MadLevelManager;
 using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
+using System;
 
 public class LoginManager : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class LoginManager : MonoBehaviour
     private const string loginUrl = "http://softvtech.website/ListenIn/php/login.php";
     private const string registernUrl = "http://softvtech.website/ListenIn/php/register.php";
     private const string reSendEmailUrl = "http://softvtech.website/ListenIn/php/resend_email.php";
-    [SerializeField] private List<Button> listOfButtons;
+    private const string resetPasswordUrl = "http://softvtech.website/ListenIn/php/reset_password_email.php";
+    [SerializeField] private List<Image> listOfButtons;
     [SerializeField] private InputField passwordInputLogin;
     [SerializeField] private InputField emailInputLogin;
     [SerializeField] private Animator loginMessageAnimator;
@@ -25,8 +27,10 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private RegistrationController registrationController;
     [SerializeField] private GameObject reSendEmailButton;
     [SerializeField] private GameObject startVerificationEmailPanel;
+    [SerializeField] private InputField emailInputResetPasword;
+    [SerializeField] private GameObject resetPasswordForm;
     private bool isInit = false;
-
+    
     private void Update()
     {
         if (NetworkManager.IsInitialInternetCheckDone && !isInit)
@@ -60,6 +64,8 @@ public class LoginManager : MonoBehaviour
         if (PlayerPrefManager.GetIdUser() != string.Empty && NetworkManager.HasInternet)
         {
             //SHOW EMAIL VERIFICATION
+            NetworkManager.UserId = PlayerPrefManager.GetIdUser();
+            startVerificationEmailPanel.transform.GetChild(0).GetComponent<Text>().text = PlayerPrefManager.GetHiddenEmail();
             startVerificationEmailPanel.SetActive(true);
         }
     }
@@ -90,7 +96,7 @@ public class LoginManager : MonoBehaviour
     private IEnumerator Login()
     {
         WWWForm form = new WWWForm();
-        form.AddField("email_hash", GetHashString(emailInputLogin.text));
+        form.AddField("email_hash", PHPMd5Hash(emailInputLogin.text));
 
         using (WWW www = new WWW(loginUrl, form))
         {
@@ -120,8 +126,8 @@ public class LoginManager : MonoBehaviour
                 {
                     string password = www.text.Split(' ')[0];
                     string idUser = www.text.Split(' ')[1];
-                    Debug.Log(password + " + " + GetHashString(passwordInputLogin.text));
-                    if (GetHashString(passwordInputLogin.text) == password)
+                    Debug.Log(password + " + " + PHPMd5Hash(passwordInputLogin.text));
+                    if (PHPMd5Hash(passwordInputLogin.text) == password)
                     {
                         Debug.Log("LOG IN SUCCESFUL");
                         NetworkManager.UserId = idUser;
@@ -160,9 +166,9 @@ public class LoginManager : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("email", emailInputRegister.text);
         form.AddField("email_encrypted", StringCipher.Encrypt(emailInputRegister.text, encryptionKey));
-        form.AddField("email_hash", GetHashString(emailInputRegister.text));
+        form.AddField("email_hash", PHPMd5Hash(emailInputRegister.text));
         form.AddField("password", passwordInputRegister.text);
-        form.AddField("password_hash", GetHashString(passwordInputRegister.text));
+        form.AddField("password_hash", PHPMd5Hash(passwordInputRegister.text));
         form.AddField("genre", registrationController.RegistrationGenre);
         form.AddField("date_of_birth", registrationController.RegistrationDateOfBirth);
         form.AddField("cause", registrationController.RegistrationCause);
@@ -205,9 +211,12 @@ public class LoginManager : MonoBehaviour
 
     private void ToggleButtons(bool isInteractible)
     {
-        foreach (Button item in listOfButtons)
+        foreach (Image item in listOfButtons)
         {
-            item.interactable = isInteractible;
+            Color temp = item.color;
+            temp.a = isInteractible ? 1f : 0.2f;
+            item.color = temp;
+            item.transform.parent.GetComponent<Image>().enabled = isInteractible;
         }
     }
 
@@ -230,7 +239,7 @@ public class LoginManager : MonoBehaviour
         reSendEmailButton.SetActive(false);
         WWWForm form = new WWWForm();
         form.AddField("email", emailInputLogin.text);
-        form.AddField("email_hash", GetHashString(emailInputLogin.text));
+        form.AddField("email_hash", PHPMd5Hash(emailInputLogin.text));
 
         using (WWW www = new WWW(reSendEmailUrl, form))
         {
@@ -271,6 +280,56 @@ public class LoginManager : MonoBehaviour
         }
     }
 
+    public void ResetPasswordForm()
+    {
+        emailInputResetPasword.text = string.Empty;
+        logInForm.SetActive(false);
+        resetPasswordForm.SetActive(true);
+    }
+
+    public void ResetPassword()
+    {
+        if (string.IsNullOrEmpty(emailInputResetPasword.text)) return;
+        StartCoroutine(ResetPasswordCoroutine());
+    }
+
+    public IEnumerator ResetPasswordCoroutine()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("email", emailInputResetPasword.text);
+        form.AddField("email_hash", PHPMd5Hash(emailInputResetPasword.text));
+
+        using (WWW www = new WWW(resetPasswordUrl, form))
+        {
+            yield return www;
+
+            if (!string.IsNullOrEmpty(www.error))
+            {
+                Debug.LogError("ERROR CONNECTING TO THE DATABSE: " + www.error);
+                TriggerLoginMessage("Error 404. Contact support.", Color.red);
+                yield break;
+            }
+            else
+            {
+                if (www.text == "bien")
+                {
+                    TriggerLoginMessage("Please check your email inbox/spam folder.", Color.green);
+                }
+                else if (www.text == "mal")
+                {
+                    TriggerLoginMessage("Email doesn't exist.", Color.red);
+                }
+            }
+        }
+        CloseResetPasswordForm();
+    }
+
+    public void CloseResetPasswordForm()
+    {
+        resetPasswordForm.SetActive(false);
+        logInForm.SetActive(true);
+    }
+
     #region Utilities
     public static byte[] GetHash(string inputString)
     {
@@ -278,13 +337,14 @@ public class LoginManager : MonoBehaviour
         return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
     }
 
-    public static string GetHashString(string inputString)
+    public static string PHPMd5Hash(string pass)
     {
-        StringBuilder sb = new StringBuilder();
-        foreach (byte b in GetHash(inputString))
-            sb.Append(b.ToString("X2"));
-
-        return sb.ToString();
+        using (MD5 md5 = MD5.Create())
+        {
+            byte[] input = Encoding.UTF8.GetBytes(pass);
+            byte[] hash = md5.ComputeHash(input);
+            return BitConverter.ToString(hash).Replace("-", "").ToLower();
+        }
     }
     #endregion
 }
