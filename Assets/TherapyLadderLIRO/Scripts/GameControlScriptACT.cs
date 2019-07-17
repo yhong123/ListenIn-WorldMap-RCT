@@ -262,7 +262,7 @@ public class GameControlScriptACT : MonoBehaviour
 
         ShowAllStimuli(true);
 
-        PlayAudioLIRO(3.0f);
+        PlayAudioLIRO(2.5f);
         ResetStimulThrowPos();
         SetCurrentCounter();
         SetEnable(true);

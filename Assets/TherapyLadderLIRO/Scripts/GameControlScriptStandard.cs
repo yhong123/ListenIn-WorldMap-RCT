@@ -298,8 +298,21 @@ public class GameControlScriptStandard : MonoBehaviour
             try
             {
                 Debug.Log("Loading image: " + availableFoils[i].ToString());
-                m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/phase1/" + availableFoils[i].ToString());
-                m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
+
+                ///Up to 3000 is reserved for ACT items
+                if (m_currChallenge.ChallengeID < 3000)
+                {
+                    m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/LIRO/ACT/" + m_currChallenge.ChallengeID.ToString() + "/" + availableFoils[i].ToString());
+                    m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
+                }
+                //Normal core items
+                else
+                {
+                    m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/phase1/" + availableFoils[i].ToString());
+                    m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -618,9 +631,17 @@ public class GameControlScriptStandard : MonoBehaviour
         // stop coroutine "WaitIncorrect" when user presses the "repeat" button or audio is auto played after a pause
         if (m_bIsCoroutineIncorrectRunning)
             StopCoroutine("WaitIncorrect");
-
-        string strAudio = "Audio/phase1/" + m_currAudio;
+        string strAudio;
+        if (m_currChallenge.ChallengeID < 3000)
+        {
+            strAudio = "Images/LIRO/ACT/" + m_currChallenge.ChallengeID.ToString() + "/" + m_currAudio;
+        }
+        else
+        {
+            strAudio = "Audio/phase1/" + m_currAudio;            
+        }
         strAudio = strAudio.Replace(".wav", "");
+
         Debug.Log(String.Format("GameControlScript: target audio = {0}", strAudio));
         AudioClip clip = null;
                 
