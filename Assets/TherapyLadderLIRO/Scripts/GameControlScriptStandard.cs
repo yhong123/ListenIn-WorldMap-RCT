@@ -297,6 +297,7 @@ public class GameControlScriptStandard : MonoBehaviour
             }
             try
             {
+                Debug.Log("Loading image: " + availableFoils[i].ToString());
                 m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/phase1/" + availableFoils[i].ToString());
                 m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
             }
@@ -623,33 +624,34 @@ public class GameControlScriptStandard : MonoBehaviour
         Debug.Log(String.Format("GameControlScript: target audio = {0}", strAudio));
         AudioClip clip = null;
                 
+
+        try
         {
-            try
+            m_sound_manager.SetChannelLevel(ChannelType.VoiceText, 0.0f);
+
+            AudioClipInfo aci;
+            aci.isLoop = false;
+            aci.delayAtStart = fDelay - 0.2f;
+            aci.useDefaultDBLevel = true;
+            aci.clipTag = string.Empty;
+
+            clip = Resources.Load<AudioClip>(strAudio);
+
+            if (clip != null)
             {
-                m_sound_manager.SetChannelLevel(ChannelType.VoiceText, 0.0f);
-
-                AudioClipInfo aci;
-                aci.isLoop = false;
-                aci.delayAtStart = fDelay;
-                aci.useDefaultDBLevel = true;
-                aci.clipTag = string.Empty;
-
-                clip = Resources.Load(strAudio) as AudioClip;
-                if (clip != null)
-                {
-                    m_sound_manager.Play(clip, ChannelType.VoiceText, aci);
-                }
-                else
-                {
-                     Debug.LogError(String.Format("Challenge ID: {0}; Cannot load audio: {1}", m_currChallenge.ChallengeID.ToString(), m_currAudio.ToString()));
-                }
+                m_sound_manager.Play(clip, ChannelType.VoiceText, aci);
             }
-            catch (Exception ex)
+            else
             {
-                Debug.LogError("GameControlScriptStandard: unable to load " + strAudio);
+                Debug.LogWarning(String.Format("Challenge ID: {0}; Cannot load audio: {1}", m_currChallenge.ChallengeID.ToString(), m_currAudio.ToString()));
             }
-
         }
+        catch (Exception ex)
+        {
+            Debug.LogWarning("GameControlScriptStandard: unable to load " + strAudio);
+        }
+
+
 
         m_bShowBtnRepeat = true;
 

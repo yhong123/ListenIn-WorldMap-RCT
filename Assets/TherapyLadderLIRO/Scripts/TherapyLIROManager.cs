@@ -23,7 +23,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
 
     [Header("Debug Settings")]
-    public int m_maxACTChallenges = 8;
+    public int m_maxACTChallenges = 1;
 
     private int m_currSectionCounter;
     public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }

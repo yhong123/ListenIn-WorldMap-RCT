@@ -98,6 +98,12 @@ public class StimulusScript : MonoBehaviour {
 
             // retrieve image from the Resource folder
             Sprite currSprite = Resources.Load(strImage, typeof(Sprite)) as Sprite;
+
+            if (currSprite == null)
+            {
+                Debug.LogWarning("Loading an empty sprite");
+            }
+
             m_goImage.GetComponent<SpriteRenderer>().sprite = currSprite;
 
             // scale sprite to smaller size
