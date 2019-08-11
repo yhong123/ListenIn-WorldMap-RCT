@@ -160,23 +160,64 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             yield return StartCoroutine(LoadInitialACTFile(GlobalVars.LiroACT_A, value => list_A = value));
             //Loading list of ACT_B
             yield return StartCoroutine(LoadInitialACTFile(GlobalVars.LiroACT_B, value => list_B = value));
+
+            //Load ACT Basket
+            List<Challenge> basket_act_list = new List<Challenge>();
+            List<Challenge> generated_basket_act = new List<Challenge>();
+            List<string> currLines = new List<string>();
+            //Load ACT Basket here
+            //Add code
+            CoreItemReader cir = new CoreItemReader();
+            string actbasketName = "ACT_basket";
+            string actbasketPath= Path.Combine(GlobalVars.GetPathToLIROBaskets(), actbasketName);
+
+            //Loading all the basket challenges excluding the untrained items
+            basket_act_list = cir.ParseCsv(actbasketPath, true).ToList();
+
+            string currentSelectedChallenge = String.Empty;
+            string currentSelectedLexicalItem = String.Empty;
+
             int randomNumber = 0;
             for (int i = 0; i < list_A.Count; i++)
             {
+                //Reset
+                currentSelectedChallenge = String.Empty;
+                currentSelectedLexicalItem = String.Empty;
+
                 //Choose random between 0 and 1
                 randomNumber = RandomGenerator.GetRandomInRange(0, 2);
-                if (randomNumber == 0)
-                {
-                    personalized_List.Add(list_A[i].Replace("\r", "").Trim());
-                }
-                else if (randomNumber == 1)
-                {
-                    personalized_List.Add(list_B[i].Replace("\r", "").Trim());
-                }
+                currentSelectedChallenge = randomNumber == 0 ? list_A[i].Replace("\r", "").Trim() : list_B[i].Replace("\r", "").Trim();
+                currentSelectedLexicalItem = currentSelectedChallenge.Split(new char[] { ',' })[1];
+                generated_basket_act.AddRange(basket_act_list.Where(x => x.LexicalItem == currentSelectedLexicalItem));
+
+                personalized_List.Add(currentSelectedChallenge);
+
             }
 
             //Saving to the local folder
             File.WriteAllLines(GlobalVars.GetPathToLIROACTGenerated(NetworkManager.UserId), personalized_List.ToArray());
+
+            for (int j = 0; j < generated_basket_act.Count; j++)
+            {
+                currLines.Add(String.Join(",", new string[] { generated_basket_act[j].ChallengeID.ToString(),
+                                                              generated_basket_act[j].Difficulty.ToString(),
+                                                              generated_basket_act[j].LexicalItem.ToString(),
+                                                              generated_basket_act[j].FileAudioIDs[0].ToString(),
+                                                              generated_basket_act[j].FileAudioIDs[1].ToString(),
+                                                              generated_basket_act[j].FileAudioIDs[2].ToString(),
+                                                              generated_basket_act[j].FileAudioIDs[3].ToString(),
+                                                              generated_basket_act[j].FileAudioIDs[4].ToString(),
+                                                              generated_basket_act[j].CorrectImageID.ToString(),
+                                                              generated_basket_act[j].Foils[1].ToString(),
+                                                              generated_basket_act[j].Foils[2].ToString(),
+                                                              generated_basket_act[j].Foils[3].ToString(),
+                                                              generated_basket_act[j].Foils[4].ToString(),
+                                                              generated_basket_act[j].Foils[5].ToString()
+                }));
+
+            }
+
+            File.WriteAllLines(GlobalVars.GetPathToLIROBasketACTGenerated(NetworkManager.UserId), currLines.ToArray());
 
             //AndreaLIRO: add the file to be sent online
             m_UserProfileManager.m_userProfile.isFirstInit = false;
@@ -714,6 +755,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         lines.Clear();
         lines.AddRange(shuffledLines);
     }
+    /// <summary>
+    /// Create therapy files after basket select screen
+    /// </summary>
+    /// <param name="basketsInfos"> basket infos coming from basket selction</param>
+    /// <returns></returns>
     internal IEnumerator LoadTherapyFromBasketFiles(List<BasketUI> basketsInfos)
     {
         //AndreaLIRO: increasing number of cycle
@@ -723,7 +769,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         //Loading ACT GEN file
         ACTItemReader air = new ACTItemReader();
-        List<ACTChallenge> listTrainedItems = air.ParseCsv(GlobalVars.GetPathToLIROACTGenerated(NetworkManager.UserId   ), false).ToList();
+        List<ACTChallenge> listTrainedItems = air.ParseCsv(GlobalVars.GetPathToLIROACTGenerated(NetworkManager.UserId), false).ToList();
 
         string currBasketsPath;
         List<Challenge> curr_basket_list_read = new List<Challenge>();

@@ -34,6 +34,8 @@ return Application.dataPath;// +"/"+ fileName;
     public static string LiroACT_A = @"Doc/ACT_LIRO/ACT_A";
     public static string LiroACT_B = @"Doc/ACT_LIRO/ACT_B";
     public static string LiroGeneratedACT = @"ACT/GEN_ACT";
+    public static string LiroACT_Basket = @"Doc/ACT_LIRO/ACT_BASKET";
+    public static string LiroGeneratedACT_Basket = @"ACT/GEN_ACT_BASKET";
 
     public static string GetPathToLIROOutput(string patientID)
     { 
@@ -59,5 +61,9 @@ return Application.dataPath;// +"/"+ fileName;
     public static string GetPathToLIROACTGenerated(string patientID)
     {
         return Path.Combine(GetPath(patientID), LiroGeneratedACT);
+    }
+    public static string GetPathToLIROBasketACTGenerated(string patientID)
+    {
+        return Path.Combine(GetPath(patientID), LiroGeneratedACT_Basket);
     }
 }
