@@ -577,7 +577,7 @@
 //				break;
 //			}
 //			//m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/" + m_lsTrial [m_intCurIdx].m_lsStimulus[i].m_strImage);
-//			m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/phase1/" + m_curTrial.m_lsStimulus[i].m_strImage);
+//			m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/CorePhotos/" + m_curTrial.m_lsStimulus[i].m_strImage);
 			
 //		}
 

@@ -864,7 +864,7 @@
 //                    break;
 //            }
 //            //m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/" + m_lsTrial [m_intCurIdx].m_lsStimulus[i].m_strImage);
-//            m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/phase1/" + m_curTrial.m_lsStimulus[i].m_strImage);
+//            m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/CorePhotos/" + m_curTrial.m_lsStimulus[i].m_strImage);
 
 //        }
 
@@ -900,7 +900,7 @@
 //        if (m_bIsCoroutineIncorrectRunning)
 //            StopCoroutine("WaitIncorrect");
 
-//        string strAudio = "Audio/phase1/" + m_curTrial.m_strTargetAudio;
+//        string strAudio = "Audio/CorePhotos/" + m_curTrial.m_strTargetAudio;
 //        Debug.Log(String.Format("GameControlScript: target audio = {0}", strAudio));
 //        /*
 //        string strFolder = CTrialList.Instance.getCurAudioFolder ();

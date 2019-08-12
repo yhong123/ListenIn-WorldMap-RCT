@@ -317,7 +317,7 @@
 //                if (intIdx2 >= 0)
 //                    trial.m_strTargetAudio = challengeItem.m_lsAudioFile[j].Substring(0, intIdx2);
 
-//                string strAudio = "Audio/phase1/" + trial.m_strTargetAudio;
+//                string strAudio = "Audio/CorePhotos/" + trial.m_strTargetAudio;
 //                AudioClip clip = Resources.Load(strAudio) as AudioClip;
 //                if (clip != null) break;
 //            }

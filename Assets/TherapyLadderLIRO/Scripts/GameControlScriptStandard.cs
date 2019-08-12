@@ -308,7 +308,7 @@ public class GameControlScriptStandard : MonoBehaviour
                 //Normal core items
                 else
                 {
-                    m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/phase1/" + availableFoils[i].ToString());
+                    m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/CorePhotos/" + availableFoils[i].ToString());
                     m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
                 }
 
@@ -638,7 +638,7 @@ public class GameControlScriptStandard : MonoBehaviour
         }
         else
         {
-            strAudio = "Audio/phase1/" + m_currAudio;            
+            strAudio = "Audio/CorePhotos/" + m_currAudio;            
         }
         strAudio = strAudio.Replace(".wav", "");
 
