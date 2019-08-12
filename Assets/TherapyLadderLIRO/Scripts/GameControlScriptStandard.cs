@@ -638,7 +638,7 @@ public class GameControlScriptStandard : MonoBehaviour
         }
         else
         {
-            strAudio = "Audio/CorePhotos/" + m_currAudio;            
+            strAudio = "Audio/CoreAudios/" + m_currAudio;            
         }
         strAudio = strAudio.Replace(".wav", "");
 
