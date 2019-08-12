@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 1, SART_TEST = 2, BASKET = 3, CORE = 4, QUESTIONAIRE = 5};
+public enum TherapyLadderStep { ACT = 4, SART_PRACTICE = 2, SART_TEST = 3, BASKET = 0, CORE = 1, QUESTIONAIRE = 5};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -173,6 +173,32 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             //Loading all the basket challenges excluding the untrained items
             basket_act_list = cir.ParseCsv(actbasketPath, true).ToList();
+
+            List<string> lexItems = basket_act_list.Select(x => x.LexicalItem).Distinct().ToList();
+            List<string> listAlexical = list_A.Select(x => x.Split(new char[] { ',' })[1]).ToList();
+            List<string> listBlexical = list_B.Select(x => x.Split(new char[] { ',' })[1]).ToList();
+
+            foreach (var item in listAlexical)
+            {
+                bool found = false;
+                if (lexItems.Any(x => x == item))
+                    found = true;
+                if (!found)
+                {
+                    Debug.Log(item);
+                }
+            }
+
+            foreach (var item in listBlexical)
+            {
+                bool found = false;
+                if (lexItems.Any(x => x == item))
+                    found = true;
+                if (!found)
+                {
+                    Debug.Log(item);
+                }
+            }
 
             string currentSelectedChallenge = String.Empty;
             string currentSelectedLexicalItem = String.Empty;
@@ -767,9 +793,16 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         int currAmount = 1;
 
+        basketsInfos.Shuffle();
+
         //Loading ACT GEN file
-        ACTItemReader air = new ACTItemReader();
-        List<ACTChallenge> listTrainedItems = air.ParseCsv(GlobalVars.GetPathToLIROACTGenerated(NetworkManager.UserId), false).ToList();
+        CoreItemReader cir = new CoreItemReader();
+        List<Challenge> listTrainedItems = cir.ParseCsv(GlobalVars.GetPathToLIROBasketACTGenerated(NetworkManager.UserId), false).ToList();
+        List<Challenge> curr_Selected_BasketACT = new List<Challenge>();
+        List<string> lexicalItems = new List<string>();
+        lexicalItems = listTrainedItems.Select(x => x.LexicalItem).Distinct().ToList();
+        lexicalItems.Shuffle();
+        int countLexicalItems = 0;
 
         string currBasketsPath;
         List<Challenge> curr_basket_list_read = new List<Challenge>();
@@ -789,7 +822,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             
             yield return new WaitForEndOfFrame();
 
-            CoreItemReader cir = new CoreItemReader();
+            cir = new CoreItemReader();
             string basketName = String.Format("Basket_{0}", basketsInfos[i].basketId);
             currBasketsPath = Path.Combine(GlobalVars.GetPathToLIROBaskets(), basketName);
 
@@ -875,32 +908,46 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             }
             yield return new WaitForEndOfFrame();
 
-            int countACTITems = 0;
-            Challenge currACTtoCoreChallenge;
+            int countACTBasketItemsInCurrentBasket = 0;
+
             //AndreaLIRO: adding trained items: may be adjusted when I have the final version
-            while (countACTITems < 30 && listTrainedItems.Count > 0)
+            // numero di lexixal total per act * numero di trial per lexical / numero di basket + un buffer to make sure I train all of the items
+            while (countACTBasketItemsInCurrentBasket < ((lexicalItems.Count * m_numberSelectedPerLexicalItem)/ basketsInfos.Count) && listTrainedItems.Count > 0 && countLexicalItems < lexicalItems.Count)
             {
-                currACTtoCoreChallenge = new Challenge(
-                        listTrainedItems[0].ChallengeID,
-                        listTrainedItems[0].LexicalItem,
-                        0,
-                        listTrainedItems[0].FileAudioID_F,
-                        listTrainedItems[0].FileAudioID_M,
-                        "0",
-                        "0",
-                        "0",
-                        listTrainedItems[0].Foils[0],
-                        listTrainedItems[0].Foils[1],
-                        listTrainedItems[0].Foils[2],
-                        listTrainedItems[0].Foils[3],
-                        listTrainedItems[0].Foils[4],
-                        listTrainedItems[0].Foils[5]
-                    );
-                curr_basket_list_write.Add(currACTtoCoreChallenge);
-                listTrainedItems.RemoveAt(0);
-                countACTITems++;
+
+                curr_Selected_BasketACT = listTrainedItems.Where(x => x.LexicalItem == lexicalItems[countLexicalItems]).ToList();
+                curr_Selected_BasketACT.Shuffle();
+
+                for (int xdr = 0; xdr < m_numberSelectedPerLexicalItem; xdr++)
+                {
+                    curr_basket_list_write.Add(curr_Selected_BasketACT[i % curr_Selected_BasketACT.Count]);
+                    countACTBasketItemsInCurrentBasket++;
+                }
+
+                countLexicalItems++;
+                
             }
 
+            //IF LAST BASKET ADD REMAINING LEXICAL ITEMS
+            if(i == basketsInfos.Count - 1 && countLexicalItems < lexicalItems.Count)
+            {
+                while (countLexicalItems < lexicalItems.Count)
+                {
+                    curr_Selected_BasketACT = listTrainedItems.Where(x => x.LexicalItem == lexicalItems[countLexicalItems]).ToList();
+                    curr_Selected_BasketACT.Shuffle();
+                    for (int xdr = 0; xdr < m_numberSelectedPerLexicalItem; xdr++)
+                    {
+                        curr_basket_list_write.Add(curr_Selected_BasketACT[i % curr_Selected_BasketACT.Count]);
+                        countACTBasketItemsInCurrentBasket++;
+                    }
+
+                    countLexicalItems++;
+                }
+
+            }
+
+
+            //---------- GENERATION COMPLETE
             //Shuffling challenges
             curr_basket_list_write.Shuffle();
 
