@@ -17,6 +17,10 @@ public class BasketManager : MonoBehaviour {
     private GameObject m_progressScreen;
     [SerializeField]
     private Text m_progressTherapy;
+    [SerializeField]
+    private Image[] tickImages;
+
+    public BasketSelectionHandHelper m_handHelper;
 
     private string m_stringProgressBarFormat = "Loading Therapy... {0}%";
 
@@ -28,6 +32,8 @@ public class BasketManager : MonoBehaviour {
             Debug.LogError("Please attach the components to BasketManager");
         m_startButton.interactable = false;
         m_progressScreen.SetActive(false);
+        m_handHelper.gameObject.SetActive(false);
+        UpdateTicks(0);
     }
 
     void Update()
@@ -57,7 +63,9 @@ public class BasketManager : MonoBehaviour {
             //Remove
             bc.SetHighlightColor(false);
             m_SelectedBaskets.Remove(basketInList);
+            UpdateTicks(m_SelectedBaskets.Count);
             m_startButton.interactable = false;
+            m_handHelper.gameObject.SetActive(false);
         }
         else
         {
@@ -68,8 +76,13 @@ public class BasketManager : MonoBehaviour {
                 newBasket.basketId = bc.m_basketNumber;
                 newBasket.hardMode = bc.m_hardMode;
                 m_SelectedBaskets.Add(newBasket);
-                if(m_SelectedBaskets.Count == max_number_of_selected_basket)
+                UpdateTicks(m_SelectedBaskets.Count);
+                if (m_SelectedBaskets.Count == max_number_of_selected_basket)
+                {
                     m_startButton.interactable = true;
+                    m_handHelper.gameObject.SetActive(true);
+                }
+                    
             }                    
         }
     }
@@ -98,6 +111,14 @@ public class BasketManager : MonoBehaviour {
         {
             //Escaping to the world map select
             StartCoroutine(BackToWorldMap());
+        }
+    }
+
+    private void UpdateTicks(int count)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+                tickImages[i].enabled = i < count;
         }
     }
 
