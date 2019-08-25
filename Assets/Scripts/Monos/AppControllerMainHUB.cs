@@ -8,13 +8,16 @@ public class AppControllerMainHUB : MonoBehaviour {
 
     public Button m_continueButtonACT;
     public Button m_continueButtonTherapy;
+    public Button m_continueInstructionTherapy;
+
     public Button[] m_continueButtonSart;
     public Button m_questionaireStart;
-    public Text m_currentSectionText;
+    //public Text m_currentSectionText;
     public ACT_UI m_ACT_ui;
     public Therapy_UI m_Therapy_ui;
     public SART_UI m_SART_ui;
     public Questionaire_UI m_Questionaire_ui;
+    public Therpay_Instruction_UI m_Therapy_Instruction_UI;
 
     private TherapyLadderStep currLadderStep;
     private string currLevelToLoad = "";
@@ -36,6 +39,7 @@ public class AppControllerMainHUB : MonoBehaviour {
     void OnLevelWasLoaded(int level)
     {
         Debug.Log("Level Loaded calling TherapyLiroManager");
+        HideAllMenus();
         TherapyLIROManager.Instance.CheckCurrentSection();
     }
 
@@ -93,15 +97,15 @@ public class AppControllerMainHUB : MonoBehaviour {
         switch (currProfile.LIROStep)
         {
             case TherapyLadderStep.BASKET:
-                m_currentSectionText.text = "Therapy";
-                m_Therapy_ui.gameObject.SetActive(true);
-                m_Therapy_ui.PrepareBasketScreen(currProfile);
-                m_continueButtonTherapy.enabled = true;
+                //m_currentSectionText.text = "Therapy";
+                m_Therapy_Instruction_UI.gameObject.SetActive(true);
+                //m_Therapy_ui.PrepareBasketScreen(currProfile);
+                m_continueInstructionTherapy.enabled = true;
                 currLevelToLoad = "Basket Selection";
-                m_continueButtonTherapy.interactable = true;
+                m_continueInstructionTherapy.interactable = true;
                 break;
             case TherapyLadderStep.CORE:
-                m_currentSectionText.text = "Therapy";
+                //m_currentSectionText.text = "Therapy";
                 m_Therapy_ui.gameObject.SetActive(true);
                 m_Therapy_ui.UpdateUserStats(currProfile);
                 m_continueButtonTherapy.enabled = true;
@@ -109,28 +113,28 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_continueButtonTherapy.interactable = true;
                 break;
             case TherapyLadderStep.ACT:
-                m_currentSectionText.text = "ACT";
+                //m_currentSectionText.text = "ACT";
                 m_ACT_ui.gameObject.SetActive(true);
                 m_ACT_ui.UpdateIcon(2,currProfile.m_userProfile.m_ACTLiroUserProfile.m_currentBlock);
                 //currLevelToLoad = "ACT";
                 m_continueButtonACT.interactable = true;
                 break;
             case TherapyLadderStep.SART_PRACTICE:
-                m_currentSectionText.text = "SART";
+                //m_currentSectionText.text = "SART";
                 m_SART_ui.gameObject.SetActive(true);
                 m_continueButtonSart[0].interactable = true;
                 m_continueButtonSart[1].interactable = false;
                 //currLevelToLoad = "SART";
                 break;
             case TherapyLadderStep.SART_TEST:
-                m_currentSectionText.text = "SART";
+                //m_currentSectionText.text = "SART";
                 m_SART_ui.gameObject.SetActive(true);
                 m_continueButtonSart[0].interactable = false;
                 m_continueButtonSart[1].interactable = true;
                 //currLevelToLoad = "SART";
                 break;
             case TherapyLadderStep.QUESTIONAIRE:
-                m_currentSectionText.text = "Questionnaire";
+                //m_currentSectionText.text = "Questionnaire";
                 m_Questionaire_ui.gameObject.SetActive(true);
                 m_questionaireStart.interactable = true;
                 break;
@@ -144,42 +148,45 @@ public class AppControllerMainHUB : MonoBehaviour {
         if (amount == 0)
         {
             HideAllMenus();
+
             //Activate the current UI
             switch (currProfile.LIROStep)
             {
                 case TherapyLadderStep.BASKET:
-                    m_currentSectionText.text = "Therapy";
-                    m_Therapy_ui.gameObject.SetActive(true);
-                    m_Therapy_ui.PrepareBasketScreen(currProfile);
+                    //m_currentSectionText.text = "Therapy";
+                    m_Therapy_Instruction_UI.gameObject.SetActive(true);
+                    //m_Therapy_ui.PrepareBasketScreen(currProfile);
                     currLevelToLoad = "Basket Selection";
-                    m_continueButtonTherapy.interactable = true;
+                    m_continueInstructionTherapy.enabled = true;
+                    currLevelToLoad = "Basket Selection";
+                    m_continueInstructionTherapy.interactable = true;
                     break;
                 case TherapyLadderStep.CORE:
-                    m_currentSectionText.text = "Therapy";
+                    //m_currentSectionText.text = "Therapy";
                     m_Therapy_ui.gameObject.SetActive(true);
                     m_Therapy_ui.UpdateUserStats(currProfile);
                     currLevelToLoad = "World Map Select";
                     m_continueButtonTherapy.interactable = true;
                     break;
                 case TherapyLadderStep.ACT:
-                    m_currentSectionText.text = "ACT";
+                    //m_currentSectionText.text = "ACT";
                     m_ACT_ui.gameObject.SetActive(true);
                     currLevelToLoad = "ACT";
                     break;
                 case TherapyLadderStep.SART_PRACTICE:
-                    m_currentSectionText.text = "SART";
+                    //m_currentSectionText.text = "SART";
                     m_SART_ui.gameObject.SetActive(true);
                     m_continueButtonSart[0].interactable = true;
                     m_continueButtonSart[1].interactable = false;
                     break;
                 case TherapyLadderStep.SART_TEST:
-                    m_currentSectionText.text = "SART";
+                    //m_currentSectionText.text = "SART";
                     m_SART_ui.gameObject.SetActive(true);
                     m_continueButtonSart[0].interactable = false;
                     m_continueButtonSart[1].interactable = true;
                     break;
                 case TherapyLadderStep.QUESTIONAIRE:
-                    m_currentSectionText.text = "Questionnaire";
+                    //m_currentSectionText.text = "Questionnaire";
                     m_Questionaire_ui.gameObject.SetActive(true);
                     m_questionaireStart.interactable = true;
                     break;
@@ -208,31 +215,31 @@ public class AppControllerMainHUB : MonoBehaviour {
         {
             case TherapyLadderStep.BASKET:
             case TherapyLadderStep.CORE:
-                m_currentSectionText.text = "Therapy";
+                //m_currentSectionText.text = "Therapy";
                 m_Therapy_ui.gameObject.SetActive(true);
                 StartCoroutine(EndTherapy(currProfile));
                 break;
             case TherapyLadderStep.ACT:
-                m_currentSectionText.text = "ACT";
+                //m_currentSectionText.text = "ACT";
                 m_ACT_ui.gameObject.SetActive(true);
                 StartCoroutine(EndACT(currProfile));
                 break;
             case TherapyLadderStep.SART_PRACTICE:
-                m_currentSectionText.text = "SART";
+                //m_currentSectionText.text = "SART";
                 m_SART_ui.gameObject.SetActive(true);
                 m_continueButtonSart[0].interactable = false;
                 m_continueButtonSart[1].interactable = false;
                 StartCoroutine(EndSART(currProfile));
                 break;
             case TherapyLadderStep.SART_TEST:
-                m_currentSectionText.text = "SART";
+                //m_currentSectionText.text = "SART";
                 m_SART_ui.gameObject.SetActive(true);
                 m_continueButtonSart[0].interactable = false;
                 m_continueButtonSart[1].interactable = false;
                 StartCoroutine(EndSART(currProfile));
                 break;
             case TherapyLadderStep.QUESTIONAIRE:
-                m_currentSectionText.text = "Questionaire";
+                //m_currentSectionText.text = "Questionaire";
                 m_Questionaire_ui.gameObject.SetActive(true);
                 m_questionaireStart.interactable = false;
                 StartCoroutine(EndQuestionaire(currProfile));
@@ -284,6 +291,7 @@ public class AppControllerMainHUB : MonoBehaviour {
         m_Therapy_ui.gameObject.SetActive(false);
         m_SART_ui.gameObject.SetActive(false);
         m_Questionaire_ui.gameObject.SetActive(false);
+        m_Therapy_Instruction_UI.gameObject.SetActive(false);
     }
 
 }

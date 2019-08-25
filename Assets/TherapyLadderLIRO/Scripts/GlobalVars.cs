@@ -14,7 +14,11 @@ public static class GlobalVars {
     public static int ActChallengeLength = 30;
     public static string GetPath(string patientID)
     {
-#if UNITY_EDITOR
+#if UNITY_STANDALONE_WIN
+        string patientPath = Application.persistentDataPath + @"/ListenIn/LIRO";
+        patientPath = Path.Combine(patientPath, patientID);
+        return patientPath;
+#elif UNITY_EDITOR
         string patientPath = Application.persistentDataPath + @"/ListenIn/LIRO";
         patientPath = Path.Combine(patientPath, patientID);
         return patientPath;
