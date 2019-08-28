@@ -7,7 +7,9 @@ using System;
 using System.IO;
 using System.Linq;
 
-
+/// <summary>
+/// USED FOR STANDARD THERAPY ANDREA
+/// </summary>
 public class GameControlScriptStandard : MonoBehaviour 
 {
     // list of trials / challenges
@@ -302,12 +304,14 @@ public class GameControlScriptStandard : MonoBehaviour
                 ///Up to 3000 is reserved for ACT items
                 if (m_currChallenge.ChallengeID < 3000)
                 {
+                    Debug.LogError("Detected ACT ID in normal therapy");
                     m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/LIRO/ACT/" + m_currChallenge.ChallengeID.ToString() + "/" + availableFoils[i].ToString());
                     m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
                 }
                 //Normal core items
                 else
                 {
+                    
                     m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/CorePhotos/" + availableFoils[i].ToString());
                     m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
                 }
