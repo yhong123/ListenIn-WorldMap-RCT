@@ -920,7 +920,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1679,7 +1679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1866,7 +1866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2359,7 +2359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2469,7 +2469,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1002520542}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: -215.00006, y: 35}
@@ -2617,7 +2617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3527,7 +3527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3574,8 +3574,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1601236692}
-  - {fileID: 2084008406}
-  m_Father: {fileID: 1932750989}
+  m_Father: {fileID: 1002520542}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -3953,8 +3952,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 885876825}
   - {fileID: 682546072}
-  - {fileID: 1628302603}
   - {fileID: 1932750989}
   - {fileID: 450982004}
   - {fileID: 824460420}
@@ -3977,24 +3976,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_baseText: {fileID: 2084008407}
-  m_Icon: {fileID: 728332871}
   standardAct: {fileID: 1932750988}
   scoreAct: {fileID: 824460419}
   currScoreText: {fileID: 1938176814}
   prevScoreText: {fileID: 926407094}
-  m_iconTransformList:
-  - {fileID: 1452719607}
-  - {fileID: 444424989}
-  - {fileID: 1925927752}
-  - {fileID: 939020713}
-  - {fileID: 1783347826}
-  - {fileID: 64843875}
-  - {fileID: 1315009267}
-  - {fileID: 254433417}
-  - {fileID: 1670471134}
-  - {fileID: 1268832823}
   m_continueButton: {fileID: 1628302604}
   m_closeScoreButton: {fileID: 1271705634}
+  m_circularProgression: {fileID: 161766001}
+  m_filledPieces:
+  - {fileID: 1472116460}
+  - {fileID: 685784209}
+  - {fileID: 408824537}
+  - {fileID: 2039085132}
+  - {fileID: 1125615305}
+  - {fileID: 852511706}
+  - {fileID: 665371609}
+  - {fileID: 401975855}
+  m_scoreText: {fileID: 1761692661}
 --- !u!1 &1014112928
 GameObject:
   m_ObjectHideFlags: 0
@@ -4495,7 +4493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6199,7 +6197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6850,8 +6848,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 152740987}
-  m_Father: {fileID: 1002520542}
-  m_RootOrder: 1
+  m_Father: {fileID: 1932750989}
+  m_RootOrder: 4
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 419.7, y: -76.20001}
@@ -7664,7 +7662,7 @@ GameObject:
   - 222: {fileID: 1761692662}
   - 114: {fileID: 1761692661}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: CircularBarText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7719,7 +7717,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0/8
+  m_Text: 
 --- !u!222 &1761692662
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8291,7 +8289,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1932750989
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8302,10 +8300,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 885876825}
+  - {fileID: 2084008406}
   - {fileID: 161766000}
   - {fileID: 1490767934}
   - {fileID: 728332872}
+  - {fileID: 1628302603}
   m_Father: {fileID: 1002520542}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
@@ -8955,7 +8954,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -9003,11 +9002,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 885876825}
-  m_RootOrder: 1
+  m_Father: {fileID: 1932750989}
+  m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030552503, y: -90}
+  m_AnchoredPosition: {x: -0.00009158411, y: -78.9}
   m_SizeDelta: {x: -0.000061105005, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2084008407

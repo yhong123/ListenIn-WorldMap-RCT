@@ -115,6 +115,7 @@ public class AppControllerMainHUB : MonoBehaviour {
             case TherapyLadderStep.ACT:
                 //m_currentSectionText.text = "ACT";
                 m_ACT_ui.gameObject.SetActive(true);
+                m_ACT_ui.SetACTStardardBoard();
                 m_ACT_ui.UpdateIcon(2,currProfile.m_userProfile.m_ACTLiroUserProfile.m_currentBlock);
                 //currLevelToLoad = "ACT";
                 m_continueButtonACT.interactable = true;
@@ -171,6 +172,7 @@ public class AppControllerMainHUB : MonoBehaviour {
                 case TherapyLadderStep.ACT:
                     //m_currentSectionText.text = "ACT";
                     m_ACT_ui.gameObject.SetActive(true);
+                    m_ACT_ui.SetACTStardardBoard();
                     currLevelToLoad = "ACT";
                     break;
                 case TherapyLadderStep.SART_PRACTICE:
