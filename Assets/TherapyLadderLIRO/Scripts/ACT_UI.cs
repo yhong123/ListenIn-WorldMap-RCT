@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Text;
 
 public class ACT_UI : MonoBehaviour {
 
+    [Header("Initialization, Score and Current progression")]
     public Text m_baseText;
     //public GameObject m_Icon;
     public GameObject standardAct;
@@ -15,6 +17,20 @@ public class ACT_UI : MonoBehaviour {
     public Button m_continueButton;
     public Button m_closeScoreButton;
 
+    [Header("Score")]
+    public Text ResultText;
+    public GameObject ResultsIcon;
+    public GameObject todayIcon;
+    public GameObject lastIcon;
+    public Text todayText;
+    public Text lastText;
+    public AnimationCurve animationIconsScale;
+    public AnimationCurve animationIconsRotation;
+    public AnimationCurve animationTranslate;
+    public float AnimationSpeedMultiplier;
+    public float initialRotation;
+
+    [Header("Current Progression")]
     public Image m_circularProgression;
     public Image[] m_filledPieces;
     public Text m_scoreText;
@@ -51,17 +67,97 @@ public class ACT_UI : MonoBehaviour {
         yield return new WaitForSeconds(2);
     }
 
-    public IEnumerator SetScore(int currScore, int previousScore)
+    public IEnumerator SetScore(int currScore, int previousScore, bool firstTime)
     {
         HideInteralUI();
         m_closeScoreButton.interactable = false;
         scoreAct.SetActive(true);
-        currScoreText.text = currScore.ToString();
-        prevScoreText.text = previousScore.ToString();
+
+        string formatCurrent = "{0}/<color=aqua>240</color>";
+        string formatLast = "{0}/<color=lime>240</color>";
+
+        yield return null;
+        yield return StartCoroutine(PrintText(ResultText, "RESULTS".ToCharArray(), 0.2f));
+        yield return StartCoroutine(fastAnimationGO(ResultsIcon, AnimationSpeedMultiplier));
+        yield return new WaitForSeconds(0.3f);
+        yield return StartCoroutine(fastAnimationGOTranslate(todayIcon, 1.5f, new Vector3(-150,0,0)));
+        yield return StartCoroutine(PrintText(todayText, "Today's score".ToCharArray(), 0.08f));
+        yield return new WaitForSeconds(1.0f);
+        currScoreText.text = string.Format(formatCurrent, currScore.ToString());
+        yield return null;
+        yield return new WaitForSeconds(0.5f);
+        yield return StartCoroutine(fastAnimationGOTranslate(lastIcon, 1.5f, new Vector3(150, 0, 0)));
+        yield return StartCoroutine(PrintText(lastText, "Last score".ToCharArray(), 0.08f));
+        yield return new WaitForSeconds(1.0f);
+        prevScoreText.text = firstTime ? "N/A" : string.Format(formatLast,previousScore.ToString());
 
         yield return new WaitForSeconds(3);
 
         m_closeScoreButton.interactable = true;
+    }
+
+    private IEnumerator fastAnimationGO(GameObject go, float speed)
+    {
+
+        Transform tf = go.transform;
+        Vector3 initialScale = new Vector3(4, 4, 1);
+        Vector3 finalScale = new Vector3(1, 1, 1);
+        //Quaternion initialRotation = Quaternion.Euler(0, 0, 360+270);
+        //Quaternion finalRotation = Quaternion.Euler(0, 0, 0);
+        float initialRotation = this.initialRotation;
+        float finalRotation = 0;
+        float currRoation = 0;
+
+        go.SetActive(true);
+        tf.localScale = initialScale;
+        float t = 0.0f;
+        while (t <= 1.0f)
+        {
+            t += Time.deltaTime * speed;
+
+            tf.localScale = Vector3.LerpUnclamped(initialScale, finalScale, animationIconsScale.Evaluate(t));
+            currRoation = Mathf.Lerp(initialRotation, finalRotation, animationIconsRotation.Evaluate(t));
+            tf.localRotation = Quaternion.AngleAxis(currRoation, Vector3.forward);
+
+            yield return new WaitForEndOfFrame();
+        }
+
+    }
+
+    private IEnumerator fastAnimationGOTranslate(GameObject go, float speed, Vector3 InitialPos)
+    {
+        Transform tf = go.transform;
+        Vector3 initialPos = InitialPos;
+        Vector3 fialPosition = new Vector3(0, 0, 0);
+
+        go.SetActive(true);
+        tf.localPosition = InitialPos;
+        float t = 0.0f;
+        while (t <= 1.0f)
+        {
+            t += Time.deltaTime * speed;
+
+            tf.localPosition = Vector3.LerpUnclamped(initialPos, fialPosition, animationIconsScale.Evaluate(t));
+            yield return new WaitForEndOfFrame();
+        }
+
+    }
+
+    private IEnumerator PrintText(Text targetText, char[] targetString, float textSpeed)
+    {
+        targetText.text = string.Empty;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < targetString.Length; i++)
+        {
+            sb.Append(targetString[i]);
+            targetText.text = sb.ToString();
+            yield return new WaitForSeconds(textSpeed);
+        }
+    }
+
+    public void StartAnimationEditor()
+    {
+        StartCoroutine(SetScore(64, 25, false));
     }
 
     public void UpdateText(int amount)
@@ -73,7 +169,7 @@ public class ACT_UI : MonoBehaviour {
 
     public void UpdateIcon(float duration, int currStep)
     {
-        StartCoroutine(SetCircularBar(1.4f, currStep));
+        StartCoroutine(SetCircularBar(1.3f, currStep));
 
         if (currStep > 0)
         {
@@ -151,7 +247,7 @@ public class ACT_UI : MonoBehaviour {
 
         if (previousAmount == 100)
         {
-            StartCoroutine(SetCircularBar(1.3f,0));
+            StartCoroutine(SetCircularBar(1.3f,1));
             yield return new WaitForSeconds(1.5f);
             m_baseText.text = "Please, press play";
             m_continueButton.interactable = true;
