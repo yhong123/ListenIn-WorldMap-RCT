@@ -26,6 +26,8 @@ public class SART_Test_Practice : MonoBehaviour {
     public Sprite OkHand;
     public Sprite NotOkHand;
 
+    public ButtonSpriteAnimator bsa;
+
     private SpriteRenderer goHandRenderer;
     private SpriteRenderer rewardHandRenderer;
 
@@ -319,12 +321,15 @@ public class SART_Test_Practice : MonoBehaviour {
         yield return new WaitForSeconds(2.0f);
         button.SetActive(true);
         buttonB.interactable = false;
+        bsa.SetAnimationEnabled(false);
         isButtonEnabled = false;
         yield return new WaitForEndOfFrame();
         yield return StartCoroutine(ShowHand(true, false, ButtonPromptType.Demo));
         CleanTrial();
         yield return new WaitForEndOfFrame();
         yield return StartCoroutine(ShowRewardHandFeedback(true));
+        bsa.SetAnimationEnabled(true);
+
     }
     /// <summary>
     /// Demo for one NoGo trial
@@ -334,17 +339,18 @@ public class SART_Test_Practice : MonoBehaviour {
     {
         yield return null;
         SetCharacter(false);
-        yield return new WaitForSeconds(2.0f);
         button.SetActive(true);
         buttonB.interactable = false;
         isButtonEnabled = false;
-        yield return new WaitForEndOfFrame();
+        bsa.SetAnimationEnabled(false);
+        yield return new WaitForSeconds(2.0f);
         yield return StartCoroutine(ShowHand(true, true, ButtonPromptType.Prompt1));
         yield return new WaitForSeconds(3.0f);
         CleanTrial();
         buttonB.interactable = true;
         yield return new WaitForEndOfFrame();
         yield return StartCoroutine(ShowRewardHandFeedback(true));
+        bsa.SetAnimationEnabled(true);
     }
     /// <summary>
     /// Single Go trial

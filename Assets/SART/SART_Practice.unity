@@ -476,7 +476,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1857351356}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 100, y: -180}
@@ -543,7 +543,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1857351356}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 100, y: -180}
@@ -620,6 +620,7 @@ MonoBehaviour:
   NoGoHand: {fileID: 21300000, guid: 8402353d8c380c641b8b7f9fda6d44e0, type: 3}
   OkHand: {fileID: 21300000, guid: b2dafb0282c39dd48be3503f0cacdb30, type: 3}
   NotOkHand: {fileID: 21300000, guid: 7025578be9b7f4c4faad771e719af5d3, type: 3}
+  bsa: {fileID: 1943176756}
   currCorrectGoTrial: 0
   currCorrectNOGoSession: 0
   handInitialiPosition: {x: 3.3, y: -3.5, z: -15}
@@ -731,7 +732,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1857351356}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 100, y: -180}
@@ -989,10 +990,10 @@ RectTransform:
   - {fileID: 751660317}
   - {fileID: 1955709646}
   - {fileID: 578571547}
-  - {fileID: 1943176751}
   - {fileID: 846528900}
   - {fileID: 775602571}
   - {fileID: 1211463230}
+  - {fileID: 1943176751}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
@@ -1012,6 +1013,8 @@ GameObject:
   - 114: {fileID: 1943176754}
   - 114: {fileID: 1943176753}
   - 114: {fileID: 1943176752}
+  - 58: {fileID: 1943176757}
+  - 114: {fileID: 1943176756}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1027,14 +1030,14 @@ RectTransform:
   m_GameObject: {fileID: 1943176750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.23790568, y: 0.23790577, z: 0.23790577}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1857351356}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 30}
-  m_SizeDelta: {x: 450, y: 350}
+  m_AnchoredPosition: {x: 0, y: 18.8}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1943176752
 MonoBehaviour:
@@ -1067,8 +1070,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1111,14 +1114,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 52d25f6226dc340209186e916a8e646e, type: 2}
-  m_Color: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 1}
+  m_Color: {r: 0.5176471, g: 0.5176471, b: 0.5176471, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 004d0b048d048194e8a0e1f171ed83c4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8987a22510aac504faa1943c7535b25b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1132,6 +1135,35 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1943176750}
+--- !u!114 &1943176756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1943176750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3050b8438df0b7418bed61b69d365fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonSprites:
+  - {fileID: 21300000, guid: 8987a22510aac504faa1943c7535b25b, type: 3}
+  - {fileID: 21300000, guid: 734755ea7be325a48908a92a33c75632, type: 3}
+  buttonImage: {fileID: 1943176754}
+--- !u!58 &1943176757
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1943176750}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 60.05}
+  serializedVersion: 2
+  m_Radius: 56.04
 --- !u!1 &1955709645
 GameObject:
   m_ObjectHideFlags: 0

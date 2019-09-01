@@ -9,7 +9,7 @@ public class ColorLerper : MonoBehaviour {
     public void StopLerp()
     {
         StopAllCoroutines();
-        currImage.color = new Color(165.0f / 255.0f, 165.0f / 255.0f, 165.0f / 255.0f);
+        currImage.color = new Color(132.0f / 255.0f, 132.0f / 255.0f, 132.0f / 255.0f);
     }
     public void StartLerp()
     {
@@ -25,7 +25,7 @@ public class ColorLerper : MonoBehaviour {
     {
         while (true)
         {
-            currImage.color = Color.Lerp(new Color(165.0f / 255.0f, 165.0f / 255.0f, 165.0f / 255.0f), new Color(220.0f / 255.0f, 220.0f / 255.0f, 220.0f / 255.0f), Mathf.PingPong(Time.time,1));
+            currImage.color = Color.Lerp(new Color(132.0f / 255.0f, 132.0f / 255.0f, 132.0f / 255.0f), new Color(200.0f / 255.0f, 200.0f / 255.0f, 200.0f / 255.0f), Mathf.PingPong(Time.time,1));
             yield return new WaitForEndOfFrame();
         }
     }
