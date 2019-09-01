@@ -89,6 +89,12 @@ public class AppControllerMainHUB : MonoBehaviour {
         MadLevel.LoadLevelByName(currLevelToLoad);
         //AndreaLIRO: need to implement
     }
+
+    public void sartEndAllClicked()
+    {
+        m_SART_ui.DisableCloseButtons();
+        TherapyLIROManager.Instance.GoToNextSection();
+    }
     #endregion
 
     #region DelegateMethods
@@ -123,6 +129,10 @@ public class AppControllerMainHUB : MonoBehaviour {
             case TherapyLadderStep.SART_PRACTICE:
                 //m_currentSectionText.text = "SART";
                 m_SART_ui.gameObject.SetActive(true);
+                if (currProfile.m_userProfile.m_SartLiroUserProfile.attempts == 1)
+                {
+                    m_SART_ui.SetText("Practice failed, please try again");
+                }
                 m_continueButtonSart[0].interactable = true;
                 m_continueButtonSart[1].interactable = false;
                 //currLevelToLoad = "SART";
@@ -238,7 +248,7 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_SART_ui.gameObject.SetActive(true);
                 m_continueButtonSart[0].interactable = false;
                 m_continueButtonSart[1].interactable = false;
-                StartCoroutine(EndSART(currProfile));
+                m_SART_ui.PrepareEndingScreen();
                 break;
             case TherapyLadderStep.QUESTIONAIRE:
                 //m_currentSectionText.text = "Questionaire";
@@ -272,7 +282,7 @@ public class AppControllerMainHUB : MonoBehaviour {
     }
     private IEnumerator EndSART(UserProfileManager currProfile)
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForEndOfFrame();
         TherapyLIROManager.Instance.GoToNextSection();
     }
     private IEnumerator EndQuestionaire(UserProfileManager currProfile)

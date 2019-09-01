@@ -24,6 +24,7 @@ public class SARTLiroUserProfile
 {
     public bool practiceCompleted;
     public bool testCompleted;
+    public int attempts;
 }
 
 public class QuestionnaireUserProfile

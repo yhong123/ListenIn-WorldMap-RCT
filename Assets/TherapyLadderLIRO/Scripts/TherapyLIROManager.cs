@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 2, SART_TEST = 3, BASKET = 4, CORE = 5, QUESTIONAIRE = 1};
+public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 1, SART_TEST = 2, BASKET = 4, CORE = 5, QUESTIONAIRE = 3};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -78,15 +78,22 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.m_userProfile.isFirstInit = true; //This is to make the first initialization 
             m_UserProfileManager.m_userProfile.isTutorialDone = false; //This is used to make sure the initial tutorial has been done
             m_UserProfileManager.m_userProfile.m_currIDUser = 1;
+            m_UserProfileManager.m_userProfile.m_cycleNumber = 0;
+
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = 0;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = 0;
-            m_UserProfileManager.m_userProfile.m_cycleNumber = 0;
+            
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 8;
+
             m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = false;
+            m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = false;
+            m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = 0;
+
             m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = false;
+
 
             //Wait for the data to be saved
             yield return StartCoroutine(SaveCurrentUserProfile());
@@ -289,7 +296,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     {
         //AndreaLIRO: simplify this version. We switch between the sections and call separate methods
 
-        //We check for first initialization only as this is treated specially
+        //AndreaLIRO: We check for first initialization only as this is treated specially , MUST BE NEGATED
         if (m_UserProfileManager.m_userProfile.isTutorialDone)
         {
             //AndreaLIRO:
@@ -304,7 +311,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         //AndreaLIRO: Create an escape for when having finished the tutorial
         //************************************************************************************************************************
-        if (m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock == -1 && m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock == -1)
+        if (  m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock == -1
+                && m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock == -1
+                && (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.BASKET || m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.ACT))
         {
             StartCoroutine(CreateCurrentSection());
             return;
@@ -383,7 +392,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// <returns></returns>
     private bool CheckSARTEscapeSection()
     {
-        return m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted;
+        return m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted || m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts > 1;
     }
     /// <summary>
     /// Escaping condition for the SART
@@ -447,12 +456,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     public IEnumerator AddTherapyMinutes(int minutes)
     {
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes += minutes;
-        yield return SaveCurrentUserProfile();
+        yield return StartCoroutine(SaveCurrentUserProfile());
     }
     public IEnumerator AddGameMinutes(int minutes)
     {
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes += minutes;
-        yield return SaveCurrentUserProfile();
+        yield return StartCoroutine(SaveCurrentUserProfile());
     }
     public void StartCoreTherapy(List<BasketUI> selectedBasket)
     {
@@ -495,23 +504,27 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     public IEnumerator SaveCurrentSARTPractice(bool isCompleted)
     {
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = isCompleted;
-        yield return SaveCurrentUserProfile();
+        if (!isCompleted)
+        {
+            m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts++;
+        }
+        yield return StartCoroutine(SaveCurrentUserProfile());
     }
     public IEnumerator SaveCurrentQuestionaire(bool isCompleted)
     {
         m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = isCompleted;
-        yield return SaveCurrentUserProfile();
+        yield return StartCoroutine(SaveCurrentUserProfile());
     }
 
     public IEnumerator SaveSARTFinished()
     {
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = true;
-        yield return SaveCurrentUserProfile();
+        yield return StartCoroutine(SaveCurrentUserProfile());
     }
     public IEnumerator SaveBasketCompletedInfo()
     {
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.isBasketDone = true;
-        yield return SaveCurrentUserProfile();
+        yield return StartCoroutine(SaveCurrentUserProfile());
     }
     /// <summary>
     /// Called by the UploadManager to update the current score in the ACT
@@ -588,6 +601,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 //AndreaLIRO: resetting completed state
                 m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = false;
                 m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = false;
+                m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = 0;
                 yield return StartCoroutine(SaveCurrentUserProfile());
                 LoadingSARTSCreen();
                 break;

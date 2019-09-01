@@ -682,7 +682,14 @@ public class GameControlScriptACT : MonoBehaviour
             EndTherapySessionACT();
             return;
         }
-            
+
+#endif
+#if UNITY_STANDALONE_WIN
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            EndTherapySessionACT();
+            return;
+        }
 #endif
         if (enable_input)
         {

@@ -35,6 +35,11 @@ public class ACT_UI : MonoBehaviour {
     public Image[] m_filledPieces;
     public Text m_scoreText;
 
+    [Header("Helpers in section")]
+    public Button CloseButton;
+    public Button InfoButton;
+    public GameObject InitialInfoAfterLoading;
+
     private string text_format = "Loading... {0}%";
 
     private int currAmount = 0;
@@ -49,18 +54,19 @@ public class ACT_UI : MonoBehaviour {
     {
         standardAct.gameObject.SetActive(false);
         standardAct.gameObject.SetActive(false);
+        CloseButton.interactable = false;
     }
 
     public void SetACTStardardBoard()
     {
         HideInteralUI();
         standardAct.gameObject.SetActive(true);
-
     }
 
     public IEnumerator HideBoard()
     {
         m_closeScoreButton.interactable = false;
+        CloseButton.interactable = false;
         yield return new WaitForSeconds(1);
         standardAct.SetActive(false);
         scoreAct.SetActive(false);
@@ -93,6 +99,7 @@ public class ACT_UI : MonoBehaviour {
 
         yield return new WaitForSeconds(3);
 
+        CloseButton.interactable = true;
         m_closeScoreButton.interactable = true;
     }
 
@@ -228,7 +235,9 @@ public class ACT_UI : MonoBehaviour {
         m_scoreText.text = string.Format("{0}/8", (step - 1).ToString());
 
         yield return new WaitForSeconds(1.0f);
-        m_baseText.text = "Please, press play";
+        m_baseText.text = "Please, press Play button";
+        CloseButton.interactable = true;
+        InfoButton.interactable = true;
         yield return new WaitForEndOfFrame();
 
     }
@@ -247,10 +256,15 @@ public class ACT_UI : MonoBehaviour {
 
         if (previousAmount == 100)
         {
-            StartCoroutine(SetCircularBar(1.3f,1));
-            yield return new WaitForSeconds(1.5f);
-            m_baseText.text = "Please, press play";
+            //StartCoroutine(SetCircularBar(1.3f,1));
+            yield return new WaitForSeconds(1.0f);
+            m_baseText.text = "";
+            yield return new WaitForEndOfFrame();
+            InitialInfoAfterLoading.SetActive(true);
             m_continueButton.interactable = true;
+            CloseButton.interactable = true;
+            InfoButton.interactable = true;
+            yield return new WaitForEndOfFrame();
         }
 
     }
