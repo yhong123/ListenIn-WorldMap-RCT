@@ -271,7 +271,9 @@ public class AppControllerMainHUB : MonoBehaviour {
         //m_ACT_ui.UpdateIcon(2, currProfile.m_userProfile.m_ACTLiroUserProfile.m_currentBlock);
         //yield return new WaitForSeconds(2);
         bool firstTime = currProfile.m_userProfile.m_cycleNumber == 0;
-        yield return StartCoroutine(m_ACT_ui.SetScore(currProfile.m_userProfile.m_ACTLiroUserProfile.m_currScore, currProfile.m_userProfile.m_ACTLiroUserProfile.m_previousScore, firstTime));
+        //Hardcode the percentage
+        // There are 228 ACT at the moment
+        yield return StartCoroutine(m_ACT_ui.SetScore((float)(currProfile.m_userProfile.m_ACTLiroUserProfile.m_currScore/228.0f)*100.0f, (float)(currProfile.m_userProfile.m_ACTLiroUserProfile.m_previousScore / 228.0f) * 100.0f, firstTime));
         //AndreaLIRO: add other animations here... then back to the Therapy Manager to change section
         //Maybe wait for a button to be pressed in order to go back to the 
     }

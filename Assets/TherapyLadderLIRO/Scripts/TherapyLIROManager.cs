@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 1, SART_TEST = 2, BASKET = 4, CORE = 5, QUESTIONAIRE = 3};
+public enum TherapyLadderStep { ACT = 4, SART_PRACTICE = 5, SART_TEST = 2, BASKET = 0, CORE = 1, QUESTIONAIRE = 3};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 

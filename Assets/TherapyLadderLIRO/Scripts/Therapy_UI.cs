@@ -17,6 +17,7 @@ public class Therapy_UI : MonoBehaviour {
     public Image backgroundFill;
     public Image filledProgressBar;
     public Text percentageText;
+    public Text completedTherapyText;
 
     public float textSpeed = 0.1f;
 
@@ -91,9 +92,10 @@ public class Therapy_UI : MonoBehaviour {
     private IEnumerator UpdateUI()
     {
         yield return StartCoroutine(PrintText(cycleText,cycleTextS));
-        yield return StartCoroutine(PrintText(completedText, ("Completed:").ToCharArray()));
+        yield return StartCoroutine(PrintText(completedText, ("Total time:").ToCharArray()));
         yield return StartCoroutine(ShowImageAlpha(clockImage, 1.5f));
         yield return StartCoroutine(PrintText(therapyText, therapyTextS));
+        yield return StartCoroutine(PrintText(completedTherapyText, ("Therapy completed:").ToCharArray()));
         yield return StartCoroutine(ShowImageAlpha(backgroundFill, 1.8f));
         yield return StartCoroutine(ShowProgressFill(filledProgressBar, 1.5f));
         //yield return StartCoroutine(PrintText(gameText, gameTextS));

@@ -73,14 +73,14 @@ public class ACT_UI : MonoBehaviour {
         yield return new WaitForSeconds(2);
     }
 
-    public IEnumerator SetScore(int currScore, int previousScore, bool firstTime)
+    public IEnumerator SetScore(float currScore, float previousScore, bool firstTime)
     {
         HideInteralUI();
         m_closeScoreButton.interactable = false;
         scoreAct.SetActive(true);
 
-        string formatCurrent = "{0}/<color=aqua>240</color>";
-        string formatLast = "{0}/<color=lime>240</color>";
+        string formatCurrent = "<color=aqua>{0}%</color>";
+        string formatLast = "<color=lime>{0}%</color>";
 
         yield return null;
         yield return StartCoroutine(PrintText(ResultText, "RESULTS".ToCharArray(), 0.2f));
@@ -235,7 +235,7 @@ public class ACT_UI : MonoBehaviour {
         m_scoreText.text = string.Format("{0}/8", (step - 1).ToString());
 
         yield return new WaitForSeconds(1.0f);
-        m_baseText.text = "Please, press Play button";
+        m_baseText.text = "Please press PLAY to continue the game";
         CloseButton.interactable = true;
         InfoButton.interactable = true;
         yield return new WaitForEndOfFrame();
