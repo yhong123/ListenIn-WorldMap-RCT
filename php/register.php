@@ -1,5 +1,5 @@
 <?php
-include 'conn.php'; 
+require 'conn.php'; 
 
 $email = $_POST["email"];
 $email_hash = $_POST["email_hash"];
@@ -7,13 +7,13 @@ $email_encrypted = $_POST["email_encrypted"];
 $password = $_POST["password"];
 $password_hash = $_POST["password_hash"];
 $genre = $_POST["genre"];
-$date_of_birth = $_POST["date_of_birth"];
 $cause = $_POST["cause"];
 $date_of_onset = $_POST["date_of_onset"];
 $concent = $_POST["concent"];
+$can_contact = $_POST["can_contact"];
 
 //ASK FOR ALREADY USED EMAIL
-$preparedStatement = $dbConnection->prepare('SELECT * FROM user WHERE email_hash = :email_hash');
+$preparedStatement = dbConnection::get()->prepare('SELECT * FROM user WHERE email_hash = :email_hash');
 
 $preparedStatement->execute(array('email_hash' => $email_hash));
 
@@ -23,19 +23,18 @@ if($preparedStatement->rowCount() > 0)
 }
 else
 {
-	$preparedStatement = $dbConnection->prepare('INSERT INTO user (email_hash, email_encrypted, password, genre, date_of_birth, cause, date_of_onset, concent) VALUES (:email_hash, :email_encrypted, :password, :genre, :date_of_birth, :cause, :date_of_onset, :concent)');
+	$preparedStatement = dbConnection::get()->prepare('INSERT INTO user (email_hash, email_encrypted, password, genre, cause, date_of_onset, concent, can_contact) VALUES (:email_hash, :email_encrypted, :password, :genre, :cause, :date_of_onset, :concent, :can_contact)');
 	$preparedStatement->execute(array(
 			'email_hash' => $email_hash,
 			'email_encrypted' => $email_encrypted,
 			'password' => $password_hash,
 			'genre' => $genre,
-			'date_of_birth' => $date_of_birth,
 			'cause' => $cause,
 			'date_of_onset' => $date_of_onset,
-			'concent' => $concent
+			'concent' => $concent,
+			'can_contact' => $can_contact
 		));
-		
-	$from = 'SoftV@softvtech.website';
+
 	$to      = $email; // Send email to our user
 	$subject = 'Signup | Verification'; // Give the email a subject 
 	$message = '
@@ -53,7 +52,9 @@ else
 	 
 	';
 						 
-	$headers = 'From:'.$from;
+	$headers = 'MIME-Version: 1.0' . '\r\n';
+	$headers .= 'Content-type:text/html;charset=UTF-8' . '\r\n';
+	$headers .= 'From: <noreply@ucl.ac.uk>' . '\r\n';
 
 	mail($to, $subject, $message, $headers);
 

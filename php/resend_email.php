@@ -1,11 +1,11 @@
 <?php
-include 'conn.php'; 
+require 'conn.php'; 
 
 $email_hash = $_POST["email_hash"];
 $email = $_POST["email"];
 
 //ASK FOR ALREADY USED EMAIL
-$preparedStatement = $dbConnection->prepare('SELECT * FROM user WHERE email_hash = :email_hash');
+$preparedStatement = dbConnection::get()->prepare('SELECT * FROM user WHERE email_hash = :email_hash');
 
 $preparedStatement->execute(array('email_hash' => $email_hash));
 

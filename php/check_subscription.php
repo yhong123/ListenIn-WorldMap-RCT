@@ -1,17 +1,17 @@
 <?php
-include 'conn.php'; 
+require 'conn.php'; 
 
 $id_user = $_POST["id_user"];
 $current_time = date_create(date('Y-m-d h:i:s', time()));
 
-$preparedStatement = $dbConnection->prepare('SELECT * FROM user WHERE id = :id_user LIMIT 1');
+$preparedStatement = dbConnection::get()->prepare('SELECT * FROM user WHERE id = :id_user LIMIT 1');
 
 $preparedStatement->execute(array('id_user' => $id_user));
 
 if($preparedStatement->rowCount() > 0)
 {
 	//CHECK IF A CODE HAS BEEN ASSIGNED TO THE USER
-	$preparedStatementCode = $dbConnection->prepare('SELECT * FROM redeem_code WHERE id_user_assigned = :id_user LIMIT 1');
+	$preparedStatementCode = dbConnection::get()->prepare('SELECT * FROM redeem_code WHERE id_user_assigned = :id_user LIMIT 1');
 	$preparedStatementCode->execute(array('id_user' => $id_user));
 	
 	if($preparedStatementCode->rowCount() > 0) //IF YES, THEN LET THEM PLAY
@@ -42,7 +42,7 @@ if($preparedStatement->rowCount() > 0)
 			$current_time = $current_time->format('Y-m-d h:i:s');
 			$subscription = date('Y-m-d h:i:s', strtotime($current_time . ' + 7 days'));
 			
-			$preparedStatement = $dbConnection->prepare('UPDATE user SET subscription_end = :subscription_end, has_logged = 1 WHERE id = :id_user LIMIT 1');
+			$preparedStatement = dbConnection::get()->prepare('UPDATE user SET subscription_end = :subscription_end, has_logged = 1 WHERE id = :id_user LIMIT 1');
 			$preparedStatement->execute(array('subscription_end' => $subscription, 'id_user' => $id_user));
 			echo "true";
 		}

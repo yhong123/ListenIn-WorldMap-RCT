@@ -4,11 +4,48 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Events;
 
-public enum RegistrationStep { AgeConcent, ParticipationConcent, Concent, Genre, DateOfBirth, Cause, DateOfOnset, Registration }
+public enum RegistrationStep
+{
+    Splash,
+    Login,
+    Register,
+    RegisterEmailInUse,
+    RegisterSuccess,
+    LoginCredentialFail,
+    ForgottenPassword,
+    LoginIncorrectCredentials,
+    LoginResendEmail,
+    LoginEmailNoExist,
+    FogottenSuccess,
+    StudyInformation,
+    ResearchStudy,
+    ResearchStudyDataCollection,
+    ResearchStudyConfidentiality,
+    ResearchStudyPersonalInformation,
+    ResearchStudyInformationSheet,
+    ResearchStudyWithdraw,
+    ResearchStudyDecision,
+    ResearchStudyThanks,
+    ResearchStudySubmitted,
+    ResearchStudyDeny,
+    Questions,
+    QuestionsGenre,
+    QuestionsCause,
+    QuestionsDate,
+    QuestionsContact,
+    QuestionsComplete,
+    Tests,
+    TestsBrief,
+    TestsContinue
+}
 
 public class RegistrationController : MonoBehaviour
 {
+    public Text CurrentShit;
+    public static RegistrationController Instance;
+
     public List<RegistrationStepObject> ListOfRegistrationStepObject;
 
     private RegistrationStep currentRegistrationStep;
@@ -17,8 +54,9 @@ public class RegistrationController : MonoBehaviour
     {
         set
         {
+            SetCurrentPanel(currentRegistrationStep, false);
             currentRegistrationStep = value;
-            CheckRegistrationStepStatus();
+            SetCurrentPanel(currentRegistrationStep, true);
         }
 
         get
@@ -35,111 +73,45 @@ public class RegistrationController : MonoBehaviour
 
     public GameObject RegistrationObject;
     [SerializeField] private GameObject loginObject;
-
-    [SerializeField] private Dropdown dayOfBirth;
-    [SerializeField] private Dropdown monthOfBirth;
-    [SerializeField] private Dropdown yearOfBirth;
-
-    [SerializeField] private Dropdown monthOfOnset;
-    [SerializeField] private Dropdown yearOfOnset;
     [SerializeField] private Toggle concentToggle;
 
     //REGISTRATION VALUES
+    [HideInInspector] public bool RegistrationHasConcent = false;
     [HideInInspector] public string RegistrationGenre;
-    [HideInInspector] public string RegistrationDateOfBirth;
     [HideInInspector] public string RegistrationCause;
-    [HideInInspector] public string HasConcent;
-    [HideInInspector] public string RegistrationDateOfOnset;
+    public Dropdown MonthOfOnset;
+    public Dropdown YearOfOnset;
+    [HideInInspector] public bool RegistrationCanContact = false;
+    [HideInInspector] public bool RegistrationUnknownDateOfStroke = false;
     //REGISTRATION VALUES
+
     private bool noOnsetDate = false;
 
-    public void GenreSelect(string genre)
+    private void Awake()
     {
-        RegistrationGenre = genre;
-        NextRegistrationStep();
-    }
-
-    public void CauseSelect(string cause)
-    {
-        RegistrationCause = cause;
-        NextRegistrationStep();
-    }
-
-    public void ConcentSelect(string concent)
-    {
-        HasConcent = concent;
-        NextRegistrationStep();
-    }
-
-    public void NextRegistrationStep()
-    {
-        CurrentRegistrationStep++;
-    }
-
-    public void NextRegistrationStepNoDateOnset()
-    {
-        noOnsetDate = true;
-        CurrentRegistrationStep++;
-    }
-
-    private void CheckRegistrationStepStatus()
-    {
-        switch (CurrentRegistrationStep)
+        if (Instance == null)
         {
-            case RegistrationStep.AgeConcent:
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
-                break;
-            case RegistrationStep.ParticipationConcent:
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.AgeConcent).Single().RegistrationObject.SetActive(false);
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
-                break;
-            case RegistrationStep.Concent:
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.ParticipationConcent).Single().RegistrationObject.SetActive(false);
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
-                SetConcentText();
-                break;
-            case RegistrationStep.Genre:
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.Concent).Single().RegistrationObject.SetActive(false);
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
-                break;
-            case RegistrationStep.DateOfBirth:
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.Genre).Single().RegistrationObject.SetActive(false);
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
-                break;
-            case RegistrationStep.Cause:
-                //register DOB
-                RegistrationDateOfBirth = string.Concat(dayOfBirth.options[dayOfBirth.value].text, "/", monthOfBirth.options[monthOfBirth.value].text, "/", yearOfBirth.options[yearOfBirth.value].text);
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.DateOfBirth).Single().RegistrationObject.SetActive(false);
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
-                break;
-            case RegistrationStep.DateOfOnset:
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.Cause).Single().RegistrationObject.SetActive(false);
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
-                break;
-            case RegistrationStep.Registration:
-                //register date of onset
-                if (!noOnsetDate)
-                {
-                    RegistrationDateOfOnset = string.Concat(monthOfOnset.options[monthOfOnset.value].text, "/", yearOfOnset.options[yearOfOnset.value].text);
-                }
-                else
-                {
-                    RegistrationDateOfOnset = "not sure";
-                }
-
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == RegistrationStep.DateOfOnset).Single().RegistrationObject.SetActive(false);
-                ListOfRegistrationStepObject.Where(step => step.RegistrationStep == CurrentRegistrationStep).Single().RegistrationObject.SetActive(true);
-                break;
-            default:
-                break;
+            Instance = this;
         }
+
+        foreach (RegistrationStepObject item in ListOfRegistrationStepObject)
+        {
+            SetCanvasGroupVisibility(item.RegistrationCanvas, false);
+        }
+
+        SetCanvasGroupVisibility(ListOfRegistrationStepObject.Where(type => type.RegistrationStep == RegistrationStep.Splash).Single().RegistrationCanvas, true);
+    }
+
+    public void SetDateForStrokeToDefault()
+    {
+        RegistrationUnknownDateOfStroke = false;
     }
 
     private void Restart()
     {
         foreach (RegistrationStepObject item in ListOfRegistrationStepObject)
         {
-            item.RegistrationObject.SetActive(false);
+            SetCanvasGroupVisibility(item.RegistrationCanvas, true);
         }
         currentConcentTextIndex = 0;
         noOnsetDate = false;
@@ -149,7 +121,6 @@ public class RegistrationController : MonoBehaviour
     {
         if (currentConcentTextIndex == ListOfConcentText.Count)
         {
-            NextRegistrationStep();
             return;
         }
 
@@ -161,23 +132,10 @@ public class RegistrationController : MonoBehaviour
         currentConcentTextIndex++;
     }
 
-    public void StartRegistration()
-    {
-        Restart();
-        CurrentRegistrationStep = RegistrationStep.AgeConcent;
-        loginObject.SetActive(false);
-        RegistrationObject.SetActive(true);
-    }
-
-    public void BackToLogin()
-    {
-        RegistrationObject.SetActive(false);
-        loginObject.SetActive(true);
-    }
 
     public void SetConcentNextButtonInteractable()
     {
-        Color temp = concentNext.color; 
+        Color temp = concentNext.color;
         temp.a = concentToggle.isOn ? 1f : 0.2f;
         concentNext.color = temp;
         concentNext.transform.parent.GetComponent<Image>().enabled = concentToggle.isOn;
@@ -190,12 +148,35 @@ public class RegistrationController : MonoBehaviour
         concentNext.color = temp;
         concentNext.transform.parent.GetComponent<Image>().enabled = false;
     }
+
+    private void SetCurrentPanel(RegistrationStep phase, bool isVisible)
+    {
+        Debug.Log("SET:" + phase.ToString() + " to " + isVisible);
+        RegistrationStepObject currentStep = ListOfRegistrationStepObject.Where(type => type.RegistrationStep == phase).SingleOrDefault();
+        SetCanvasGroupVisibility(currentStep.RegistrationCanvas, isVisible);
+        CurrentShit.text = currentStep.RegistrationStep.ToString();
+
+        if (!isVisible) return;
+
+        if (currentStep.OnActive != null)
+        {
+            currentStep.OnActive.Invoke();
+        }
+    }
+
+    private void SetCanvasGroupVisibility(CanvasGroup panel, bool isVisible)
+    {
+        panel.blocksRaycasts = isVisible;
+        panel.interactable = isVisible;
+        panel.alpha = isVisible ? 1 : 0;
+    }
 }
 
 [Serializable]
 public class RegistrationStepObject
 {
     public RegistrationStep RegistrationStep;
-    public GameObject RegistrationObject;
+    public CanvasGroup RegistrationCanvas;
+    public UnityEvent OnActive;
 }
 

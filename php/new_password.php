@@ -1,10 +1,10 @@
 <?php
-include 'conn.php'; 
+require 'conn.php'; 
 
 $email = $_POST["eh"];
 $new_password = md5($_POST["np"]);
 
-$preparedStatement = $dbConnection->prepare('UPDATE user SET password = :password WHERE email_hash = :email_hash LIMIT 1');
+$preparedStatement = dbConnection::get()->prepare('UPDATE user SET password = :password WHERE email_hash = :email_hash LIMIT 1');
 $preparedStatement->execute(array('password' => $new_password, 'email_hash' => $email));
 
 $from = 'SoftV@softvtech.website';
