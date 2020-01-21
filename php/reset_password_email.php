@@ -11,17 +11,16 @@ $preparedStatement->execute(array('email_hash' => $email_hash));
 
 if($preparedStatement->rowCount() > 0)
 {
-	$from = 'SoftV@softvtech.website';
 	$to      = $email; // Send email to our user
-	$subject = 'Change password'; // Give the email a subject 
-	$message = '
+	$subject = "ListenIn - Change password"; // Give the email a subject
  
-	Please click this link to reset your password:
-	http://softvtech.website/ListenIn/php/reset_password_form.php?eh='.$email_hash .'&e='.$email.'
-	 
-	';
+	$message = "Please click this link to reset your password:" . "\r\n";
+	$message .= "https://listeninsoftv.ucl.ac.uk/php/reset_password_form.php?eh=" . $email_hash . "&e=" . $email . "\r\n";
+	$message = nl2br($message);
 						 
-	$headers = 'From:'.$from;
+	$headers = "MIME-Version: 1.0" . "\r\n";
+	$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+	$headers .= 'From: <noreply@ucl.ac.uk>' . "\r\n";
 
 	mail($to, $subject, $message, $headers);
 
