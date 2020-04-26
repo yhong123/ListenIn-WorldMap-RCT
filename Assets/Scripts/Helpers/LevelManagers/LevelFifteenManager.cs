@@ -76,7 +76,7 @@ public class LevelFifteenManager : ILevel {
 		currSpawnTime = Random.Range(minSpawnTime, maxSpawnTime);
 		emitter = GetComponentInChildren<EllipsoidParticleEmitter>();
 		ResetWind();
-		monk = gameObject.transform.FindChild("Monk").gameObject;
+		monk = gameObject.transform.Find("Monk").gameObject;
 
 		windstate = WindState.IDLE;
 
@@ -207,7 +207,7 @@ public class LevelFifteenManager : ILevel {
             if (coinDestroyer != null)
             {
                 coinDestroyer.enabled = true;
-                obj.transform.FindChild("Death").gameObject.SetActive(true);
+                obj.transform.Find("Death").gameObject.SetActive(true);
             }
         }
 

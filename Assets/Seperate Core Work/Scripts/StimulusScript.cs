@@ -23,7 +23,7 @@ public class StimulusScript : MonoBehaviour {
 	//----------------------------------------------------------------------------------------------------
 	void Start () 
 	{
-		m_goImage = transform.FindChild("PictureFrame").gameObject;
+		m_goImage = transform.Find("PictureFrame").gameObject;
         scaleSize = m_goImage.transform.localScale.x;
         //m_goRectangle = transform.FindChild("Rectangle").gameObject;
         m_anim = GetComponent<Animator> ();
@@ -94,7 +94,7 @@ public class StimulusScript : MonoBehaviour {
         try
         {
             if (!m_goImage)
-                m_goImage = transform.FindChild("PictureFrame").gameObject;
+                m_goImage = transform.Find("PictureFrame").gameObject;
 
             // retrieve image from the Resource folder
             Sprite currSprite = Resources.Load(strImage, typeof(Sprite)) as Sprite;

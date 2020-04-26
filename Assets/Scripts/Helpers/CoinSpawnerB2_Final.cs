@@ -61,7 +61,7 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 		if (dirRight) traslationTarget = Vector3.right * speed; //transform.Translate(Vector2.right * speed * Time.deltaTime);
 		else traslationTarget = -Vector3.right * speed;
 
-		translation =  Vector2.SmoothDamp(translation, traslationTarget, ref smoothVelocity, 0.10f);
+		translation =  Vector2.SmoothDamp(translation, traslationTarget, ref smoothVelocity, 0.10f, 1, 1);
         //gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, gameObject.transform.position + traslationTarget, Time.deltaTime);
         //gameObject.transform.Translate(traslationTarget * Time.deltaTime);
 

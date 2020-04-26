@@ -138,7 +138,7 @@ public class StatePinball : State
 			jigsawPieceTransform.localPosition = Vector2.zero;//m_PinballMono.JigsawParents[BucketsShuffled[i]].GetComponent<RectTransform>().localPosition;
 			jigsawPieceTransform.localScale = Vector2.one * 0.015f;
 
-            Image currFiller = jigsawPieceTransform.FindChild("Progression").gameObject.GetComponent<Image>();
+            Image currFiller = jigsawPieceTransform.Find("Progression").gameObject.GetComponent<Image>();
 
             //Initialize cardbucketcontroller
             m_PinballMono.Buckets[BucketsShuffled[i]].Init(intList[i], thisChapter.JigsawPeicesUnlocked[intList[i]], ID, currFiller);

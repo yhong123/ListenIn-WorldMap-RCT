@@ -765,47 +765,47 @@ public class GameControlScriptStandard : MonoBehaviour
         SetupStimuliPosMapTransforms();
 
         Vector3 scale = new Vector3(2, 2, 2);
-        GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.localScale = scale;
-        GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").transform.localScale = scale;
-        GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").transform.localScale = scale;
-        GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").transform.localScale = scale;
-        GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").transform.localScale = scale;
-        GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").transform.localScale = scale;
+        GameObject.Find("Stimulus1").transform.Find("PictureFrame").transform.localScale = scale;
+        GameObject.Find("Stimulus2").transform.Find("PictureFrame").transform.localScale = scale;
+        GameObject.Find("Stimulus3").transform.Find("PictureFrame").transform.localScale = scale;
+        GameObject.Find("Stimulus4").transform.Find("PictureFrame").transform.localScale = scale;
+        GameObject.Find("Stimulus5").transform.Find("PictureFrame").transform.localScale = scale;
+        GameObject.Find("Stimulus6").transform.Find("PictureFrame").transform.localScale = scale;
 
         // set stimulus's layer orders - for images overlapping
-        GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 52;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 51;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus1").transform.Find("PictureFrame").transform.Find("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 52;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus1").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 51;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 54;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 53;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus2").transform.Find("PictureFrame").transform.Find("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 54;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus2").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 53;// GameObject.Find("Stimulus1").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 56;// GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 55;// GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus3").transform.Find("PictureFrame").transform.Find("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 56;// GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus3").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 55;// GameObject.Find("Stimulus2").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 58;// GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 57;// GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus4").transform.Find("PictureFrame").transform.Find("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 58;// GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus4").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 57;// GameObject.Find("Stimulus3").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 60;// GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 59;// GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus5").transform.Find("PictureFrame").transform.Find("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 60;// GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus5").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 59;// GameObject.Find("Stimulus4").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
-        GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 62;// GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
-        GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 61;// GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus6").transform.Find("PictureFrame").transform.Find("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder = 62;// GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").transform.FindChild("FrameShadow").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        GameObject.Find("Stimulus6").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder = 61;// GameObject.Find("Stimulus5").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
         
         // set particlesystem layer's order
         m_particleSyst = GameObject.Find("ParticleFeedback").GetComponent<ParticleSystem>();
-        m_particleSyst.GetComponent<Renderer>().sortingLayerID = GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingLayerID;
-        m_particleSyst.GetComponent<Renderer>().sortingOrder = GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        m_particleSyst.GetComponent<Renderer>().sortingLayerID = GameObject.Find("Stimulus6").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingLayerID;
+        m_particleSyst.GetComponent<Renderer>().sortingOrder = GameObject.Find("Stimulus6").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
         m_particleSystIncorrect = GameObject.Find("ParticleFeedbackIncorrect").GetComponent<ParticleSystem>();
-        m_particleSystIncorrect.GetComponent<Renderer>().sortingLayerID = GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingLayerID;
-        m_particleSystIncorrect.GetComponent<Renderer>().sortingOrder = GameObject.Find("Stimulus6").transform.FindChild("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
+        m_particleSystIncorrect.GetComponent<Renderer>().sortingLayerID = GameObject.Find("Stimulus6").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingLayerID;
+        m_particleSystIncorrect.GetComponent<Renderer>().sortingOrder = GameObject.Find("Stimulus6").transform.Find("PictureFrame").gameObject.GetComponent<Renderer>().sortingOrder + 1;
 
         //GETTING THE Animator script
         GameObject lepr = GameObject.FindGameObjectWithTag("Leprechaun");
         if (lepr != null)
         {
             ai = lepr.GetComponent<AnimationInterface>();
-            Vector3 throwPosition = lepr.transform.FindChild("ThrowPos").position;
+            Vector3 throwPosition = lepr.transform.Find("ThrowPos").position;
             SetStimuliThrowPos(throwPosition);
         }
         
