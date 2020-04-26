@@ -10,11 +10,10 @@ using System;
 public class LoginManager : MonoBehaviour
 {
     private const string encryptionKey = "Softv01**";
-    private const string loginUrl = "http://softvtech.website/ListenIn/php/login.php";
-    private const string registernUrl = "http://softvtech.website/ListenIn/php/register.php";
-    private const string reSendEmailUrl = "http://softvtech.website/ListenIn/php/resend_email.php";
-    private const string resetPasswordUrl = "http://softvtech.website/ListenIn/php/reset_password_email.php";
-    [SerializeField] private List<Image> listOfButtons;
+    private const string loginUrl = "https://listeninsoftv.ucl.ac.uk/php/login.php";
+    private const string registernUrl = "https://listeninsoftv.ucl.ac.uk/php/register.php";
+    private const string reSendEmailUrl = "https://listeninsoftv.ucl.ac.uk/php/resend_email.php";
+    private const string resetPasswordUrl = "https://listeninsoftv.ucl.ac.uk/php/reset_password_email.php";
     [SerializeField] private InputField passwordInputLogin;
     [SerializeField] private InputField emailInputLogin;
     [SerializeField] private Animator loginMessageAnimator;
@@ -22,13 +21,9 @@ public class LoginManager : MonoBehaviour
     [SerializeField] private InputField emailInputRegister;
     [SerializeField] private InputField passwordInputRegister;
     [SerializeField] private InputField reenterPasswordInputRegister;
-    [SerializeField] private GameObject logInForm;
-    [SerializeField] private GameObject registerForm;
-    [SerializeField] private RegistrationController registrationController;
-    [SerializeField] private GameObject reSendEmailButton;
     [SerializeField] private GameObject startVerificationEmailPanel;
     [SerializeField] private InputField emailInputResetPasword;
-    [SerializeField] private GameObject resetPasswordForm;
+    [SerializeField] private CanvasGroup blockInputs;
     private bool isInit = false;
     
     private void Update()
@@ -57,8 +52,8 @@ public class LoginManager : MonoBehaviour
         }
 
         ClearInputs();
-        logInForm.SetActive(true);
-        registerForm.SetActive(false);
+        //////////////////////////////////logInForm.SetActive(true);
+        //////////////////////////////////registerForm.SetActive(false);
 
 
         if (PlayerPrefManager.GetIdUser() != string.Empty && NetworkManager.HasInternet)
@@ -70,31 +65,17 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    public void RegisterButton()
-    {
-        ClearInputs();
-        logInForm.SetActive(false);
-        registerForm.SetActive(true);
-    }
-
-    public void BackButton()
-    {
-        ClearInputs();
-        logInForm.SetActive(true);
-        registerForm.SetActive(false);
-        registrationController.BackToLogin();
-    }
-
     public void LoginButton()
     {
         if (emailInputLogin.text == string.Empty || passwordInputLogin.text == string.Empty) return;
 
-        ToggleButtons(false);
+        SetBlockInputs(true);
         StartCoroutine(Login());
     }
 
     private IEnumerator Login()
     {
+        Debug.Log(emailInputLogin.text);
         WWWForm form = new WWWForm();
         form.AddField("email_hash", PHPMd5Hash(emailInputLogin.text));
 
@@ -106,7 +87,7 @@ public class LoginManager : MonoBehaviour
             {
                 Debug.LogError("ERROR CONNECTING TO THE DATABSE: " + www.error);
                 TriggerLoginMessage("Error 404. Contact support.", Color.red);
-                ToggleButtons(true);
+                SetBlockInputs(false);
                 yield break;
             }
             else
@@ -114,13 +95,13 @@ public class LoginManager : MonoBehaviour
                 if (www.text == "email_not_verified")
                 {
                     Debug.Log("EMAIL NOT VERIFIED");
-                    TriggerLoginMessage("Email not verified, please check your email inbox/spam folder.", Color.red);
-                    reSendEmailButton.SetActive(true);
+                    //TriggerLoginMessage("Email not verified, please check your email inbox/spam folder.", Color.red);
+                    RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.LoginResendEmail;
                 }
                 else if (www.text == "no_user")
                 {
                     Debug.Log("LOG IN ERROR");
-                    TriggerLoginMessage("Wrong ID/password.", Color.red);
+                    RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.LoginCredentialFail;
                 }
                 else
                 {
@@ -137,10 +118,10 @@ public class LoginManager : MonoBehaviour
                     else
                     {
                         Debug.Log("LOG IN ERROR");
-                        TriggerLoginMessage("Wrong ID/password.", Color.red);
+                        RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.LoginCredentialFail;
                     }
                 }
-                ToggleButtons(true);
+                SetBlockInputs(false);
             }
         }
     }
@@ -152,13 +133,32 @@ public class LoginManager : MonoBehaviour
         {
             return;
         }
+
         if (passwordInputRegister.text != reenterPasswordInputRegister.text)
         {
             TriggerLoginMessage("Passwords don't match.", Color.red);
             return;
         }
-        ToggleButtons(false);
+
+        SetBlockInputs(true);
         StartCoroutine(RegisterCoroutine());
+    }
+
+    public void Printregistarionshit()
+    {
+        Debug.Log
+        (
+            string.Concat
+            (
+                "email:", emailInputRegister.text, "\n",
+                "password: ", passwordInputRegister.text, "\n",
+                "concent: ", RegistrationController.Instance.RegistrationHasConcent, "\n",
+                "RegistrationGenre: ", RegistrationController.Instance.RegistrationGenre, "\n",
+                "RegistrationCause: ", RegistrationController.Instance.RegistrationCause, "\n",
+                "RegistrationCanContact: ", RegistrationController.Instance.RegistrationCanContact, "\n",
+                "RegistrationUnknownDateOfStroke: ", !RegistrationController.Instance.RegistrationUnknownDateOfStroke ? RegistrationController.Instance.MonthOfOnset.value.ToString() + " " + RegistrationController.Instance.YearOfOnset.value.ToString() : "false", "\n"
+            )
+        );
     }
 
     private IEnumerator RegisterCoroutine()
@@ -169,11 +169,11 @@ public class LoginManager : MonoBehaviour
         form.AddField("email_hash", PHPMd5Hash(emailInputRegister.text));
         form.AddField("password", passwordInputRegister.text);
         form.AddField("password_hash", PHPMd5Hash(passwordInputRegister.text));
-        form.AddField("genre", registrationController.RegistrationGenre);
-        form.AddField("date_of_birth", registrationController.RegistrationDateOfBirth);
-        form.AddField("cause", registrationController.RegistrationCause);
-        form.AddField("date_of_onset", registrationController.RegistrationDateOfOnset);
-        form.AddField("concent", registrationController.HasConcent);
+        form.AddField("genre", RegistrationController.Instance.RegistrationGenre);
+        form.AddField("cause", RegistrationController.Instance.RegistrationCause);
+        form.AddField("date_of_onset", RegistrationController.Instance.RegistrationUnknownDateOfStroke ? "none" : RegistrationController.Instance.MonthOfOnset.value.ToString() + "/" + RegistrationController.Instance.YearOfOnset.value.ToString());
+        form.AddField("concent", RegistrationController.Instance.RegistrationHasConcent.ToString());
+        form.AddField("can_contact", RegistrationController.Instance.RegistrationCanContact.ToString());
 
         using (WWW www = new WWW(registernUrl, form))
         {
@@ -182,7 +182,7 @@ public class LoginManager : MonoBehaviour
             {
                 Debug.LogError("ERROR CONNECTING TO THE DATABSE: " + www.error);
                 TriggerLoginMessage("Error 404. Contact support.", Color.red);
-                ToggleButtons(true);
+                SetBlockInputs(false);
                 yield break;
             }
             else
@@ -190,14 +190,14 @@ public class LoginManager : MonoBehaviour
                 if (www.text == "bien")
                 {
                     Debug.Log("REGISTER SUCCESFUL");
-                    BackButton();
+                    RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.Login;
                 }
                 else if (www.text == "used")
                 {
                     Debug.Log("ERROR EMAIL EXIST");
-                    TriggerLoginMessage("Email already exist.", Color.red);
+                    RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.RegisterEmailInUse;
                 }
-                ToggleButtons(true);
+                SetBlockInputs(false);
             }
         }
     }
@@ -207,17 +207,6 @@ public class LoginManager : MonoBehaviour
         loginMessageText.color = textColor;
         loginMessageText.text = message;
         loginMessageAnimator.Play("LoginMessage", -1, 0f);
-    }
-
-    private void ToggleButtons(bool isInteractible)
-    {
-        foreach (Image item in listOfButtons)
-        {
-            Color temp = item.color;
-            temp.a = isInteractible ? 1f : 0.2f;
-            item.color = temp;
-            item.transform.parent.GetComponent<Image>().enabled = isInteractible;
-        }
     }
 
     private void ClearInputs()
@@ -236,8 +225,8 @@ public class LoginManager : MonoBehaviour
 
     private IEnumerator ReSendVerificationEmailCoroutine()
     {
-        reSendEmailButton.SetActive(false);
         WWWForm form = new WWWForm();
+        Debug.Log(emailInputLogin.text);
         form.AddField("email", emailInputLogin.text);
         form.AddField("email_hash", PHPMd5Hash(emailInputLogin.text));
 
@@ -254,15 +243,16 @@ public class LoginManager : MonoBehaviour
             {
                 if (www.text == "bien")
                 {
-                    Debug.Log("REGISTER SUCCESFUL");
+                    Debug.Log("RESEND SUCCESFUL");
+                    RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.Login;
                     TriggerLoginMessage("Please check your email inbox/spam folder .", Color.green);
                 }
                 else if (www.text == "mal")
                 {
-                    Debug.Log("ERROR EMAIL EXIST");
-                    TriggerLoginMessage("Email doesn't exist.", Color.red);
+                    Debug.Log("<color=red>ERROR EMAIL EXIST</color>");
+                    RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.LoginEmailNoExist;
                 }
-                ToggleButtons(true);
+                SetBlockInputs(false);
             }
         }
     }
@@ -283,13 +273,14 @@ public class LoginManager : MonoBehaviour
     public void ResetPasswordForm()
     {
         emailInputResetPasword.text = string.Empty;
-        logInForm.SetActive(false);
-        resetPasswordForm.SetActive(true);
+        //////////////////////////////////logInForm.SetActive(false);
+        RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.LoginResendEmail;
     }
 
     public void ResetPassword()
     {
         if (string.IsNullOrEmpty(emailInputResetPasword.text)) return;
+        SetBlockInputs(true);
         StartCoroutine(ResetPasswordCoroutine());
     }
 
@@ -307,27 +298,35 @@ public class LoginManager : MonoBehaviour
             {
                 Debug.LogError("ERROR CONNECTING TO THE DATABSE: " + www.error);
                 TriggerLoginMessage("Error 404. Contact support.", Color.red);
+                SetBlockInputs(false);
                 yield break;
             }
             else
             {
                 if (www.text == "bien")
                 {
+                    RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.FogottenSuccess;
                     TriggerLoginMessage("Please check your email inbox/spam folder.", Color.green);
                 }
                 else if (www.text == "mal")
                 {
-                    TriggerLoginMessage("Email doesn't exist.", Color.red);
+                    RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.LoginEmailNoExist;
                 }
+                SetBlockInputs(false);
             }
         }
-        CloseResetPasswordForm();
+        /////////////////CloseResetPasswordForm();
     }
 
     public void CloseResetPasswordForm()
     {
-        resetPasswordForm.SetActive(false);
-        logInForm.SetActive(true);
+        RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.Login;
+        //////////////////////////////////logInForm.SetActive(true);
+    }
+
+    private void SetBlockInputs(bool block)
+    {
+        blockInputs.blocksRaycasts = block;
     }
 
     #region Utilities

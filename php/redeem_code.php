@@ -1,10 +1,10 @@
 <?php
-include 'conn.php'; 
+require 'conn.php'; 
 
 $id_user = $_POST["id_user"];
 $code = $_POST["code"];
 
-$preparedStatement = $dbConnection->prepare('SELECT * FROM redeem_code WHERE code = :code LIMIT 1');
+$preparedStatement = dbConnection::get()->prepare('SELECT * FROM redeem_code WHERE code = :code LIMIT 1');
 
 $preparedStatement->execute(array('code' => $code));
 
@@ -14,7 +14,7 @@ if($preparedStatement->rowCount() > 0)
 	
 	if($row['id_user_assigned'] == "")
 	{
-		$preparedStatement = $dbConnection->prepare('UPDATE redeem_code SET id_user_assigned = :id_user WHERE code = :code LIMIT 1');
+		$preparedStatement = dbConnection::get()->prepare('UPDATE redeem_code SET id_user_assigned = :id_user WHERE code = :code LIMIT 1');
 		$preparedStatement->execute(array('id_user' => $id_user, 'code' => $code));
 		echo "bien";
 	}

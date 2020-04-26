@@ -1,10 +1,10 @@
 <?php
-include 'conn.php'; 
+require 'conn.php'; 
 
 $email_hash = $_POST["email_hash"];
 
 //ASK FOR THE SITES
-$preparedStatement = $dbConnection->prepare('SELECT * FROM user WHERE email_hash = :email_hash LIMIT 1');
+$preparedStatement = dbConnection::get()->prepare('SELECT * FROM user WHERE email_hash = :email_hash LIMIT 1');
 
 $preparedStatement->execute(array('email_hash' => $email_hash));
 
