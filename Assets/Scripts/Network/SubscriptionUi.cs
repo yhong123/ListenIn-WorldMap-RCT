@@ -53,7 +53,7 @@ public class SubscriptionUi : MonoBehaviour
         form.AddField("id_user", NetworkManager.UserId);
         form.AddField("code", input.text);
         
-        NetworkManager.SendDataServer(form, NetworkManager.ServerUrlRedeemCode, "test", RedeemCodeCallback);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlRedeemCode, "test", RedeemCodeCallback);
     }
 
     public void RedeemCodeCallback(string result)
@@ -106,7 +106,7 @@ public class SubscriptionUi : MonoBehaviour
         form.AddField("id_user", NetworkManager.UserId);
         form.AddField("period", period);
 
-        NetworkManager.SendDataServer(form, NetworkManager.ServerUrlExtendSubscription, "test", ExtendSubscription);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlExtendSubscription, "test", ExtendSubscription);
     }
 
     private void ExtendSubscription(string result)

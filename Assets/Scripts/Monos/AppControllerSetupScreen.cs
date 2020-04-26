@@ -30,9 +30,15 @@ public class AppControllerSetupScreen : MonoBehaviour
     private GameObject switchPatient;
 
     private bool lockEmailSending = false;
-    // Use this for initialization
-    void Start()
+    private int setupPorcentageProgress = 0;
+
+
+    [SerializeField] private Text userID;
+
+    public void StartSetup()
     {
+        NetworkManager.UserId = userID.text;
+        Debug.Log("USER ID: " + NetworkManager.UserId);
         m_playButton.interactable = false;
         m_playButton.gameObject.SetActive(false);
         switchPatient.gameObject.SetActive(false);
@@ -44,7 +50,6 @@ public class AppControllerSetupScreen : MonoBehaviour
         {
             ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
-        
     }
 
     private void UpdateFeedbackLog(String message, bool canContinue)
@@ -65,9 +70,8 @@ public class AppControllerSetupScreen : MonoBehaviour
         Application.targetFrameRate = 60;
         //Preventing the screen to go off
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-
-        int percentage = 1;
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
         //Assigning a Random seed at the    
         UnityEngine.Random.seed = System.Environment.TickCount;
@@ -81,8 +85,8 @@ public class AppControllerSetupScreen : MonoBehaviour
         //ListenIn.Logger.Instance.Log("AppControllerSetup: Logger started", ListenIn.LoggerMessageType.Info);
         yield return new WaitForEndOfFrame();
 
-        percentage = 3;
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        setupPorcentageProgress = 3;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {            
             UploadManager.Instance.Initialize();
@@ -97,11 +101,15 @@ public class AppControllerSetupScreen : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         //AndreaLIRO: Insert therapy ladder new algorithm
-        percentage = 47;
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        setupPorcentageProgress = 47;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
-        yield return StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
-        yield return new WaitForSeconds(2);
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, "temp", GetProfileCallback);
+        Debug.Log("111111111111111111111111111111111111111111111111111111111:"+ NetworkManager.UserId);
+        //yield return StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
+        //yield return new WaitForSeconds(2);
         //try
         //{
         //    StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
@@ -111,8 +119,19 @@ public class AppControllerSetupScreen : MonoBehaviour
         //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         //}
 
-        percentage = 55;
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+
+
+    }
+
+    public void GetProfileCallback(string response)
+    {
+        Debug.Log("+++++++++++++++++++"+response);
+    }
+
+    public IEnumerator InitializationACTPairChoose()
+    {
+        setupPorcentageProgress = 55;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         //AndreaLIRO: Checking first ever initialization for ACT pair randomization
         yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
         yield return new WaitForSeconds(2);
@@ -126,8 +145,8 @@ public class AppControllerSetupScreen : MonoBehaviour
         //}
 
         //AndreaLIRO: Preparing the jigsaw pieces
-        percentage = 77;
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        setupPorcentageProgress = 77;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {
             StateJigsawPuzzle.Instance.OnGameLoadedInitialization();
@@ -143,7 +162,7 @@ public class AppControllerSetupScreen : MonoBehaviour
             {
                 GlobalVars.isProfileNewOrChanged = false;
             }
-            GameStateSaver.Instance.ResetListenIn();       
+            GameStateSaver.Instance.ResetListenIn();
 
         }
         catch (Exception ex)
@@ -153,9 +172,9 @@ public class AppControllerSetupScreen : MonoBehaviour
 
         yield return new WaitForSeconds(2);
 
-        percentage = 85;
+        setupPorcentageProgress = 85;
         //AndreaLIRO: Loading current world map configuration
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {
             IMadLevelProfileBackend backend = MadLevelProfile.backend;
@@ -168,8 +187,8 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         yield return new WaitForEndOfFrame();
 
-        percentage = 92;
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        setupPorcentageProgress = 92;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {
             GameStateSaver.Instance.Load();
@@ -180,15 +199,15 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         yield return new WaitForEndOfFrame();
 
-        percentage = 95;
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        setupPorcentageProgress = 95;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
         //AndreaLIRO: Commenting out the last three log files
         // yield return SendLogs();
         yield return new WaitForEndOfFrame();
 
-        percentage = 99;
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        setupPorcentageProgress = 99;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
         try
         {
@@ -199,8 +218,8 @@ public class AppControllerSetupScreen : MonoBehaviour
             ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
 
-        percentage = 100;
-        m_textScreen.text = String.Format(m_textStringFormat, percentage);
+        setupPorcentageProgress = 100;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
         //m_playButton.interactable = true;
         //m_playButton.gameObject.SetActive(true);
@@ -209,7 +228,6 @@ public class AppControllerSetupScreen : MonoBehaviour
         yield return new WaitForSeconds(2);
         //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
         MadLevel.LoadLevelByName("MainHUB");
-
     }
 
     private void CleaningUpOlderLogs()

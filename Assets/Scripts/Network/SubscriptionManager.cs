@@ -18,6 +18,6 @@ public class SubscriptionManager : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
 
-        NetworkManager.SendDataServer(form, NetworkManager.ServerUrlSubscriptionCheck, "test", FindObjectOfType<SubscriptionUi>().RequestSubscriptionCallback);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlSubscriptionCheck, "test", FindObjectOfType<SubscriptionUi>().RequestSubscriptionCallback);
     }
 }

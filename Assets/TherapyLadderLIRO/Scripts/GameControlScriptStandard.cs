@@ -550,7 +550,7 @@ public class GameControlScriptStandard : MonoBehaviour
             form.AddField("file_name", filemane);
             form.AddField("content", content);
 
-            NetworkManager.SendDataServer(form, NetworkManager.ServerUrlDataInput, content, filemane);
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlDataInput, content, filemane);
         }
         catch (Exception ex)
         {

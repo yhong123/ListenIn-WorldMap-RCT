@@ -83,13 +83,13 @@ public class NetworkFilesConsistency : MonoBehaviour
 
             Action<string> callBack = new Action<string>(CheckCSVFilesCallBack);
 
-            NetworkManager.SendDataServer(
-                form,
-                NetworkManager.ServerUrlFileConsistencyCheck,
-                content,
-                nameOfFile.FileName,
-                callBack
-            );
+            //NetworkManager.SendDataServer(
+            //    form,
+            //    NetworkManager.ServerUrlFileConsistencyCheck,
+            //    content,
+            //    nameOfFile.FileName,
+            //    callBack
+            //);
         }
     }
 
@@ -128,13 +128,13 @@ public class NetworkFilesConsistency : MonoBehaviour
 
             Action<string> callBack = new Action<string>(CheckRemoteFilesCallBack);
 
-            NetworkManager.SendDataServer(
-                form,
-                NetworkManager.ServerUrlFileCheck,
-                content,
-                nameOfFile.FileName,
-                callBack
-            );
+            //NetworkManager.SendDataServer(
+            //    form,
+            //    NetworkManager.ServerUrlFileCheck,
+            //    content,
+            //    nameOfFile.FileName,
+            //    callBack
+            //);
         }
     }
 

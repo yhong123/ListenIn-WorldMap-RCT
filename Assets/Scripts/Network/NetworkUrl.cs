@@ -1,0 +1,21 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public static class NetworkUrl 
+{
+    private const string ServerGameUrl = "https://listeninsoftv.ucl.ac.uk/php/game/";
+    private const string ServerDataUrl = "https://listeninsoftv.ucl.ac.uk/php/data/";
+    private const string ServerLoginUrl = "https://listeninsoftv.ucl.ac.uk/php/login/";
+
+
+    public static string ServerUrlDataInput = string.Concat(ServerDataUrl, "data_input_no_header.php");
+    public static string ServerUrlFileCheck = string.Concat(ServerDataUrl, "file_check.php");
+    public static string ServerUrlFileConsistencyCheck = string.Concat(ServerDataUrl, "file_consistency_check.php");
+    public static string ServerUrlSubscriptionCheck = string.Concat(ServerLoginUrl, "check_subscription.php");
+    public static string ServerUrlRedeemCode = string.Concat(ServerLoginUrl, "redeem_code.php");
+    public static string ServerUrlExtendSubscription = string.Concat(ServerLoginUrl, "extend_subscription.php");
+
+
+    public static string SqlGetGameUserProfile = string.Concat(ServerGameUrl, "select_user_profile.php");
+}

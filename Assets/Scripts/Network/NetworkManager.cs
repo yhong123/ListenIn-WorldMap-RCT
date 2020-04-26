@@ -28,15 +28,7 @@ public static class Tuple
 
 public class NetworkManager : MonoBehaviour
 {
-    public static string UserId = "1";
-    //root folder of the project
-    private const string serverUrl = "http://softvtech.website/ListenIn/";
-    public static string ServerUrlDataInput = string.Concat(serverUrl, "php/data_input_no_header.php");
-    public static string ServerUrlFileCheck = string.Concat(serverUrl, "php/file_check.php");
-    public static string ServerUrlFileConsistencyCheck = string.Concat(serverUrl, "php/file_consistency_check.php");
-    public static string ServerUrlSubscriptionCheck = string.Concat(serverUrl, "php/check_subscription.php");
-    public static string ServerUrlRedeemCode = string.Concat(serverUrl, "php/redeem_code.php");
-    public static string ServerUrlExtendSubscription = string.Concat(serverUrl, "php/extend_subscription.php");
+    public static string UserId;
 
     private int remoteAttempts = 0;
     private bool isInit = false;
@@ -187,7 +179,7 @@ public class NetworkManager : MonoBehaviour
                             remoteAttempts = 0;
                             Debug.Log("<color=green>SUCCESS: </color>SendDataServer()");
                             //CSV
-                            if (isLocal && DataToSend[0].First.ServerURL == ServerUrlDataInput)
+                            if (isLocal || !string.IsNullOrEmpty(DataToSend[0].Second.FileName))
                             {
                                 AppendDataCSV(DataToSend[0].Second);
                             }
@@ -209,11 +201,11 @@ public class NetworkManager : MonoBehaviour
                         }
                     }
                 }
-                else if(isLocal && !HasInternet)
+                else if(isLocal && !HasInternet) //DO NOT WORK????????????????????
                 {
                     Debug.Log("<color=green>SUCCESS: </color>LocalDataServer()");
                     //CSV
-                    if (DataToSend[0].First.ServerURL == ServerUrlDataInput)
+                    if (DataToSend[0].First.ServerURL == NetworkUrl.ServerUrlDataInput)
                     {
                         AppendDataCSV(DataToSend[0].Second);
                     }
