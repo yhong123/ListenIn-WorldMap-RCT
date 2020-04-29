@@ -126,6 +126,8 @@ public class AppControllerSetupScreen : MonoBehaviour
     public void GetProfileCallback(string response)
     {
         Debug.Log("+++++++++++++++++++"+response);
+        TherapyLIROManager.Instance.SetUserProfile(response);
+        StartCoroutine(InitializationACTPairChoose());
     }
 
     public IEnumerator InitializationACTPairChoose()

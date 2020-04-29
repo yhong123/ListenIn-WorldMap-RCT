@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 4, SART_PRACTICE = 5, SART_TEST = 2, BASKET = 0, CORE = 1, QUESTIONAIRE = 3};
+public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 2, SART_TEST = 3, BASKET = 4, CORE = 5, QUESTIONAIRE = 1};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -59,6 +59,32 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     {
     }
     #endregion
+
+    public void SetUserProfile(string response)
+    {
+        string[] profileData = response.Split('+');
+
+        m_UserProfileManager.LIROStep = (TherapyLadderStep)int.Parse(profileData[0]);
+        m_UserProfileManager.m_userProfile.isFirstInit = profileData[1] == "true"; //This is to make the first initialization 
+        m_UserProfileManager.m_userProfile.isTutorialDone = profileData[2] == "true"; //This is used to make sure the initial tutorial has been done
+        //m_UserProfileManager.m_userProfile.m_currIDUser = int.Parse(profileData[3]);
+        m_UserProfileManager.m_userProfile.m_cycleNumber = int.Parse(profileData[3]);
+
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = int.Parse(profileData[4]); //It is a shortcut for when initializing the game for the first time.
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = int.Parse(profileData[5]);
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = int.Parse(profileData[6]);
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = int.Parse(profileData[7]);
+
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = int.Parse(profileData[8]); //It is a shortcut for when initializing the game for the first time.
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = int.Parse(profileData[9]);
+
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = profileData[10] == "true";
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = profileData[11] == "true";
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[12]);
+
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = profileData[13] == "true";
+        
+    }
 
     /// <summary>
     /// This function is called at initialiation to load the last saved information for the current user on the therapy ladder
