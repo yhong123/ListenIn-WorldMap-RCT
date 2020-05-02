@@ -18,4 +18,5 @@ public static class NetworkUrl
 
 
     public static string SqlGetGameUserProfile = string.Concat(ServerGameUrl, "select_user_profile.php");
+    public static string SqlSetGameUserProfile = string.Concat(ServerGameUrl, "update_user_profile.php");
 }

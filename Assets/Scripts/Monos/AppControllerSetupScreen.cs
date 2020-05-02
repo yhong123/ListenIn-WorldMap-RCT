@@ -107,7 +107,6 @@ public class AppControllerSetupScreen : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, "temp", GetProfileCallback);
-        Debug.Log("111111111111111111111111111111111111111111111111111111111:"+ NetworkManager.UserId);
         //yield return StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
         //yield return new WaitForSeconds(2);
         //try
@@ -118,9 +117,6 @@ public class AppControllerSetupScreen : MonoBehaviour
         //{
         //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         //}
-
-
-
     }
 
     public void GetProfileCallback(string response)

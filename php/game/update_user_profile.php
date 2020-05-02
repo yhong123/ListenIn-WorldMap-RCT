@@ -1,27 +1,55 @@
 <?php
-require '../config.php'; 
+require '../game_con/config.php'; 
 
-$id_user = $_POST["id_user"];
-$therapy_level = $_POST["therapy_level"];
-$therapy_cycle = $_POST["therapy_cycle"];
-$challenge_cycle = $_POST["challenge_cycle"];
-$challenge = $_POST["challenge"];
-$galaxy_number = $_POST["galaxy_number"];
+$id_user = 					$_POST["id_user"];
+$liro_step = 				$_POST["liro_step"];
+$is_first_init = 			$_POST["is_first_init"];
+$is_tutorial_done = 		$_POST["is_tutorial_done"];
+$cycle_number = 			$_POST["cycle_number"];
+$therapy_current_block = 	$_POST["therapy_current_block"];
+$therapy_total_blocks = 	$_POST["therapy_total_blocks"];
+$total_game_time = 			$_POST["total_game_time"];
+$total_therapy_time = 		$_POST["total_therapy_time"];
+$act_current_block = 		$_POST["act_current_block"];
+$act_total_blocks = 		$_POST["act_total_blocks"];
+$practice_completed =		$_POST["practice_completed"];
+$test_completed = 			$_POST["test_completed"];
+$attempts = 				$_POST["attempts"];
+$questionaire_completed = 	$_POST["questionaire_completed"];
 
 $preparedStatement = dbConnection::get()->prepare('UPDATE user_profile SET
-	therapy_level = :therapy_level,
-	therapy_cycle = :therapy_cycle, 
-	challenge_cycle = :challenge_cycle,
-	challenge = :challenge,
-	galaxy_number = :galaxy_number
+	id_user = :id_user,
+	liro_step = : liro_step,
+	is_first_init = :is_first_init,
+	is_tutorial_done = :is_tutorial_done,
+	cycle_number = :cycle_number,
+	therapy_current_block = :therapy_current_block,
+	therapy_total_blocks = :therapy_total_blocks,
+	total_game_time = :total_game_time,
+	total_therapy_time = :total_therapy_time,
+	act_current_block = :act_current_block,
+	act_total_blocks = :act_total_blocks,
+	practice_completed = :practice_completed,
+	test_completed = :test_completed,
+	attempts = :attempts,
+	questionaire_completed = :questionaire_completed
 WHERE id_user = :id_user LIMIT 1');
 
 $preparedStatement->execute(array(
 	'id_user' => $id_user,
-	'therapy_level' => $therapy_level,
-	'therapy_cycle' => $therapy_cycle,
-	'challenge_cycle' => $challenge_cycle,
-	'challenge' => $challenge,
-	'galaxy_number' => $galaxy_number
+	'liro_step' => $liro_step,
+	'is_first_init' => $is_first_init,
+	'is_tutorial_done' => $is_tutorial_done,
+	'cycle_number' => $cycle_number,
+	'therapy_current_block' => $therapy_current_block,
+	'therapy_total_blocks' => $therapy_total_blocks,
+	'total_game_time' => $total_game_time,
+	'total_therapy_time' => $total_therapy_time,
+	'act_current_block' => $act_current_block,
+	'act_total_blocks' => $act_total_blocks,
+	'practice_completed' => $practice_completed,
+	'test_completed' => $test_completed,
+	'attempts' => $attempts,
+	'questionaire_completed' => $questionaire_completed
 ));		
 ?>

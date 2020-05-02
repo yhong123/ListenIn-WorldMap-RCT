@@ -152,6 +152,24 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
     public IEnumerator SaveCurrentUserProfile()
     {
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("liro_step", (int)m_UserProfileManager.LIROStep);
+        form.AddField("is_first_init", m_UserProfileManager.m_userProfile.isFirstInit.ToString().ToLower());
+        form.AddField("is_tutorial_done", m_UserProfileManager.m_userProfile.isTutorialDone.ToString().ToLower());
+        form.AddField("cycle_number", m_UserProfileManager.m_userProfile.m_cycleNumber);
+        form.AddField("therapy_current_block", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock);
+        form.AddField("therapy_total_blocks", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks);
+        form.AddField("total_game_time", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes);
+        form.AddField("total_therapy_time", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes);
+        form.AddField("act_current_block", m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock);
+        form.AddField("act_total_blocks", m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks);
+        form.AddField("practice_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted.ToString().ToLower());
+        form.AddField("test_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted.ToString().ToLower());
+        form.AddField("attempts", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts);
+        form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted.ToString().ToLower());
+        NetworkManager.SendDataServer(form, NetworkUrl.SqlSetGameUserProfile, "temp");
+
         try
         {
             m_UserProfileManager.SaveToPrefs();
