@@ -65,8 +65,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         string[] profileData = response.Split('+');
 
         m_UserProfileManager.LIROStep = (TherapyLadderStep)int.Parse(profileData[0]);
-        m_UserProfileManager.m_userProfile.isFirstInit = profileData[1] == "true"; //This is to make the first initialization 
-        m_UserProfileManager.m_userProfile.isTutorialDone = profileData[2] == "true"; //This is used to make sure the initial tutorial has been done
+        m_UserProfileManager.m_userProfile.isFirstInit = profileData[1] == "0"; //This is to make the first initialization 
+        m_UserProfileManager.m_userProfile.isTutorialDone = profileData[2] == "0"; //This is used to make sure the initial tutorial has been done
         //m_UserProfileManager.m_userProfile.m_currIDUser = int.Parse(profileData[3]);
         m_UserProfileManager.m_userProfile.m_cycleNumber = int.Parse(profileData[3]);
 
@@ -78,11 +78,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = int.Parse(profileData[8]); //It is a shortcut for when initializing the game for the first time.
         m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = int.Parse(profileData[9]);
 
-        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = profileData[10] == "true";
-        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = profileData[11] == "true";
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = profileData[10] == "0";
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = profileData[11] == "0";
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[12]);
 
-        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = profileData[13] == "true";
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = profileData[13] == "0";
         
     }
 
@@ -155,8 +155,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
         form.AddField("liro_step", (int)m_UserProfileManager.LIROStep);
-        form.AddField("is_first_init", m_UserProfileManager.m_userProfile.isFirstInit.ToString().ToLower());
-        form.AddField("is_tutorial_done", m_UserProfileManager.m_userProfile.isTutorialDone.ToString().ToLower());
+        form.AddField("is_first_init", m_UserProfileManager.m_userProfile.isFirstInit ? 1 : 0);
+        form.AddField("is_tutorial_done", m_UserProfileManager.m_userProfile.isTutorialDone ? 1 : 0);
         form.AddField("cycle_number", m_UserProfileManager.m_userProfile.m_cycleNumber);
         form.AddField("therapy_current_block", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock);
         form.AddField("therapy_total_blocks", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks);
@@ -164,10 +164,10 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         form.AddField("total_therapy_time", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes);
         form.AddField("act_current_block", m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock);
         form.AddField("act_total_blocks", m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks);
-        form.AddField("practice_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted.ToString().ToLower());
-        form.AddField("test_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted.ToString().ToLower());
+        form.AddField("practice_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted ? 1 : 0);
+        form.AddField("test_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted ? 1 : 0);
         form.AddField("attempts", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts);
-        form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted.ToString().ToLower());
+        form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted ? 1 : 0);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlSetGameUserProfile, "temp");
 
         try
