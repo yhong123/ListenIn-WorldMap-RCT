@@ -223,6 +223,14 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
+    public static void SendDataServer(WWWForm form, string serverURL, Action<string> callBackMethod = null)
+    {
+        //add form to the 'queue'
+        DataObject dataObject = new DataObject(form, serverURL, callBackMethod);
+        CSVDataObject csvDataObject = new CSVDataObject();
+        DataToSend.Add(new Tuple<DataObject, CSVDataObject>(dataObject, csvDataObject));
+    }
+
     public static void SendDataServer(WWWForm form, string serverURL, string contentCrc, Action<string> callBackMethod = null)
     {
         byte[] bytes = new byte[contentCrc.Length * sizeof(char)];

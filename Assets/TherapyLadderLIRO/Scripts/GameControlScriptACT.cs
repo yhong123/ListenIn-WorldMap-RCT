@@ -168,12 +168,10 @@ public class GameControlScriptACT : MonoBehaviour
     //----------------------------------------------------------------------------------------------------
     // StartTherapy
     //----------------------------------------------------------------------------------------------------
-    public IEnumerator StartTherapyACT()
+    public void StartTherapyACT()
     {
         //CleanPreviousTrial();
         LoadCurrentBlock();
-        yield return new WaitForSeconds(2);
-        PrepareNextTrialLIRO();
     }
     //----------------------------------------------------------------------------------------------------
     // RestartGame: restart game
@@ -181,27 +179,52 @@ public class GameControlScriptACT : MonoBehaviour
     void StartACT()
     {
         CleanPreviousTrial();
-        StartCoroutine(StartTherapyACT());
+        StartTherapyACT();
     }
 
     private void LoadCurrentBlock()
     {
-        try
-        {
-            m_currListOfChallenges = air.ParseCsv(Path.Combine
-                    (GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId),
-            String.Format(
-                            "{0}_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), TherapyLIROManager.Instance.GetCurrentBlockNumber(), TherapyLIROManager.Instance.GetCurrentTherapyCycle()
-                        )
-                    )
-                ).ToList();
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError("GCTACT: " + ex.Message);
-        }
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("file_name", String.Format(
+                            "{0}_{1}_Cycle_{2}",
+                            TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(),
+                            TherapyLIROManager.Instance.GetCurrentBlockNumber(),
+                            TherapyLIROManager.Instance.GetCurrentTherapyCycle()
+                        ));
+        form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetFile, LoadCurrentBlockCallback);
 
+        //try
+        //{
+        //    m_currListOfChallenges = air.ParseCsv(Path.Combine
+        //            (GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId),
+        //    String.Format(
+        //                    "{0}_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), TherapyLIROManager.Instance.GetCurrentBlockNumber(), TherapyLIROManager.Instance.GetCurrentTherapyCycle()
+        //                )
+        //            )
+        //        ).ToList();
+        //}
+        //catch (Exception ex)
+        //{
+        //    Debug.LogError("GCTACT: " + ex.Message);
+        //}
     }
+
+    private void LoadCurrentBlockCallback(string response)
+    {
+        if(response == "error")
+        {
+            Debug.LogError("THERAPY FILE NOT FOUND");
+            return;
+        }
+        else
+        {
+            m_currListOfChallenges = air.ParseCsvFromContent(response).ToList();
+            PrepareNextTrialLIRO();
+        }
+    }
+
     void PrepareNextTrialLIRO()
     {
         isRepeatOn = true;

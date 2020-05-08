@@ -526,11 +526,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         switch (m_UserProfileManager.LIROStep)
         {
             case TherapyLadderStep.CORE:
-                yield return StartCoroutine(CleanCurrentBlock(fileToDelete));
+                CleanCurrentBlock(fileToDelete);
                 AdvanceBlock();
                 break;
             case TherapyLadderStep.ACT:
-                yield return StartCoroutine(CleanCurrentBlock(fileToDelete));
+                CleanCurrentBlock(fileToDelete);
                 AdvanceBlock();
                 break;
             default:
@@ -774,7 +774,20 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             if (currCount == GlobalVars.ActChallengeLength)
             {
                 currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+                //#ERASE
                 File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currBlockLines.ToArray());
+                //#ERASE
+
+                //SEND TO SERVER
+                byte[] dataAsBytes = currBlockLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+                WWWForm form = new WWWForm();
+                form.AddField("id_user", NetworkManager.UserId);
+                form.AddField("file_name", currFilename);
+                form.AddField("file_size", dataAsBytes.Length);
+                form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+                form.AddBinaryData("file_data", dataAsBytes, currFilename);
+                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+                
                 currBlockLines.Clear();
                 currCount = 0;
                 total_blocks++;
@@ -791,7 +804,20 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if (currBlockLines.Count != 0)
         {
             currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+            //#ERASE
             File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currBlockLines.ToArray());
+            //#ERASE
+
+            //SEND TO SERVER
+            byte[] dataAsBytes = currBlockLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", currFilename);
+            form.AddField("file_size", dataAsBytes.Length);
+            form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+            form.AddBinaryData("file_data", dataAsBytes, currFilename);
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
             currBlockLines.Clear();
         }
 
@@ -1034,8 +1060,21 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
                 if (challengeCounter == GlobalVars.ChallengeLength)
                 {
-                    currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber); ; 
+                    currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber); ;
+                    //#ERASE
                     File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currLines.ToArray());
+                    //#ERASE
+
+                    //SEND TO SERVER
+                    byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+                    WWWForm form = new WWWForm();
+                    form.AddField("id_user", NetworkManager.UserId);
+                    form.AddField("file_name", currFilename);
+                    form.AddField("file_size", dataAsBytes.Length);
+                    form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+                    form.AddBinaryData("file_data", dataAsBytes, currFilename);
+                    NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
                     currLines.Clear();
                     total_blocks++;
                     challengeCounter = 0;
@@ -1044,8 +1083,21 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //Save the remaining in the last file
             if (currLines.Count != 0)
             {
-                currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber); ;
+                currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+                //#ERASE
                 File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currLines.ToArray());
+                //#ERASE
+
+                //SEND TO SERVER
+                byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+                WWWForm form = new WWWForm();
+                form.AddField("id_user", NetworkManager.UserId);
+                form.AddField("file_name", currFilename);
+                form.AddField("file_size", dataAsBytes.Length);
+                form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+                form.AddBinaryData("file_data", dataAsBytes, currFilename);
+                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
                 currLines.Clear();
                 total_blocks++;
             }
@@ -1071,47 +1123,53 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
 
     }
-    public IEnumerator CleanCurrentBlock(string fileToDelete = "")
+    public void CleanCurrentBlock(string fileToDelete = "")
     {
-        try
+        string fullPathFile = String.Empty;
+        int currBlock = -1;
+        string fileName = string.Empty;
+
+        switch (m_UserProfileManager.LIROStep)
         {
-            string fullPathFile = String.Empty;
-            int currBlock = -1;
-            switch (m_UserProfileManager.LIROStep)
-            {
-                case TherapyLadderStep.CORE:
-                    currBlock = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock;
-                    fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
-                    break;
-                case TherapyLadderStep.ACT:
-                    currBlock = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
-                    fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
+            case TherapyLadderStep.CORE:
+                currBlock = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock;
+                fileName = String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber);
+                //ERASE
+                fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
+                //ERASE
                 break;
-                default:
-                    break;
-            }
-
-            if (currBlock == -1)
-            {
-                Debug.Log("TLM: Wrong registered block to delete; section is " + m_UserProfileManager.LIROStep.ToString());
-            }
-
-            if (fileToDelete != String.Empty)
-            {
-                Debug.LogWarning("TLM: Deleting automatic captured therapy block");
-                File.Delete(fileToDelete);
-            }
-
-            File.Delete(fullPathFile);
-
-            
+            case TherapyLadderStep.ACT:
+                currBlock = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
+                fileName = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber);
+                //ERASE
+                fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
+                //ERASE
+                break;
+            default:
+                break;
         }
-        catch (Exception ex)
+
+        //create form
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+        form.AddField("file_name", fileName);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlDeleteFile);
+
+        if (currBlock == -1)
         {
-            Debug.LogError("TLM: Could not delete curr block file; " + ex.Message);
+            Debug.Log("TLM: Wrong registered block to delete; section is " + m_UserProfileManager.LIROStep.ToString());
         }
-        yield return null;
+
+        if (fileToDelete != String.Empty)
+        {
+            Debug.LogWarning("TLM: Deleting automatic captured therapy block");
+            File.Delete(fileToDelete);
+        }
+
+        File.Delete(fullPathFile);
     }
+
     internal void AdvanceBlock()
     {
         switch (m_UserProfileManager.LIROStep)

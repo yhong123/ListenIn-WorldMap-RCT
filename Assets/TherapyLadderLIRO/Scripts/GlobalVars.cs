@@ -54,14 +54,16 @@ return Application.dataPath;// +"/"+ fileName;
     {
         return GetPath(patientID);
     }
-    public static string GetPathToLIROCurrentLadderSection(string patientID)
+    public static string GetPathToLIROCurrentLadderSection(string patientID) ////////////////OLD REMOVE
     {
         return Path.Combine(GetPath(patientID), @"Section");
     }
+    public static string PathToCurrentLadderSection = "Section";
     public static string GetPathToLIROACTFolder(string patientID)
     {
         return Path.Combine(GetPath(patientID), @"ACT");
     }
+    public static string PathToACT = "ACT";
     public static string GetPathToLIROACTGenerated(string patientID)
     {
         return Path.Combine(GetPath(patientID), LiroGeneratedACT);

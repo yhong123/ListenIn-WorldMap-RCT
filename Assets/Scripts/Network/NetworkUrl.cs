@@ -19,4 +19,8 @@ public static class NetworkUrl
 
     public static string SqlGetGameUserProfile = string.Concat(ServerGameUrl, "select_user_profile.php");
     public static string SqlSetGameUserProfile = string.Concat(ServerGameUrl, "update_user_profile.php");
+    public static string ServerUrlUploadFile = string.Concat(ServerGameUrl, "upload_file.php");
+    public static string ServerUrlGetFile = string.Concat(ServerGameUrl, "get_file.php");
+    public static string ServerUrlGetCurrentBlockFile = string.Concat(ServerGameUrl, "get_current_block.php");
+    public static string ServerUrlDeleteFile = string.Concat(ServerGameUrl, "delete_file.php");
 }
