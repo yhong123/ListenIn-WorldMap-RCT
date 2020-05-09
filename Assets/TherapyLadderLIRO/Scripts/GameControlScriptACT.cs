@@ -192,7 +192,7 @@ public class GameControlScriptACT : MonoBehaviour
                             TherapyLIROManager.Instance.GetCurrentBlockNumber(),
                             TherapyLIROManager.Instance.GetCurrentTherapyCycle()
                         ));
-        form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+        form.AddField("folder_name", GlobalVars.SectionFolderName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetFile, LoadCurrentBlockCallback);
 
         //try
@@ -427,43 +427,39 @@ public class GameControlScriptACT : MonoBehaviour
     }
     private void SaveCurrentBlockResponse()
     {
-        try
+        string filename = String.Format("ACT_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
+        string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
+        //#ERASE
+        m_actWriter.WriteCsv(pathFolder, filename, m_responseList);
+        //#ERASE
+
+        List<string> listString = new List<string>();
+        foreach (var item in m_responseList)
         {
-            string filemane = String.Format("ACT_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
-            string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
-            m_actWriter.WriteCsv(pathFolder, filemane, m_responseList);
+            listString.Add(String.Join(",", new string[] {
 
-            string content = string.Empty;
-            foreach (var item in m_responseList)
-            {
-                content = String.Concat(content,
-
-                    String.Join(",", new string[] {
-                      item.m_challengeID.ToString(),
-                      item.m_timeStamp.ToString("dd/MM/yyyy"),
-                      item.m_timeStamp.ToString("HH:mm:ss"),
-                      item.m_number.ToString(),
-                      item.m_block.ToString(),
-                      item.m_cycle.ToString(),
-                      item.m_accuracy.ToString(),
-                      item.m_reactionTime.ToString(),
-                      item.m_repeat.ToString(),
-                      item.m_pictureID.ToString()
-                    }), @"\n");
-            }
-            Debug.Log(content);
-
-            WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
-            form.AddField("file_name", filemane);
-            form.AddField("content", content);
-
-            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlDataInput, content, filemane);
+                item.m_challengeID.ToString(),
+                item.m_timeStamp.ToString("dd/MM/yyyy"),
+                item.m_timeStamp.ToString("HH:mm:ss"),
+                item.m_number.ToString(),
+                item.m_block.ToString(),
+                item.m_cycle.ToString(),
+                item.m_accuracy.ToString(),
+                item.m_reactionTime.ToString(),
+                item.m_repeat.ToString(),
+                item.m_pictureID.ToString()
+            }));
         }
-        catch (Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
+
+        //SEND TO SERVER
+        byte[] dataAsBytes = listString.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("file_name", filename);
+        form.AddField("file_size", dataAsBytes.Length);
+        form.AddField("folder_name", GlobalVars.OutputFolderName);
+        form.AddBinaryData("file_data", dataAsBytes, filename);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
     }
     private IEnumerator FinishTherapyBlock()
     {

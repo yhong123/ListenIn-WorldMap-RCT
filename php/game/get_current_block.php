@@ -13,7 +13,7 @@ if (file_exists($file_path))
 else
 {
 	$file_path = $root_path.'CORE*';
-	if(count(glob($file_path) != 0))
+	if(count(glob($file_path)) != 0)
 	{
 		echo file_get_contents(glob($file_path)[0]);
 	}

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Linq;
 
 public class CSV_Maker : MonoBehaviour {
 
@@ -88,20 +89,25 @@ public class CSV_Maker : MonoBehaviour {
                 sb.AppendLine(string.Join(delimeter, output[index]));
             }
 
+            //#ERASE
             using (StreamWriter outStream = System.IO.File.CreateText(directory))
             {
                 outStream.WriteLine(sb);
                 outStream.Close();
             }
+            //#ERASE
 
+            //SEND TO SERVER
+            byte[] dataAsBytes = sb.ToString().ToArray().SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             WWWForm form = new WWWForm();
             form.AddField("id_user", NetworkManager.UserId);
             form.AddField("file_name", filenameSart);
-            form.AddField("content", sb.ToString());
+            form.AddField("file_size", dataAsBytes.Length);
+            form.AddField("folder_name", GlobalVars.OutputFolderName);
+            form.AddBinaryData("file_data", dataAsBytes, filenameSart);
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
-            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlDataInput, sb.ToString(), filenameSart);
 
-            
         }
         catch (Exception ex)
         {

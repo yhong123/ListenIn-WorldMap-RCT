@@ -37,20 +37,27 @@ return Application.dataPath;// +"/"+ fileName;
     public static string LiroACT = @"Doc/ACT_LIRO/ACT_LIRO";
     public static string LiroACT_A = @"Doc/ACT_LIRO/ACT_A";
     public static string LiroACT_B = @"Doc/ACT_LIRO/ACT_B";
-    public static string LiroGeneratedACT = @"ACT/GEN_ACT";
+    public static string LiroGeneratedACT = @"ACT/GEN_ACT"; ////////////////OLD REMOVE
     public static string LiroACT_Basket = @"Doc/ACT_LIRO/ACT_BASKET";
-    public static string LiroGeneratedACT_Basket = @"ACT/GEN_ACT_BASKET";
+    public static string LiroGeneratedACT_Basket = @"ACT/GEN_ACT_BASKET"; ////////////////OLD REMOVE
 
-    public static string GetPathToLIROOutput(string patientID)
+    public static string LiroGeneratedACTFileName = @"GEN_ACT";
+    public static string LiroGeneratedACTBasketFileName = @"GEN_ACT_BASKET";
+
+    public static string LiroGenActBasketFile = string.Empty; //GEN_ACT_BASKET
+    public static string LiroGenActFile = string.Empty; //GEN_ACT
+
+    public static string GetPathToLIROOutput(string patientID) ////////////////OLD REMOVE
     { 
         return Path.Combine(GetPath(patientID), @"Output");
     }
+    public static string OutputFolderName = "Output";
 
     public static string GetPathToLIROBaskets()
     {
         return @"DocLiro";
     }
-    public static string GetPathToLIROUserProfile(string patientID)
+    public static string GetPathToLIROUserProfile(string patientID) ////////////////OLD REMOVE
     {
         return GetPath(patientID);
     }
@@ -58,17 +65,17 @@ return Application.dataPath;// +"/"+ fileName;
     {
         return Path.Combine(GetPath(patientID), @"Section");
     }
-    public static string PathToCurrentLadderSection = "Section";
-    public static string GetPathToLIROACTFolder(string patientID)
+    public static string SectionFolderName = "Section";
+    public static string GetPathToLIROACTFolder(string patientID) ////////////////OLD REMOVE
     {
         return Path.Combine(GetPath(patientID), @"ACT");
     }
-    public static string PathToACT = "ACT";
-    public static string GetPathToLIROACTGenerated(string patientID)
+    public static string ActFolderName = "ACT";
+    public static string GetPathToLIROACTGenerated(string patientID) ////////////////OLD REMOVE
     {
         return Path.Combine(GetPath(patientID), LiroGeneratedACT);
     }
-    public static string GetPathToLIROBasketACTGenerated(string patientID)
+    public static string GetPathToLIROBasketACTGenerated(string patientID) ////////////////OLD REMOVE
     {
         return Path.Combine(GetPath(patientID), LiroGeneratedACT_Basket);
     }

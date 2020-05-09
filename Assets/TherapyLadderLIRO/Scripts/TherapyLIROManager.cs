@@ -60,12 +60,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     }
     #endregion
 
-    public void SetUserProfile(string response)
+    public bool SetUserProfile(string response)
     {
         string[] profileData = response.Split('+');
 
         m_UserProfileManager.LIROStep = (TherapyLadderStep)int.Parse(profileData[0]);
-        m_UserProfileManager.m_userProfile.isFirstInit = profileData[1] == "0"; //This is to make the first initialization 
+        m_UserProfileManager.m_userProfile.isFirstInit = profileData[1] == "1"; //This is to make the first initialization 
         m_UserProfileManager.m_userProfile.isTutorialDone = profileData[2] == "0"; //This is used to make sure the initial tutorial has been done
         //m_UserProfileManager.m_userProfile.m_currIDUser = int.Parse(profileData[3]);
         m_UserProfileManager.m_userProfile.m_cycleNumber = int.Parse(profileData[3]);
@@ -83,7 +83,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[12]);
 
         m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = profileData[13] == "0";
-        
+        return true;
     }
 
     /// <summary>
@@ -168,7 +168,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         form.AddField("test_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted ? 1 : 0);
         form.AddField("attempts", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts);
         form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted ? 1 : 0);
-        NetworkManager.SendDataServer(form, NetworkUrl.SqlSetGameUserProfile, "temp");
+        NetworkManager.SendDataServer(form, NetworkUrl.SqlSetGameUserProfile);
 
         try
         {
@@ -271,8 +271,24 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             }
 
+            //#ERASE
             //Saving to the local folder
             File.WriteAllLines(GlobalVars.GetPathToLIROACTGenerated(NetworkManager.UserId), personalized_List.ToArray());
+            //#ERASE
+
+            //SEND TO SERVER
+            byte[] dataAsBytes = personalized_List.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", GlobalVars.LiroGeneratedACTFileName);
+            form.AddField("file_size", dataAsBytes.Length);
+            form.AddField("folder_name", GlobalVars.ActFolderName);
+            form.AddBinaryData("file_data", dataAsBytes, GlobalVars.LiroGeneratedACTFileName);
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
+            GlobalVars.LiroGenActFile = String.Join(", ", personalized_List.ToArray()); //SAVE FILE
+
+            //public static string LiroGeneratedACT = @"ACT/GEN_ACT";
 
             for (int j = 0; j < generated_basket_act.Count; j++)
             {
@@ -293,8 +309,21 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 }));
 
             }
-
+            //#ERASE
             File.WriteAllLines(GlobalVars.GetPathToLIROBasketACTGenerated(NetworkManager.UserId), currLines.ToArray());
+            //#ERASE
+
+            //SEND TO SERVER
+            dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+            form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", GlobalVars.LiroGeneratedACTBasketFileName);
+            form.AddField("file_size", dataAsBytes.Length);
+            form.AddField("folder_name", GlobalVars.ActFolderName);
+            form.AddBinaryData("file_data", dataAsBytes, GlobalVars.LiroGeneratedACTBasketFileName);
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
+            GlobalVars.LiroGenActBasketFile = String.Join(", ", currLines.ToArray()); //SAVE FILE
 
             //AndreaLIRO: add the file to be sent online
             m_UserProfileManager.m_userProfile.isFirstInit = false;
@@ -304,9 +333,50 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
         else
         {
+            GetActBasketFile();
+            GetActFile();
             yield return null;
         }
     }
+
+    private void GetActBasketFile()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("file_name", GlobalVars.LiroGeneratedACTBasketFileName);
+        form.AddField("folder_name", GlobalVars.ActFolderName);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetFile, GetActBasketFileCallback);
+    }
+
+    private void GetActBasketFileCallback(string response)
+    {
+        if(string.IsNullOrEmpty(response))
+        {
+            //CRITICAL ERROR
+            Debug.LogError("<color=red>SERVER ERROR; empty file</color>");
+        }
+        GlobalVars.LiroGenActBasketFile = response;
+    }
+
+    private void GetActFile()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("file_name", GlobalVars.LiroGeneratedACTFileName);
+        form.AddField("folder_name", GlobalVars.ActFolderName);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetFile, GetActFileCallback);
+    }
+
+    private void GetActFileCallback(string response)
+    {
+        if (string.IsNullOrEmpty(response))
+        {
+            //CRITICAL ERROR
+            Debug.LogError("<color=red>SERVER ERROR; empty file</color>");
+        }
+        GlobalVars.LiroGenActFile = response;
+    }
+
     public TherapyLadderStep GetCurrentLadderStep()
     {
         return m_UserProfileManager.LIROStep;
@@ -346,7 +416,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //AndreaLIRO:
             //First initalization, should start practice
             Debug.Log("Detected first initialization. Need to start tutorial section");
-            return;
+            //return;
         }
 
         //AdnreaLIRO: this will be removed, it s here just to check consistency with the game.
@@ -784,7 +854,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 form.AddField("id_user", NetworkManager.UserId);
                 form.AddField("file_name", currFilename);
                 form.AddField("file_size", dataAsBytes.Length);
-                form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+                form.AddField("folder_name", GlobalVars.SectionFolderName);
                 form.AddBinaryData("file_data", dataAsBytes, currFilename);
                 NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
                 
@@ -814,7 +884,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             form.AddField("id_user", NetworkManager.UserId);
             form.AddField("file_name", currFilename);
             form.AddField("file_size", dataAsBytes.Length);
-            form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+            form.AddField("folder_name", GlobalVars.SectionFolderName);
             form.AddBinaryData("file_data", dataAsBytes, currFilename);
             NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
@@ -880,8 +950,18 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         basketsInfos.Shuffle();
 
         //Loading ACT GEN file
+        //CoreItemReader cir = new CoreItemReader();
+        //List<Challenge> listTrainedItems = cir.ParseCsv(GlobalVars.GetPathToLIROBasketACTGenerated(NetworkManager.UserId), false).ToList();
+
+        if(string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile))
+        {
+            //CRITICAL ERROR
+            Debug.LogError("<color=red>CRITICAL ERROR</color>");
+            yield break;
+        }
+
         CoreItemReader cir = new CoreItemReader();
-        List<Challenge> listTrainedItems = cir.ParseCsv(GlobalVars.GetPathToLIROBasketACTGenerated(NetworkManager.UserId), false).ToList();
+        List<Challenge> listTrainedItems = cir.ParseCsvFromContent(GlobalVars.LiroGenActBasketFile).ToList();
         List<Challenge> curr_Selected_BasketACT = new List<Challenge>();
         List<string> lexicalItems = new List<string>();
         lexicalItems = listTrainedItems.Select(x => x.LexicalItem).Distinct().ToList();
@@ -1071,7 +1151,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     form.AddField("id_user", NetworkManager.UserId);
                     form.AddField("file_name", currFilename);
                     form.AddField("file_size", dataAsBytes.Length);
-                    form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+                    form.AddField("folder_name", GlobalVars.SectionFolderName);
                     form.AddBinaryData("file_data", dataAsBytes, currFilename);
                     NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
@@ -1094,7 +1174,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 form.AddField("id_user", NetworkManager.UserId);
                 form.AddField("file_name", currFilename);
                 form.AddField("file_size", dataAsBytes.Length);
-                form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+                form.AddField("folder_name", GlobalVars.SectionFolderName);
                 form.AddBinaryData("file_data", dataAsBytes, currFilename);
                 NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
@@ -1123,6 +1203,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
 
     }
+
     public void CleanCurrentBlock(string fileToDelete = "")
     {
         string fullPathFile = String.Empty;
@@ -1152,7 +1233,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //create form
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
-        form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+        form.AddField("folder_name", GlobalVars.SectionFolderName);
         form.AddField("file_name", fileName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlDeleteFile);
 

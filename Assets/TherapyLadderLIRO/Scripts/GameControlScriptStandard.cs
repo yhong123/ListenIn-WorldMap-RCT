@@ -191,6 +191,16 @@ public class GameControlScriptStandard : MonoBehaviour
 
     private void LoadCurrentBlock()
     {
+        m_currBlockNumberFromManager = TherapyLIROManager.Instance.GetCurrentBlockNumber();
+        m_currCycleNumber = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
+
+        string verga = String.Format(
+                            "THERAPY_{1}_Cycle_{2}",
+                            TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(),
+                            m_currBlockNumberFromManager,
+                            TherapyLIROManager.Instance.GetCurrentTherapyCycle()
+                        );
+
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
         form.AddField("file_name", String.Format(
@@ -199,7 +209,7 @@ public class GameControlScriptStandard : MonoBehaviour
                             m_currBlockNumberFromManager,
                             TherapyLIROManager.Instance.GetCurrentTherapyCycle()
                         ));
-        form.AddField("folder_name", GlobalVars.PathToCurrentLadderSection);
+        form.AddField("folder_name", GlobalVars.SectionFolderName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetCurrentBlockFile, LoadCurrentBlockCallback);
 
         //bool error = false;
@@ -533,54 +543,51 @@ public class GameControlScriptStandard : MonoBehaviour
     }
     private void SaveCurrentBlockResponse()
     {
-        try
+        string filename = String.Format("THERAPY_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
+        string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
+
+        //#ERASE
+        m_coreWriter.WriteCsv(pathFolder, filename, m_responseList);
+        //#ERASE
+
+        List<string> listString = new List<string>();
+
+        foreach (var item in m_responseList)
         {
-            string filemane = String.Format("THERAPY_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
-            string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
+            listString.Add(String.Join(",", new string[] {
 
-            m_coreWriter.WriteCsv(pathFolder, filemane, m_responseList);
+                  item.m_challengeID.ToString(),
+                  item.m_cycle.ToString(),
+                  item.m_block.ToString(),
 
-            string content = string.Empty;
-            foreach (var item in m_responseList)
-            {
-                content = String.Concat(content,
+                  item.m_dateTimeStart.ToString("dd/MM/yyyy"),
+                  item.m_dateTimeStart.ToString("HH:mm:ss"),
+                  item.m_dateTimeEnd.ToString("dd/MM/yyyy"),
+                  item.m_dateTimeEnd.ToString("HH:mm:ss"),
 
-                    String.Join(",", new string[] {
+                  item.m_accuracy.ToString(),
+                  item.m_repeat.ToString(),
 
-                        item.m_challengeID.ToString(),
-                        item.m_cycle.ToString(),
-                        item.m_block.ToString(),
+                  item.incorrectPicturesIDs[0],
+                  item.incorrectPicturesIDs[1],
+                  item.incorrectPicturesIDs[2],
+                  item.incorrectPicturesIDs[3],
+                  item.incorrectPicturesIDs[4]
 
-                        item.m_dateTimeStart.ToString("dd/MM/yyyy"),
-                        item.m_dateTimeStart.ToString("HH:mm:ss"),
-                        item.m_dateTimeEnd.ToString("dd/MM/yyyy"),
-                        item.m_dateTimeEnd.ToString("HH:mm:ss"),
+            }));
+        };
 
-                        item.m_accuracy.ToString(),
-                        item.m_repeat.ToString(),
-
-                        item.incorrectPicturesIDs[0],
-                        item.incorrectPicturesIDs[1],
-                        item.incorrectPicturesIDs[2],
-                        item.incorrectPicturesIDs[3],
-                        item.incorrectPicturesIDs[4]
-
-                    }), @"\n");
-            }
-            Debug.Log(content);
-
-            WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
-            form.AddField("file_name", filemane);
-            form.AddField("content", content);
-
-            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlDataInput, content, filemane);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
+        //SEND TO SERVER
+        byte[] dataAsBytes = listString.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("file_name", filename);
+        form.AddField("file_size", dataAsBytes.Length);
+        form.AddField("folder_name", GlobalVars.OutputFolderName);
+        form.AddBinaryData("file_data", dataAsBytes, filename);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
     }
+
     void ShowAllStimuli(bool bShow)
     {
         List<long> availableFoils = new List<long>();

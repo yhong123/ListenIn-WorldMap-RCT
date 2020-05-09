@@ -42,6 +42,9 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_playButton.interactable = false;
         m_playButton.gameObject.SetActive(false);
         switchPatient.gameObject.SetActive(false);
+        GlobalVars.LiroGenActBasketFile = string.Empty; //GEN_ACT_BASKET
+        GlobalVars.LiroGenActFile = string.Empty; //GEN_ACT
+
         try
         {
             StartCoroutine(SetupInitialization());
@@ -106,7 +109,7 @@ public class AppControllerSetupScreen : MonoBehaviour
 
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
-        NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, "temp", GetProfileCallback);
+        NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, GetProfileCallback);
         //yield return StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
         //yield return new WaitForSeconds(2);
         //try
@@ -121,9 +124,10 @@ public class AppControllerSetupScreen : MonoBehaviour
 
     public void GetProfileCallback(string response)
     {
-        Debug.Log("+++++++++++++++++++"+response);
-        TherapyLIROManager.Instance.SetUserProfile(response);
-        StartCoroutine(InitializationACTPairChoose());
+        if(TherapyLIROManager.Instance.SetUserProfile(response))
+        {
+            StartCoroutine(InitializationACTPairChoose());
+        }
     }
 
     public IEnumerator InitializationACTPairChoose()
@@ -132,7 +136,11 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         //AndreaLIRO: Checking first ever initialization for ACT pair randomization
         yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
-        yield return new WaitForSeconds(2);
+
+        while(string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile)) //WAIT UNTIL THE FILES ARE LOADED
+        {
+            yield return null;
+        }
         //try
         //{
         //    StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
