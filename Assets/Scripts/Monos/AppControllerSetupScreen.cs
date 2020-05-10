@@ -110,6 +110,8 @@ public class AppControllerSetupScreen : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, GetProfileCallback);
+
+        GameStateSaver.Instance.DownloadGameProgress();
         //yield return StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
         //yield return new WaitForSeconds(2);
         //try
@@ -137,7 +139,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         //AndreaLIRO: Checking first ever initialization for ACT pair randomization
         yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
 
-        while(string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile)) //WAIT UNTIL THE FILES ARE LOADED
+        while(string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile)) //WAIT UNTIL THE FILES ARE LOADED
         {
             yield return null;
         }
@@ -197,7 +199,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {
-            GameStateSaver.Instance.Load();
+            GameStateSaver.Instance.LoadGameProgress();
         }
         catch (System.Exception ex)
         {
@@ -230,7 +232,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         //m_playButton.interactable = true;
         //m_playButton.gameObject.SetActive(true);
         //switchPatient.gameObject.SetActive(true);
-
+        //GameStateSaver.Instance.SaveGameProgress();
         yield return new WaitForSeconds(2);
         //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
         MadLevel.LoadLevelByName("MainHUB");

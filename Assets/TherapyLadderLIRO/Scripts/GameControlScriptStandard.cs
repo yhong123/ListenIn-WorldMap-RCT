@@ -546,9 +546,11 @@ public class GameControlScriptStandard : MonoBehaviour
         string filename = String.Format("THERAPY_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
         string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
 
+#if SAVE_LOCALLY
         //#ERASE
         m_coreWriter.WriteCsv(pathFolder, filename, m_responseList);
         //#ERASE
+#endif
 
         List<string> listString = new List<string>();
 
@@ -648,7 +650,7 @@ public class GameControlScriptStandard : MonoBehaviour
         StatePinball.Instance.InitLevelPinball();        
     }
 
-    #region Audio API
+#region Audio API
 
     void PlaySound(string resource)
     {
@@ -737,7 +739,7 @@ public class GameControlScriptStandard : MonoBehaviour
         //		m_audio_feedback.clip = Resources.Load(strAudio) as AudioClip;
         //		m_audio_feedback.Play();
     }
-    #endregion
+#endregion
 
     public float OnClickReplayButton()
     {
@@ -754,7 +756,7 @@ public class GameControlScriptStandard : MonoBehaviour
     //    return CUserTherapy.Instance.getTotalTherapyTimeMin();
     //}
 
-    #region Unity functions
+#region Unity functions
     //----------------------------------------------------------------------------------------------------
     // Awake
     //----------------------------------------------------------------------------------------------------
@@ -902,5 +904,5 @@ public class GameControlScriptStandard : MonoBehaviour
             }
         }
     }
-    #endregion
+#endregion
 }

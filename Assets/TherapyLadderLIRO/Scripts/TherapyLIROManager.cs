@@ -271,10 +271,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             }
 
+#if SAVE_LOCALLY
             //#ERASE
             //Saving to the local folder
             File.WriteAllLines(GlobalVars.GetPathToLIROACTGenerated(NetworkManager.UserId), personalized_List.ToArray());
             //#ERASE
+#endif
 
             //SEND TO SERVER
             byte[] dataAsBytes = personalized_List.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
@@ -309,9 +311,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 }));
 
             }
+
+#if SAVE_LOCALLY
             //#ERASE
             File.WriteAllLines(GlobalVars.GetPathToLIROBasketACTGenerated(NetworkManager.UserId), currLines.ToArray());
             //#ERASE
+#endif
 
             //SEND TO SERVER
             dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
@@ -844,9 +849,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             if (currCount == GlobalVars.ActChallengeLength)
             {
                 currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+
+#if SAVE_LOCALLY
                 //#ERASE
                 File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currBlockLines.ToArray());
                 //#ERASE
+#endif
 
                 //SEND TO SERVER
                 byte[] dataAsBytes = currBlockLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
@@ -874,9 +882,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if (currBlockLines.Count != 0)
         {
             currFilename = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+
+#if SAVE_LOCALLY
             //#ERASE
             File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currBlockLines.ToArray());
             //#ERASE
+#endif
 
             //SEND TO SERVER
             byte[] dataAsBytes = currBlockLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
@@ -1140,10 +1151,13 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
                 if (challengeCounter == GlobalVars.ChallengeLength)
                 {
-                    currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber); ;
+                    currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+
+#if SAVE_LOCALLY
                     //#ERASE
                     File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currLines.ToArray());
                     //#ERASE
+#endif
 
                     //SEND TO SERVER
                     byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
@@ -1164,9 +1178,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             if (currLines.Count != 0)
             {
                 currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+
+#if SAVE_LOCALLY
                 //#ERASE
                 File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currLines.ToArray());
                 //#ERASE
+#endif
 
                 //SEND TO SERVER
                 byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();

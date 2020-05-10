@@ -41,7 +41,7 @@ public class ChapterSelectMono : MonoBehaviour {
     private IEnumerator SaveGameState()
     {
         yield return new WaitForEndOfFrame();
-        GameStateSaver.Instance.Save();
+        GameStateSaver.Instance.SaveGameProgress();
     }
 
     //DEPRECATED

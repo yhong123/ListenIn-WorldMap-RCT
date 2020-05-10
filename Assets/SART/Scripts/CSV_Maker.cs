@@ -89,6 +89,7 @@ public class CSV_Maker : MonoBehaviour {
                 sb.AppendLine(string.Join(delimeter, output[index]));
             }
 
+#if SAVE_LOCALLY
             //#ERASE
             using (StreamWriter outStream = System.IO.File.CreateText(directory))
             {
@@ -96,6 +97,7 @@ public class CSV_Maker : MonoBehaviour {
                 outStream.Close();
             }
             //#ERASE
+#endif
 
             //SEND TO SERVER
             byte[] dataAsBytes = sb.ToString().ToArray().SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();

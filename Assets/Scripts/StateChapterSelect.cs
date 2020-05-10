@@ -256,7 +256,7 @@ public class StateChapterSelect : State
 		if(!m_Init)
 		{
 			try {
-				GameStateSaver.Instance.Load();
+				GameStateSaver.Instance.LoadGameProgress();
 			} catch (System.Exception ex) {
 
 				Debug.LogError(ex.Message);
@@ -481,11 +481,11 @@ public class StateChapterSelect : State
 
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			GameStateSaver.Instance.Save();
+			GameStateSaver.Instance.SaveGameProgress();
 		}
 		else if (Input.GetKeyDown(KeyCode.L))
 		{
-			GameStateSaver.Instance.Load();
+			GameStateSaver.Instance.LoadGameProgress();
 		}
 			
 

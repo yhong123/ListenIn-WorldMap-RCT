@@ -123,31 +123,27 @@ public class QuestionaireManager : MonoBehaviour
         string directory = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
         string filename = string.Format("Questionaire_{0}.txt", TherapyLIROManager.Instance.GetCurrentTherapyCycle());
         string fullPath = Path.Combine(directory, filename);
-        try
+       
+        StringBuilder sb = new StringBuilder();
+        using (StreamWriter sw = System.IO.File.CreateText(fullPath))
         {
-            StringBuilder sb = new StringBuilder();
-            using (StreamWriter sw = System.IO.File.CreateText(fullPath))
+            foreach (string line in responses)
             {
-                foreach (string line in responses)
-                {
-                    sw.WriteLine(line);
-                    sb.AppendLine(line);
-                }
-                sw.Close();
+                sw.WriteLine(line);
+                sb.AppendLine(line);
             }
-
-            WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
-            form.AddField("file_name", filename);
-            form.AddField("content", sb.ToString());
-
-            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlDataInput, sb.ToString(), filename);
-
+            sw.Close();
         }
-        catch (System.Exception ex)
-        {
-            Debug.Log(ex.Message);
-        }
+
+        //SEND TO SERVER
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("file_name", filename);
+        form.AddField("file_size", Encoding.ASCII.GetBytes(sb.ToString()).Length);
+        form.AddField("folder_name", GlobalVars.OutputFolderName);
+        form.AddBinaryData("file_data", Encoding.ASCII.GetBytes(sb.ToString()), filename);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
     }
 
     public void OnNextClickedSlider()

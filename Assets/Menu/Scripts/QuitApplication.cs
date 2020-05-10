@@ -8,7 +8,7 @@ public class QuitApplication : MonoBehaviour {
 	{
         //If we are running in a standalone build of the game
         ListenIn.Logger.Instance.Log("Starting quit routine", ListenIn.LoggerMessageType.Info);
-		GameStateSaver.Instance.Save();
+		GameStateSaver.Instance.SaveGameProgress();
 		Application.Quit();
 
 		//If we are running in the editor
@@ -23,7 +23,7 @@ public class QuitApplication : MonoBehaviour {
     /// </summary>
 	public void ResetSavedGameState()
 	{
-		GameStateSaver.Instance.Reset();
+		GameStateSaver.Instance.ResetGameProgress();
         MadLevelProfile.Reset();
         Application.Quit();
 		#if UNITY_EDITOR

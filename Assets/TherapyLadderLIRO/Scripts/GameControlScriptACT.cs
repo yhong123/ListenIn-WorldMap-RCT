@@ -429,9 +429,12 @@ public class GameControlScriptACT : MonoBehaviour
     {
         string filename = String.Format("ACT_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
         string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
+
+#if SAVE_LOCALLY
         //#ERASE
         m_actWriter.WriteCsv(pathFolder, filename, m_responseList);
         //#ERASE
+#endif
 
         List<string> listString = new List<string>();
         foreach (var item in m_responseList)
@@ -514,7 +517,7 @@ public class GameControlScriptACT : MonoBehaviour
     // OnClickButtonLevel - to be called from MenuLevelsScript
     //----------------------------------------------------------------------------------------------------
     
-    #region Audio API
+#region Audio API
 
     void PlaySound(string resource)
     {
@@ -590,7 +593,7 @@ public class GameControlScriptACT : MonoBehaviour
         //		m_audio_feedback.clip = Resources.Load(strAudio) as AudioClip;
         //		m_audio_feedback.Play();
     }
-    #endregion
+#endregion
 
     public float OnClickReplayButton()
     {
@@ -612,7 +615,7 @@ public class GameControlScriptACT : MonoBehaviour
     //    return CUserTherapy.Instance.getTotalTherapyTimeMin();
     //}
 
-    #region Unity functions
+#region Unity functions
     //----------------------------------------------------------------------------------------------------
     // Awake
     //----------------------------------------------------------------------------------------------------
@@ -744,5 +747,5 @@ public class GameControlScriptACT : MonoBehaviour
             }
         }
     }
-    #endregion
+#endregion
 }
