@@ -100,7 +100,7 @@ public class CSV_Maker : MonoBehaviour {
 #endif
 
             //SEND TO SERVER
-            byte[] dataAsBytes = sb.ToString().ToArray().SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+            byte[] dataAsBytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
             WWWForm form = new WWWForm();
             form.AddField("id_user", NetworkManager.UserId);
             form.AddField("file_name", filenameSart);
