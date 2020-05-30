@@ -1,0 +1,172 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &190620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 457350}
+  - 114: {fileID: 11441226}
+  m_Layer: 0
+  m_Name: text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &197000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 427078}
+  - 114: {fileID: 11445880}
+  - 114: {fileID: 11465788}
+  m_Layer: 0
+  m_Name: you are here
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &427078
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 197000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 84.10157, y: -28.859035, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 457350}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!4 &457350
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190620}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 427078}
+  m_RootOrder: 0
+--- !u!114 &11441226
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d36029d3533291b49a960aa04139fa4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  managed: 0
+  panel: {fileID: 0}
+  visible: 1
+  editorSelectable: 1
+  pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
+  tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
+  texture: {fileID: 0}
+  lastTexture: {fileID: 0}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
+  textureOffset: {x: 0, y: 0}
+  textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
+  guiDepth: 21
+  eventFlags: 15
+  liveLeft: 0
+  liveBottom: 0
+  liveRight: 1
+  liveTop: 1
+  hasLiveBounds: 0
+  renderLiveBoundsOnly: 0
+  fillType: 0
+  fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
+  font: {fileID: 11400000, guid: 7fd3c65ab8c2c7a4cb5be2ccd1aee57c, type: 2}
+  atlas: {fileID: 0}
+  text: You are here!
+  align: 0
+  scale: 14.76
+  letterSpacing: 1
+  wordWrap: 0
+  wordWrapLength: 1000
+  fontTextureGUID: 
+--- !u!114 &11445880
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 197000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f802c268376a744ca10500b8bf55a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  managed: 0
+  panel: {fileID: 0}
+  visible: 1
+  editorSelectable: 1
+  pivotPoint: 8
+  customPivotPoint: {x: 0, y: 0}
+  tint: {r: 1, g: 1, b: 1, a: 1}
+  inputType: 0
+  texture: {fileID: 2800000, guid: 46fc49f760613144581722d23624bf00, type: 3}
+  lastTexture: {fileID: 2800000, guid: 46fc49f760613144581722d23624bf00, type: 3}
+  textureAtlas: {fileID: 0}
+  textureAtlasSpriteGUID: 
+  lastTextureAtlasSpriteGUID: 
+  textureOffset: {x: 0, y: 0}
+  textureRepeat: {x: 1, y: 1}
+  hasPremultipliedAlpha: 0
+  guiDepth: 20
+  eventFlags: 15
+  liveLeft: 0
+  liveBottom: 0
+  liveRight: 1
+  liveTop: 1
+  hasLiveBounds: 0
+  renderLiveBoundsOnly: 0
+  fillType: 0
+  fillValue: 1
+  radialFillOffset: 0
+  radialFillLength: 1
+--- !u!114 &11465788
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 197000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd0c9677bbabeea40b47157e150fbd50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0.37, y: 0, z: 0}
+  animationAmplitude: 0.02
+  animationSpeed: 3
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 197000}
+  m_IsPrefabParent: 1

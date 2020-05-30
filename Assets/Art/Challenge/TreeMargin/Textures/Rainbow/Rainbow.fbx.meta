@@ -1,0 +1,120 @@
+fileFormatVersion: 2
+guid: 4e1fe880e71a9c0488a8928f1cd2a2ef
+timeCreated: 1444517822
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: RainBow_1
+    100004: RainBow_2
+    100006: RainBow_3
+    100008: RainBow_4
+    100010: RainBow_5
+    100012: RainBow_6
+    100014: transform1
+    100016: transform2
+    100018: transform3
+    100020: transform4
+    100022: transform5
+    100024: transform6
+    100026: Transforms_Ignore_
+    400000: //RootNode
+    400002: RainBow_1
+    400004: RainBow_2
+    400006: RainBow_3
+    400008: RainBow_4
+    400010: RainBow_5
+    400012: RainBow_6
+    400014: transform1
+    400016: transform2
+    400018: transform3
+    400020: transform4
+    400022: transform5
+    400024: transform6
+    400026: Transforms_Ignore_
+    2300000: //RootNode
+    2300002: RainBow_1
+    2300004: RainBow_2
+    2300006: RainBow_3
+    2300008: RainBow_4
+    2300010: RainBow_5
+    2300012: RainBow_6
+    3300000: //RootNode
+    3300002: RainBow_1
+    3300004: RainBow_2
+    3300006: RainBow_3
+    3300008: RainBow_4
+    3300010: RainBow_5
+    3300012: RainBow_6
+    4300000: RainBow_0
+    4300002: RainBow_1
+    4300004: RainBow_2
+    4300006: RainBow_3
+    4300008: RainBow_4
+    4300010: RainBow_5
+    4300012: RainBow_6
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

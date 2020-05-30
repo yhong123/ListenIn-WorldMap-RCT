@@ -1,0 +1,286 @@
+fileFormatVersion: 2
+guid: 4f0c36d7f1b109a48a58e127354dd0d6
+timeCreated: 1444939027
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Arm
+    100002: Belly
+    100004: Elbow
+    100006: eyeBrowLeft
+    100008: eyeBrowRight
+    100010: Eyes
+    100012: Head
+    100014: HeadTip
+    100016: LEafClover
+    100018: LeftAnkle
+    100020: LeftArmTip1
+    100022: LeftForeArm4
+    100024: LeftHip
+    100026: LeftKnee
+    100028: LeftLeg1
+    100030: LeftMidToe
+    100032: LeftToe
+    100034: Legs
+    100036: LeprechaunBody
+    100038: //RootNode
+    100040: MainHip
+    100042: MouthClosed
+    100044: Neck
+    100046: Nose
+    100048: OpenHand
+    100050: OpenMouth
+    100052: Pupils
+    100054: RightAnkle
+    100056: RightHip
+    100058: RightKnee
+    100060: RightLeg1
+    100062: RightMidToe
+    100064: RightToe
+    100066: Shoulder
+    100068: ShoulderMain
+    100070: transform1
+    100072: Wrist
+    400000: Arm
+    400002: Belly
+    400004: Elbow
+    400006: eyeBrowLeft
+    400008: eyeBrowRight
+    400010: Eyes
+    400012: Head
+    400014: HeadTip
+    400016: LEafClover
+    400018: LeftAnkle
+    400020: LeftArmTip1
+    400022: LeftForeArm4
+    400024: LeftHip
+    400026: LeftKnee
+    400028: LeftLeg1
+    400030: LeftMidToe
+    400032: LeftToe
+    400034: Legs
+    400036: LeprechaunBody
+    400038: //RootNode
+    400040: MainHip
+    400042: MouthClosed
+    400044: Neck
+    400046: Nose
+    400048: OpenHand
+    400050: OpenMouth
+    400052: Pupils
+    400054: RightAnkle
+    400056: RightHip
+    400058: RightKnee
+    400060: RightLeg1
+    400062: RightMidToe
+    400064: RightToe
+    400066: Shoulder
+    400068: ShoulderMain
+    400070: transform1
+    400072: Wrist
+    2300000: eyeBrowLeft
+    2300002: eyeBrowRight
+    2300004: Eyes
+    2300006: LEafClover
+    2300008: MouthClosed
+    2300010: Nose
+    2300012: OpenHand
+    2300014: OpenMouth
+    2300016: Pupils
+    3300000: eyeBrowLeft
+    3300002: eyeBrowRight
+    3300004: Eyes
+    3300006: LEafClover
+    3300008: MouthClosed
+    3300010: Nose
+    3300012: OpenHand
+    3300014: OpenMouth
+    3300016: Pupils
+    4300000: LeprechaunBody
+    4300002: Head
+    4300004: LeftLeg1
+    4300006: RightLeg1
+    4300008: LeftForeArm4
+    4300010: LeftArmTip1
+    4300012: eyeBrowLeft
+    4300014: eyeBrowRight
+    4300016: Nose
+    4300018: MouthClosed
+    4300020: OpenMouth
+    4300022: LEafClover
+    4300024: Eyes
+    4300026: Pupils
+    4300028: OpenHand
+    7400000: LeprechaunThrowingCards
+    9500000: //RootNode
+    13700000: Head
+    13700002: LeftArmTip1
+    13700004: LeftForeArm4
+    13700006: LeftLeg1
+    13700008: LeprechaunBody
+    13700010: RightLeg1
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: LeprechaunThrowingCards
+      takeName: LeprechaunThrowingCards
+      firstFrame: 1
+      lastFrame: 180
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: LeprechaunBody
+        weight: 1
+      - path: LeprechaunBody/Arm
+        weight: 1
+      - path: LeprechaunBody/Arm/LeftArmTip1
+        weight: 1
+      - path: LeprechaunBody/Arm/LeftForeArm4
+        weight: 1
+      - path: LeprechaunBody/Head
+        weight: 1
+      - path: LeprechaunBody/Legs
+        weight: 1
+      - path: LeprechaunBody/Legs/LeftLeg1
+        weight: 1
+      - path: LeprechaunBody/Legs/RightLeg1
+        weight: 1
+      - path: MainHip
+        weight: 1
+      - path: MainHip/Belly
+        weight: 1
+      - path: MainHip/Belly/Shoulder
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck/HeadTip
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck/HeadTip/eyeBrowLeft
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck/HeadTip/eyeBrowRight
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck/HeadTip/Eyes
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck/HeadTip/Eyes/Pupils
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck/HeadTip/LEafClover
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck/HeadTip/MouthClosed
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck/HeadTip/MouthClosed/OpenMouth
+        weight: 1
+      - path: MainHip/Belly/Shoulder/Neck/HeadTip/Nose
+        weight: 1
+      - path: MainHip/Belly/Shoulder/ShoulderMain
+        weight: 1
+      - path: MainHip/Belly/Shoulder/ShoulderMain/Elbow
+        weight: 1
+      - path: MainHip/Belly/Shoulder/ShoulderMain/Elbow/OpenHand
+        weight: 1
+      - path: MainHip/Belly/Shoulder/ShoulderMain/Elbow/Wrist
+        weight: 1
+      - path: MainHip/LeftHip
+        weight: 1
+      - path: MainHip/LeftHip/LeftKnee
+        weight: 1
+      - path: MainHip/LeftHip/LeftKnee/LeftAnkle
+        weight: 1
+      - path: MainHip/LeftHip/LeftKnee/LeftAnkle/LeftMidToe
+        weight: 1
+      - path: MainHip/LeftHip/LeftKnee/LeftAnkle/LeftMidToe/LeftToe
+        weight: 1
+      - path: MainHip/LeftHip/transform1
+        weight: 1
+      - path: MainHip/RightHip
+        weight: 1
+      - path: MainHip/RightHip/RightKnee
+        weight: 1
+      - path: MainHip/RightHip/RightKnee/RightAnkle
+        weight: 1
+      - path: MainHip/RightHip/RightKnee/RightAnkle/RightMidToe
+        weight: 1
+      - path: MainHip/RightHip/RightKnee/RightAnkle/RightMidToe/RightToe
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

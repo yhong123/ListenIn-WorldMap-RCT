@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Coin
+  - Stimulus5
+  - Stimulus4
+  - Stimulus2
+  - Stimulus3
+  - Stimulus1
+  - colour
+  - automatic
+  - manual
+  - progression
+  - Stimulus6
+  - ArrowFront
+  - Peg
+  - Spinner
+  - Bucket
+  - BouncerPeg
+  - MenuUI
+  - RepeatButton
+  - Admin
+  - LevelMenu
+  - Jigsaw
+  - BackgroundNoise
+  - SoundFx
+  - VoiceText
+  - ParticleSystemEnd
+  - UpperBar
+  - RopeSection
+  - HittedCoin
+  - PhoneVoice
+  - PhoneModeIcon
+  - PauseMenu
+  - PointingHand
+  - Challenge
+  - DiamondController
+  - WallRoot
+  - LevelEffects
+  - LevelMusic
+  - Leprechaun
+  - MusicalPegLow
+  - MusicalPegMedium
+  - MusicalPegHigh
+  - CoinEffects
+  - Selection
+  - EasyLevel
+  - MediumLevel
+  - HardLevel
+  - DestroyedCoin
+  - CoinSpawner
+  - PinballPrefab
+  - Damager
+  - PinballLevel
+  - VolcanoSmoke
+  - Cover
+  - JigsawPuzzle
+  - DebugUI
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Peg
+  - Fade
+  - RopeSection
+  - WoodPlanck
+  - Bucket
+  - Monster
+  - Frame
+  - BorderPinball
+  - JapaneseGirl
+  - Coin
+  - Bridge
+  - PlayerDodgeball
+  - CoinSpawner
+  - Duck
+  - VolcanoSmoke
+  - NoBorderCollision
+  - CarsToLeft
+  - CarsToRight
+  - Avatar
+  - Background
+  - Stimulus
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: LevelLayer
+    uniqueID: 2487298655
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Fade
+    uniqueID: 209856301
+    locked: 0
+  - name: Peg
+    uniqueID: 357616519
+    locked: 0
+  - name: EffectUI
+    uniqueID: 2975559645
+    locked: 0
+  - name: ChapterSelect
+    uniqueID: 499923249
+    locked: 0
+  - name: Challenge
+    uniqueID: 3188921013
+    locked: 0
+  - name: WorldSelection
+    uniqueID: 2475191863
+    locked: 0
+  - name: Background
+    uniqueID: 3251571823
+    locked: 0
+  - name: Avatar
+    uniqueID: 2706268659
+    locked: 0
