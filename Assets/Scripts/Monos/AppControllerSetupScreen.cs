@@ -343,92 +343,92 @@ public class AppControllerSetupScreen : MonoBehaviour
 
     }
 
-    private IEnumerator SendLogToEmail()
-    {
+    //private IEnumerator SendLogToEmail()
+    //{
 
-        lockEmailSending = true;
-        //http://answers.unity3d.com/questions/473469/email-a-file-from-editor-script.html
-        //For setting up accounts this must be turned on: https://www.google.com/settings/security/lesssecureapps
-        m_feedbackTextScreen.text = "Praparing email...";
+    //    lockEmailSending = true;
+    //    //http://answers.unity3d.com/questions/473469/email-a-file-from-editor-script.html
+    //    //For setting up accounts this must be turned on: https://www.google.com/settings/security/lesssecureapps
+    //    m_feedbackTextScreen.text = "Praparing email...";
 
-        yield return new WaitForEndOfFrame();
+    //    yield return new WaitForEndOfFrame();
 
-        if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-        {
-            string path = ListenIn.Logger.Instance.GetLogPath;
-            if (!string.IsNullOrEmpty(path))
-            {
-                var topFiles = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).Take(3).Select(x => x.FullName).ToList();
+    //    if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+    //    {
+    //        string path = ListenIn.Logger.Instance.GetLogPath;
+    //        if (!string.IsNullOrEmpty(path))
+    //        {
+    //            var topFiles = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).Take(3).Select(x => x.FullName).ToList();
 
-                if (topFiles != null)
-                {
-                    string fromEmail = "listeninlog@gmail.com";
-                    string subject = "Patient id " + NetworkManager.UserId;
+    //            if (topFiles != null)
+    //            {
+    //                string fromEmail = "listeninlog@gmail.com";
+    //                string subject = "Patient id " + NetworkManager.UserId;
 
-                    using (MailMessage mailMessage = new MailMessage())
-                    {
-                        mailMessage.From = new MailAddress(fromEmail);
-                        mailMessage.To.Add("listeninlog@gmail.com");
-                        mailMessage.Subject = subject;// subject;
-                        mailMessage.Body = "Log created from application version " + Application.version;
+    //                using (MailMessage mailMessage = new MailMessage())
+    //                {
+    //                    mailMessage.From = new MailAddress(fromEmail);
+    //                    mailMessage.To.Add("listeninlog@gmail.com");
+    //                    mailMessage.Subject = subject;// subject;
+    //                    mailMessage.Body = "Log created from application version " + Application.version;
 
-                        for (int i = 0; i < topFiles.Count; i++)
-                        {
-                            //Adding attachments
-                            Attachment attachment;
-                            attachment = new System.Net.Mail.Attachment(topFiles[i]);
-                            mailMessage.Attachments.Add(attachment);
-                        }
+    //                    for (int i = 0; i < topFiles.Count; i++)
+    //                    {
+    //                        //Adding attachments
+    //                        Attachment attachment;
+    //                        attachment = new System.Net.Mail.Attachment(topFiles[i]);
+    //                        mailMessage.Attachments.Add(attachment);
+    //                    }
 
-                        {
-                            SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
-                            smtpServer.Port = 587;
-                            smtpServer.Credentials = new NetworkCredential("listeninlog@gmail.com", "listeninlogger");
-                            smtpServer.EnableSsl = true;
-                            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-                            {
-                                return true;
-                            };
+    //                    {
+    //                        SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+    //                        smtpServer.Port = 587;
+    //                        smtpServer.Credentials = new NetworkCredential("listeninlog@gmail.com", "listeninlogger");
+    //                        smtpServer.EnableSsl = true;
+    //                        ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+    //                        {
+    //                            return true;
+    //                        };
 
-                            yield return new WaitForEndOfFrame();
+    //                        yield return new WaitForEndOfFrame();
 
-                            try
-                            {
-                                smtpServer.Send(mailMessage);
-                                m_feedbackTextScreen.text = "Thanks for feedback!";
-                            }
-                            catch (System.Exception ex)
-                            {
-                                m_feedbackTextScreen.text = "Log not uploaded...";
-                                ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
-                            }
-                            finally
-                            {
-                                lockEmailSending = false;
-                            }
-                        }
-                    }
-                }
+    //                        try
+    //                        {
+    //                            smtpServer.Send(mailMessage);
+    //                            m_feedbackTextScreen.text = "Thanks for feedback!";
+    //                        }
+    //                        catch (System.Exception ex)
+    //                        {
+    //                            m_feedbackTextScreen.text = "Log not uploaded...";
+    //                            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+    //                        }
+    //                        finally
+    //                        {
+    //                            lockEmailSending = false;
+    //                        }
+    //                    }
+    //                }
+    //            }
 
 
 
-                yield return new WaitForEndOfFrame();
+    //            yield return new WaitForEndOfFrame();
 
-            }
-            else
-            {
-                lockEmailSending = false;
-                m_feedbackTextScreen.text = "No internet detected...";
-            }
-            yield return null;
-        }
-    }
+    //        }
+    //        else
+    //        {
+    //            lockEmailSending = false;
+    //            m_feedbackTextScreen.text = "No internet detected...";
+    //        }
+    //        yield return null;
+    //    }
+    //}
 
     public void SendEmailButton()
     {
         if (!lockEmailSending)
         {
-            StartCoroutine(SendLogToEmail());
+            //StartCoroutine(SendLogToEmail());
         }
         else
         {

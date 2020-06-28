@@ -36,6 +36,8 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 
     private bool previousDirection = false;
 
+    [SerializeField] private SpriteRenderer sprite;
+
     void Start()
     {
         //Time.timeScale = 0;
@@ -283,6 +285,7 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 
     public void AnimateEnterCannon()
     {
+        sprite.enabled = true;
         iTween.Init(this.gameObject);
         iTween.MoveTo(this.gameObject, iTween.Hash("path", enteringPositions, "time", 3.5, "easetype", iTween.EaseType.easeOutCubic, "oncomplete", "FinishedTransition"));
     }
