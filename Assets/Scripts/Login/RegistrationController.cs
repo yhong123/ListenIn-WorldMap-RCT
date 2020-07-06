@@ -43,6 +43,7 @@ public enum RegistrationStep
 
 public class RegistrationController : MonoBehaviour
 {
+    public RegistrationStep InitialRegistrationStep;
     public Text CurrentShit;
     public static RegistrationController Instance;
 
@@ -99,7 +100,7 @@ public class RegistrationController : MonoBehaviour
             SetCanvasGroupVisibility(item.RegistrationCanvas, false);
         }
 
-        SetCanvasGroupVisibility(ListOfRegistrationStepObject.Where(type => type.RegistrationStep == RegistrationStep.Splash).Single().RegistrationCanvas, true);
+        SetCanvasGroupVisibility(ListOfRegistrationStepObject.Where(type => type.RegistrationStep == InitialRegistrationStep).Single().RegistrationCanvas, true);
     }
 
     public void SetDateForStrokeToDefault()
