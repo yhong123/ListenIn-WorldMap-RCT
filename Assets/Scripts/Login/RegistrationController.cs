@@ -68,7 +68,6 @@ public class RegistrationController : MonoBehaviour
 
     [SerializeField] private Image concentNext;
     public Toggle ConcentAcceptCurrent;
-    public List<string> ListOfConcentText;
     public Text ConcentText;
     private int currentConcentTextIndex = 0;
 
@@ -116,21 +115,6 @@ public class RegistrationController : MonoBehaviour
         }
         currentConcentTextIndex = 0;
         noOnsetDate = false;
-    }
-
-    public void SetConcentText()
-    {
-        if (currentConcentTextIndex == ListOfConcentText.Count)
-        {
-            return;
-        }
-
-        DisableConcentNextButtonInteractable();
-        ConcentAcceptCurrent.isOn = false;
-
-        ConcentText.text = ListOfConcentText[currentConcentTextIndex];
-
-        currentConcentTextIndex++;
     }
 
 

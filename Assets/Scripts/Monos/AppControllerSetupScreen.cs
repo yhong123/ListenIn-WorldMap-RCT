@@ -35,9 +35,19 @@ public class AppControllerSetupScreen : MonoBehaviour
 
     [SerializeField] private Text userID;
 
-    public void StartSetup()
+    void Start()
+    {
+        StartSetup();
+    }
+
+    public void StartGameWithoutLogin()
     {
         NetworkManager.UserId = userID.text;
+        StartSetup();
+    }
+
+    public void StartSetup()
+    {
         Debug.Log("USER ID: " + NetworkManager.UserId);
         m_playButton.interactable = false;
         m_playButton.gameObject.SetActive(false);
