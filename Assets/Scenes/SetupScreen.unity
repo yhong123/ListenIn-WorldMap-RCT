@@ -277,6 +277,14 @@ Prefab:
       propertyPath: m_AnchoredPosition.y
       value: 375
       objectReference: {fileID: 0}
+    - target: {fileID: 22451146, guid: fb25dd20af02b914a841285673c5c3cb, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22421426, guid: fb25dd20af02b914a841285673c5c3cb, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb25dd20af02b914a841285673c5c3cb, type: 2}
   m_IsPrefabAsset: 0
@@ -463,7 +471,7 @@ GameObject:
   - component: {fileID: 523645763}
   - component: {fileID: 523645762}
   m_Layer: 0
-  m_Name: Text
+  m_Name: UserIdText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -673,7 +681,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 404984561}
-        m_MethodName: StartSetup
+        m_MethodName: StartGameWithoutLogin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

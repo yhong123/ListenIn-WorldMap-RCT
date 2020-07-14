@@ -328,4 +328,9 @@ public class PinballMono : MonoBehaviour {
             GameController.Instance.ChangeState(GameController.States.StatePinball);
         }
 	}
+
+	public void SkipPinball()
+	{
+		GameController.Instance.ChangeState(GameController.States.StateReward);
+	}
 }
