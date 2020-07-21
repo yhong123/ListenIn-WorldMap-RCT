@@ -152,6 +152,8 @@ public class AppControllerMainHUB : MonoBehaviour {
             default:
                 break;
         }
+
+        VideoPlayerController.Instance.SetVideo(currProfile.LIROStep);
     }
 
     void SwitchingSection(UserProfileManager currProfile, int amount)
@@ -309,4 +311,8 @@ public class AppControllerMainHUB : MonoBehaviour {
         m_Therapy_Instruction_UI.gameObject.SetActive(false);
     }
 
+    public void PlayVideo()
+    {
+        VideoPlayerController.Instance.PlayVideo();
+    }
 }
