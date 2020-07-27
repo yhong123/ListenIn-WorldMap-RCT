@@ -18,7 +18,7 @@ if($preparedStatement->rowCount() > 0)
 	}
 	else
 	{
-		echo $row['password'] . ' ' . $row['id'];
+		echo $row['password'] . ' ' . $row['id'] . ' ' . $row['has_logged'];
 	}
 }
 else

@@ -38,14 +38,18 @@ else
 	$to      = $email; // Send email to our user
 	$subject = "ListenIn - Signup | Verification"; // Give the email a subject 
 	
-	$message = "Thanks for signing up!" . "\r\n";
-	$message .= "Your account has been created, you can login with the following credentials after you have activated your account by pressing the url below." . "\r\n\n";
+	$message = "Thank you for signing up to Listen-In!" . "\r\n";
+	$message = "Please go to the link below to activate your account:" . "\r\n";
+	$message .= "https://listeninsoftv.ucl.ac.uk/php/verify.php?hash_e=" . $email_hash . "\r\n\n";
+	
+	$message .= "After this, you can log in to Listen-In with the following credentials:" . "\r\n\n";
 	$message .= "-----------------------" . "\r\n";
 	$message .= "Mail: " . $email . "\r\n";
 	$message .= "Password: " . $password . "\r\n";
 	$message .= "------------------------" . "\r\n\n";
-	$message .= "Please click this link to activate your account:" . "\r\n";
-	$message .= "https://listeninsoftv.ucl.ac.uk/php/verify.php?hash_e=" . $email_hash . "\r\n\n";
+	$message .= "If you experience any problems, please contact us at:" . "\r\n";
+	$message .= "Listen-in@ucl.ac.uk" . "\r\n";
+	$message .= "(Please note: It may take a few days to receive a reply)" . "\r\n";
 	$message = nl2br($message);
 						 
 	$headers = "MIME-Version: 1.0" . "\r\n";

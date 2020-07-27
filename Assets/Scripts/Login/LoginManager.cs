@@ -14,7 +14,8 @@ public class LoginManager : MonoBehaviour
     private const string loginUrl = "https://listeninsoftv.ucl.ac.uk/php/login.php";
     private const string registernUrl = "https://listeninsoftv.ucl.ac.uk/php/register.php";
     private const string reSendEmailUrl = "https://listeninsoftv.ucl.ac.uk/php/resend_email.php";
-    private const string resetPasswordUrl = "https://listeninsoftv.ucl.ac.uk/php/reset_password_email.php";
+    private const string resetPasswordUrl = "https://listeninsoftv.ucl.ac.uk/php/reset_password_email.php"; 
+    private const string firstTimeLoginUrl = "https://listeninsoftv.ucl.ac.uk/php/first_time_login.php";
     [SerializeField] private InputField passwordInputLogin;
     [SerializeField] private InputField emailInputLogin;
     [SerializeField] private Animator loginMessageAnimator;
@@ -112,13 +113,22 @@ public class LoginManager : MonoBehaviour
                 {
                     string password = www.downloadHandler.text.Split(' ')[0];
                     string idUser = www.downloadHandler.text.Split(' ')[1];
+                    string hasLogged = www.downloadHandler.text.Split(' ')[2];
                     Debug.Log(password + " + " + PHPMd5Hash(passwordInputLogin.text));
                     if (PHPMd5Hash(passwordInputLogin.text) == password)
                     {
                         Debug.Log("LOG IN SUCCESFUL");
                         NetworkManager.UserId = idUser;
                         PlayerPrefManager.SetPlayerPrefData(emailInputLogin.text, NetworkManager.UserId);
-                        MadLevel.LoadLevelByName("Setup Screen");
+
+                        if(hasLogged == "0")
+                        {
+                            RegistrationController.Instance.CurrentRegistrationStep = RegistrationStep.Tests;
+                        }
+                        else
+                        {
+                            MadLevel.LoadLevelByName("Setup Screen");
+                        }
                     }
                     else
                     {
@@ -176,7 +186,7 @@ public class LoginManager : MonoBehaviour
         form.AddField("password_hash", PHPMd5Hash(passwordInputRegister.text));
         form.AddField("genre", RegistrationController.Instance.RegistrationGenre);
         form.AddField("cause", RegistrationController.Instance.RegistrationCause);
-        form.AddField("date_of_onset", RegistrationController.Instance.RegistrationUnknownDateOfStroke ? "none" : RegistrationController.Instance.MonthOfOnset.options[RegistrationController.Instance.MonthOfOnset.value].text + "/" + RegistrationController.Instance.YearOfOnset.options[RegistrationController.Instance.YearOfOnset.value].text);
+        form.AddField("date_of_onset", !RegistrationController.Instance.RegistrationHasConcent ? string.Empty : RegistrationController.Instance.RegistrationUnknownDateOfStroke ? "none" : RegistrationController.Instance.MonthOfOnset.options[RegistrationController.Instance.MonthOfOnset.value].text + "/" + RegistrationController.Instance.YearOfOnset.options[RegistrationController.Instance.YearOfOnset.value].text);
         form.AddField("concent", RegistrationController.Instance.RegistrationHasConcent.ToString());
         form.AddField("can_contact", RegistrationController.Instance.RegistrationCanContact.ToString());
 
@@ -340,6 +350,25 @@ public class LoginManager : MonoBehaviour
     private void SetBlockInputs(bool block)
     {
         blockInputs.blocksRaycasts = block;
+    }
+    public void StartGameFirstTime()
+    {
+        SetBlockInputs(true);
+        StartCoroutine(StartGameFirstTimeCoroutine());
+    }
+
+    public IEnumerator StartGameFirstTimeCoroutine()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("user_id", PlayerPrefManager.GetIdUser());
+
+        using (UnityWebRequest www = UnityWebRequest.Post(firstTimeLoginUrl, form))
+        {
+            www.chunkedTransfer = false;
+            www.certificateHandler = new AcceptAllCertificatesSignedWithASpecificPublicKey();
+            yield return www.SendWebRequest();
+        }
+        MadLevel.LoadLevelByName("Setup Screen");
     }
 
     #region Utilities

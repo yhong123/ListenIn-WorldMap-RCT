@@ -77,8 +77,8 @@ public class RegistrationController : MonoBehaviour
 
     //REGISTRATION VALUES
     [HideInInspector] public bool RegistrationHasConcent = false;
-    [HideInInspector] public string RegistrationGenre;
-    [HideInInspector] public string RegistrationCause;
+    [HideInInspector] public string RegistrationGenre = string.Empty;
+    [HideInInspector] public string RegistrationCause = string.Empty;
     public Dropdown MonthOfOnset;
     public Dropdown YearOfOnset;
     [HideInInspector] public bool RegistrationCanContact = false;

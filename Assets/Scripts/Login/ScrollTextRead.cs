@@ -16,7 +16,7 @@ public class ScrollTextRead : MonoBehaviour
 
 	public void OnScrollTextValueChange(Vector2 vector)
 	{
-		if(vector.y <= 0.05f)
+		if(vector.y <= 0.1f)
 		{
 			nextButton.SetActive(true);
 		}
