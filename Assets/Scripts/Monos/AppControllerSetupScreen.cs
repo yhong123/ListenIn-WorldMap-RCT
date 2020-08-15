@@ -35,8 +35,12 @@ public class AppControllerSetupScreen : MonoBehaviour
 
     [SerializeField] private Text userID;
 
+    [SerializeField] private bool isDebug = false;
+
     void Start()
     {
+        if (isDebug) return;
+
         StartSetup();
     }
 
