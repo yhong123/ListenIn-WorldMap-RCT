@@ -279,6 +279,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 #endif
 
             //SEND TO SERVER
+            //AndreaLIRO_Q: what if this fail?
             byte[] dataAsBytes = personalized_List.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             WWWForm form = new WWWForm();
             form.AddField("id_user", NetworkManager.UserId);

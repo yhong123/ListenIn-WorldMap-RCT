@@ -142,6 +142,8 @@ public class AppControllerSetupScreen : MonoBehaviour
     {
         if(TherapyLIROManager.Instance.SetUserProfile(response))
         {
+            //AndreaLIRO: This has to be performed only at the beginning of ListenIn and once per user
+            //AndreaLIRO: it s actually performed in the following function
             StartCoroutine(InitializationACTPairChoose());
         }
     }

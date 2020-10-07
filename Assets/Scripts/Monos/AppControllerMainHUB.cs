@@ -38,7 +38,7 @@ public class AppControllerMainHUB : MonoBehaviour {
 
     void OnLevelWasLoaded(int level)
     {
-        Debug.Log("Level Loaded calling TherapyLiroManager");
+        Debug.Log("MainHUB: Level Loaded calling TherapyLiroManager");
         HideAllMenus();
         TherapyLIROManager.Instance.CheckCurrentSection();
     }
