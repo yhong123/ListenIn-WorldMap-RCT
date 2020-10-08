@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 2, SART_TEST = 3, BASKET = 4, CORE = 5, QUESTIONAIRE = 1};
+public enum TherapyLadderStep { ACT = 4, SART_PRACTICE = 2, SART_TEST = 3, BASKET = 0, CORE = 5, QUESTIONAIRE = 1};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -197,6 +197,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     #region API
     public IEnumerator LIROInitializationACTPairChoose()
     {
+        //These two lists are used in the ACT only
         List<string> list_A = new List<string>();
         List<string> list_B = new List<string>();
 
@@ -206,7 +207,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         if (m_UserProfileManager.m_userProfile.isFirstInit)
         {
-            //AndreaLIRO: need to go on on this.
             //Loading list of ACT_A
             yield return StartCoroutine(LoadInitialACTFile(GlobalVars.LiroACT_A, value => list_A = value));
             //Loading list of ACT_B
@@ -216,13 +216,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             List<Challenge> basket_act_list = new List<Challenge>();
             List<Challenge> generated_basket_act = new List<Challenge>();
             List<string> currLines = new List<string>();
-            //Load ACT Basket here
+
             //Add code
             CoreItemReader cir = new CoreItemReader();
             string actbasketName = "ACT_basket";
             string actbasketPath= Path.Combine(GlobalVars.GetPathToLIROBaskets(), actbasketName);
 
-            //Loading all the basket challenges excluding the untrained items
+            //Loading all the basket challenges.
+            //These are items paired to the lexical items in set A and B and will be the one inserted in the therapy cycle (excluding the untrained lexical items)
             basket_act_list = cir.ParseCsv(actbasketPath, true).ToList();
 
             List<string> lexItems = basket_act_list.Select(x => x.LexicalItem).Distinct().ToList();
@@ -236,7 +237,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     found = true;
                 if (!found)
                 {
-                    Debug.Log(item);
+                    Debug.Log("< color = yellow > Warning act pair choose </ yellow >: no therapy cycle item for " + item);
                 }
             }
 
@@ -247,7 +248,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     found = true;
                 if (!found)
                 {
-                    Debug.Log(item);
+                    Debug.Log("< color = yellow > Warning act pair choose </ yellow >: no therapy cycle item for " + item);
                 }
             }
 
@@ -255,6 +256,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             string currentSelectedLexicalItem = String.Empty;
 
             int randomNumber = 0;
+            //List_A and List_B are matched by size
             for (int i = 0; i < list_A.Count; i++)
             {
                 //Reset
@@ -263,8 +265,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
                 //Choose random between 0 and 1
                 randomNumber = RandomGenerator.GetRandomInRange(0, 2);
-                currentSelectedChallenge = randomNumber == 0 ? list_A[i].Replace("\r", "").Trim() : list_B[i].Replace("\r", "").Trim();
+                currentSelectedChallenge = randomNumber == 0 ? list_A[i].Replace("\r", "").Trim() : list_B[i].Replace("\r", "").Trim(); //select by removing trailing \r
                 currentSelectedLexicalItem = currentSelectedChallenge.Split(new char[] { ',' })[1];
+                //Adding all the trials for that lexical item to the basket that goes into the therapy
                 generated_basket_act.AddRange(basket_act_list.Where(x => x.LexicalItem == currentSelectedLexicalItem));
 
                 personalized_List.Add(currentSelectedChallenge);
@@ -278,7 +281,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //#ERASE
 #endif
 
-            //SEND TO SERVER
+            //Sending to server the generated paired list
             //AndreaLIRO_Q: what if this fail?
             byte[] dataAsBytes = personalized_List.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             WWWForm form = new WWWForm();
@@ -319,7 +322,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //#ERASE
 #endif
 
-            //SEND TO SERVER
+            //Sending to server the generated act basket file to be used in therapy
             dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             form = new WWWForm();
             form.AddField("id_user", NetworkManager.UserId);
@@ -968,11 +971,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if(string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile))
         {
             //CRITICAL ERROR
-            Debug.LogError("<color=red>CRITICAL ERROR</color>");
+            Debug.LogError("<color=red>CRITICAL ERROR</color> generated ACT is not present");
             yield break;
         }
 
         CoreItemReader cir = new CoreItemReader();
+        //This has been created at the first initialization of the user to create the list of trained lexical items
         List<Challenge> listTrainedItems = cir.ParseCsvFromContent(GlobalVars.LiroGenActBasketFile).ToList();
         List<Challenge> curr_Selected_BasketACT = new List<Challenge>();
         List<string> lexicalItems = new List<string>();
@@ -981,6 +985,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         int countLexicalItems = 0;
 
         string currBasketsPath;
+        //This is currently build for each of the basket
         List<Challenge> curr_basket_list_read = new List<Challenge>();
         List<Challenge> curr_Selected_Challenges = new List<Challenge>();
         List<string> curr_basket_lexical_item_list = new List<string>();
