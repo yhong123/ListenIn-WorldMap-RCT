@@ -362,7 +362,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if(string.IsNullOrEmpty(response))
         {
             //CRITICAL ERROR
-            Debug.LogError("<color=red>SERVER ERROR; empty file</color>");
+            Debug.LogError("<color=red>SERVER ERROR; empty generated act file</color>");
         }
         GlobalVars.LiroGenActBasketFile = response;
     }
@@ -961,6 +961,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_cycleNumber++;
 
         int currAmount = 1;
+        if (m_onUpdateProgress != null)
+        {
+            m_onUpdateProgress(currAmount);
+        }
+        yield return new WaitForEndOfFrame();
 
         basketsInfos.Shuffle();
 
@@ -971,36 +976,53 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if(string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile))
         {
             //CRITICAL ERROR
-            Debug.LogError("<color=red>CRITICAL ERROR</color> generated ACT is not present");
+            Debug.LogError("<color=red>CRITICAL ERROR</color> generated basket with trained ACT items is not present");
             yield break;
         }
 
+        //******************************* BASKET WITH ACT ITEMS ****************************************************
         CoreItemReader cir = new CoreItemReader();
         //This has been created at the first initialization of the user to create the list of trained lexical items
         List<Challenge> listTrainedItems = cir.ParseCsvFromContent(GlobalVars.LiroGenActBasketFile).ToList();
         List<Challenge> curr_Selected_BasketACT = new List<Challenge>();
+        //Extracting distinct lexical items
         List<string> lexicalItems = new List<string>();
         lexicalItems = listTrainedItems.Select(x => x.LexicalItem).Distinct().ToList();
         lexicalItems.Shuffle();
         int countLexicalItems = 0;
 
+        //******************************* BASKET ****************************************************
         string currBasketsPath;
         //This is currently build for each of the basket
+        //Used for reading the basket
         List<Challenge> curr_basket_list_read = new List<Challenge>();
+        //Used to select items for each lexical item
         List<Challenge> curr_Selected_Challenges = new List<Challenge>();
+        //Used to extract distinct lexical items
         List<string> curr_basket_lexical_item_list = new List<string>();
+        //Used to write the list of challenges that create the therapy
         List<Challenge> curr_basket_list_write = new List<Challenge>();
 
         string coreFormat = String.Concat( "THERAPY_{0}_Cycle_{1}");
         string currFilename;
         int total_blocks = 1;
 
+        //AndreaLIRO_TB: do not have to clear this at every basket as the shuffle will be done at the end to distribute evenly the trials
+        curr_basket_list_write.Clear();
+        int countChallengesLexicalItem = 0;
+
+        currAmount = 5;
+        if (m_onUpdateProgress != null)
+        {
+            m_onUpdateProgress(currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
         for (int i = 0; i < basketsInfos.Count; i++)
         {
             curr_basket_list_read.Clear();
             curr_basket_lexical_item_list.Clear();
-            curr_basket_list_write.Clear();
-            
+                        
             yield return new WaitForEndOfFrame();
 
             cir = new CoreItemReader();
@@ -1009,20 +1031,19 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             //Loading all the basket challenges excluding the untrained items
             curr_basket_list_read = cir.ParseCsv(currBasketsPath, true).ToList();
-            currAmount += 4;
+            currAmount += 10;
             if (m_onUpdateProgress != null)
             {
                 m_onUpdateProgress(currAmount);
             }
             yield return new WaitForEndOfFrame();
 
-            //Geting current difficulty
+            //Getting current difficulty
             //int currDifficulty = basketsInfos[i].hardMode ? 3 : 1;
             try
             {
                 //select distinct lexical item for this batch
                 curr_basket_lexical_item_list = curr_basket_list_read.Select(x => x.LexicalItem).Distinct().ToList();
-                int countChallengesLexicalItem = 0;
                 int currentStep = 0;
                 //For each distinct lexical item choose a set number of random challenges
                 foreach (string lexical_item in curr_basket_lexical_item_list)
@@ -1033,13 +1054,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     if (basketsInfos[i].hardMode)
                     {
                         curr_Selected_Challenges.Clear();
+                        //Selecting hard challenges from current basket 
                         curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty > 1).ToList();
                         if (curr_Selected_Challenges != null || curr_Selected_Challenges.Count != 0)
                         {
                             curr_Selected_Challenges.Shuffle();
                             currentStep = 0;
-                            
-                            //Until reaching desired number for lexical item or finishing challenges for this difficulty
+
+                            //Until reaching desired number for lexical item or finishing challenges for this hard difficulty
                             while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem && currentStep < curr_Selected_Challenges.Count)
                             {
                                 curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
@@ -1048,11 +1070,17 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                                 currentStep++;
                             }
                         }
+                        else 
+                        {
+                            Debug.LogError(String.Format("Could not find easy challenges for {0}", lexical_item));
+                        }
                         curr_Selected_Challenges.Clear();
                     }
 
                     curr_Selected_Challenges.Clear();
+                    //Selecting easy challenges from the current basket
                     curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty == 1).ToList();
+                    curr_Selected_Challenges.Shuffle();
 
                     if (curr_Selected_Challenges != null && curr_Selected_Challenges.Count != 0)
                     {
@@ -1072,8 +1100,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                         }
                     }
                     else
-                    {
-                        Debug.LogError(String.Format("Could not find easy challenges for {0}", lexical_item));
+                    { 
+                        Debug.Log("<color=yellow>Therapy Warning</color> Could not find hard challenges for " + lexical_item);
                     }
                 }
             }
@@ -1081,63 +1109,67 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             {
                 Debug.LogError(ex.Message);
             }          
+           
+        }
 
-            currAmount += 6;
-            if (m_onUpdateProgress != null)
+        //At this point we have all the baskets.
+        //Repeating the same for the ACT trained items that are generated in a basket
+        currAmount += 10; //55
+        if (m_onUpdateProgress != null)
+        {
+            m_onUpdateProgress(currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        foreach (string lexical_item in lexicalItems)
+        {
+            //Resetting challenges count
+            countChallengesLexicalItem = 0;
+            curr_Selected_Challenges.Clear();
+            curr_Selected_Challenges = listTrainedItems.Where(x => x.LexicalItem == lexical_item).ToList();
+            curr_Selected_Challenges.Shuffle();
+            int currentStep = 0;
+            if (curr_Selected_Challenges != null && curr_Selected_Challenges.Count != 0)
             {
-                m_onUpdateProgress(currAmount);
-            }
-            yield return new WaitForEndOfFrame();
+                curr_Selected_Challenges = curr_Selected_Challenges.OrderBy(y => RandomGenerator.GetRandom()).ToList();
 
-            int countACTBasketItemsInCurrentBasket = 0;
+                //Resetting counter to cycle through challenges
+                currentStep = 0;
 
-            //AndreaLIRO: adding trained items: may be adjusted when I have the final version
-            // numero di lexixal total per act * numero di trial per lexical / numero di basket + un buffer to make sure I train all of the items
-            while (countACTBasketItemsInCurrentBasket < ((lexicalItems.Count * m_numberSelectedPerLexicalItem)/ basketsInfos.Count) && listTrainedItems.Count > 0 && countLexicalItems < lexicalItems.Count)
-            {
-
-                curr_Selected_BasketACT = listTrainedItems.Where(x => x.LexicalItem == lexicalItems[countLexicalItems]).ToList();
-                curr_Selected_BasketACT.Shuffle();
-
-                for (int xdr = 0; xdr < m_numberSelectedPerLexicalItem; xdr++)
+                //populating until reaching the final number of items
+                while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem)
                 {
-                    curr_basket_list_write.Add(curr_Selected_BasketACT[i % curr_Selected_BasketACT.Count]);
-                    countACTBasketItemsInCurrentBasket++;
+                    curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                    currentStep++;
+                    //This should make sure that challenges are always cycled through the current list
+                    currentStep = currentStep % curr_Selected_Challenges.Count;
+                    countChallengesLexicalItem++;
                 }
-
-                countLexicalItems++;
-                
+            }
+            else
+            {
+                Debug.Log("<color=yellow>Therapy Warning</color> Could not find act trained basket challenges for " + lexical_item);
             }
 
-            //IF LAST BASKET ADD REMAINING LEXICAL ITEMS
-            if(i == basketsInfos.Count - 1 && countLexicalItems < lexicalItems.Count)
-            {
-                while (countLexicalItems < lexicalItems.Count)
-                {
-                    curr_Selected_BasketACT = listTrainedItems.Where(x => x.LexicalItem == lexicalItems[countLexicalItems]).ToList();
-                    curr_Selected_BasketACT.Shuffle();
-                    for (int xdr = 0; xdr < m_numberSelectedPerLexicalItem; xdr++)
-                    {
-                        curr_basket_list_write.Add(curr_Selected_BasketACT[i % curr_Selected_BasketACT.Count]);
-                        countACTBasketItemsInCurrentBasket++;
-                    }
+        }
 
-                    countLexicalItems++;
-                }
+        //---------- GENERATION COMPLETE
+        //Shuffling challenges
+        curr_basket_list_write.Shuffle();
 
-            }
+        currAmount += 5; //60
+        if (m_onUpdateProgress != null)
+        {
+            m_onUpdateProgress(currAmount);
+        }
+        yield return new WaitForEndOfFrame();
 
-
-            //---------- GENERATION COMPLETE
-            //Shuffling challenges
-            curr_basket_list_write.Shuffle();
-
-            List<string> currLines = new List<string>();
-            int challengeCounter = 0;
-            //Selected all the items for this basket, allocating them to blocks
-            for (int j = 0; j < curr_basket_list_write.Count; j++)
-            {
-                currLines.Add(String.Join(",", new string[] { curr_basket_list_write[j].ChallengeID.ToString(),
+        List<string> currLines = new List<string>();
+        int challengeCounter = 0;
+        //Selected all the items for this basket, allocating them to blocks
+        for (int j = 0; j < curr_basket_list_write.Count; j++)
+        {
+            currLines.Add(String.Join(",", new string[] { curr_basket_list_write[j].ChallengeID.ToString(),
                                                               curr_basket_list_write[j].Difficulty.ToString(),
                                                               curr_basket_list_write[j].LexicalItem.ToString(),
                                                               curr_basket_list_write[j].FileAudioIDs[0].ToString(),
@@ -1153,11 +1185,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                                                               curr_basket_list_write[j].Foils[5].ToString()
                 }));
 
-                challengeCounter++;
+            challengeCounter++;
 
-                if (challengeCounter == GlobalVars.ChallengeLength)
-                {
-                    currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+            if (challengeCounter == GlobalVars.ChallengeLength)
+            {
+                currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
 
 #if SAVE_LOCALLY
                     //#ERASE
@@ -1165,32 +1197,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     //#ERASE
 #endif
 
-                    //SEND TO SERVER
-                    byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
-                    WWWForm form = new WWWForm();
-                    form.AddField("id_user", NetworkManager.UserId);
-                    form.AddField("file_name", currFilename);
-                    form.AddField("file_size", dataAsBytes.Length);
-                    form.AddField("folder_name", GlobalVars.SectionFolderName);
-                    form.AddBinaryData("file_data", dataAsBytes, currFilename);
-                    NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
-
-                    currLines.Clear();
-                    total_blocks++;
-                    challengeCounter = 0;
-                }
-            }
-            //Save the remaining in the last file
-            if (currLines.Count != 0)
-            {
-                currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
-
-#if SAVE_LOCALLY
-                //#ERASE
-                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currLines.ToArray());
-                //#ERASE
-#endif
-
+                //Sending basket file to the server
                 //SEND TO SERVER
                 byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
                 WWWForm form = new WWWForm();
@@ -1203,15 +1210,52 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
                 currLines.Clear();
                 total_blocks++;
-            }
+                challengeCounter = 0;
 
-            currAmount += 11;
-            if (m_onUpdateProgress != null)
-            {
-                m_onUpdateProgress(currAmount);
+                if (total_blocks % 10 == 0)
+                {
+                    //Sending update to UI
+                    currAmount += 2; //from 55 initially
+                    if (m_onUpdateProgress != null && currAmount < 90)
+                    {
+                        m_onUpdateProgress(currAmount);
+                    }
+                    yield return new WaitForEndOfFrame();
+                }
+
             }
-            yield return new WaitForEndOfFrame();
         }
+        //Save the remaining in the last file
+        if (currLines.Count != 0)
+        {
+            currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+
+#if SAVE_LOCALLY
+                //#ERASE
+                File.WriteAllLines(Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), currFilename), currLines.ToArray());
+                //#ERASE
+#endif
+
+            //SEND TO SERVER
+            byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", currFilename);
+            form.AddField("file_size", dataAsBytes.Length);
+            form.AddField("folder_name", GlobalVars.SectionFolderName);
+            form.AddBinaryData("file_data", dataAsBytes, currFilename);
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
+            currLines.Clear();
+            total_blocks++;
+        }
+
+        currAmount = 95; //95
+        if (m_onUpdateProgress != null)
+        {
+            m_onUpdateProgress(currAmount);
+        }
+        yield return new WaitForEndOfFrame();
 
         //Updating UserProfile in the therapy section
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = total_blocks - 1;
@@ -1224,7 +1268,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         {
             m_onUpdateProgress(currAmount);
         }
-
+        yield return new WaitForSeconds(1);
     }
 
     public void CleanCurrentBlock(string fileToDelete = "")

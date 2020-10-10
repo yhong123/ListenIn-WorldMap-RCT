@@ -155,7 +155,8 @@ public class AppControllerSetupScreen : MonoBehaviour
         //AndreaLIRO: Checking first ever initialization for ACT pair randomization
         yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
 
-        while(string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile)) //WAIT UNTIL THE FILES ARE LOADED
+        //AndreaLIRO_TB: need to wait until the files are loaded from the server before continuing with the progress
+        while (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile))
         {
             yield return null;
         }
