@@ -154,6 +154,7 @@ public class AppControllerMainHUB : MonoBehaviour {
         }
 
         VideoPlayerController.Instance.SetVideo(currProfile.LIROStep);
+
     }
 
     void SwitchingSection(UserProfileManager currProfile, int amount)

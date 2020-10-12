@@ -292,7 +292,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             form.AddBinaryData("file_data", dataAsBytes, GlobalVars.LiroGeneratedACTFileName);
             NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
-            GlobalVars.LiroGenActFile = String.Join(", ", personalized_List.ToArray()); //SAVE FILE
+            GlobalVars.LiroGenActFile = String.Join(Environment.NewLine, personalized_List.ToArray()); //SAVE FILE
 
             //public static string LiroGeneratedACT = @"ACT/GEN_ACT";
 
@@ -332,7 +332,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             form.AddBinaryData("file_data", dataAsBytes, GlobalVars.LiroGeneratedACTBasketFileName);
             NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
-            GlobalVars.LiroGenActBasketFile = String.Join(", ", currLines.ToArray()); //SAVE FILE
+            GlobalVars.LiroGenActBasketFile = String.Join(Environment.NewLine, currLines.ToArray()); //SAVE FILE
 
             //AndreaLIRO: add the file to be sent online
             m_UserProfileManager.m_userProfile.isFirstInit = false;
