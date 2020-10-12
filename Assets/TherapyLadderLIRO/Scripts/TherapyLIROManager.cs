@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Runtime.Remoting.Messaging;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
@@ -984,6 +985,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         CoreItemReader cir = new CoreItemReader();
         //This has been created at the first initialization of the user to create the list of trained lexical items
         List<Challenge> listTrainedItems = cir.ParseCsvFromContent(GlobalVars.LiroGenActBasketFile).ToList();
+        listTrainedItems = listTrainedItems.Select(x => { x.BasketNumber = 99; return x; }).ToList<Challenge>();
         List<Challenge> curr_Selected_BasketACT = new List<Challenge>();
         //Extracting distinct lexical items
         List<string> lexicalItems = new List<string>();
@@ -1031,7 +1033,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             //Loading all the basket challenges excluding the untrained items
             curr_basket_list_read = cir.ParseCsv(currBasketsPath, true).ToList();
-            currAmount += 10;
+            curr_basket_list_read = curr_basket_list_read.Select(x => { x.BasketNumber = basketsInfos[i].basketId; return x; }).ToList<Challenge>();
+            currAmount += 10; //15
             if (m_onUpdateProgress != null)
             {
                 m_onUpdateProgress(currAmount);
@@ -1064,7 +1067,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                             //Until reaching desired number for lexical item or finishing challenges for this hard difficulty
                             while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem && currentStep < curr_Selected_Challenges.Count)
                             {
-                                curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                                Challenge ch = new Challenge(curr_Selected_Challenges[currentStep]);
+                                ch.BasketNumber = basketsInfos[i].basketId;
+                                curr_basket_list_write.Add(ch);
                                 //curr_challenges_lexical_item.RemoveAt(0);
                                 countChallengesLexicalItem++;
                                 currentStep++;
@@ -1092,7 +1097,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                         //populating until reaching the final number of items
                         while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem)
                         {
-                            curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                            Challenge ch = new Challenge(curr_Selected_Challenges[currentStep]);
+                            ch.BasketNumber = basketsInfos[i].basketId;
+                            curr_basket_list_write.Add(ch);
                             currentStep++;
                             //This should make sure that challenges are always cycled through the current list
                             currentStep = currentStep % curr_Selected_Challenges.Count;
@@ -1139,7 +1146,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 //populating until reaching the final number of items
                 while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem)
                 {
-                    curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                    Challenge ch = new Challenge(curr_Selected_Challenges[currentStep]);
+                    ch.BasketNumber = 99;
+                    curr_basket_list_write.Add(ch);
                     currentStep++;
                     //This should make sure that challenges are always cycled through the current list
                     currentStep = currentStep % curr_Selected_Challenges.Count;
@@ -1154,10 +1163,41 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
 
         //---------- GENERATION COMPLETE
+
         //Shuffling challenges
         curr_basket_list_write.Shuffle();
 
+        //Adding information about number presentation inside the current cycle
+        for (int i = 0; i < curr_basket_list_write.Count; i++)
+        {
+            Challenge c = new Challenge(curr_basket_list_write.ElementAt(i));
+            c.PresentationNumber = i+1;
+            curr_basket_list_write[i] = c;
+        }
+
+        //I am trynig to cheat here.
+        //curr_basket_list_write = curr_basket_list_write.OrderBy(x => x.PresentationNumber).ToList();
+
         currAmount += 5; //60
+        if (m_onUpdateProgress != null)
+        {
+            m_onUpdateProgress(currAmount);
+        }
+        yield return new WaitForEndOfFrame();
+
+        //Getting all distinct lexical item
+        curr_basket_lexical_item_list = curr_basket_list_write.Select(x => x.LexicalItem).Distinct().ToList();
+        foreach (string lexical_item in curr_basket_lexical_item_list)
+        {
+            int count = 1;
+            foreach (var item in curr_basket_list_write.Where(x => x.LexicalItem == lexical_item).OrderBy(x => x.PresentationNumber))
+            {
+                item.LexicalPresentationNumber = count;
+                count++;
+            }
+        }
+
+        currAmount += 5; //65
         if (m_onUpdateProgress != null)
         {
             m_onUpdateProgress(currAmount);
@@ -1172,6 +1212,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             currLines.Add(String.Join(",", new string[] { curr_basket_list_write[j].ChallengeID.ToString(),
                                                               curr_basket_list_write[j].Difficulty.ToString(),
                                                               curr_basket_list_write[j].LexicalItem.ToString(),
+                                                              curr_basket_list_write[j].PresentationNumber.ToString(),
+                                                              curr_basket_list_write[j].LexicalPresentationNumber.ToString(),
+                                                              curr_basket_list_write[j].BasketNumber.ToString(),
                                                               curr_basket_list_write[j].FileAudioIDs[0].ToString(),
                                                               curr_basket_list_write[j].FileAudioIDs[1].ToString(),
                                                               curr_basket_list_write[j].FileAudioIDs[2].ToString(),
@@ -1215,7 +1258,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 if (total_blocks % 10 == 0)
                 {
                     //Sending update to UI
-                    currAmount += 2; //from 55 initially
+                    currAmount += 1; //from 55 initially
                     if (m_onUpdateProgress != null && currAmount < 90)
                     {
                         m_onUpdateProgress(currAmount);
@@ -1250,7 +1293,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             total_blocks++;
         }
 
-        currAmount = 95; //95
+        currAmount = 95; //93
         if (m_onUpdateProgress != null)
         {
             m_onUpdateProgress(currAmount);

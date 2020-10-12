@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ACTChallenge
 {
@@ -37,6 +38,9 @@ public class Challenge {
     public string LexicalItem;
     public List<string> FileAudioIDs = new List<string>();
     public long CorrectImageID;
+    public int BasketNumber;
+    public int PresentationNumber;
+    public int LexicalPresentationNumber;
     public List<long> Foils = new List<long>();
 
     public Challenge()
@@ -44,7 +48,7 @@ public class Challenge {
 
     }
 
-    public Challenge(long chID, string lexicalItem, int difficulty, string faID1, string faID2, string faID3, string faID4, string faID5, long ciID, long f1, long f2, long f3, long f4, long f5)
+    public Challenge(long chID, string lexicalItem, int difficulty, string faID1, string faID2, string faID3, string faID4, string faID5, long ciID, long f1, long f2, long f3, long f4, long f5, int basketNumber = 0, int presentationNumber = 0, int lexicalPresentationNumber = 0)
     {
         ChallengeID = chID;
         LexicalItem = lexicalItem;
@@ -61,6 +65,27 @@ public class Challenge {
         Foils.Add(f3);
         Foils.Add(f4);
         Foils.Add(f5);
+    }
+
+    public Challenge(Challenge c) 
+    {
+        ChallengeID = c.ChallengeID;
+        LexicalItem = c.LexicalItem;
+        Difficulty = c.Difficulty;
+        BasketNumber = c.BasketNumber;
+        PresentationNumber = c.PresentationNumber;
+        LexicalPresentationNumber = c.LexicalPresentationNumber;
+        for (int i = 0; i < c.FileAudioIDs.Count; i++)
+        {
+            FileAudioIDs.Add(c.FileAudioIDs.ElementAt(i));
+        }
+        CorrectImageID = c.CorrectImageID;
+        
+        Foils.Add(c.CorrectImageID);
+        for (int i = 0; i < c.Foils.Count; i++)
+        {
+            Foils.Add(c.Foils.ElementAt(i));
+        }
     }
 
 }
