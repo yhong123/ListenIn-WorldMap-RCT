@@ -294,6 +294,10 @@ public class GameControlScriptStandard : MonoBehaviour
         m_challengeResponse.m_challengeID = m_currChallenge.ChallengeID;
         m_challengeResponse.m_block = m_currBlockNumberFromManager;
         m_challengeResponse.m_cycle = m_currCycleNumber;
+        m_challengeResponse.m_presentationNumber = m_currChallenge.PresentationNumber;
+        m_challengeResponse.m_lexicalPresentationNumber = m_currChallenge.LexicalPresentationNumber;
+        m_challengeResponse.m_basketNumber = m_currChallenge.BasketNumber;
+        m_challengeResponse.m_accuracy = 1;
         RandomizeFoils(m_currChallenge);
         m_currAudio = GetRandomizedAudio(m_currChallenge);
         trialsCounter--;
@@ -356,7 +360,6 @@ public class GameControlScriptStandard : MonoBehaviour
             {
                 ListenIn.Logger.Instance.Log(String.Format("Challenge ID: {0}; Cannot load: {0}", m_currChallenge.ChallengeID.ToString(),availableFoils[i].ToString()), ListenIn.LoggerMessageType.Error);
             }
-            //m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/" + m_lsTrial [m_intCurIdx].m_lsStimulus[i].m_strImage);
 
         }
         ai.Play("Throw");
@@ -365,8 +368,8 @@ public class GameControlScriptStandard : MonoBehaviour
         PlayAudioLIRO(delay);
         ResetStimulThrowPos();
         // to keep track reaction time
-        m_dtCurTrialStartTime = DateTime.Now;
-        m_challengeResponse.m_dateTimeStart = DateTime.Now;
+        m_dtCurTrialStartTime = DateTime.UtcNow;
+        m_challengeResponse.m_dateTimeStart = DateTime.UtcNow;
 
     }
     private void CleanPreviousTrial()
@@ -435,7 +438,7 @@ public class GameControlScriptStandard : MonoBehaviour
             m_challengeResponse.m_dateTimeEnd = DateTime.UtcNow;
 
             int coinsEarned = 1;
-            if (m_challengeResponse.m_accuracy == 0)
+            if (m_challengeResponse.m_accuracy == 1)
                 coinsEarned++;
 
             StateChallenge.Instance.AddCoin(coinsEarned);
@@ -561,6 +564,9 @@ public class GameControlScriptStandard : MonoBehaviour
                   item.m_challengeID.ToString(),
                   item.m_cycle.ToString(),
                   item.m_block.ToString(),
+                  item.m_presentationNumber.ToString(),
+                  item.m_lexicalPresentationNumber.ToString(),
+                  item.m_basketNumber.ToString(),
 
                   item.m_dateTimeStart.ToString("dd/MM/yyyy"),
                   item.m_dateTimeStart.ToString("HH:mm:ss"),

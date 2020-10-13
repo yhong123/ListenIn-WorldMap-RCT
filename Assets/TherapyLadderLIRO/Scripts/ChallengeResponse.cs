@@ -7,6 +7,9 @@ public class ChallengeResponse {
     public long m_challengeID;
     public int m_cycle;
     public int m_block;
+    public int m_presentationNumber;
+    public int m_lexicalPresentationNumber;
+    public int m_basketNumber;
     public DateTime m_dateTimeStart;
     public DateTime m_dateTimeEnd;
     public List<string> incorrectPicturesIDs = new List<string>();

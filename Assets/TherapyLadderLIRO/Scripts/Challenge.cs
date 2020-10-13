@@ -36,11 +36,11 @@ public class Challenge {
     public long ChallengeID;
     public int Difficulty;
     public string LexicalItem;
-    public List<string> FileAudioIDs = new List<string>();
-    public long CorrectImageID;
-    public int BasketNumber;
     public int PresentationNumber;
     public int LexicalPresentationNumber;
+    public int BasketNumber;
+    public List<string> FileAudioIDs = new List<string>();
+    public long CorrectImageID;
     public List<long> Foils = new List<long>();
 
     public Challenge()
