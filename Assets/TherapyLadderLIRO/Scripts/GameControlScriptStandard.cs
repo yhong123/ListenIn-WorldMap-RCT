@@ -353,8 +353,6 @@ public class GameControlScriptStandard : MonoBehaviour
                     m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/CorePhotos/" + availableFoils[i].ToString());
                     m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
                 }
-
-
             }
             catch (Exception ex)
             {

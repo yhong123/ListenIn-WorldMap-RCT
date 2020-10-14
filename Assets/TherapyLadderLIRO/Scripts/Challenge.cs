@@ -40,8 +40,10 @@ public class Challenge {
     public int LexicalPresentationNumber;
     public int BasketNumber;
     public List<string> FileAudioIDs = new List<string>();
-    public long CorrectImageID;
     public List<long> Foils = new List<long>();
+    //AndreaLIRO: this contains a duplicate information (it s foil 0 basically) just for having a quick access to the correct response
+    //NO NEED TO SAVE IT ON FILES
+    public long CorrectImageID;
 
     public Challenge()
     {
@@ -82,7 +84,7 @@ public class Challenge {
         CorrectImageID = c.CorrectImageID;
         
         Foils.Add(c.CorrectImageID);
-        for (int i = 0; i < c.Foils.Count; i++)
+        for (int i = 1; i < c.Foils.Count; i++)
         {
             Foils.Add(c.Foils.ElementAt(i));
         }

@@ -260,7 +260,8 @@ public class CoreItemReader : ICsvReader<Challenge>
             int.TryParse(sections[5], out basketNumber);
             currChallenge.LexicalPresentationNumber = basketNumber;
 
-
+            //Addint the pointer for having the same parser depending if offseted information or not
+            //Andrea_LIRO: may consider to do different functions
             additionalPointer = 3;
         }
 
@@ -271,7 +272,7 @@ public class CoreItemReader : ICsvReader<Challenge>
             //AndreaLIRO: I try to parse it as number and if it fails I save it as 0
             if (!int.TryParse(sections[3 + additionalPointer + i], out audionull))
             {
-                currChallenge.FileAudioIDs.Add(sections[6 + i]);
+                currChallenge.FileAudioIDs.Add(sections[3 + additionalPointer + i]);
             }
             else
             {
