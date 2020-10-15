@@ -184,7 +184,7 @@ public class CoreItemReader : ICsvReader<Challenge>
             if (item != String.Empty)
             {
 
-                Challenge currChallenge = PopulateChallenge(item);
+                Challenge currChallenge = new Challenge(PopulateChallenge(item));
                 currList.Add(currChallenge);
             }
         }
@@ -214,7 +214,7 @@ public class CoreItemReader : ICsvReader<Challenge>
         {
             if (item != String.Empty)
             {
-                Challenge currChallenge = PopulateChallenge(item);
+                Challenge currChallenge = new Challenge(PopulateChallenge(item));
                 currList.Add(currChallenge);
             }
         }
@@ -258,7 +258,7 @@ public class CoreItemReader : ICsvReader<Challenge>
             //Lexical Presentation Number
             int basketNumber = 0;
             int.TryParse(sections[5], out basketNumber);
-            currChallenge.LexicalPresentationNumber = basketNumber;
+            currChallenge.BasketNumber = basketNumber;
 
             //Addint the pointer for having the same parser depending if offseted information or not
             //Andrea_LIRO: may consider to do different functions

@@ -555,6 +555,33 @@ public class GameControlScriptStandard : MonoBehaviour
 
         List<string> listString = new List<string>();
 
+        //Adding header
+        listString.Add(String.Join(",", new string[] {
+                
+                "ChallengeID",
+                "CycleNumber",
+                "Block",
+                "PresentationNumber",
+                "LexicalPresentationNumber",
+                "BasketNumber",
+
+                "DayStart",
+                "TimeStart",
+                //"DayEnd",
+                //"TimeEnd",
+
+                "Accuracy",
+                "SoundRepetition",
+
+                "IncorrectPicture1",
+                "IncorrectPicture2",
+                "IncorrectPicture3",
+                "IncorrectPicture4",
+                "IncorrectPicture5",
+
+        }));
+
+
         foreach (var item in m_responseList)
         {
             listString.Add(String.Join(",", new string[] {
@@ -568,8 +595,8 @@ public class GameControlScriptStandard : MonoBehaviour
 
                   item.m_dateTimeStart.ToString("dd/MM/yyyy"),
                   item.m_dateTimeStart.ToString("HH:mm:ss"),
-                  item.m_dateTimeEnd.ToString("dd/MM/yyyy"),
-                  item.m_dateTimeEnd.ToString("HH:mm:ss"),
+                  //item.m_dateTimeEnd.ToString("dd/MM/yyyy"),
+                  //item.m_dateTimeEnd.ToString("HH:mm:ss"),
 
                   item.m_accuracy.ToString(),
                   item.m_repeat.ToString(),
