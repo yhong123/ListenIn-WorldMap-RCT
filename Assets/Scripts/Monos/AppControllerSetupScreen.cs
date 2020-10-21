@@ -185,10 +185,10 @@ public class AppControllerSetupScreen : MonoBehaviour
         {
             if (GlobalVars.isProfileNewOrChanged)
             {
+                //AndreaLIRO_TB: we have to detect the change of profile and load the correct files.
                 GlobalVars.isProfileNewOrChanged = false;
+                //GameStateSaver.Instance.ResetListenIn();
             }
-            GameStateSaver.Instance.ResetListenIn();
-
         }
         catch (Exception ex)
         {
@@ -216,6 +216,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {
+            //AndreaLIRO_TB: load must happen from the server
             GameStateSaver.Instance.LoadGameProgress();
         }
         catch (System.Exception ex)

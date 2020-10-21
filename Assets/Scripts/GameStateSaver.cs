@@ -54,7 +54,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         if (string.IsNullOrEmpty(response))
         {
             //CRITICAL ERROR
-            Debug.LogError("<color=red>SERVER ERROR; empty file</color>");
+            Debug.LogError("<color=red>SERVER ERROR; could not retrieve jigsaw information from server. Resetting automatically</color>");
             ResetListenIn();
         }
 
@@ -66,7 +66,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         if(string.IsNullOrEmpty(GlobalVars.GameProgressFile))
         {
             //CRITICAL ERROR
-            Debug.LogError("<color=red>SERVER ERROR; empty file</color>");
+            Debug.LogError("<color=red>SERVER ERROR; jigsaw information from server not downloaded. Resetting automatically</color>");
             return;
         }
 
@@ -246,6 +246,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 	{
         //Debug.Log("Initializing ListenIn");
         ListenIn.Logger.Instance.Log("GameStateSaver: resetting jigsaw pieces state", ListenIn.LoggerMessageType.Info);
+        Debug.LogError("<color=red>LISTENIN ERROR; Reset jigsaw state. Check if this wanted</color>");
         //Reset();
         ResetGameProgress();
         //Load();
