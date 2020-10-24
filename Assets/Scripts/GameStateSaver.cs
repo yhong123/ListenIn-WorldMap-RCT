@@ -55,6 +55,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         {
             //CRITICAL ERROR
             Debug.LogError("<color=red>SERVER ERROR; could not retrieve jigsaw information from server. Resetting automatically</color>");
+            ///AndreaLIRO_TB: Resetting jigsaw states if the file is empty.
             ResetListenIn();
         }
 
@@ -298,6 +299,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         form.AddBinaryData("file_data", Encoding.ASCII.GetBytes(gameProgress), FileName());
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
+        ///Saving the game progress for current section
         GlobalVars.GameProgressFile = gameProgress;
 
         LoadGameProgress();

@@ -54,7 +54,10 @@ public class StateJigsawPuzzle : State
     private bool m_Init = false;
     #endregion
 
-
+    /// <summary>
+    /// This is a loca dictionary for the level names. It has been crerated before introducing the level manager
+    /// <para>It is being used by ILevel interface to load dynamically the backgrounds and to assign a particular color to each level in the jigsaw recap screen</para>
+    /// </summary>
     private void InitializeChapters(){
         Chapters = new Dictionary<string, Chapter>();
         Chapters.Add("Space Travel", (new Chapter("Space", 2, "Background_002", "Postcards/Postcard_Space", Color.black, false, "")));

@@ -8,7 +8,10 @@ public enum TimerType { Idle, WorldMap, Therapy, Pinball }
 public static class GlobalVars {
 
     public static bool isProfileNewOrChanged = false;
-
+    /// <summary>
+    /// AndreaLIRO_TB: This should be changed if we realize that the networked profile is changed.
+    /// </summary>
+    public static bool isNetworkedProfileNewOrChanged = false;
     //Pedro: use this class for paths purposes. I ll change user id so to use a string
     public static int ChallengeLength = 20;
     public static int ActChallengeLength = 30;

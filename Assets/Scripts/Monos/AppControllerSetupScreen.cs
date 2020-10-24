@@ -121,33 +121,27 @@ public class AppControllerSetupScreen : MonoBehaviour
         setupPorcentageProgress = 47;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
+        //AndreaLIRO_TB : what happens if get profile back arrives before dowload game progress?
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, GetProfileCallback);
 
         GameStateSaver.Instance.DownloadGameProgress();
-        //yield return StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
-        //yield return new WaitForSeconds(2);
-        //try
-        //{
-        //    StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
-        //}
-        //catch (Exception ex)
-        //{
-        //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
-        //}
+
     }
 
     public void GetProfileCallback(string response)
     {
         if(TherapyLIROManager.Instance.SetUserProfile(response))
         {
-            //AndreaLIRO: This has to be performed only at the beginning of ListenIn and once per user
-            //AndreaLIRO: it s actually performed in the following function
             StartCoroutine(InitializationACTPairChoose());
         }
     }
 
+    /// <summary>
+    /// Function being called during SetupScreen starting after login. The Initialization of ACT pairs is executed only if isFirstInit is true.
+    /// </summary>
+    /// <returns>Nothing</returns>
     public IEnumerator InitializationACTPairChoose()
     {
         setupPorcentageProgress = 55;
@@ -155,7 +149,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         //AndreaLIRO: Checking first ever initialization for ACT pair randomization
         yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
 
-        //AndreaLIRO_TB: need to wait until the files are loaded from the server before continuing with the progress
+        //AndreaLIRO: need to wait until the files are loaded from the server before continuing with the progress
         while (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile))
         {
             yield return null;
@@ -185,7 +179,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         {
             if (GlobalVars.isProfileNewOrChanged)
             {
-                //AndreaLIRO_TB: we have to detect the change of profile and load the correct files.
+                //AndreaLIRO_TB: This is not required anymore because if we switch reset Listen In is called before anyway and we don t need to save stuff locally anymore.
                 GlobalVars.isProfileNewOrChanged = false;
                 //GameStateSaver.Instance.ResetListenIn();
             }

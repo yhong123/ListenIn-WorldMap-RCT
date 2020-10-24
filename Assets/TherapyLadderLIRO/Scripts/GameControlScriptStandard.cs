@@ -108,7 +108,8 @@ public class GameControlScriptStandard : MonoBehaviour
     DateTime m_dtEndingBlock;
     double m_totalPlayedMinutes = 0;
 
-    private bool m_cheatOn = false;
+    [SerializeField]
+    private bool m_cheatOn = true;
 
     LayerMask currMask;
 
@@ -894,9 +895,8 @@ public class GameControlScriptStandard : MonoBehaviour
 
 #if UNITY_EDITOR
         //AndreaLIRO: putting this on the GameControlScriptStandard to control normal process of closing the challenge therapy
-        if (Input.GetKeyDown(KeyCode.Space) && !m_cheatOn)
+        if (Input.GetKeyDown(KeyCode.Space) && m_cheatOn)
         {
-            m_cheatOn = true;
             StartCoroutine(DoCheatCodes());
         }
 #endif

@@ -16,13 +16,15 @@ public class OnMouseDownEvent : MonoBehaviour
 
     void OnMouseDown()
     {
-        spriteRenderer.sprite = buttons[1];
+        if(buttons.Length > 1)
+            spriteRenderer.sprite = buttons[1];
         OnMouseDownUnityEvent.Invoke();
 
     }
 
     void OnMouseUp()
     {
-        spriteRenderer.sprite = buttons[0];
+        if (buttons.Length > 1)
+            spriteRenderer.sprite = buttons[0];
     }
 }
