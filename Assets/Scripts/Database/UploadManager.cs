@@ -306,7 +306,7 @@ public class UploadManager : Singleton<UploadManager> {
                 Debug.Log("UploadManager: " + _currDeltaTime + " returning to main screen.");
                 backToLevelSelection = false;
                 timeoutTimer = 0.0f;
-                GameStateSaver.Instance.SaveGameProgress();
+                GameStateSaver.Instance.SaveGame();
                 MadLevel.LoadLevelByName("MainHUB");
             }
         }
@@ -320,6 +320,11 @@ public class UploadManager : Singleton<UploadManager> {
     {
         CollectMemory();
         StartCoroutine(UpdateUserProfile());        
+    }
+
+    public void SaveGame()
+    {
+        GameStateSaver.Instance.SaveGame();
     }
 
     private void CollectMemory()

@@ -50,6 +50,7 @@ return Application.dataPath;// +"/"+ fileName;
     public static string LiroGenActBasketFile = string.Empty; //GEN_ACT_BASKET
     public static string LiroGenActFile = string.Empty; //GEN_ACT
     public static string GameProgressFile = string.Empty; //GAMES PROGRESS
+    public static string GameWorldMapProgressFile = string.Empty; //GAMES PROGRESS
 
     public static string GameProgressFolderName = "Game";
     public static string GetPathToLIROOutput(string patientID) ////////////////OLD REMOVE

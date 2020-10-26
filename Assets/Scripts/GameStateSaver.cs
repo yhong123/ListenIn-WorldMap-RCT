@@ -9,6 +9,7 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Text;
+using MadLevelManager;
 
 public class ChapterSaveState
 {
@@ -51,7 +52,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 
     private void DownloadGameProgressCallback(string response)
     {
-        if (string.IsNullOrEmpty(response))
+        if (string.IsNullOrEmpty(response)||String.Equals(response,"error"))
         {
             //CRITICAL ERROR
             Debug.LogError("<color=red>SERVER ERROR; could not retrieve jigsaw information from server. Resetting automatically</color>");
@@ -60,6 +61,33 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         }
 
         GlobalVars.GameProgressFile = response;
+    }
+
+    /// <summary>
+    /// This function will download the world map progression from the server (separated from the jigsaw information
+    /// </summary>
+    public void DownloadWorldMapProgress()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("file_name", WorldMapProgressFileName());
+        form.AddField("folder_name", GlobalVars.GameProgressFolderName);
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetFile, DownloadWorldMapProgressCallback);
+    }
+
+    private void DownloadWorldMapProgressCallback(string response)
+    {
+        if (string.IsNullOrEmpty(response) || String.Equals(response,"error"))
+        {
+            ResetWorldMapProgress();
+        }
+        else
+        {
+            //AndreaLiro_TB: prepared the MadLevel calls to load the profile from remote; 
+            MadLevelProfile.LoadProfileFromString(response);
+            GlobalVars.GameWorldMapProgressFile = response;
+        }
+
     }
 
     public void LoadGameProgress()
@@ -98,6 +126,15 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 
         }
         Debug.Log("GameStateSaver: Load() jigsaw pieces game state");
+    }
+
+    /// <summary>
+    /// This function save both the jigsaw and world map progress.
+    /// </summary>
+    public void SaveGame()
+    {
+        SaveGameProgress();
+        SaveGameWorldProgress();
     }
 
     public void SaveGameProgress()
@@ -144,6 +181,23 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         form.AddField("folder_name", GlobalVars.GameProgressFolderName);
         form.AddBinaryData("file_data", Encoding.ASCII.GetBytes(gameProgress), FileName());
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+    }
+
+    public void SaveGameWorldProgress()
+    {
+        string currProgress = MadLevelProfile.SaveProfileToString();
+
+        //SEND TO SERVER
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("file_name", WorldMapProgressFileName());
+        form.AddField("file_size", Encoding.ASCII.GetBytes(currProgress).Length);
+        form.AddField("folder_name", GlobalVars.GameProgressFolderName);
+        form.AddBinaryData("file_data", Encoding.ASCII.GetBytes(currProgress), WorldMapProgressFileName());
+        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
+        ///Saving the game progress for current section
+        GlobalVars.GameWorldMapProgressFile = currProgress;
     }
 
     public void Load() //#ERASE
@@ -247,7 +301,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 	{
         //Debug.Log("Initializing ListenIn");
         ListenIn.Logger.Instance.Log("GameStateSaver: resetting jigsaw pieces state", ListenIn.LoggerMessageType.Info);
-        Debug.LogError("<color=red>LISTENIN ERROR; Reset jigsaw state. Check if this wanted</color>");
+        Debug.LogWarning("<color=yellow>LISTENIN Reset; Reset jigsaw state. Check if this wanted</color>");
         //Reset();
         ResetGameProgress();
         //Load();
@@ -303,6 +357,15 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         GlobalVars.GameProgressFile = gameProgress;
 
         LoadGameProgress();
+    }
+
+    /// <summary>
+    /// Called to reset the MadLevelManager and send the initial configuration to the server
+    /// </summary>
+    public void ResetWorldMapProgress()
+    {
+        MadLevelProfile.Reset();
+        SaveGameWorldProgress();
     }
 
 	public void Reset() //#ERASE
@@ -367,6 +430,11 @@ public class GameStateSaver : Singleton<GameStateSaver> {
     public string FileName()
     {
         return String.Format("user_{0}_SavedState.xml", NetworkManager.UserId);
+    }
+
+    public string WorldMapProgressFileName()
+    {
+        return String.Format("user_{0}_WorldMap.xml", NetworkManager.UserId);
     }
 
 }

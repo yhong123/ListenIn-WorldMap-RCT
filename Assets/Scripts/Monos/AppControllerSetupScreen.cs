@@ -126,7 +126,11 @@ public class AppControllerSetupScreen : MonoBehaviour
         form.AddField("id_user", NetworkManager.UserId);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, GetProfileCallback);
 
+        ///The progression on the world map
+        GameStateSaver.Instance.DownloadWorldMapProgress();
+        ///Jigsaw pieces information for each level
         GameStateSaver.Instance.DownloadGameProgress();
+
 
     }
 
@@ -150,7 +154,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
 
         //AndreaLIRO: need to wait until the files are loaded from the server before continuing with the progress
-        while (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile))
+        while (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile) && string.IsNullOrEmpty(GlobalVars.GameWorldMapProgressFile))
         {
             yield return null;
         }
@@ -196,9 +200,10 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {
-            IMadLevelProfileBackend backend = MadLevelProfile.backend;
-            String profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetupScreen: SetupInitialization() loaded pinball level profile: {0}", profile), ListenIn.LoggerMessageType.Info);
+            //AndreaLIRO_TB: this is is not done anymre as the progress is saved on the server
+            //IMadLevelProfileBackend backend = MadLevelProfile.backend;
+            //String profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
+            //ListenIn.Logger.Instance.Log(String.Format("AppControllerSetupScreen: SetupInitialization() loaded pinball level profile: {0}", profile), ListenIn.LoggerMessageType.Info);
         }
         catch (System.Exception ex)
         {

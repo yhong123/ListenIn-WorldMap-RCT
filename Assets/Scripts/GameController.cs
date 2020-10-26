@@ -8,13 +8,13 @@ public class GameController : Singleton<GameController> {
 
     //Insert FSM in this
 
-
-    //Andrea: This should be eliminated 
     private State[] m_States = new State[]{
         StateIdle.Instance,
         StateSplash.Instance,
         StateJigsawPuzzle.Instance,
+        //AndreaLIRO_TB: should look if this is actually used
         StateChapterSelect.Instance,
+
         StateChallenge.Instance,
         StateTutorialChallenge.Instance,
         StateInitializePinball.Instance,

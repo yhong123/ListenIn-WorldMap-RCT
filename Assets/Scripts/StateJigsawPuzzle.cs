@@ -52,6 +52,8 @@ public class StateJigsawPuzzle : State
 
     // This initialization is when the game starts, for loading in memory the different levels
     private bool m_Init = false;
+
+    private bool achievementWasReached = false;
     #endregion
 
     /// <summary>
@@ -224,8 +226,9 @@ public class StateJigsawPuzzle : State
         {
             animating = false;
             EndRewardAnimation();
-            UnlockBadge();
-            CleanJigsawPiecesValue();
+            //AndreaLIRO_TB: done in UnlockJigsawPiece
+            //UnlockBadge();
+            //CleanJigsawPiecesValue();
             rewardAnimation = false;
             returnToSelectScreen = true;
         }
@@ -363,6 +366,16 @@ public class StateJigsawPuzzle : State
     public void RecordPieceToUnlock(int pieceToUnlock)
     {
         currChapter.JigsawPiecesToUnlock[pieceToUnlock] = true;
+        currChapter.JigsawPeicesUnlocked[pieceToUnlock] = 1.0f;
+        //AndreaLIRO_TB: I am doing here automatically to make sure user don t exit before end of reward causing a big problem on the saving
+        if (currChapter.AllPiecesUnlocked())
+        {
+            UnlockBadge();
+            CleanJigsawPiecesValue();
+            achievementWasReached = true;
+        }
+
+        UploadManager.Instance.SaveGame();
     }
 
     private void FinishJigsawTransition()
@@ -382,8 +395,9 @@ public class StateJigsawPuzzle : State
 
         UnityEngine.GameObject.DestroyImmediate(jigsawUnlocked);
 
-        if (currChapter.AllPiecesUnlocked())
+        if (achievementWasReached)
         {
+            achievementWasReached = false;
             currChapter.Mono.PlayButton.SetActive(false);
             m_chapterSelectMono.EndPuzzleEffect.SetActive(true);
             m_chapterSelectMono.EndPuzzleEffect.GetComponent<Animator>().SetTrigger("StartTrophyAnim");
