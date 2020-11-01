@@ -1232,7 +1232,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             if (challengeCounter == GlobalVars.ChallengeLength)
             {
-                currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+                currFilename = String.Format(coreFormat, total_blocks+GlobalVars.TherapyFilesOffset, m_UserProfileManager.m_userProfile.m_cycleNumber); //Starting from 100 for naming convention
 
 #if SAVE_LOCALLY
                     //#ERASE
@@ -1271,7 +1271,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //Save the remaining in the last file
         if (currLines.Count != 0)
         {
-            currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+            currFilename = String.Format(coreFormat, total_blocks+ GlobalVars.TherapyFilesOffset, m_UserProfileManager.m_userProfile.m_cycleNumber);
 
 #if SAVE_LOCALLY
                 //#ERASE

@@ -15,6 +15,7 @@ public static class GlobalVars {
     //Pedro: use this class for paths purposes. I ll change user id so to use a string
     public static int ChallengeLength = 20;
     public static int ActChallengeLength = 30;
+    public static int TherapyFilesOffset = 100;
     public static string GetPath(string patientID)
     {
 #if UNITY_STANDALONE_WIN

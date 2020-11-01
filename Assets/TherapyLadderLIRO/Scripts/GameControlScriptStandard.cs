@@ -192,7 +192,7 @@ public class GameControlScriptStandard : MonoBehaviour
 
     private void LoadCurrentBlock()
     {
-        m_currBlockNumberFromManager = TherapyLIROManager.Instance.GetCurrentBlockNumber();
+        m_currBlockNumberFromManager = TherapyLIROManager.Instance.GetCurrentBlockNumber()+GlobalVars.TherapyFilesOffset;
         m_currCycleNumber = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
 
         string verga = String.Format(
@@ -893,7 +893,7 @@ public class GameControlScriptStandard : MonoBehaviour
     void Update()
     {
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
         //AndreaLIRO: putting this on the GameControlScriptStandard to control normal process of closing the challenge therapy
         if (Input.GetKeyDown(KeyCode.Space) && m_cheatOn)
         {
