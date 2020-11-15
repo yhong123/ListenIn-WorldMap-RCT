@@ -12,7 +12,7 @@ using System.Runtime.Remoting.Messaging;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 4, SART_PRACTICE = 2, SART_TEST = 3, BASKET = 0, CORE = 1, QUESTIONAIRE = 5};
+public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 3, SART_TEST = 4, BASKET = 1, CORE = 2, QUESTIONAIRE = 5};
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -958,6 +958,10 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// <returns></returns>
     internal IEnumerator LoadTherapyFromBasketFiles(List<BasketUI> basketsInfos)
     {
+#if DEBUG_LIRO
+        bool singleTherapyCicle = true;
+        bool blockSent = false;
+#endif
         //AndreaLIRO: increasing number of cycle
         m_UserProfileManager.m_userProfile.m_cycleNumber++;
 
@@ -1249,7 +1253,16 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 form.AddField("file_size", dataAsBytes.Length);
                 form.AddField("folder_name", GlobalVars.SectionFolderName);
                 form.AddBinaryData("file_data", dataAsBytes, currFilename);
-                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+#if DEBUG_LIRO
+                if (singleTherapyCicle && !blockSent)
+                {
+                    NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+                    blockSent = true;
+                }
+#else
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
+#endif
 
                 currLines.Clear();
                 total_blocks++;
@@ -1287,8 +1300,17 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             form.AddField("file_size", dataAsBytes.Length);
             form.AddField("folder_name", GlobalVars.SectionFolderName);
             form.AddBinaryData("file_data", dataAsBytes, currFilename);
+
+#if DEBUG_LIRO
+            if (singleTherapyCicle && !blockSent)
+            {
+                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+                blockSent = true;
+            }
+#else
             NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
+#endif
             currLines.Clear();
             total_blocks++;
         }
@@ -1301,7 +1323,15 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         yield return new WaitForEndOfFrame();
 
         //Updating UserProfile in the therapy section
+#if DEBUG_LIRO
+        if (singleTherapyCicle)
+        {
+            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 1;
+        }
+#else
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = total_blocks - 1;
+
+#endif
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = 1;
 
         yield return StartCoroutine(SaveCurrentUserProfile());

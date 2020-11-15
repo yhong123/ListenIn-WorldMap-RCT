@@ -126,19 +126,13 @@ public class AppControllerSetupScreen : MonoBehaviour
         form.AddField("id_user", NetworkManager.UserId);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, GetProfileCallback);
 
-        ///The progression on the world map
-        GameStateSaver.Instance.DownloadWorldMapProgress();
-        ///Jigsaw pieces information for each level
-        GameStateSaver.Instance.DownloadGameProgress();
-
-
     }
 
     public void GetProfileCallback(string response)
     {
         if(TherapyLIROManager.Instance.SetUserProfile(response))
         {
-            StartCoroutine(InitializationACTPairChoose());
+            StartCoroutine(WaitForServerDataAndCompleteInitialization());
         }
     }
 
@@ -146,30 +140,12 @@ public class AppControllerSetupScreen : MonoBehaviour
     /// Function being called during SetupScreen starting after login. The Initialization of ACT pairs is executed only if isFirstInit is true.
     /// </summary>
     /// <returns>Nothing</returns>
-    public IEnumerator InitializationACTPairChoose()
+    public IEnumerator WaitForServerDataAndCompleteInitialization()
     {
-        setupPorcentageProgress = 55;
+        setupPorcentageProgress = 50;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-        //AndreaLIRO: Checking first ever initialization for ACT pair randomization
-        yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
-
-        //AndreaLIRO: need to wait until the files are loaded from the server before continuing with the progress
-        while (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile) && string.IsNullOrEmpty(GlobalVars.GameWorldMapProgressFile))
-        {
-            yield return null;
-        }
-        //try
-        //{
-        //    StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
-        //}
-        //catch (Exception ex)
-        //{
-        //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
-        //}
-
+        
         //AndreaLIRO: Preparing the jigsaw pieces
-        setupPorcentageProgress = 77;
-        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {
             StateJigsawPuzzle.Instance.OnGameLoadedInitialization();
@@ -179,36 +155,40 @@ public class AppControllerSetupScreen : MonoBehaviour
             ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
         }
 
-        try
+        yield return new WaitForEndOfFrame();
+
+        //IF IS FIRST INIT RESET GAME AND JIGSAW
+        if (TherapyLIROManager.Instance.GetUserProfile.m_userProfile.isFirstInit)
         {
-            if (GlobalVars.isProfileNewOrChanged)
-            {
-                //AndreaLIRO_TB: This is not required anymore because if we switch reset Listen In is called before anyway and we don t need to save stuff locally anymore.
-                GlobalVars.isProfileNewOrChanged = false;
-                //GameStateSaver.Instance.ResetListenIn();
-            }
+            GameStateSaver.Instance.ResetLI();
         }
-        catch (Exception ex)
+        else
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            ///The progression on the world map
+            GameStateSaver.Instance.DownloadWorldMapProgress();
+            ///Jigsaw pieces information for each level
+            GameStateSaver.Instance.DownloadGameProgress();
         }
 
-        yield return new WaitForSeconds(2);
-
-        setupPorcentageProgress = 85;
-        //AndreaLIRO: Loading current world map configuration
+        setupPorcentageProgress = 56;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-        try
+        yield return new WaitForEndOfFrame();
+
+        //AndreaLIRO: Checking first ever initialization for ACT pair randomization
+        yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
+
+        setupPorcentageProgress = 75;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
+        yield return new WaitForEndOfFrame();
+
+        //AndreaLIRO: need to wait until the files are loaded from the server before continuing with the progress
+        while (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile) && string.IsNullOrEmpty(GlobalVars.GameWorldMapProgressFile))
         {
-            //AndreaLIRO_TB: this is is not done anymre as the progress is saved on the server
-            //IMadLevelProfileBackend backend = MadLevelProfile.backend;
-            //String profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
-            //ListenIn.Logger.Instance.Log(String.Format("AppControllerSetupScreen: SetupInitialization() loaded pinball level profile: {0}", profile), ListenIn.LoggerMessageType.Info);
+            yield return null;
         }
-        catch (System.Exception ex)
-        {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetupScreen: SetupInitialization() {0}", ex.Message), ListenIn.LoggerMessageType.Error);
-        }
+
+        setupPorcentageProgress = 82;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         yield return new WaitForEndOfFrame();
 
         setupPorcentageProgress = 92;
@@ -246,10 +226,6 @@ public class AppControllerSetupScreen : MonoBehaviour
         setupPorcentageProgress = 100;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
-        //m_playButton.interactable = true;
-        //m_playButton.gameObject.SetActive(true);
-        //switchPatient.gameObject.SetActive(true);
-        //GameStateSaver.Instance.SaveGameProgress();
         yield return new WaitForSeconds(2);
         //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
         MadLevel.LoadLevelByName("MainHUB");
