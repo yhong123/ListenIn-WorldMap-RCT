@@ -71,7 +71,7 @@ public class QuestionaireManager : MonoBehaviour
             Debug.Log("Reached end of the questionaire");
             endSaving = true;
             thankyouGO.SetActive(true);
-            StartCoroutine(FinishAndSave());
+            StartCoroutine(FinishAndSaveHalf());
             return;
         }
         else
@@ -95,11 +95,19 @@ public class QuestionaireManager : MonoBehaviour
         }
     }
 
-    private IEnumerator FinishAndSave()
+    private IEnumerator FinishAndSaveHalf()
     {
         yield return new WaitForEndOfFrame();
         SaveToFile();
-        yield return StartCoroutine(TherapyLIROManager.Instance.SaveCurrentQuestionaire(true));
+        yield return StartCoroutine(TherapyLIROManager.Instance.SaveHalfQuestionnaire(true));
+        endButton.interactable = true;
+    }
+
+    private IEnumerator FinishAndSaveSecondHalf()
+    {
+        yield return new WaitForEndOfFrame();
+        SaveToFile();
+        yield return StartCoroutine(TherapyLIROManager.Instance.SaveSecondHalfQuestionaire(true));
         endButton.interactable = true;
     }
 

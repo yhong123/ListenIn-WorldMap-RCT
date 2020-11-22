@@ -12,7 +12,7 @@ using System.Runtime.Remoting.Messaging;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 3, SART_TEST = 4, BASKET = 1, CORE = 2, QUESTIONAIRE = 5};
+public enum TherapyLadderStep { ACT = 0, BASKET = 1, CORE = 2, SART_PRACTICE = 3, SART_TEST = 4, QUESTIONAIRE_1 = 5, QUESTIONAIRE_2 = 6 };
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -83,7 +83,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = profileData[11] == "0";
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[12]);
 
-        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = profileData[13] == "0";
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = int.Parse(profileData[13]);
+        Debug.LogError("<color=red>Set User Profile;</color> needs to add a bit for the second part of the questionnaire");
+        //m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.friendQuestionCompleted = profileData[14] == "0";
         return true;
     }
 
@@ -119,8 +121,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = false;
             m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = 0;
 
-            m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = false;
-
+            m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 0;
 
             //Wait for the data to be saved
             yield return StartCoroutine(SaveCurrentUserProfile());
@@ -168,7 +169,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         form.AddField("practice_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted ? 1 : 0);
         form.AddField("test_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted ? 1 : 0);
         form.AddField("attempts", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts);
-        form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted ? 1 : 0);
+        form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage);
+        Debug.LogError("<color=red>Save Current User Profile;</color> needs to add a bit for the second part of the questionnaire");
+        //form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.friendQuestionCompleted ? 1 : 0);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlSetGameUserProfile);
 
         try
@@ -434,6 +437,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //************************************************************************************************************************
 
         //AndreaLIRO: Create an escape for when having finished the tutorial
+        //AndreaLIRO: There is no tutorial anymore
         //************************************************************************************************************************
         if (  m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock == -1
                 && m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock == -1
@@ -462,7 +466,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.SART_TEST:
                 advance = CheckSARTTESTEscapeSection();
                 break;
-            case TherapyLadderStep.QUESTIONAIRE:
+            case TherapyLadderStep.QUESTIONAIRE_1:
+            case TherapyLadderStep.QUESTIONAIRE_2:
                 advance = CheckQuestionaireEscapeSection();
                 break;
             default:
@@ -532,7 +537,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// <returns></returns>
     private bool CheckQuestionaireEscapeSection()
     {
-        return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted;
+        if (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.QUESTIONAIRE_1)
+            return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage == 1;
+        else if (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.QUESTIONAIRE_2)
+            return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage == 2;
+        else return false;
     }
 
     /// <summary>
@@ -558,7 +567,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.SART_TEST:            
                 PrepareSARTScreen();
                 break;
-            case TherapyLadderStep.QUESTIONAIRE:
+            case TherapyLadderStep.QUESTIONAIRE_1:
+            case TherapyLadderStep.QUESTIONAIRE_2:
                 PrepareQuestionaireScreen();
                 break;
             default:
@@ -634,9 +644,17 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
-    public IEnumerator SaveCurrentQuestionaire(bool isCompleted)
+
+    public IEnumerator SaveHalfQuestionnaire(bool isCompleted)
     {
-        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = isCompleted;
+        if(isCompleted)
+            m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 1;
+        yield return StartCoroutine(SaveCurrentUserProfile());
+    }
+    public IEnumerator SaveSecondHalfQuestionaire(bool isCompleted)
+    {
+        if(isCompleted)
+            m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 2;
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
 
@@ -732,19 +750,15 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.SART_TEST:
                 LoadingSARTSCreen();
                 break;
-            case TherapyLadderStep.QUESTIONAIRE:
+            case TherapyLadderStep.QUESTIONAIRE_1:
                 //For questionaire only, if cycle == 0 skip
-                if (m_UserProfileManager.m_userProfile.m_cycleNumber == 0)
-                {
-                    GoToNextSection();
-                }
-                else
-                {
-                    m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = false;
-                    yield return StartCoroutine(SaveCurrentUserProfile());
-                    LoadingQuestionaireScreen();
-                }
-
+                m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 0;
+                yield return StartCoroutine(SaveCurrentUserProfile());
+                LoadingQuestionaireScreen();
+                break;
+            case TherapyLadderStep.QUESTIONAIRE_2:
+                //For questionaire only, if cycle == 0 skip
+                LoadingQuestionaireScreen();
                 break;
             default:
                 Debug.LogError("This has not been found...");

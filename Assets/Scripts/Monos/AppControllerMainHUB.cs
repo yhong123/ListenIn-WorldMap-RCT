@@ -144,7 +144,8 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_continueButtonSart[1].interactable = true;
                 //currLevelToLoad = "SART";
                 break;
-            case TherapyLadderStep.QUESTIONAIRE:
+            case TherapyLadderStep.QUESTIONAIRE_1:
+            case TherapyLadderStep.QUESTIONAIRE_2:
                 //m_currentSectionText.text = "Questionnaire";
                 m_Questionaire_ui.gameObject.SetActive(true);
                 m_questionaireStart.interactable = true;
@@ -200,7 +201,8 @@ public class AppControllerMainHUB : MonoBehaviour {
                     m_continueButtonSart[0].interactable = false;
                     m_continueButtonSart[1].interactable = true;
                     break;
-                case TherapyLadderStep.QUESTIONAIRE:
+                case TherapyLadderStep.QUESTIONAIRE_1:
+                case TherapyLadderStep.QUESTIONAIRE_2:
                     //m_currentSectionText.text = "Questionnaire";
                     m_Questionaire_ui.gameObject.SetActive(true);
                     m_questionaireStart.interactable = true;
@@ -253,7 +255,7 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_continueButtonSart[1].interactable = false;
                 m_SART_ui.PrepareEndingScreen();
                 break;
-            case TherapyLadderStep.QUESTIONAIRE:
+            case TherapyLadderStep.QUESTIONAIRE_1:
                 //m_currentSectionText.text = "Questionaire";
                 m_Questionaire_ui.gameObject.SetActive(true);
                 m_questionaireStart.interactable = false;

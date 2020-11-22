@@ -29,7 +29,7 @@ public class SARTLiroUserProfile
 
 public class QuestionnaireUserProfile
 {
-    public bool questionaireCompleted;
+    public int questionnairStage;
 }
 
 public class UserProfile
