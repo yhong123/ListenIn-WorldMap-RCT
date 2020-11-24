@@ -12,7 +12,7 @@ using System.Runtime.Remoting.Messaging;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 0, BASKET = 1, CORE = 2, SART_PRACTICE = 3, SART_TEST = 4, QUESTIONAIRE_1 = 5, QUESTIONAIRE_2 = 6 };
+public enum TherapyLadderStep { ACT = 2, BASKET = 3, CORE = 4, SART_PRACTICE = 5, SART_TEST = 6, QUESTIONAIRE_1 = 0, QUESTIONAIRE_2 = 1 };
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -84,7 +84,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[12]);
 
         m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = int.Parse(profileData[13]);
-        Debug.LogError("<color=red>Set User Profile;</color> needs to add a bit for the second part of the questionnaire");
         //m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.friendQuestionCompleted = profileData[14] == "0";
         return true;
     }
@@ -170,8 +169,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         form.AddField("test_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted ? 1 : 0);
         form.AddField("attempts", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts);
         form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage);
-        Debug.LogError("<color=red>Save Current User Profile;</color> needs to add a bit for the second part of the questionnaire");
-        //form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.friendQuestionCompleted ? 1 : 0);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlSetGameUserProfile);
 
         try
@@ -761,7 +758,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 LoadingQuestionaireScreen();
                 break;
             default:
-                Debug.LogError("This has not been found...");
+                Debug.LogError("TherapyLiroManager: Current step has not being created...");
                 break;
         }
 

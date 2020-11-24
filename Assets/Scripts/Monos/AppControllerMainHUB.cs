@@ -257,7 +257,13 @@ public class AppControllerMainHUB : MonoBehaviour {
                 break;
             case TherapyLadderStep.QUESTIONAIRE_1:
                 //m_currentSectionText.text = "Questionaire";
-                m_Questionaire_ui.gameObject.SetActive(true);
+                m_Questionaire_ui.gameObject.SetActive(false);
+                m_questionaireStart.interactable = false;
+                StartCoroutine(EndQuestionaire(currProfile));
+                break;
+            case TherapyLadderStep.QUESTIONAIRE_2:
+                //m_currentSectionText.text = "Questionaire";
+                m_Questionaire_ui.gameObject.SetActive(false);
                 m_questionaireStart.interactable = false;
                 StartCoroutine(EndQuestionaire(currProfile));
                 break;

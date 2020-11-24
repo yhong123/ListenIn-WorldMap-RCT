@@ -23,6 +23,7 @@ public class QuestionaireManager : MonoBehaviour
     [SerializeField]
     [Tooltip("Assigned statically")]
     private static int INDEXMIDQUESTIONNAIRE = 5;
+    private static int INDEXENDQUESTIONNAIRE = 9;
 
     [SerializeField]
     private GameObject ButtonsGO;
@@ -50,7 +51,7 @@ public class QuestionaireManager : MonoBehaviour
     private GameObject[] faceList;
 
     private int currQuestionaireCount = 0;
-
+    private int currQuestionairePart = 0;
 
     private bool endSaving = false;
 
@@ -66,8 +67,8 @@ public class QuestionaireManager : MonoBehaviour
     void Start()
     {
 
-        int currStep = TherapyLIROManager.Instance.GetUserProfile.m_userProfile.m_QuestionaireUserProfile.questionnairStage;
-        if (currStep == 1)
+        currQuestionairePart = TherapyLIROManager.Instance.GetUserProfile.m_userProfile.m_QuestionaireUserProfile.questionnairStage;
+        if (currQuestionairePart == 1)
             currQuestionaireCount = INDEXMIDQUESTIONNAIRE + 1;
         else
             currQuestionaireCount = 0;
@@ -115,12 +116,25 @@ public class QuestionaireManager : MonoBehaviour
 
         currQuestion.SetActive(true);
 
+        if (questionNumber == INDEXENDQUESTIONNAIRE)
+        {
+            StartCoroutine(Save());
+            buttonNext.interactable = false;
+            TherapyLIROManager.Instance.StartCoroutine(TherapyLIROManager.Instance.SaveSecondHalfQuestionaire(true));
+
+        }
+        else if (questionNumber == INDEXMIDQUESTIONNAIRE)
+        {
+            StartCoroutine(Save());
+            TherapyLIROManager.Instance.StartCoroutine(TherapyLIROManager.Instance.SaveHalfQuestionnaire(true));
+        }
+
     }
 
     private IEnumerator FinishAndSaveHalf()
     {
         yield return new WaitForEndOfFrame();
-        SaveToFile();
+        SaveQuestionnaire();
         yield return StartCoroutine(TherapyLIROManager.Instance.SaveHalfQuestionnaire(true));
         //endButton.interactable = true;
     }
@@ -128,15 +142,21 @@ public class QuestionaireManager : MonoBehaviour
     private IEnumerator FinishAndSaveSecondHalf()
     {
         yield return new WaitForEndOfFrame();
-        SaveToFile();
+        SaveQuestionnaire();
         yield return StartCoroutine(TherapyLIROManager.Instance.SaveSecondHalfQuestionaire(true));
         //endButton.interactable = true;
     }
 
-    private void SaveToFile()
+    private IEnumerator Save()
+    {
+        SaveQuestionnaire();
+        yield return null;
+    }
+
+    private void SaveQuestionnaire()
     {
         string directory = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
-        string filename = string.Format("Questionaire_{0}.txt", TherapyLIROManager.Instance.GetCurrentTherapyCycle());
+        string filename = string.Format("Questionaire_Part_{0}_Cycle_{0}.txt", (currQuestionairePart + 1).ToString(), TherapyLIROManager.Instance.GetCurrentTherapyCycle());
         string fullPath = Path.Combine(directory, filename);
        
         StringBuilder sb = new StringBuilder();
@@ -159,11 +179,6 @@ public class QuestionaireManager : MonoBehaviour
         form.AddBinaryData("file_data", Encoding.ASCII.GetBytes(sb.ToString()), filename);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
-    }
-
-    public void onEndQuestionaireClicked()
-    {
-        MadLevel.LoadLevelByName("MainHUB");
     }
 
     #region Button Events
@@ -202,6 +217,25 @@ public class QuestionaireManager : MonoBehaviour
         ActivateQuestion(currQuestionaireCount);
 
     }
+
+    public void HalfQuestionnaireReturn()
+    {
+        buttonNext.interactable = false;
+        onEndQuestionaireClicked();
+    }
+
+    public void SkipToEndOfTheQuestionnaire()
+    {
+        buttonNext.interactable = false;
+        currQuestionaireCount = INDEXENDQUESTIONNAIRE;
+        ActivateQuestion(currQuestionaireCount);
+    }
+
+    public void onEndQuestionaireClicked()
+    {
+        MadLevel.LoadLevelByName("MainHUB");
+    }
+
     #endregion
 
 }

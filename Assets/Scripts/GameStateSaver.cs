@@ -95,7 +95,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         if(string.IsNullOrEmpty(GlobalVars.GameProgressFile))
         {
             //CRITICAL ERROR
-            Debug.LogError("<color=red>SERVER ERROR; jigsaw information from server not downloaded. Resetting automatically</color>");
+            Debug.LogError("<color=yellow>SERVER Warning; jigsaw information from server not downloaded. Should be after a reset</color>");
             return;
         }
 
