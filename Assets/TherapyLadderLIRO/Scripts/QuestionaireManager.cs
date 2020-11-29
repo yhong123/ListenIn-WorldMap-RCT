@@ -32,6 +32,9 @@ public class QuestionaireManager : MonoBehaviour
     private GameObject InputTextGO;
 
     [SerializeField]
+    private InputField inputField;
+
+    [SerializeField]
     private Text inputText;
 
     [SerializeField]
@@ -107,6 +110,7 @@ public class QuestionaireManager : MonoBehaviour
             InputTextGO.SetActive(true);
             buttonNext.interactable = true;
             infoButton.interactable = true;
+            inputField.text = string.Empty;
         }
         else
         {
@@ -129,22 +133,6 @@ public class QuestionaireManager : MonoBehaviour
             TherapyLIROManager.Instance.StartCoroutine(TherapyLIROManager.Instance.SaveHalfQuestionnaire(true));
         }
 
-    }
-
-    private IEnumerator FinishAndSaveHalf()
-    {
-        yield return new WaitForEndOfFrame();
-        SaveQuestionnaire();
-        yield return StartCoroutine(TherapyLIROManager.Instance.SaveHalfQuestionnaire(true));
-        //endButton.interactable = true;
-    }
-
-    private IEnumerator FinishAndSaveSecondHalf()
-    {
-        yield return new WaitForEndOfFrame();
-        SaveQuestionnaire();
-        yield return StartCoroutine(TherapyLIROManager.Instance.SaveSecondHalfQuestionaire(true));
-        //endButton.interactable = true;
     }
 
     private IEnumerator Save()

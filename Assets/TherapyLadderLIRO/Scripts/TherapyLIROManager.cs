@@ -12,7 +12,19 @@ using System.Runtime.Remoting.Messaging;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 2, BASKET = 3, CORE = 4, SART_PRACTICE = 5, SART_TEST = 6, QUESTIONAIRE_1 = 0, QUESTIONAIRE_2 = 1 };
+
+/// <summary>
+/// Final version of listen in will be as follow
+/// 1 REGISTRATION
+/// 2 ACT
+/// 3 SART
+/// 4 BASKET + THERAPY
+/// 5 ACT
+/// 6 SART
+/// 7 QUESTIONNAIRE PART 1 + 2 
+/// repeat from 2
+/// </summary>
+public enum TherapyLadderStep { ACT_1_ = 0, SART_PRACTICE_1_ = 1, SART_TEST_1_ = 2, BASKET = 3, CORE = 4, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7,  QUESTIONAIRE_1 = 8, QUESTIONAIRE_2 = 9 };
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -398,7 +410,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.CORE:
                 return m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock;
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 return m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
                 break;
             default:
@@ -438,7 +451,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //************************************************************************************************************************
         if (  m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock == -1
                 && m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock == -1
-                && (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.BASKET || m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.ACT))
+                && (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.BASKET || m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.ACT_1_ || m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.ACT_2_))
         {
             StartCoroutine(CreateCurrentSection());
             return;
@@ -454,13 +467,16 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.CORE:
                 advance = CheckTherapyCoreEscapeSection();
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 advance = CheckACTEscapeSection();
                 break;
-            case TherapyLadderStep.SART_PRACTICE:
+            case TherapyLadderStep.SART_PRACTICE_1_:
+            case TherapyLadderStep.SART_PRACTICE_2_:
                 advance = CheckSARTEscapeSection();
                 break;
-            case TherapyLadderStep.SART_TEST:
+            case TherapyLadderStep.SART_TEST_1_:
+            case TherapyLadderStep.SART_TEST_2_:
                 advance = CheckSARTTESTEscapeSection();
                 break;
             case TherapyLadderStep.QUESTIONAIRE_1:
@@ -557,11 +573,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.CORE:
                 PrepareTherapyScreen();
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 PrepareACTScreen();
                 break;
-            case TherapyLadderStep.SART_PRACTICE:
-            case TherapyLadderStep.SART_TEST:            
+            case TherapyLadderStep.SART_PRACTICE_1_:
+            case TherapyLadderStep.SART_PRACTICE_2_:
+            case TherapyLadderStep.SART_TEST_1_:
+            case TherapyLadderStep.SART_TEST_2_:
                 PrepareSARTScreen();
                 break;
             case TherapyLadderStep.QUESTIONAIRE_1:
@@ -616,7 +635,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 CleanCurrentBlock(fileToDelete);
                 AdvanceBlock();
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 CleanCurrentBlock(fileToDelete);
                 AdvanceBlock();
                 break;
@@ -730,13 +750,15 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 yield return StartCoroutine(SaveCurrentUserProfile());
                 PrepareBasketSelectionScreen();
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currScore = 0;
                 yield return StartCoroutine(SaveCurrentUserProfile());
                 LoadingACTScreen(0);
                 yield return StartCoroutine(LoadACTFile());
                 break;
-            case TherapyLadderStep.SART_PRACTICE:
+            case TherapyLadderStep.SART_PRACTICE_1_:
+            case TherapyLadderStep.SART_PRACTICE_2_:
                 //AndreaLIRO: resetting completed state
                 m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = false;
                 m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = false;
@@ -744,7 +766,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 yield return StartCoroutine(SaveCurrentUserProfile());
                 LoadingSARTSCreen();
                 break;
-            case TherapyLadderStep.SART_TEST:
+            case TherapyLadderStep.SART_TEST_1_:
+            case TherapyLadderStep.SART_TEST_2_:
                 LoadingSARTSCreen();
                 break;
             case TherapyLadderStep.QUESTIONAIRE_1:
@@ -1370,7 +1393,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
                 //ERASE
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 currBlock = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
                 fileName = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber);
                 //ERASE
@@ -1409,7 +1433,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.CORE:
                 m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock++;
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock++;
                 break;
             default:

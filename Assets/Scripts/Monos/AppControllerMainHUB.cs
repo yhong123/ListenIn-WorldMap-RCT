@@ -118,7 +118,8 @@ public class AppControllerMainHUB : MonoBehaviour {
                 currLevelToLoad = "World Map Select";
                 m_continueButtonTherapy.interactable = true;
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 //m_currentSectionText.text = "ACT";
                 m_ACT_ui.gameObject.SetActive(true);
                 m_ACT_ui.SetACTStardardBoard();
@@ -126,7 +127,8 @@ public class AppControllerMainHUB : MonoBehaviour {
                 //currLevelToLoad = "ACT";
                 m_continueButtonACT.interactable = true;
                 break;
-            case TherapyLadderStep.SART_PRACTICE:
+            case TherapyLadderStep.SART_PRACTICE_1_:
+            case TherapyLadderStep.SART_PRACTICE_2_:
                 //m_currentSectionText.text = "SART";
                 m_SART_ui.gameObject.SetActive(true);
                 if (currProfile.m_userProfile.m_SartLiroUserProfile.attempts == 1)
@@ -137,7 +139,8 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_continueButtonSart[1].interactable = false;
                 //currLevelToLoad = "SART";
                 break;
-            case TherapyLadderStep.SART_TEST:
+            case TherapyLadderStep.SART_TEST_1_:
+            case TherapyLadderStep.SART_TEST_2_:
                 //m_currentSectionText.text = "SART";
                 m_SART_ui.gameObject.SetActive(true);
                 m_continueButtonSart[0].interactable = false;
@@ -183,19 +186,22 @@ public class AppControllerMainHUB : MonoBehaviour {
                     currLevelToLoad = "World Map Select";
                     m_continueButtonTherapy.interactable = true;
                     break;
-                case TherapyLadderStep.ACT:
+                case TherapyLadderStep.ACT_1_:
+                case TherapyLadderStep.ACT_2_:
                     //m_currentSectionText.text = "ACT";
                     m_ACT_ui.gameObject.SetActive(true);
                     m_ACT_ui.SetACTStardardBoard();
                     currLevelToLoad = "ACT";
                     break;
-                case TherapyLadderStep.SART_PRACTICE:
+                case TherapyLadderStep.SART_PRACTICE_1_:
+                case TherapyLadderStep.SART_PRACTICE_2_:
                     //m_currentSectionText.text = "SART";
                     m_SART_ui.gameObject.SetActive(true);
                     m_continueButtonSart[0].interactable = true;
                     m_continueButtonSart[1].interactable = false;
                     break;
-                case TherapyLadderStep.SART_TEST:
+                case TherapyLadderStep.SART_TEST_1_:
+                case TherapyLadderStep.SART_TEST_2_:
                     //m_currentSectionText.text = "SART";
                     m_SART_ui.gameObject.SetActive(true);
                     m_continueButtonSart[0].interactable = false;
@@ -217,7 +223,8 @@ public class AppControllerMainHUB : MonoBehaviour {
             {
                 case TherapyLadderStep.CORE:
                     break;
-                case TherapyLadderStep.ACT:
+                case TherapyLadderStep.ACT_1_:
+                case TherapyLadderStep.ACT_2_:
                     m_ACT_ui.UpdateText(amount);
                     break;
                 default:
@@ -236,19 +243,22 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_Therapy_ui.gameObject.SetActive(true);
                 StartCoroutine(EndTherapy(currProfile));
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 //m_currentSectionText.text = "ACT";
                 m_ACT_ui.gameObject.SetActive(true);
                 StartCoroutine(EndACT(currProfile));
                 break;
-            case TherapyLadderStep.SART_PRACTICE:
+            case TherapyLadderStep.SART_PRACTICE_1_:
+            case TherapyLadderStep.SART_PRACTICE_2_:
                 //m_currentSectionText.text = "SART";
                 m_SART_ui.gameObject.SetActive(true);
                 m_continueButtonSart[0].interactable = false;
                 m_continueButtonSart[1].interactable = false;
                 StartCoroutine(EndSART(currProfile));
                 break;
-            case TherapyLadderStep.SART_TEST:
+            case TherapyLadderStep.SART_TEST_1_:
+            case TherapyLadderStep.SART_TEST_2_:
                 //m_currentSectionText.text = "SART";
                 m_SART_ui.gameObject.SetActive(true);
                 m_continueButtonSart[0].interactable = false;

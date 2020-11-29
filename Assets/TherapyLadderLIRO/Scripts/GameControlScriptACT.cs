@@ -426,7 +426,8 @@ public class GameControlScriptACT : MonoBehaviour
     }
     private void SaveCurrentBlockResponse()
     {
-        string filename = String.Format("ACT_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
+        TherapyLadderStep currentACTSection = TherapyLIROManager.Instance.GetUserProfile.LIROStep;
+        string filename = String.Format(GlobalVars.ACTStringFormat, currentACTSection.ToString(), m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
         string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
 
 #if SAVE_LOCALLY
