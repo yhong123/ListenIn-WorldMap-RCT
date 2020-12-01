@@ -29,6 +29,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     private int m_currSectionCounter;
     public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }
     private static int m_numberSelectedPerLexicalItem = 15;
+    private int currentBasketFile = 0;
+    private int totalBasketFile = 0;
+
     #endregion
 
     #region Delegates
@@ -961,13 +964,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //AndreaLIRO: increasing number of cycle
         m_UserProfileManager.m_userProfile.m_cycleNumber++;
 
-        int currAmount = 1;
-        if (m_onUpdateProgress != null)
-        {
-            m_onUpdateProgress(currAmount);
-        }
-        yield return new WaitForEndOfFrame();
-
         basketsInfos.Shuffle();
 
         //Loading ACT GEN file
@@ -1013,11 +1009,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         curr_basket_list_write.Clear();
         int countChallengesLexicalItem = 0;
 
-        currAmount = 5;
-        if (m_onUpdateProgress != null)
-        {
-            m_onUpdateProgress(currAmount);
-        }
         yield return new WaitForEndOfFrame();
 
         for (int i = 0; i < basketsInfos.Count; i++)
@@ -1034,12 +1025,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //Loading all the basket challenges excluding the untrained items
             curr_basket_list_read = cir.ParseCsv(currBasketsPath, true).ToList();
             curr_basket_list_read = curr_basket_list_read.Select(x => { x.BasketNumber = basketsInfos[i].basketId; return x; }).ToList<Challenge>();
-            currAmount += 10; //15
-            if (m_onUpdateProgress != null)
-            {
-                m_onUpdateProgress(currAmount);
-            }
-            yield return new WaitForEndOfFrame();
 
             //Getting current difficulty
             //int currDifficulty = basketsInfos[i].hardMode ? 3 : 1;
@@ -1121,12 +1106,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         //At this point we have all the baskets.
         //Repeating the same for the ACT trained items that are generated in a basket
-        currAmount += 10; //55
-        if (m_onUpdateProgress != null)
-        {
-            m_onUpdateProgress(currAmount);
-        }
-        yield return new WaitForEndOfFrame();
 
         foreach (string lexical_item in lexicalItems)
         {
@@ -1178,13 +1157,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //I am trynig to cheat here.
         //curr_basket_list_write = curr_basket_list_write.OrderBy(x => x.PresentationNumber).ToList();
 
-        currAmount += 5; //60
-        if (m_onUpdateProgress != null)
-        {
-            m_onUpdateProgress(currAmount);
-        }
-        yield return new WaitForEndOfFrame();
-
         //Getting all distinct lexical item
         curr_basket_lexical_item_list = curr_basket_list_write.Select(x => x.LexicalItem).Distinct().ToList();
         foreach (string lexical_item in curr_basket_lexical_item_list)
@@ -1197,12 +1169,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             }
         }
 
-        currAmount += 5; //65
-        if (m_onUpdateProgress != null)
-        {
-            m_onUpdateProgress(currAmount);
-        }
-        yield return new WaitForEndOfFrame();
+        totalBasketFile = curr_basket_list_write.Count / GlobalVars.ChallengeLength;
 
         List<string> currLines = new List<string>();
         int challengeCounter = 0;
@@ -1243,28 +1210,19 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 //Sending basket file to the server
                 //SEND TO SERVER
                 byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+                yield return new WaitForEndOfFrame();
+
                 WWWForm form = new WWWForm();
                 form.AddField("id_user", NetworkManager.UserId);
                 form.AddField("file_name", currFilename);
                 form.AddField("file_size", dataAsBytes.Length);
                 form.AddField("folder_name", GlobalVars.SectionFolderName);
-                form.AddBinaryData("file_data", dataAsBytes, currFilename);
-                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+                form.AddBinaryData("file_data", dataAsBytes, "temp");
+                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile, currFilename, currFilename, BasketUploadCallback);
 
                 currLines.Clear();
                 total_blocks++;
                 challengeCounter = 0;
-
-                if (total_blocks % 10 == 0)
-                {
-                    //Sending update to UI
-                    currAmount += 1; //from 55 initially
-                    if (m_onUpdateProgress != null && currAmount < 90)
-                    {
-                        m_onUpdateProgress(currAmount);
-                    }
-                    yield return new WaitForEndOfFrame();
-                }
 
             }
         }
@@ -1286,32 +1244,28 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             form.AddField("file_name", currFilename);
             form.AddField("file_size", dataAsBytes.Length);
             form.AddField("folder_name", GlobalVars.SectionFolderName);
-            form.AddBinaryData("file_data", dataAsBytes, currFilename);
-            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+            form.AddBinaryData("file_data", dataAsBytes, "temp");
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile, currFilename, currFilename, BasketUploadCallback);
 
             currLines.Clear();
             total_blocks++;
+            totalBasketFile++;
         }
-
-        currAmount = 95; //93
-        if (m_onUpdateProgress != null)
-        {
-            m_onUpdateProgress(currAmount);
-        }
-        yield return new WaitForEndOfFrame();
 
         //Updating UserProfile in the therapy section
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = total_blocks - 1;
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = 1;
 
         yield return StartCoroutine(SaveCurrentUserProfile());
+    }
 
-        currAmount = 100;
+    private void BasketUploadCallback(string response)
+    {
+        currentBasketFile++;
         if (m_onUpdateProgress != null)
         {
-            m_onUpdateProgress(currAmount);
+            m_onUpdateProgress((int)(100f * ((float)currentBasketFile / (float)totalBasketFile)));
         }
-        yield return new WaitForSeconds(1);
     }
 
     public void CleanCurrentBlock(string fileToDelete = "")

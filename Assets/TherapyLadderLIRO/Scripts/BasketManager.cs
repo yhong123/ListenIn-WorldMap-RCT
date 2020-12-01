@@ -107,7 +107,7 @@ public class BasketManager : MonoBehaviour {
     private void UpdateProgressBar(int amount)
     {
         m_progressTherapy.text = string.Format(m_stringProgressBarFormat, amount);
-        if (amount == 100)
+        if (amount >= 100)
         {
             //Escaping to the world map select
             StartCoroutine(BackToWorldMap());

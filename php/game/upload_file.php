@@ -1,5 +1,5 @@
 <?php
-if($_POST['file_size'] == $_FILES['file_data']['size'])
+if(isset($_POST['file_size']) && isset($_POST['id_user']) && isset($_POST['folder_name']) && isset($_POST['file_name']) && $_POST['file_size'] == $_FILES['file_data']['size'])
 {
 	//DATA
 	$id_user = $_POST['id_user'];
@@ -8,7 +8,7 @@ if($_POST['file_size'] == $_FILES['file_data']['size'])
 
 	$root_directory = '../../files/'.$id_user.'/'.$folder_name.'/';
 
-	$file_path = $root_directory.$_FILES['file_data']['name'];
+	$file_path = $root_directory.$file_name;
 	
 	if (!file_exists($root_directory))
 	{
