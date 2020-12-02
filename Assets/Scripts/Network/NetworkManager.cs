@@ -166,7 +166,7 @@ public class NetworkManager : MonoBehaviour
                     Debug.Log(DataToSend[0].First.ServerURL);
                     using (UnityWebRequest www = UnityWebRequest.Post(DataToSend[0].First.ServerURL, DataToSend[0].First.DataForm))
                     {
-                        www.chunkedTransfer = false;
+                        www.chunkedTransfer = true;
                         www.certificateHandler = new AcceptAllCertificatesSignedWithASpecificPublicKey();
 
                         yield return www.SendWebRequest();
@@ -186,10 +186,10 @@ public class NetworkManager : MonoBehaviour
                             remoteAttempts = 0;
                             Debug.Log("<color=green>SUCCESS: </color>SendDataServer()");
                             //CSV
-                            if (isLocal || !string.IsNullOrEmpty(DataToSend[0].Second.FileName))
-                            {
-                                AppendDataCSV(DataToSend[0].Second);
-                            }
+                            //if (isLocal || !string.IsNullOrEmpty(DataToSend[0].Second.FileName))
+                            //{
+                            //    AppendDataCSV(DataToSend[0].Second);
+                            //}
                             //CSV
                             if (DataToSend[0].First.callBackMethod != null)
                             {
