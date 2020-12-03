@@ -23,4 +23,8 @@ public static class NetworkUrl
     public static string ServerUrlGetFile = string.Concat(ServerGameUrl, "get_file.php");
     public static string ServerUrlGetCurrentBlockFile = string.Concat(ServerGameUrl, "get_current_block.php");
     public static string ServerUrlDeleteFile = string.Concat(ServerGameUrl, "delete_file.php");
+
+    //Andrea
+    public static string SqlGetUserBasketTracking = string.Concat(ServerGameUrl, "select_user_basket_tracking.php");
+    public static string SqlSetUserBasketTracking = string.Concat(ServerGameUrl, "update_user_basket_tracking.php");
 }

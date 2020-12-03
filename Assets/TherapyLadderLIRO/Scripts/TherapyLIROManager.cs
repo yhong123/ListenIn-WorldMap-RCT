@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Runtime.Remoting.Messaging;
+using MadLevelManager;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
@@ -24,7 +25,17 @@ using System.Runtime.Remoting.Messaging;
 /// 7 QUESTIONNAIRE PART 1 + 2 
 /// repeat from 2
 /// </summary>
-public enum TherapyLadderStep { ACT_1_ = 0, SART_PRACTICE_1_ = 1, SART_TEST_1_ = 2, BASKET = 3, CORE = 4, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7,  QUESTIONAIRE_1 = 8, QUESTIONAIRE_2 = 9 };
+//
+public enum TherapyLadderStep { ACT_1_ = 0, SART_PRACTICE_1_ = 1, SART_TEST_1_ = 2, BASKET = 3, CORE = 4, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7, QUESTIONAIRE_1 = 8, QUESTIONAIRE_2 = 9 };
+
+//THESE ARE FOR DEBUGGING
+//BASKET FIRST
+//public enum TherapyLadderStep { ACT_1_ = 8, SART_PRACTICE_1_ = 9, SART_TEST_1_ = 2, BASKET = 0, CORE = 1, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7,  QUESTIONAIRE_1 = 3, QUESTIONAIRE_2 = 4 };
+//ACT FIRST
+//public enum TherapyLadderStep { ACT_1_ = 0, SART_PRACTICE_1_ = 1, SART_TEST_1_ = 2, BASKET = 8, CORE = 9, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7, QUESTIONAIRE_1 = 3, QUESTIONAIRE_2 = 4 };
+//SART FIRST
+//public enum TherapyLadderStep { ACT_1_ = 2, SART_PRACTICE_1_ = 0, SART_TEST_1_ = 1, BASKET = 8, CORE = 9, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7, QUESTIONAIRE_1 = 3, QUESTIONAIRE_2 = 4 };
+
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -37,10 +48,13 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     [Header("Debug Settings")]
     public int m_maxACTChallenges = 1;
+    [Tooltip("You can change this to skip to different LIRO sections")]
+    public TherapyLadderStep m_DebugLiroStep = TherapyLadderStep.BASKET;
 
     private int m_currSectionCounter;
     public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }
     private static int m_numberSelectedPerLexicalItem = 15;
+
     #endregion
 
     #region Delegates
@@ -71,7 +85,58 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     protected override void Awake()
     {
     }
-    #endregion
+#if DEBUG_LIRO
+    public void ChangeLIROSectionButton(String currSection = null)
+    {
+        UserProfileDefault();
+        if (currSection != null)
+        {
+            m_UserProfileManager.LIROStep = (TherapyLadderStep)Enum.Parse(typeof(TherapyLadderStep), currSection);
+        }
+        else
+        {
+            //Taking from inspector
+            m_UserProfileManager.LIROStep = m_DebugLiroStep;
+        }
+        StartCoroutine(ChangeLIROSection());        
+    }
+
+    /// <summary>
+    /// Function to Debug sections within the editor
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ChangeLIROSection()
+    {
+        m_UserProfileManager.m_userProfile.isFirstInit = false;
+        yield return SaveCurrentUserProfile();
+        //ReloadLevel
+        MadLevel.LoadLevelByName("MainHUB");
+    }
+#endif
+#endregion
+
+    public void UserProfileDefault()
+    {
+        m_UserProfileManager.LIROStep = TherapyLadderStep.ACT_1_;
+        m_UserProfileManager.m_userProfile.isFirstInit = true; //This is to make the first initialization 
+        m_UserProfileManager.m_userProfile.isTutorialDone = false; //This is used to make sure the initial tutorial has been done
+        //m_UserProfileManager.m_userProfile.m_currIDUser = int.Parse(profileData[3]);
+        m_UserProfileManager.m_userProfile.m_cycleNumber = 0;
+
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = 0;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = 0;
+
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 0;
+
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = false;
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = false;
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = 0;
+
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 0;
+    }
 
     public bool SetUserProfile(string response)
     {
@@ -96,12 +161,38 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[12]);
 
         m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = int.Parse(profileData[13]);
-        //m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.friendQuestionCompleted = profileData[14] == "0";
         return true;
+    }
+
+    public bool SetUserBasketTrackingProfile(string response)
+    {
+        string[] profileData = response.Split('+');
+        for (int i = 0; i < 8; i++)
+        {
+            m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[i] = int.Parse(profileData[i]);
+        }
+        return true;
+    }
+
+    public IEnumerator SaveCurrentUserBasketTracking()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("Basket1", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[0]);
+        form.AddField("Basket2", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[1]);
+        form.AddField("Basket3", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[2]);
+        form.AddField("Basket4", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[3]);
+        form.AddField("Basket5", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[4]);
+        form.AddField("Basket6", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[5]);
+        form.AddField("Basket7", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[6]);
+        form.AddField("Basket8", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[7]);
+        NetworkManager.SendDataServer(form, NetworkUrl.SqlSetUserBasketTracking);
+        yield return null;
     }
 
     /// <summary>
     /// This function is called at initialiation to load the last saved information for the current user on the therapy ladder
+    /// AndreaLIRO: DEPRECATED???
     /// </summary>
     public IEnumerator LoadCurrentUserProfile()
     {
@@ -207,7 +298,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     }
 
-    #region API
+#region API
     public IEnumerator LIROInitializationACTPairChoose()
     {
         //These two lists are used in the ACT only
@@ -349,7 +440,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             //AndreaLIRO: add the file to be sent online
             m_UserProfileManager.m_userProfile.isFirstInit = false;
-
+            //AndreaLIRO: cycle number is 0 only at the beginning to do this operation. After this we can safely start the cycle.
+            m_UserProfileManager.m_userProfile.m_cycleNumber = 1;
             //Saving user profile info
             yield return StartCoroutine(SaveCurrentUserProfile());
         }
@@ -551,7 +643,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     private bool CheckQuestionaireEscapeSection()
     {
         if (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.QUESTIONAIRE_1)
-            return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage == 1;
+            return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage > 0;
         else if (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.QUESTIONAIRE_2)
             return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage == 2;
         else return false;
@@ -602,6 +694,13 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         currStep = (currStep + 1) % size;
         m_UserProfileManager.LIROStep = (TherapyLadderStep)currStep;
+
+        //AndreaLIRO: increasing number of cycle
+        if (m_UserProfileManager.LIROStep == TherapyLadderStep.ACT_1_)
+        {
+            m_UserProfileManager.m_userProfile.m_cycleNumber++;
+        } 
+
     }
     public IEnumerator AddTherapyMinutes(int minutes)
     {
@@ -664,14 +763,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     public IEnumerator SaveHalfQuestionnaire(bool isCompleted)
     {
-        if(isCompleted)
-            m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 1;
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 1;
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
-    public IEnumerator SaveSecondHalfQuestionaire(bool isCompleted)
+    public IEnumerator SaveSecondHalfQuestionaire(bool isSkipped)
     {
-        if(isCompleted)
-            m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 2;
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 2;
+        if (isSkipped)
+            m_UserProfileManager.m_userProfile.m_LIROTherapyStep = TherapyLadderStep.QUESTIONAIRE_2;
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
 
@@ -992,13 +1091,10 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// <returns></returns>
     internal IEnumerator LoadTherapyFromBasketFiles(List<BasketUI> basketsInfos)
     {
-#if DEBUG_LIRO
+#if DEBUG_LIRO_THERAPY
         bool singleTherapyCicle = true;
         bool blockSent = false;
 #endif
-        //AndreaLIRO: increasing number of cycle
-        m_UserProfileManager.m_userProfile.m_cycleNumber++;
-
         int currAmount = 1;
         if (m_onUpdateProgress != null)
         {
@@ -1287,14 +1383,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 form.AddField("file_size", dataAsBytes.Length);
                 form.AddField("folder_name", GlobalVars.SectionFolderName);
                 form.AddBinaryData("file_data", dataAsBytes, currFilename);
-#if DEBUG_LIRO
+#if DEBUG_LIRO_THERAPY
                 if (singleTherapyCicle && !blockSent)
                 {
                     NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
                     blockSent = true;
                 }
 #else
-            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
 #endif
 
@@ -1335,7 +1431,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             form.AddField("folder_name", GlobalVars.SectionFolderName);
             form.AddBinaryData("file_data", dataAsBytes, currFilename);
 
-#if DEBUG_LIRO
+#if DEBUG_LIRO_THERAPY
             if (singleTherapyCicle && !blockSent)
             {
                 NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
@@ -1357,7 +1453,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         yield return new WaitForEndOfFrame();
 
         //Updating UserProfile in the therapy section
-#if DEBUG_LIRO
+#if DEBUG_LIRO_THERAPY
         if (singleTherapyCicle)
         {
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 1;
@@ -1369,6 +1465,15 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = 1;
 
         yield return StartCoroutine(SaveCurrentUserProfile());
+
+        //Andrea_LIRO: adding the tracking for the baskets counter
+        foreach (var bs in basketsInfos)
+        {
+            int currID = bs.basketId - 1;
+            m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[currID] += 1;
+        }
+
+        yield return StartCoroutine(SaveCurrentUserBasketTracking());
 
         currAmount = 100;
         if (m_onUpdateProgress != null)

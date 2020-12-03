@@ -19,6 +19,8 @@ public class BasketManager : MonoBehaviour {
     private Text m_progressTherapy;
     [SerializeField]
     private Image[] tickImages;
+    [SerializeField]
+    private Text[] m_basketCounterTexts;
 
     public BasketSelectionHandHelper m_handHelper;
 
@@ -34,6 +36,7 @@ public class BasketManager : MonoBehaviour {
         m_progressScreen.SetActive(false);
         m_handHelper.gameObject.SetActive(false);
         UpdateTicks(0);
+        UpdateBasketCounters();
     }
 
     void Update()
@@ -119,6 +122,15 @@ public class BasketManager : MonoBehaviour {
         for (int i = 0; i < 4; i++)
         {
                 tickImages[i].enabled = i < count;
+        }
+    }
+
+    private void UpdateBasketCounters()
+    {
+        int[] currNumbers = TherapyLIROManager.Instance.GetUserProfile.m_userProfile.m_BasketTracking.m_basketTrackingCounters;
+        for (int i = 0; i < 8; i++)
+        {
+            m_basketCounterTexts[i].text = currNumbers[i].ToString();
         }
     }
 

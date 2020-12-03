@@ -12,6 +12,11 @@ public class TherapyLiroUserProfile
     public int m_totalGameMinutes = 0;
 }
 
+public class BasketTracking
+{
+    public int[] m_basketTrackingCounters = { -1, -1, -1, -1, -1, -1, -1, -1 };
+}
+
 public class ACTLiroUserProfile
 {
     public int m_previousScore = 0;
@@ -45,6 +50,7 @@ public class UserProfile
     public ACTLiroUserProfile m_ACTLiroUserProfile = new ACTLiroUserProfile();
     public SARTLiroUserProfile m_SartLiroUserProfile = new SARTLiroUserProfile();
     public QuestionnaireUserProfile m_QuestionaireUserProfile = new QuestionnaireUserProfile();
+    public BasketTracking m_BasketTracking = new BasketTracking();
     #endregion
 }
 

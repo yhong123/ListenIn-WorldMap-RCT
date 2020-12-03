@@ -121,21 +121,38 @@ public class AppControllerSetupScreen : MonoBehaviour
         setupPorcentageProgress = 47;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
-        //AndreaLIRO_TB : what happens if get profile back arrives before dowload game progress?
+        //AndreaLIRO_TB : This gets the user profile
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, GetProfileCallback);
 
+        
     }
 
     public void GetProfileCallback(string response)
     {
-        if(TherapyLIROManager.Instance.SetUserProfile(response))
+        if (TherapyLIROManager.Instance.SetUserProfile(response))
         {
-            StartCoroutine(WaitForServerDataAndCompleteInitialization());
+            //AndreaLiro_TB : Getting the remaining part of the profile
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            NetworkManager.SendDataServer(form, NetworkUrl.SqlGetUserBasketTracking, GetUserBasketTrackingCallback);
+        }
+        else
+        {
+            Debug.LogError("<color=red>Fatal Error: </color> Unable to retrieve USER ID profile : " + NetworkManager.UserId);
         }
     }
 
+    public void GetUserBasketTrackingCallback(string response)
+    {
+        //AndreaLIRO: this is not fatal
+        if (TherapyLIROManager.Instance.SetUserBasketTrackingProfile(response))
+        {
+            Debug.Log("Basket tracking correctly loaded");
+        }
+        StartCoroutine(WaitForServerDataAndCompleteInitialization());
+    }
     /// <summary>
     /// Function being called during SetupScreen starting after login. The Initialization of ACT pairs is executed only if isFirstInit is true.
     /// </summary>
@@ -254,18 +271,6 @@ public class AppControllerSetupScreen : MonoBehaviour
             }
         }
     }
-
-    //private IEnumerator UploadProfileHistory()
-    //{
-    //    yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
-    //}
-
-    //public void GoToWorldMap()
-    //{
-    //    //Debug.Log("PressedButton");
-    //    //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
-    //    MadLevel.LoadLevelByName("MainHUB");
-    //}
 
     /// <summary>
     /// AndreaLIRO: must be changed to be consistent with new database

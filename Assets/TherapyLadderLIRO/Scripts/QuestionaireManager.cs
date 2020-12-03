@@ -57,6 +57,7 @@ public class QuestionaireManager : MonoBehaviour
     private int currQuestionairePart = 0;
 
     private bool endSaving = false;
+    private bool isSkipped = false;
 
     private List<string> responses = new List<string>();
     private string formatResponse = "q{0}:{1}";
@@ -65,8 +66,7 @@ public class QuestionaireManager : MonoBehaviour
     private string currResponse = "";
     //Saving private slider input
     private int currSliderValue;
-
-
+       
     void Start()
     {
 
@@ -131,6 +131,7 @@ public class QuestionaireManager : MonoBehaviour
         {
             StartCoroutine(Save());
             TherapyLIROManager.Instance.StartCoroutine(TherapyLIROManager.Instance.SaveHalfQuestionnaire(true));
+            currQuestionairePart++;
         }
 
     }
@@ -144,28 +145,34 @@ public class QuestionaireManager : MonoBehaviour
     private void SaveQuestionnaire()
     {
         string directory = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
-        string filename = string.Format("Questionaire_Part_{0}_Cycle_{0}.txt", (currQuestionairePart + 1).ToString(), TherapyLIROManager.Instance.GetCurrentTherapyCycle());
+        string filename = string.Format("Questionaire_Part_{0}_Cycle_{1}.txt", (currQuestionairePart + 1).ToString(), TherapyLIROManager.Instance.GetCurrentTherapyCycle());
         string fullPath = Path.Combine(directory, filename);
-       
-        StringBuilder sb = new StringBuilder();
-        using (StreamWriter sw = System.IO.File.CreateText(fullPath))
+
+        if (responses.Count != 0)
         {
-            foreach (string line in responses)
+            StringBuilder sb = new StringBuilder();
+            using (StreamWriter sw = System.IO.File.CreateText(fullPath))
             {
-                sw.WriteLine(line);
-                sb.AppendLine(line);
+                foreach (string line in responses)
+                {
+                    sw.WriteLine(line);
+                    sb.AppendLine(line);
+                }
+                sw.Close();
             }
-            sw.Close();
+
+            //SEND TO SERVER
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", filename);
+            form.AddField("file_size", Encoding.ASCII.GetBytes(sb.ToString()).Length);
+            form.AddField("folder_name", GlobalVars.OutputFolderName);
+            form.AddBinaryData("file_data", Encoding.ASCII.GetBytes(sb.ToString()), filename);
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
+            responses.Clear();
         }
 
-        //SEND TO SERVER
-        WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
-        form.AddField("file_name", filename);
-        form.AddField("file_size", Encoding.ASCII.GetBytes(sb.ToString()).Length);
-        form.AddField("folder_name", GlobalVars.OutputFolderName);
-        form.AddBinaryData("file_data", Encoding.ASCII.GetBytes(sb.ToString()), filename);
-        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
     }
 
@@ -192,12 +199,14 @@ public class QuestionaireManager : MonoBehaviour
         GameObject currQuestion = questionnaireStructure[currQuestionaireCount];
         if (currQuestion.tag == "QSlider")
         {
-            responses.Add(string.Format(formatResponse, currQuestionaireCount.ToString(), currSliderValue.ToString()));
+            int counter = responses.Count;
+            responses.Add(string.Format(formatResponse, (counter+1).ToString(), currSliderValue.ToString()));
         }
         else if (currQuestion.tag == "QInput")
         {
             currResponse = inputText.text;
-            responses.Add(string.Format(formatResponse, currQuestionaireCount.ToString(), currResponse));
+            int counter = responses.Count;
+            responses.Add(string.Format(formatResponse, (counter + 1).ToString(), currResponse));
         }
 
         currQuestionaireCount++;
@@ -216,6 +225,7 @@ public class QuestionaireManager : MonoBehaviour
     {
         buttonNext.interactable = false;
         currQuestionaireCount = INDEXENDQUESTIONNAIRE;
+        isSkipped = true;
         ActivateQuestion(currQuestionaireCount);
     }
 

@@ -133,7 +133,7 @@ public class AppControllerMainHUB : MonoBehaviour {
                 m_SART_ui.gameObject.SetActive(true);
                 if (currProfile.m_userProfile.m_SartLiroUserProfile.attempts == 1)
                 {
-                    m_SART_ui.SetText("Practice failed, please try again");
+                    m_SART_ui.SetText("Practice FAILED, try again");
                 }
                 m_continueButtonSart[0].interactable = true;
                 m_continueButtonSart[1].interactable = false;

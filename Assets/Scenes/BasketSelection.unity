@@ -9628,6 +9628,15 @@ MonoBehaviour:
   - {fileID: 888067878}
   - {fileID: 460756783}
   - {fileID: 2146017586}
+  m_basketCounterTexts:
+  - {fileID: 1217201335}
+  - {fileID: 793603993}
+  - {fileID: 879311434}
+  - {fileID: 83424055}
+  - {fileID: 828501997}
+  - {fileID: 1601754288}
+  - {fileID: 339116963}
+  - {fileID: 1208359635}
   m_handHelper: {fileID: 196462245}
 --- !u!4 &1822625107
 Transform:
