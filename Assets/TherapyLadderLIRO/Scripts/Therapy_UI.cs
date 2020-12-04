@@ -5,7 +5,7 @@ using System.Text;
 
 public class Therapy_UI : MonoBehaviour {
 
-    private string CycleFormat = "Therapy Cycle #{0}";
+    private string CycleFormat = "Therapy Cycle {0}";
     private string TherapyFormat = "  {0}h  {1}m";
     //private string GameFormat = "Total Game Time: {0}h {1}m";
     private string PercentageFormat = "{0}%";
@@ -61,7 +61,9 @@ public class Therapy_UI : MonoBehaviour {
         if (perc > 100.0f || perc == -Mathf.Infinity || profile.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock > profile.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks)
             perc = 0.0f;
 
-        percentageTextS = (string.Format(PercentageFormat, perc.ToString("f2"))).ToCharArray();
+        int roundPer = Mathf.RoundToInt(perc);
+
+        percentageTextS = (string.Format(PercentageFormat, roundPer.ToString())).ToCharArray();
         StartCoroutine(UpdateUI());
     }
 

@@ -10,6 +10,7 @@ public class TherapyLiroUserProfile
     public int m_totalBlocks = 0;
     public int m_totalTherapyMinutes = 0;
     public int m_totalGameMinutes = 0;
+    public int m_totalDayTherapyMinutes = 0;
 }
 
 public class BasketTracking

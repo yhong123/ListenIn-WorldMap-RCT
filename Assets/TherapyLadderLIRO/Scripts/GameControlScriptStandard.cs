@@ -106,7 +106,7 @@ public class GameControlScriptStandard : MonoBehaviour
     DateTime m_dtCurTrialStartTime;
     DateTime m_dtStartingBlock;
     DateTime m_dtEndingBlock;
-    double m_totalPlayedMinutes = 0;
+    float m_totalPlayedMinutes = 0;
 
     [SerializeField]
     private bool m_cheatOn = true;
@@ -213,55 +213,6 @@ public class GameControlScriptStandard : MonoBehaviour
         form.AddField("folder_name", GlobalVars.SectionFolderName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetCurrentBlockFile, LoadCurrentBlockCallback);
 
-        //bool error = false;
-        //try
-        //{
-        //    m_currBlockNumberFromManager = TherapyLIROManager.Instance.GetCurrentBlockNumber();
-        //    m_currCycleNumber = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
-        //    m_currListOfChallenges = cir.ParseCsv(Path.Combine
-        //            (GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId),
-        //    String.Format(
-        //                    "THERAPY_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), m_currBlockNumberFromManager, TherapyLIROManager.Instance.GetCurrentTherapyCycle()
-        //                )
-        //            )
-        //        ).ToList();
-        //}
-        //catch (Exception ex)
-        //{
-        //    error = true;
-        //    Debug.LogError("GCTACT: " + ex.Message);
-        //}
-
-        //if (error)
-        //{
-        //    try
-        //    {
-        //        error = false;
-        //        m_loadedFile = Directory.GetFiles(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId)).Where(x => Path.GetFileName(x).Contains("CORE")).OrderBy(x => Path.GetFileName(x)).FirstOrDefault();
-        //        if (m_loadedFile != null || m_loadedFile != String.Empty)
-        //        {
-        //            Debug.LogWarning("Loading therapy file from the folder, but found a mismatch between ");
-        //            m_currListOfChallenges = cir.ParseCsv(m_loadedFile).ToList();
-        //        }
-        //        else
-        //        {
-        //            error = true;
-        //            Debug.LogError("GCTACT: cannot load the current block... fatal error");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        error = true;
-        //        Debug.LogError("GCTACT: " + ex.Message);
-        //    }
-        //}
-
-        //if (!error)
-        //{
-        //    //AndreaLIRO: removed for debugging purposes
-        //    //RandomizeChallenges();
-        //}
-            
     }
 
     private void LoadCurrentBlockCallback(string response)
@@ -274,6 +225,8 @@ public class GameControlScriptStandard : MonoBehaviour
         else
         {
             m_currListOfChallenges = cir.ParseCsvFromContent(response).ToList();
+            UploadManager.Instance.ResetTimer(TimerType.Therapy);
+            UploadManager.Instance.SetTimerState(TimerType.Therapy, true);
             PrepareNextTrialLIRO();
         }
     }
@@ -514,7 +467,9 @@ public class GameControlScriptStandard : MonoBehaviour
     private IEnumerator FinishTherapyBlock()
     {
         m_dtEndingBlock = DateTime.UtcNow;
-        m_totalPlayedMinutes = Mathf.CeilToInt((float)(m_dtEndingBlock - m_dtStartingBlock).TotalMinutes);
+        //m_totalPlayedMinutes = Mathf.CeilToInt((float)(m_dtEndingBlock - m_dtStartingBlock).TotalMinutes);
+        UploadManager.Instance.SetTimerState(TimerType.Therapy, false);
+        m_totalPlayedMinutes = (UploadManager.Instance.GetTimerState(TimerType.Therapy))/60.0f;
         yield return new WaitForSeconds(3);
         ai.Play("JumpIn");
         SaveCurrentBlockResponse();
@@ -540,8 +495,8 @@ public class GameControlScriptStandard : MonoBehaviour
         }
         m_responseList.Add(m_challengeResponse);
 
-        //AndreaLIRO: adding times
-        m_totalPlayedMinutes += (m_challengeResponse.m_dateTimeEnd - m_challengeResponse.m_dateTimeStart).TotalMinutes;
+        //AndreaLIRO: TIMERS are counted in UPLOAD MANAGER
+        //m_totalPlayedMinutes += (float)(m_challengeResponse.m_dateTimeEnd - m_challengeResponse.m_dateTimeStart).TotalMinutes;
     }
     private void SaveCurrentBlockResponse()
     {
