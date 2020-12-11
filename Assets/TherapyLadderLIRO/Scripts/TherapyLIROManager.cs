@@ -108,7 +108,17 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     private IEnumerator ChangeLIROSection()
     {
         m_UserProfileManager.m_userProfile.isFirstInit = false;
+
+        int previousTherapyTime = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes;
+        int previousGameTherapyTime = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes;
+        int previousDailyTherapyTime = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes;
+
         yield return SaveCurrentUserProfile();
+
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = previousTherapyTime;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes    = previousGameTherapyTime;
+        m_UserProfileManager.m_userProfile.m_cycleNumber                                  = 1;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes = previousDailyTherapyTime;
         //ReloadLevel
         MadLevel.LoadLevelByName("MainHUB");
     }
@@ -127,6 +137,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = 0;
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = 0;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes = 0;
 
         m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
         m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 0;
@@ -153,14 +164,16 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = int.Parse(profileData[6]);
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = int.Parse(profileData[7]);
 
-        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = int.Parse(profileData[8]); //It is a shortcut for when initializing the game for the first time.
-        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = int.Parse(profileData[9]);
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes = int.Parse(profileData[8]);
 
-        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = profileData[10] == "0";
-        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = profileData[11] == "0";
-        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[12]);
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = int.Parse(profileData[9]); //It is a shortcut for when initializing the game for the first time.
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = int.Parse(profileData[10]);
 
-        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = int.Parse(profileData[13]);
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = profileData[11] == "0";
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = profileData[12] == "0";
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[13]);
+
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = int.Parse(profileData[14]);
         return true;
     }
 
@@ -215,7 +228,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = 0;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = 0;
-            
+            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes = 0;
+
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 8;
 
@@ -266,6 +280,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         form.AddField("therapy_total_blocks", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks);
         form.AddField("total_game_time", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes);
         form.AddField("total_therapy_time", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes);
+        form.AddField("daily_therapy_time", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes);
         form.AddField("act_current_block", m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock);
         form.AddField("act_total_blocks", m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks);
         form.AddField("practice_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted ? 1 : 0);
@@ -705,6 +720,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     public IEnumerator AddTherapyMinutes(int minutes)
     {
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes += minutes;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes += minutes;
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
     public IEnumerator AddGameMinutes(int minutes)

@@ -16,7 +16,8 @@ if($preparedStatement->rowCount() > 0)
 	$result["Basket5"] . '+' .
 	$result["Basket6"] . '+' .
 	$result["Basket7"] . '+' .
-	$result["Basket8"];
+	$result["Basket8"] . '+' .
+	$result["DailyTherapyMinutes"];
 	
 }
 else
@@ -37,7 +38,8 @@ else
 		$result["Basket5"] . '+' .
 		$result["Basket6"] . '+' .
 		$result["Basket7"] . '+' .
-		$result["Basket8"];
+		$result["Basket8"] . '+' .
+		$rresut["DailyTherapyMinutes"];
 		
 	}
 }
