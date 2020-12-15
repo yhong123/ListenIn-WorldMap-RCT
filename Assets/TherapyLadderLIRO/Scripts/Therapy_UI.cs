@@ -5,7 +5,7 @@ using System.Text;
 
 public class Therapy_UI : MonoBehaviour {
 
-    private string CycleFormat = "Therapy Cycle {0}";
+    private string CycleFormat = "Cycle {0} progress";
     private string TherapyTotalFormat = "Total: {0}h  {1}m";
     private string TherapyDailyFormat = "Daily: {0}h  {1}m";
     //private string GameFormat = "Total Game Time: {0}h {1}m";
