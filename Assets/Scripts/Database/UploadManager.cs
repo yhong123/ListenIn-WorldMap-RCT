@@ -94,7 +94,7 @@ public class UploadManager : Singleton<UploadManager> {
         }
 #endif
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
         fingerCount = Input.GetMouseButtonDown(0) ? 1 : 0;
 #endif
 
