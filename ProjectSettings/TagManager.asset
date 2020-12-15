@@ -59,6 +59,8 @@ TagManager:
   - Cover
   - JigsawPuzzle
   - DebugUI
+  - QSlider
+  - QInput
   layers:
   - Default
   - TransparentFX

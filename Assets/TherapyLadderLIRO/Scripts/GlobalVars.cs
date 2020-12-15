@@ -86,4 +86,10 @@ return Application.dataPath;// +"/"+ fileName;
     {
         return Path.Combine(GetPath(patientID), LiroGeneratedACT_Basket);
     }
+
+    //Naming conventions to save the files
+    public static string ACTStringFormat = "{0}_Block_{1}_Cycle_{2}.csv"; // 0 Is the TherapyLIRO step: for each cycle you have two ACT 
+    public static string SARTStringFormat = "{0}_Cycle_{1}.csv"; // 0 Is the TherapyLIRO step: for each cycle you have two SART
+
+
 }

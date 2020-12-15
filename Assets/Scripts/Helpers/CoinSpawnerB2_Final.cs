@@ -11,6 +11,8 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 	public bool isDebugging = false;
 
     private float maxWidth;
+    [SerializeField]
+    private float OFFSET_FROM_CORNER = 0.3f;
     private int coinsEarned;
     private int totalNumberSpawned = 0;
 
@@ -67,11 +69,11 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
         //gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, gameObject.transform.position + traslationTarget, Time.deltaTime);
         //gameObject.transform.Translate(traslationTarget * Time.deltaTime);
 
-        if (transform.position.x >= maxWidth)
+        if (transform.position.x >= (maxWidth - OFFSET_FROM_CORNER))
         {
             dirRight = false;
         }
-        if (transform.position.x <= -maxWidth)
+        if (transform.position.x <= -1*(maxWidth - OFFSET_FROM_CORNER))
         {
             dirRight = true;
         }

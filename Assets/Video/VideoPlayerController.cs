@@ -43,6 +43,7 @@ public class VideoPlayerController : MonoBehaviour
 
     public void PlayVideo()
     {
+        videoPlayer.aspectRatio = VideoAspectRatio.Stretch;
         videoPlayer.Prepare();
     }
 

@@ -18,153 +18,222 @@ public class QuestionaireManager : MonoBehaviour
 {
 
     [SerializeField]
-    private List<QuestionStructure> listQS = new List<QuestionStructure>();
+    public GameObject[] questionnaireStructure;
 
     [SerializeField]
-    private GameObject inputTextGO;
+    [Tooltip("Assigned statically")]
+    private static int INDEXMIDQUESTIONNAIRE = 5;
+    private static int INDEXENDQUESTIONNAIRE = 9;
 
     [SerializeField]
-    private GameObject sliderGO;
+    private GameObject ButtonsGO;
 
     [SerializeField]
-    private GameObject thankyouGO;
+    private GameObject InputTextGO;
 
     [SerializeField]
-    private Text displayTextQuestion;
+    private InputField inputField;
 
     [SerializeField]
-    private Text displayTextSlider;
+    private Text inputText;
 
     [SerializeField]
-    private InputField inputText;
+    private GameObject SliderGO;
 
     [SerializeField]
-    private Slider slider;
+    private GameObject sliderObject;
 
     [SerializeField]
-    private Button endButton;
+    private Button buttonNext;
+
+    [SerializeField]
+    private Button infoButton;
+
+
+    [SerializeField]
+    private GameObject[] faceList;
+
+    private int currQuestionaireCount = 0;
+    private int currQuestionairePart = 0;
 
     private bool endSaving = false;
-
-    private int questionsTotal;
-    private int questionsCounter = 0;
+    private bool isSkipped = false;
 
     private List<string> responses = new List<string>();
     private string formatResponse = "q{0}:{1}";
-    private string currResponse = "";
 
+    //Saving private response from texts
+    private string currResponse = "";
+    //Saving private slider input
+    private int currSliderValue;
+       
     void Start()
     {
-        inputTextGO.SetActive(false);
-        sliderGO.SetActive(false);
-        listQS.Add(new QuestionStructure { qt = QuestionType.InputText, text = "Please describe your speech comprehension skills below", uiText = displayTextQuestion});
-        listQS.Add(new QuestionStructure { qt = QuestionType.Slider   , text = "Please rate your speech comprehension skills below"    , uiText = displayTextSlider });
-        questionsTotal = listQS.Count;
-        PrepareNextQuestion();
+
+        currQuestionairePart = TherapyLIROManager.Instance.GetUserProfile.m_userProfile.m_QuestionaireUserProfile.questionnairStage;
+        if (currQuestionairePart == 1)
+            currQuestionaireCount = INDEXMIDQUESTIONNAIRE + 1;
+        else
+            currQuestionaireCount = 0;
+
+        ActivateQuestion(currQuestionaireCount);
+
     }
 
-    public void PrepareNextQuestion()
+    private void ActivateQuestion(int questionNumber)
     {
-        if (questionsCounter >= questionsTotal && !endSaving)
+        foreach (var item in questionnaireStructure)
         {
-            //End of questions.
-            Debug.Log("Reached end of the questionaire");
-            endSaving = true;
-            thankyouGO.SetActive(true);
-            StartCoroutine(FinishAndSave());
-            return;
+            item.SetActive(false);
+        }
+
+        SliderGO.SetActive(false);
+        InputTextGO.SetActive(false);
+
+        buttonNext.interactable = false;
+        infoButton.interactable = false;
+
+        RectTransform currTransform = sliderObject.GetComponent<RectTransform>();
+        Vector3 position = currTransform.localPosition;
+        position.x = 0;
+        sliderObject.transform.localPosition = position;
+
+        GameObject currQuestion = questionnaireStructure[currQuestionaireCount];
+        if (currQuestion.tag == "QSlider")
+        {
+            SliderGO.SetActive(true);
+            buttonNext.interactable = false;
+            infoButton.interactable = true;
+        }
+        else if (currQuestion.tag == "QInput")
+        {
+            InputTextGO.SetActive(true);
+            buttonNext.interactable = true;
+            infoButton.interactable = true;
+            inputField.text = string.Empty;
         }
         else
         {
-            QuestionStructure currQuest = listQS[questionsCounter];
-
-            currQuest.uiText.text = currQuest.text;
-            currResponse = "";
-
-            switch (currQuest.qt)
-            {
-                case QuestionType.InputText:
-                    inputTextGO.SetActive(true);
-                    break;
-                case QuestionType.Slider:
-                    sliderGO.SetActive(true);
-                    break;
-                default:
-                    break;
-            }
+            buttonNext.interactable = true;
+            infoButton.interactable = true;
         }
+
+        currQuestion.SetActive(true);
+
+        if (questionNumber == INDEXENDQUESTIONNAIRE)
+        {
+            StartCoroutine(Save());
+            buttonNext.interactable = false;
+            TherapyLIROManager.Instance.StartCoroutine(TherapyLIROManager.Instance.SaveSecondHalfQuestionaire(true));
+
+        }
+        else if (questionNumber == INDEXMIDQUESTIONNAIRE)
+        {
+            StartCoroutine(Save());
+            TherapyLIROManager.Instance.StartCoroutine(TherapyLIROManager.Instance.SaveHalfQuestionnaire(true));
+            currQuestionairePart++;
+        }
+
     }
 
-    private IEnumerator FinishAndSave()
+    private IEnumerator Save()
     {
-        yield return new WaitForEndOfFrame();
-        SaveToFile();
-        yield return StartCoroutine(TherapyLIROManager.Instance.SaveCurrentQuestionaire(true));
-        endButton.interactable = true;
+        SaveQuestionnaire();
+        yield return null;
     }
 
-    private void ClearCurrentQuestion()
-    {
-        slider.value = 4;
-        inputText.text = "";
-        inputTextGO.SetActive(false);
-        sliderGO.SetActive(true);
-
-    }
-
-    private void SaveResponse()
-    {
-        responses.Add(string.Format(formatResponse,questionsCounter.ToString(),currResponse));
-        questionsCounter++;
-    }
-
-    private void SaveToFile()
+    private void SaveQuestionnaire()
     {
         string directory = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
-        string filename = string.Format("Questionaire_{0}.txt", TherapyLIROManager.Instance.GetCurrentTherapyCycle());
+        string filename = string.Format("Questionaire_Part_{0}_Cycle_{1}.txt", (currQuestionairePart + 1).ToString(), TherapyLIROManager.Instance.GetCurrentTherapyCycle());
         string fullPath = Path.Combine(directory, filename);
-       
-        StringBuilder sb = new StringBuilder();
-        using (StreamWriter sw = System.IO.File.CreateText(fullPath))
+
+        if (responses.Count != 0)
         {
-            foreach (string line in responses)
+            StringBuilder sb = new StringBuilder();
+            using (StreamWriter sw = System.IO.File.CreateText(fullPath))
             {
-                sw.WriteLine(line);
-                sb.AppendLine(line);
+                foreach (string line in responses)
+                {
+                    sw.WriteLine(line);
+                    sb.AppendLine(line);
+                }
+                sw.Close();
             }
-            sw.Close();
+
+            //SEND TO SERVER
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", filename);
+            form.AddField("file_size", Encoding.ASCII.GetBytes(sb.ToString()).Length);
+            form.AddField("folder_name", GlobalVars.OutputFolderName);
+            form.AddBinaryData("file_data", Encoding.ASCII.GetBytes(sb.ToString()), filename);
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+
+            responses.Clear();
         }
 
-        //SEND TO SERVER
-        WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
-        form.AddField("file_name", filename);
-        form.AddField("file_size", Encoding.ASCII.GetBytes(sb.ToString()).Length);
-        form.AddField("folder_name", GlobalVars.OutputFolderName);
-        form.AddBinaryData("file_data", Encoding.ASCII.GetBytes(sb.ToString()), filename);
-        NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
     }
 
-    public void OnNextClickedSlider()
+    #region Button Events
+    public void SetCurrentFace(int faceIdx)
     {
-        currResponse = slider.value.ToString();
-        SaveResponse();
-        ClearCurrentQuestion();
-        PrepareNextQuestion();
+        buttonNext.interactable = true;
+
+        currSliderValue = faceIdx + 1;
+        GameObject currFace = faceList[faceIdx];
+
+        RectTransform currTransform = sliderObject.GetComponent<RectTransform>();
+        Vector3 position = currTransform.localPosition;
+        position.x = currFace.GetComponent<RectTransform>().localPosition.x;
+        sliderObject.transform.localPosition = position;
+
     }
 
-    public void OnNextClickedQuestionaire()
+    public void SaveAnswerAndContinue()
     {
-        currResponse = inputText.text;
-        SaveResponse();
-        ClearCurrentQuestion();
-        PrepareNextQuestion();
+        buttonNext.interactable = false;
+        infoButton.interactable = false;
+
+        GameObject currQuestion = questionnaireStructure[currQuestionaireCount];
+        if (currQuestion.tag == "QSlider")
+        {
+            int counter = responses.Count;
+            responses.Add(string.Format(formatResponse, (counter+1).ToString(), currSliderValue.ToString()));
+        }
+        else if (currQuestion.tag == "QInput")
+        {
+            currResponse = inputText.text;
+            int counter = responses.Count;
+            responses.Add(string.Format(formatResponse, (counter + 1).ToString(), currResponse));
+        }
+
+        currQuestionaireCount++;
+
+        ActivateQuestion(currQuestionaireCount);
+
+    }
+
+    public void HalfQuestionnaireReturn()
+    {
+        buttonNext.interactable = false;
+        onEndQuestionaireClicked();
+    }
+
+    public void SkipToEndOfTheQuestionnaire()
+    {
+        buttonNext.interactable = false;
+        currQuestionaireCount = INDEXENDQUESTIONNAIRE;
+        isSkipped = true;
+        ActivateQuestion(currQuestionaireCount);
     }
 
     public void onEndQuestionaireClicked()
     {
         MadLevel.LoadLevelByName("MainHUB");
     }
+
+    #endregion
 
 }

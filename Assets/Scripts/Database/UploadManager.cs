@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-
+using UnityEngine.SceneManagement;
 using MadLevelManager;
 using System.IO;
 
@@ -18,6 +18,9 @@ public class UploadManager : Singleton<UploadManager> {
     private float waitTime = 3.0f;
     private bool startTimer = false;
 
+    private static int minutesToPause = 1;
+    private static int minutesToQuit = 1;
+
     #region Timers
     //idle time
     float idle_time = 0;
@@ -33,9 +36,6 @@ public class UploadManager : Singleton<UploadManager> {
     bool isMenuPaused = false;
     bool m_stop_forcetimer_routine = false;
     public bool SetIsMenu { get { return isMenuPaused; } set { isMenuPaused = value; } }
-
-    float m_fTherapy_block_idle_time_sec = 0;   // to keep track the idle time within a therapy block
-    float m_fTotal_therapy_time_sec = 0;   // to keep track the total therapy time
 
     #endregion Timers
 
@@ -94,7 +94,7 @@ public class UploadManager : Singleton<UploadManager> {
         }
 #endif
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
         fingerCount = Input.GetMouseButtonDown(0) ? 1 : 0;
 #endif
 
@@ -114,7 +114,6 @@ public class UploadManager : Singleton<UploadManager> {
         if (count_therapy_time)
         {
             therapy_time += Time.deltaTime;
-            m_fTotal_therapy_time_sec += Time.deltaTime;
         }
 
         if (count_pinball_time)
@@ -131,40 +130,94 @@ public class UploadManager : Singleton<UploadManager> {
         if (count_idle_time)
         {
             idle_time += Time.unscaledDeltaTime;
-            //Debug.Log((int)therapy_block_time);
         }
 
-        if (isMenuPaused)
-            m_fTherapy_block_idle_time_sec += Time.unscaledDeltaTime;
-
         //TODO: unify the menu system
-        //        #region TimeoutGame
-        //        if (isMenuPaused && idle_time > 60 * 1)
-        //        {
-        //            Debug.Log("DatabaseXML: Update() Forcing ListenIn to quit due to timeout (99)");
-        //            reasonToExit = 99;
-        //            Application.Quit();
+        #region TimeoutGame
+        if (isMenuPaused && idle_time > 60 * minutesToQuit)
+        {
+            Debug.Log("Forcing ListenIn to quit due to timeout (99)");
+            //reasonToExit = 99;
+            Application.Quit();
 
-        //            //If we are running in the editor
-        //#if UNITY_EDITOR
-        //            //Stop playing the scene
-        //            UnityEditor.EditorApplication.isPlaying = false;
-        //#endif
-        //        }
-        //        else if (!isMenuPaused && idle_time > 60 * 1 && !m_stop_forcetimer_routine)
-        //        {
-        //            if (OpenPauseMenu())
-        //            {
-        //                ResetTimer(TimerType.Idle);
-        //            }
-        //            else
-        //            {
-        //                Debug.LogWarning("DatabaseXML: preventing force idle menu. Could be setup screen, uploading screen or a transition");
-        //                ResetTimer(TimerType.Idle);
-        //            }
-        //        }
+            //If we are running in the editor
+#if UNITY_EDITOR
+            //Stop playing the scene
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        }
+        else if (!isMenuPaused && idle_time > 60 * minutesToPause && !m_stop_forcetimer_routine)
+        {
+            if (OpenPauseMenu())
+            {
+                ResetTimer(TimerType.Idle);
+            }
+            else
+            {
+                Debug.LogWarning("Preventing force idle menu. Could be setup screen, uploading screen or a transition");
+                ResetTimer(TimerType.Idle);
+            }
+        }
 
-        //        #endregion
+        #endregion
+    }
+
+    private bool OpenPauseMenu()
+    {
+        Scene currScene = SceneManager.GetActiveScene();
+        if (currScene.name == "SetupScreen")
+        {
+            //Debug.Log("DatabaseXML: OpenPauseMenu() preventing screen to pause in setupscreen");
+            return false;
+        }
+
+        //Works only on the WorldMapScene
+        if (currScene.name == "LevelSelectScene")
+        {
+            GameObject menuUI = GameObject.FindGameObjectWithTag("MenuUI");
+            if (menuUI != null)
+            {
+                LevelSelectManager lsm = menuUI.GetComponent<LevelSelectManager>();
+                if (lsm != null)
+                {
+                    lsm.OpenPauseMenu();
+
+                    Debug.Log("DatabaseXML: OpenPauseMenu() Forcing menu after idle timeout - case WorldMap");
+                    return true;
+                }
+            }
+        }
+
+        //Andrea
+        if (currScene.name == "GameLoop")
+        {
+            GameObject challengeTherapy = GameObject.FindGameObjectWithTag("Challenge");
+            if (challengeTherapy != null)
+            {
+                MenuManager mm = challengeTherapy.GetComponentInChildren<MenuManager>();
+                if (mm != null)
+                {
+                    mm.OpenMenu();
+                    Debug.Log("DatabaseXML: OpenPauseMenu() Forcing menu after idle timeout - case Therapy Challenge");
+                    return true;
+                }
+            }
+
+            GameObject jigsawPuzzle = GameObject.FindGameObjectWithTag("PinballPrefab");
+            if (jigsawPuzzle != null)
+            {
+                MenuManager csm = jigsawPuzzle.GetComponentInChildren<MenuManager>();
+                if (csm != null)
+                {
+                    csm.OpenMenu();
+                    Debug.Log("Forcing menu after idle timeout - case Pinball");
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
     }
 
     public void SetTimerState(TimerType tymerType, bool state)
@@ -186,6 +239,33 @@ public class UploadManager : Singleton<UploadManager> {
             default:
                 break;
         }
+    }
+
+    public float GetTimerState(TimerType tymerType)
+    {
+        float currTime = 0;
+        switch (tymerType)
+        {
+            case TimerType.Idle:
+                currTime = idle_time;
+                break;
+            case TimerType.WorldMap:
+                currTime = therapy_worldmap_time;
+                break;
+            case TimerType.Therapy:
+                currTime = therapy_time;
+                break;
+            case TimerType.Pinball:
+                currTime = therapy_pinball_time;
+                break;
+            default:
+                break;
+        }
+        if (currTime == 0)
+        {
+            Debug.LogError("UploadManager: asked for a timer, but currently is zero");
+        }
+        return currTime;
     }
 
     public void ResetTimer(TimerType tymerType)

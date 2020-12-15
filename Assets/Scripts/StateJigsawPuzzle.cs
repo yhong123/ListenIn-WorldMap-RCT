@@ -62,28 +62,28 @@ public class StateJigsawPuzzle : State
     /// </summary>
     private void InitializeChapters(){
         Chapters = new Dictionary<string, Chapter>();
-        Chapters.Add("Space Travel", (new Chapter("Space", 2, "Background_002", "Postcards/Postcard_Space", Color.black, false, "")));
-        Chapters.Add("Cheeky Jungle", (new Chapter("Cheeky Jungle", 3, "Background_008", "Postcards/Postcard_CheekyJungle", Color.red, false, "")));
-        Chapters.Add("Candy Madness", (new Chapter("Candy Island", 1, "Background_009", "Postcards/Postcard_Candyland", new Color32(255, 0, 162, 255), false, "")));
-        Chapters.Add("Cookie Monster", (new Chapter("Cookie Monsters", 4, "Background_011", "Postcards/Postcard_CookieMonsters", new Color32(255, 221, 0, 255), false, "")));
-        Chapters.Add("Tricky Lights", (new Chapter("Tricky Lights", 5, "Background_014", "Postcards/Postcard_TrickyLights", Color.black, false, "")));
+        Chapters.Add("Space Travel", (new Chapter("Space", 2, "Background_002", "Postcards/Postcard_Space", Color.white, false, "")));
+        Chapters.Add("Cheeky Jungle", (new Chapter("Cheeky Jungle", 3, "Background_008", "Postcards/Postcard_CheekyJungle", Color.white, false, "")));
+        Chapters.Add("Candy Madness", (new Chapter("Candy Island", 1, "Background_009", "Postcards/Postcard_Candyland", Color.white, false, "")));
+        Chapters.Add("Cookie Monster", (new Chapter("Cookie Monsters", 4, "Background_011", "Postcards/Postcard_CookieMonsters", Color.white, false, "")));
+        Chapters.Add("Tricky Lights", (new Chapter("Tricky Lights", 5, "Background_014", "Postcards/Postcard_TrickyLights", Color.white, false, "")));
         Chapters.Add("Tibet", (new Chapter("Tibet", 6, "Background_015", "Postcards/Postcard_Tibet", Color.white, false, "")));
-        Chapters.Add("Halloween", (new Chapter("Halloween", 7, "Background_003", "Postcards/Postcard_Halloween", new Color(0.686275f, 0.933333f, 0.933333f), false, "")));
+        Chapters.Add("Halloween", (new Chapter("Halloween", 7, "Background_003", "Postcards/Postcard_Halloween", Color.white, false, "")));
         Chapters.Add("Fun Fair", (new Chapter("Fun Fair", 8, "Background_016", "Postcards/Postcard_FunFair", Color.white, false, "")));
-        Chapters.Add("Far Islands", (new Chapter("Fancy Island", 9, "Background_004", "Postcards/Postcard_FancyIsland", Color.yellow, false, "")));
-        Chapters.Add("Great Canyon", (new Chapter("Grand Canyon", 10, "Background_005", "Postcards/Postcard_GrandCanyon", new Color(0.498039f, 1f, 0.831373f), false, "")));
-        Chapters.Add("Underworld", (new Chapter("Underwater", 11, "Background_006", "Postcards/Postcard_UnderWater", Color.cyan, false, "")));
-        Chapters.Add("Artic View", (new Chapter("Green Land", 12, "Background_007", "Postcards/Postcard_Greenland", Color.green, false, "")));
-        Chapters.Add("Wonder Land", (new Chapter("Wonderland", 13, "Background_010", "Postcards/Postcard_Wonderland", new Color32(36, 145, 0, 255), false, "")));
+        Chapters.Add("Far Islands", (new Chapter("Fancy Island", 9, "Background_004", "Postcards/Postcard_FancyIsland", Color.white, false, "")));
+        Chapters.Add("Great Canyon", (new Chapter("Grand Canyon", 10, "Background_005", "Postcards/Postcard_GrandCanyon", Color.white, false, "")));
+        Chapters.Add("Underworld", (new Chapter("Underwater", 11, "Background_006", "Postcards/Postcard_UnderWater", Color.white, false, "")));
+        Chapters.Add("Artic View", (new Chapter("Green Land", 12, "Background_007", "Postcards/Postcard_Greenland", Color.white, false, "")));
+        Chapters.Add("Wonder Land", (new Chapter("Wonderland", 13, "Background_010", "Postcards/Postcard_Wonderland", Color.white, false, "")));
 
-        Chapters.Add("Fuji Mountain", (new Chapter("Fuji", 14, "Background_012", "Postcards/Postcard_Fuji", new Color32(255, 0, 221, 255), false, "")));
-        Chapters.Add("Moscow", (new Chapter("Moscow", 15, "Background_013", "Postcards/Postcard_Moscow", new Color32(175, 0, 0, 255), false, "")));
+        Chapters.Add("Fuji Mountain", (new Chapter("Fuji", 14, "Background_012", "Postcards/Postcard_Fuji", Color.white, false, "")));
+        Chapters.Add("Moscow", (new Chapter("Moscow", 15, "Background_013", "Postcards/Postcard_Moscow", Color.white, false, "")));
 
-        Chapters.Add("Dodgeball", (new Chapter("Basketball", 16, "Background_017", "Postcards/Postcard_Basketball", Color.blue, false, "")));
-        Chapters.Add("Great Coliseum", (new Chapter("Colosseum", 17, "Background_018", "Postcards/Postcard_Colosseum", Color.magenta, false, "")));
-        Chapters.Add("Egypt", (new Chapter("Pyramids", 18, "Background_019", "Postcards/Postcard_Egypt", Color.yellow, false, "")));
-		Chapters.Add("Fearless Ski", (new Chapter("Fearless Ski", 19, "Background_021", "Postcards/Postcard_SkiAlps", Color.blue, false, "")));
-        Chapters.Add("London", (new Chapter("London", 20, "Background_001", "Postcards/Postcard_London", new Color(0f, 0f, 0.803922f), false, "")));
+        Chapters.Add("Dodgeball", (new Chapter("Basketball", 16, "Background_017", "Postcards/Postcard_Basketball", Color.white, false, "")));
+        Chapters.Add("Great Coliseum", (new Chapter("Colosseum", 17, "Background_018", "Postcards/Postcard_Colosseum", Color.white, false, "")));
+        Chapters.Add("Egypt", (new Chapter("Pyramids", 18, "Background_019", "Postcards/Postcard_Egypt", Color.white, false, "")));
+		Chapters.Add("Fearless Ski", (new Chapter("Sky Alps", 19, "Background_021", "Postcards/Postcard_SkiAlps", Color.white, false, "")));
+        Chapters.Add("London", (new Chapter("London", 20, "Background_001", "Postcards/Postcard_London", Color.white, false, "")));
         
     }
 
