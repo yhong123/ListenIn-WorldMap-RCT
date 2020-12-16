@@ -1369,7 +1369,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 form.AddField("file_size", dataAsBytes.Length);
                 form.AddField("folder_name", GlobalVars.SectionFolderName);
                 form.AddBinaryData("file_data", dataAsBytes, "temp");
-                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile, currFilename, currFilename, BasketUploadCallback);
+                
 #if DEBUG_LIRO_THERAPY
                 if (singleTherapyCicle && !blockSent)
                 {
@@ -1406,8 +1406,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             form.AddField("file_size", dataAsBytes.Length);
             form.AddField("folder_name", GlobalVars.SectionFolderName);
             form.AddBinaryData("file_data", dataAsBytes, "temp");
-            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile, currFilename, currFilename, BasketUploadCallback);
-
+            
 #if DEBUG_LIRO_THERAPY
             if (singleTherapyCicle && !blockSent)
             {
