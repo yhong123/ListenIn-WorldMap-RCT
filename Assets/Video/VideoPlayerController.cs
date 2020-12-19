@@ -57,12 +57,20 @@ public class VideoPlayerController : MonoBehaviour
 
     public void SetVideo(TherapyLadderStep therapyStep)
     {
-        videoPlayer.clip = listOfVideos.Where(therapy => therapy.TherapyStep == therapyStep).SingleOrDefault().VideoClip;
+        VideoTherapy videoTh = listOfVideos.Where(therapy => therapy.TherapyStep == therapyStep).SingleOrDefault();
+        if (videoTh != null)
+        {
+            videoPlayer.clip = videoTh.VideoClip;
+        }
+        else
+        {
+            Debug.LogWarning("No video associated with " + therapyStep.ToString());
+        }
     }
 }
 
 [Serializable]
-public struct VideoTherapy
+public class VideoTherapy
 {
     public TherapyLadderStep TherapyStep;
     public VideoClip VideoClip;
