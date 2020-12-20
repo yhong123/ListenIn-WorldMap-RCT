@@ -94,8 +94,8 @@ public class GameStateSaver : Singleton<GameStateSaver> {
     {
         if(string.IsNullOrEmpty(GlobalVars.GameProgressFile))
         {
-            //CRITICAL ERROR
-            Debug.LogError("<color=yellow>SERVER Warning; jigsaw information from server not downloaded. Should be after a reset</color>");
+            //Warning that this function should be called when having download the game progress from the server
+            Debug.LogWarning("<color=yellow>SERVER Warning; jigsaw information from server not downloaded. Could be a reset.</color>");
             return;
         }
 
@@ -300,7 +300,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 	public void ResetListenIn()
 	{
         //Debug.Log("Initializing ListenIn");
-        ListenIn.Logger.Instance.Log("GameStateSaver: resetting jigsaw pieces state", ListenIn.LoggerMessageType.Info);
+        Debug.Log("GameStateSaver: resetting jigsaw pieces state");
         Debug.LogWarning("<color=yellow>LISTENIN Reset; Reset jigsaw state. Check if this wanted</color>");
         //Reset();
         ResetGameProgress();
@@ -309,6 +309,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 
     public void ResetGameProgress()
     {
+        Debug.Log("Listen In - resettning game progress");
         string gameProgress;
         //TODO now there is StateJigsawPuzzle
         XmlSerializer serializer = new XmlSerializer(typeof(GameSaveState));
@@ -336,7 +337,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
                 }
                 else
                 {
-                    ListenIn.Logger.Instance.Log(String.Format("GameStateSaver: cannot reset as chapter with key {0} have not been found", levelKeys[i]), ListenIn.LoggerMessageType.Error);
+                    Debug.LogError(String.Format("GameStateSaver: cannot reset as chapter with key {0} have not been found", levelKeys[i]));
                     //Debug.LogError(String.Format("Cannot reset as chapter with key {0} have not been found", levelKeys[i]));
                 }
             }
@@ -375,13 +376,6 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         ResetGameProgress();
         ResetWorldMapProgress();
     }
-
-	//public string FilePath() //#ERASE
- //   {
- //       string patientFolder = GlobalVars.GetPath(NetworkManager.UserId);
- //       string fileName = String.Format("user_{0}_SavedState.xml", NetworkManager.UserId);
- //       return Path.Combine(patientFolder, fileName);
-	//}
 
     public string FileName()
     {

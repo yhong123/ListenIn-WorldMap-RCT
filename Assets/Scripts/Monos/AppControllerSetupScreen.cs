@@ -11,6 +11,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
 using System.Text;
+using ListenIn;
 
 public class AppControllerSetupScreen : MonoBehaviour
 {
@@ -65,7 +66,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         catch (Exception ex)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
         }
     }
 
@@ -113,7 +114,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
         }
         yield return new WaitForSeconds(2);
 
@@ -169,7 +170,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
         }
 
         yield return new WaitForEndOfFrame();
@@ -217,7 +218,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
         }
         yield return new WaitForEndOfFrame();
 
@@ -233,17 +234,19 @@ public class AppControllerSetupScreen : MonoBehaviour
 
         try
         {
-            CleaningUpOlderLogs();
+            ListenInLogger.Instance.WakeUp();
+            //CleaningUpOlderLogs();
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
         }
+        
 
         setupPorcentageProgress = 100;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-
-        yield return new WaitForSeconds(2);
+        
+        yield return new WaitForSeconds(1);
         //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
         MadLevel.LoadLevelByName("MainHUB");
     }
@@ -251,7 +254,7 @@ public class AppControllerSetupScreen : MonoBehaviour
     private void CleaningUpOlderLogs()
     {
         //Andrea: need to implement this function
-        String path = ListenIn.Logger.Instance.GetLogPath;
+        String path = ListenInLogger.Instance.GetLogPath;
         if (!String.IsNullOrEmpty(path))
         {
             List<String> files = new DirectoryInfo(path).GetFiles().OrderBy(f => f.LastWriteTime).Select(x => x.FullName).ToList();
@@ -297,7 +300,7 @@ public class AppControllerSetupScreen : MonoBehaviour
 
         if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
         {
-            string path = ListenIn.Logger.Instance.GetLogPath;
+            string path = ListenInLogger.Instance.GetLogPath;
             if (!string.IsNullOrEmpty(path))
             {
                 var topFiles = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).Take(5).ToList();

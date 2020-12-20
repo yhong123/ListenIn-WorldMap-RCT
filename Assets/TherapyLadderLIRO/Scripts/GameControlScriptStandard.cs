@@ -310,7 +310,7 @@ public class GameControlScriptStandard : MonoBehaviour
             }
             catch (Exception ex)
             {
-                ListenIn.Logger.Instance.Log(String.Format("Challenge ID: {0}; Cannot load: {0}", m_currChallenge.ChallengeID.ToString(),availableFoils[i].ToString()), ListenIn.LoggerMessageType.Error);
+                Debug.LogError(String.Format("Challenge ID: {0}; Cannot load: {0}", m_currChallenge.ChallengeID.ToString(),availableFoils[i].ToString()));
             }
 
         }

@@ -59,6 +59,7 @@ return Application.dataPath;// +"/"+ fileName;
         return Path.Combine(GetPath(patientID), @"Output");
     }
     public static string OutputFolderName = "Output";
+    public static string LogFolderName = "Logs";
 
     public static string GetPathToLIROBaskets()
     {

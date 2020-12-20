@@ -51,7 +51,7 @@ public class GameController : Singleton<GameController> {
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            Debug.LogError(string.Format("ERROR while changing state from {0}: {1}", m_CurState.ToString(), ex.Message));
         }
 
     }
@@ -67,7 +67,7 @@ public class GameController : Singleton<GameController> {
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            Debug.LogError(string.Format("ERROR while updating state {0}: {1}", m_CurState.ToString(), ex.Message));
         }
 
     }

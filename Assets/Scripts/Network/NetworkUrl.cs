@@ -27,4 +27,5 @@ public static class NetworkUrl
     //Andrea
     public static string SqlGetUserBasketTracking = string.Concat(ServerGameUrl, "select_user_basket_tracking.php");
     public static string SqlSetUserBasketTracking = string.Concat(ServerGameUrl, "update_user_basket_tracking.php");
+    public static string ServerUrlUploadLogFile = string.Concat(ServerGameUrl, "upload_log_file.php");
 }

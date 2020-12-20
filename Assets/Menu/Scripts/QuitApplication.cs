@@ -7,7 +7,7 @@ public class QuitApplication : MonoBehaviour {
 	public void Quit()
 	{
         //If we are running in a standalone build of the game
-        ListenIn.Logger.Instance.Log("Starting quit routine", ListenIn.LoggerMessageType.Info);
+        Debug.Log("Starting LISTEN IN quit routine");
 		GameStateSaver.Instance.SaveGameProgress();
 		Application.Quit();
 
