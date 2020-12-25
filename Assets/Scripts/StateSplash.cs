@@ -58,7 +58,7 @@ public class StateSplash : State
 		{
 			m_gameIntro = false;
 			GoToGameIntro();
-			m_intro_go = GameObject.Instantiate(Resources.Load("Prefabs/Intro")) as GameObject;
+			m_intro_go = GameObject.Instantiate(Resources.Load("Prefabs/IntroNew")) as GameObject;
 		}
 		else if(m_mainmenu)
 		{
