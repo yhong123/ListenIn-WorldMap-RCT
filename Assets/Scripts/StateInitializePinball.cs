@@ -81,6 +81,6 @@ public class StateInitializePinball : State
 	public override void Exit()
 	{
         Debug.Log("StateInitializePinball: Exit() Finishing transiton to pinball");
-        StatePinball.Instance.InitLevelPinball();
+        StatePinball.Instance.InitLevelPinball(false);
 	}
 }

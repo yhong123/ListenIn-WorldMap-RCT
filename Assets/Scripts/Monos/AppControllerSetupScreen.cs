@@ -33,7 +33,6 @@ public class AppControllerSetupScreen : MonoBehaviour
     private bool lockEmailSending = false;
     private int setupPorcentageProgress = 0;
 
-
     [SerializeField] private Text userID;
 
     [SerializeField] private bool isDebug = false;
@@ -152,17 +151,28 @@ public class AppControllerSetupScreen : MonoBehaviour
         {
             Debug.Log("Basket tracking correctly loaded");
         }
-        StartCoroutine(WaitForServerDataAndCompleteInitialization());
+        StartCoroutine(WaitForServerDataInitialization());
     }
     /// <summary>
     /// Function being called during SetupScreen starting after login. The Initialization of ACT pairs is executed only if isFirstInit is true.
     /// </summary>
     /// <returns>Nothing</returns>
-    public IEnumerator WaitForServerDataAndCompleteInitialization()
+    public IEnumerator WaitForServerDataInitialization()
     {
         setupPorcentageProgress = 50;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-        
+
+        try
+        {
+            //It is safe to initialize the logger here since the user has been successfully logged in from the server
+            ListenInLogger.Instance.WakeUp();
+            //CleaningUpOlderLogs();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
+        }
+
         //AndreaLIRO: Preparing the jigsaw pieces
         try
         {
@@ -199,12 +209,44 @@ public class AppControllerSetupScreen : MonoBehaviour
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         yield return new WaitForEndOfFrame();
 
+        float currTime = Time.realtimeSinceStartup;
+        int countTime = 0; ;
+
         //AndreaLIRO: need to wait until the files are loaded from the server before continuing with the progress
-        while (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile) && string.IsNullOrEmpty(GlobalVars.GameWorldMapProgressFile))
+        while (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) || string.IsNullOrEmpty(GlobalVars.LiroGenActFile) || string.IsNullOrEmpty(GlobalVars.GameProgressFile) || string.IsNullOrEmpty(GlobalVars.GameWorldMapProgressFile))
         {
+            if (currTime + 15f < Time.realtimeSinceStartup)
+            {
+                currTime = Time.realtimeSinceStartup;
+                Debug.LogError("Could not retrieve data from the server in Setup screen");
+                if (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile))
+                    { Debug.LogError("Could not retrieve data for generated basket file"); }
+                if (string.IsNullOrEmpty(GlobalVars.LiroGenActFile))
+                    { Debug.LogError("Could not retrieve data for generated ACT file"); }
+                if (string.IsNullOrEmpty(GlobalVars.GameProgressFile))
+                    { Debug.LogError("Could not retrieve data for jigsaw game progress file"); }
+                if (string.IsNullOrEmpty(GlobalVars.GameWorldMapProgressFile))
+                    { Debug.LogError("Could not retrieve data for world map progress"); }
+                countTime++;
+                if (countTime >= 3) //45 seconds to get the files is more than enough
+                    break;
+            }                
             yield return null;
         }
 
+        if (countTime == 3)
+        {
+            Debug.LogError("Unable to start ListenIn after login");
+        }
+        else
+        {
+            Debug.Log("<color=green>Retrieved all data from server after login. Starting LI.</color>");
+            StartCoroutine(CompleteInitialization());
+        }        
+    }
+
+    public IEnumerator CompleteInitialization()
+    {
         setupPorcentageProgress = 82;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         yield return new WaitForEndOfFrame();
@@ -222,31 +264,10 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         yield return new WaitForEndOfFrame();
 
-        setupPorcentageProgress = 95;
-        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-
-        //AndreaLIRO: Commenting out the last three log files
-        // yield return SendLogs();
-        yield return new WaitForEndOfFrame();
-
-        setupPorcentageProgress = 99;
-        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-
-        try
-        {
-            ListenInLogger.Instance.WakeUp();
-            //CleaningUpOlderLogs();
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
-        }
-        
-
         setupPorcentageProgress = 100;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-        
-        yield return new WaitForSeconds(1);
+
+        yield return new WaitForSeconds(1.0f);
         //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
         MadLevel.LoadLevelByName("MainHUB");
     }

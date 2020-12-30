@@ -234,7 +234,7 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
         coinInstance.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         coinInstance.GetComponent<Rigidbody2D>().angularVelocity = 0.0f;
         coinInstance.GetComponent<Rigidbody2D>().AddForce(-Vector2.up * 10);
-        RaycastHit hit;
+        //RaycastHit hit;
         //if (Physics.Raycast(ray, out hit))
         //{
         //    GameObject coinInstance = null;
@@ -290,6 +290,12 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
         sprite.enabled = true;
         iTween.Init(this.gameObject);
         iTween.MoveTo(this.gameObject, iTween.Hash("path", enteringPositions, "time", 3.5, "easetype", iTween.EaseType.easeOutCubic, "oncomplete", "FinishedTransition"));
+    }
+
+    public void SetCannonSprite()
+    {
+        if (sprite != null)
+            sprite.enabled = true;
     }
 
     public void FinishedTransition()

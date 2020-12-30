@@ -1194,6 +1194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacab16267072cd4a9090cfb24e7e405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offsetFromRightSide: 0
 --- !u!4 &134112592
 Transform:
   m_ObjectHideFlags: 0
@@ -3308,8 +3309,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 573814143}
   m_HandleRect: {fileID: 573814142}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 1
+  m_Value: 0.5
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3694,7 +3695,7 @@ RectTransform:
   m_Father: {fileID: 255121265}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.000000029802322, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -5465,7 +5466,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: "<align=center><margin=3em><b><size=+10>About</size></b></margin><line-height=125%><line-height=150%>\r\nFind
-    out more about the Listen-In project here:<line-height=100%>\r\n<u><i><#30BEEF><link=\"www.ucl.ac.uk/ion/listen-in/\">www.ucl.ac.uk/ion/listen-in/</link></color></i></u></align><page><line-height=220%>\r\n<align=center><margin=3em><b><size=+10>Credits</size></b></margin><line-height=125%></align><line-height=150%>\r\n<align=left>Academic
+    out more about the Listen-In project here:<line-height=100%>\r\n<u><i><#30BEEF><link=\"http://www.ucl.ac.uk/ion/listen-in/\">www.ucl.ac.uk/ion/listen-in/</link></color></i></u></align><page><line-height=220%>\r\n<align=center><margin=3em><b><size=+10>Credits</size></b></margin><line-height=125%></align><line-height=150%>\r\n<align=left>Academic
     researchers:</align><pos=50%>Professor Alex Leff<line-height=90%>\r\n<pos=50%>Dr
     Sonia Brownsett\r\n<pos=50%>Dr Victoria Fleming<line-height=125%>\r\nDeveloped
     by<pos=50%><b>SoftV Ltd</b>.\r\nLead developer:<pos=50%>Andrea Castegnaro<line-height=125%>\r\nBackend
@@ -5475,12 +5476,12 @@ MonoBehaviour:
     index=1></size></align><line-height=400%>\r\n<align=center><margin=3em><b><size=+10>Privacy
     Policy</size></b></margin><line-height=125%></align><line-height=150%>\n<line-height=100%>\r<align=center><margin=10em>We
     only use any personal data we collect through your use of the App and the Services
-    in the ways set out in our privacy policy, here:\n<u><i><#30BEEF><link=\"www.ucl.ac.uk/ion/therapy-apps-privacy-notice\">www.ucl.ac.uk/ion/therapy-apps-privacy-notice</link></color></i></u></margin></align><line-height=225%>\n<align=center><margin=3em><b><size=+10>Research
+    in the ways set out in our privacy policy, here:\n<u><i><#30BEEF><link=\"http://www.ucl.ac.uk/ion/therapy-apps-privacy-notice\">www.ucl.ac.uk/ion/therapy-apps-privacy-notice</link></color></i></u></margin></align><line-height=225%>\n<align=center><margin=3em><b><size=+10>Research
     Study</size></b></margin><line-height=125%></align><line-height=150%>\n<line-height=100%><align=center><margin=10em>This
     section only applies to users who  have consented to take part in the research
     study.\n\r\nYou can download a copy of the <b>Participant Information Sheet</b>
     here.\n\nIf you would like to withdraw from the study, please contact us using
-    the details found here:\n<u><i><#30BEEF><link=\"www.ucl.ac.uk/ion/listen-in\">www.ucl.ac.uk/ion/listen-in\r</link></color></i></u>\n\r\nIf
+    the details found here:\n<u><i><#30BEEF><link=\"http://www.ucl.ac.uk/ion/listen-in\">www.ucl.ac.uk/ion/listen-in\r</link></color></i></u>\n\r\nIf
     you change your mind  and want to take part in the research study, please create
     a new account and registration with a different email address. \r\n</margin></align>\n\n<align=center><size=+60><pos=15%><sprite=\"CreditsImages\"
     index=0></size></align><line-height=350%>\n<align=center><size=+6>\xA9UCL 2020</size></align>"
@@ -10944,7 +10945,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2123002888}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.40283674
+  m_Size: 0.40283668
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12363,7 +12364,7 @@ GameObject:
   - component: {fileID: 1665542596}
   - component: {fileID: 1665542595}
   m_Layer: 5
-  m_Name: CreditsPage
+  m_Name: Page
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

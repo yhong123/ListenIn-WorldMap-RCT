@@ -17,6 +17,7 @@ public class UploadAppendTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.E))
         {
             Debug.LogError("Catching Some Error");
@@ -41,5 +42,6 @@ public class UploadAppendTest : MonoBehaviour {
             form.AddBinaryData("file_data", dataAsBytes, "Log");
             NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadLogFile);
         }
+#endif
     }
 }

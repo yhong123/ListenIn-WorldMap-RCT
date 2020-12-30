@@ -55,7 +55,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
         if (string.IsNullOrEmpty(response)||String.Equals(response,"error"))
         {
             //CRITICAL ERROR
-            Debug.LogError("<color=red>SERVER ERROR; could not retrieve jigsaw information from server. Resetting automatically</color>");
+            Debug.LogError("<color=red>SERVER ERROR; could not retrieve jigsaw information from server. File missing or corrupted. Resetting automatically</color>");
             ///AndreaLIRO_TB: Resetting jigsaw states if the file is empty.
             ResetListenIn();
         }
@@ -79,6 +79,8 @@ public class GameStateSaver : Singleton<GameStateSaver> {
     {
         if (string.IsNullOrEmpty(response) || String.Equals(response,"error"))
         {
+            //CRITICAL ERROR
+            Debug.LogError("<color=red>SERVER ERROR; could not retrieve jigsaw information from server. File missing or corrupted. Resetting automatically</color>");
             ResetWorldMapProgress();
         }
         else

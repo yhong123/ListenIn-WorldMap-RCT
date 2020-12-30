@@ -13,8 +13,9 @@ namespace ListenIn
 
     public class MessageToLog {
         public string message; public LoggerMessageType messageType; public string logDate;
-        private string format = "[{0}]:{1}:{2}";
-        public override string ToString() { return String.Format(format, logDate, messageType.ToString(), message); }
+        public string stacktrace = String.Empty;
+        private string format = "[{0}]{1}::{2}:::stack trace:::{3}";
+        public override string ToString() { return String.Format(format, logDate, messageType.ToString(), message, stacktrace); }
     }
 
     public class ListenInLogger : Singleton<ListenInLogger>
@@ -207,7 +208,7 @@ namespace ListenIn
             if (applicationQuitting)
                 return;
 
-            MessageToLog mtl = new MessageToLog() { message = logString };
+            MessageToLog mtl = new MessageToLog() { message = logString, stacktrace = stackTrace};
             if (type == LogType.Assert || type == LogType.Error || type == LogType.Exception)
             {
                 mtl.messageType = LoggerMessageType.Error;

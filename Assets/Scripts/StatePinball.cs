@@ -227,7 +227,7 @@ public class StatePinball : State
 
     }
 
-	public void InitLevelPinball()
+	public void InitLevelPinball(bool cheatOn)
 	{
         //Debug.Log("");
         UploadManager.Instance.ResetTimer(TimerType.Idle);
@@ -237,6 +237,8 @@ public class StatePinball : State
         m_PinballMono.BucketsHolder.SetActive(true);
         m_PinballMono.SetSpwanerTriggerState(true);
         m_PinballMono.SetCannonState(true);
+        if (cheatOn)
+            m_PinballMono.EnableCannonGraphics();
 
         rotatingCogs[] cogs = m_PinballMono.Cannon.GetComponentsInChildren<rotatingCogs>();
         if (cogs.Length != 0)

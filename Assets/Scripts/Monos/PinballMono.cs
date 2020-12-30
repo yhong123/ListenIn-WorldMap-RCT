@@ -233,9 +233,14 @@ public class PinballMono : MonoBehaviour {
 	public void SetCannonState(bool state)
 	{
 		gameObject.GetComponentInChildren<CoinSpawnerB2_Final>().ActivateCannon = state;
-	}
+    }
 
-	public void OrderCoinInSpawner()
+    public void EnableCannonGraphics()
+    {
+        gameObject.GetComponentInChildren<CoinSpawnerB2_Final>().SetCannonSprite();
+    }
+
+    public void OrderCoinInSpawner()
 	{
 		gameObject.GetComponentInChildren<CoinSpawnerB2_Final>().SetListOfCoins();
 	}

@@ -28,12 +28,13 @@ public class CheatLoader : MonoBehaviour {
 	//	}
 	//}
 
+    //No references anymore.
 	public void Cheat()
 	{
 		StateChallenge.Instance.cheatActivated = true;
 		GameObject.Find("Main Camera").GetComponent<SoundManager>().Stop(ChannelType.BackgroundNoise);
 		GameController.Instance.ChangeState(GameController.States.StatePinball);
-		StatePinball.Instance.InitLevelPinball();
+		StatePinball.Instance.InitLevelPinball(true);
 	}
 
 	public void AddCoinsToCurrentChallenge()

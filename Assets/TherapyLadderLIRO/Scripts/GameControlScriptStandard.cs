@@ -634,7 +634,7 @@ public class GameControlScriptStandard : MonoBehaviour
         StateChallenge.Instance.cheatActivated = true;
         StatePinball.Instance.initialize = false;
         GameController.Instance.ChangeState(GameController.States.StatePinball);
-        StatePinball.Instance.InitLevelPinball();        
+        StatePinball.Instance.InitLevelPinball(true);        
     }
 
 #region Audio API

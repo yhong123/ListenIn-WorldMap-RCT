@@ -902,6 +902,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 break;
         }
 
+        VideoPlayerController.Instance.SetVideo(m_UserProfileManager.LIROStep);
+
         yield return null;
     }
     /// <summary>

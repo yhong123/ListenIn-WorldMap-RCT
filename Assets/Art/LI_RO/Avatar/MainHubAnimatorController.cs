@@ -42,9 +42,11 @@ public class MainHubAnimatorController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
             AnimateCharacter(animatorMoves.Throw);
-	}
+#endif
+    }
 
     public void AnimateCharacter(animatorMoves movetype)
     {

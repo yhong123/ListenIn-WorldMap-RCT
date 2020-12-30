@@ -117,8 +117,12 @@ public class DebugMenu : MonoBehaviour {
     private ComboBox comboBoxControl;// = new ComboBox();
     private GUIStyle listStyle = new GUIStyle();
     string[] enumvalues;
+
+    public float offsetFromRightSide = 0.0f;
+
     private void Start()
     {
+#if UNITY_EDITOR || UNITY_STANDALONE || DEBUG_LIRO
         enumvalues = Enum.GetNames(typeof(TherapyLadderStep));
         comboBoxList = new GUIContent[enumvalues.Length];
 
@@ -135,17 +139,20 @@ public class DebugMenu : MonoBehaviour {
         listStyle.padding.top = 0; 
         listStyle.padding.bottom = 4;
 
-        comboBoxControl = new ComboBox(new Rect(Screen.width - 240, 20, 100, 30), comboBoxList[0], comboBoxList, "button", "box", listStyle);
+        comboBoxControl = new ComboBox(new Rect(Screen.width - 240 - offsetFromRightSide, 20, 100, 30), comboBoxList[0], comboBoxList, "button", "box", listStyle);
+#endif
     }
 
     private void OnGUI()
     {
-        GUI.Box(new Rect(Screen.width - 250, 10, 240, 50), "");
+#if UNITY_EDITOR || UNITY_STANDALONE || DEBUG_LIRO
+        GUI.Box(new Rect(Screen.width - 250 - offsetFromRightSide, 10, 240, 50), "");
         comboBoxControl.Show();
-        if (GUI.Button(new Rect(Screen.width - 130, 20, 110, 30), "Change"))
+        if (GUI.Button(new Rect(Screen.width - 130 - offsetFromRightSide, 20, 110, 30), "Change"))
         {
             TherapyLIROManager.Instance.ChangeLIROSectionButton(enumvalues[comboBoxControl.SelectedItemIndex]);
         }
+#endif
     }
 }
 #endif
