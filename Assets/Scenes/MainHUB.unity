@@ -3309,8 +3309,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 573814143}
   m_HandleRect: {fileID: 573814142}
   m_Direction: 0
-  m_Value: 0.5
-  m_Size: 0.99999994
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3695,7 +3695,7 @@ RectTransform:
   m_Father: {fileID: 255121265}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.000000029802322, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -9596,7 +9596,7 @@ MonoBehaviour:
   filledProgressBar: {fileID: 1764764330}
   percentageText: {fileID: 827295201}
   completedTherapyText: {fileID: 1670723924}
-  textSpeed: 0.03
+  textSpeed: 0.05
 --- !u!1 &1300376011
 GameObject:
   m_ObjectHideFlags: 0
@@ -10945,7 +10945,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2123002888}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.40283668
+  m_Size: 0.4028367
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
