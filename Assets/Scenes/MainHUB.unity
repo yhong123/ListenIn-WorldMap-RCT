@@ -1007,7 +1007,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -23.32, y: -1.7999992}
+  m_AnchoredPosition: {x: -23.319992, y: -1.7999992}
   m_SizeDelta: {x: 45, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &120373814
@@ -2301,7 +2301,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -23.32, y: 0.70000076}
+  m_AnchoredPosition: {x: -23.320007, y: 0.70000076}
   m_SizeDelta: {x: 100, y: 46.666668}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &357145931
@@ -7188,7 +7188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -23.32, y: 0}
+  m_AnchoredPosition: {x: -23.319992, y: 0}
   m_SizeDelta: {x: 45, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &939179198
@@ -13790,13 +13790,13 @@ MonoBehaviour:
   - TherapyStep: 5
     VideoClip: {fileID: 32900000, guid: 96779a920ff58c44e9f34ae39b614e50, type: 3}
   - TherapyStep: 1
-    VideoClip: {fileID: 32900000, guid: fe1cc7fbc610a66408a5f8526d9197e7, type: 3}
+    VideoClip: {fileID: 32900000, guid: 18370f78750bc9548b16154b8c321d13, type: 3}
   - TherapyStep: 2
-    VideoClip: {fileID: 32900000, guid: fe1cc7fbc610a66408a5f8526d9197e7, type: 3}
+    VideoClip: {fileID: 32900000, guid: 18370f78750bc9548b16154b8c321d13, type: 3}
   - TherapyStep: 6
-    VideoClip: {fileID: 32900000, guid: fe1cc7fbc610a66408a5f8526d9197e7, type: 3}
+    VideoClip: {fileID: 32900000, guid: 18370f78750bc9548b16154b8c321d13, type: 3}
   - TherapyStep: 7
-    VideoClip: {fileID: 32900000, guid: fe1cc7fbc610a66408a5f8526d9197e7, type: 3}
+    VideoClip: {fileID: 32900000, guid: 18370f78750bc9548b16154b8c321d13, type: 3}
   - TherapyStep: 3
     VideoClip: {fileID: 32900000, guid: 1e9896302f1f5074da1572c5693e9582, type: 3}
   rawImage: {fileID: 84013491}
