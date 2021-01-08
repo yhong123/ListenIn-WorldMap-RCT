@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using MadLevelManager;
 using System.Text;
+using TMPro;
 
 public enum QuestionType { InputText, Slider};
 
@@ -32,10 +33,10 @@ public class QuestionaireManager : MonoBehaviour
     private GameObject InputTextGO;
 
     [SerializeField]
-    private InputField inputField;
+    private TMP_InputField inputField;
 
     [SerializeField]
-    private Text inputText;
+    private TextMeshProUGUI inputText;
 
     [SerializeField]
     private GameObject SliderGO;
@@ -48,7 +49,6 @@ public class QuestionaireManager : MonoBehaviour
 
     [SerializeField]
     private Button infoButton;
-
 
     [SerializeField]
     private GameObject[] faceList;
@@ -204,7 +204,7 @@ public class QuestionaireManager : MonoBehaviour
         }
         else if (currQuestion.tag == "QInput")
         {
-            currResponse = inputText.text;
+            currResponse = inputField.text;
             int counter = responses.Count;
             responses.Add(string.Format(formatResponse, (counter + 1).ToString(), currResponse));
         }

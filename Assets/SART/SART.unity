@@ -424,7 +424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6978fdf97355df4986d9cb92d5d2247, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxBlocks: 8
+  maxBlocks: 1
   debugMaxBlocks: 2
   generatedBlock: 
 --- !u!4 &700015697
