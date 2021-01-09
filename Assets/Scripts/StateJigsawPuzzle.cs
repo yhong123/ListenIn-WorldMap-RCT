@@ -82,7 +82,7 @@ public class StateJigsawPuzzle : State
         Chapters.Add("Dodgeball", (new Chapter("Basketball", 16, "Background_017", "Postcards/Postcard_Basketball", Color.white, false, "")));
         Chapters.Add("Great Coliseum", (new Chapter("Colosseum", 17, "Background_018", "Postcards/Postcard_Colosseum", Color.white, false, "")));
         Chapters.Add("Egypt", (new Chapter("Pyramids", 18, "Background_019", "Postcards/Postcard_Egypt", Color.white, false, "")));
-		Chapters.Add("Fearless Ski", (new Chapter("Sky Alps", 19, "Background_021", "Postcards/Postcard_SkiAlps", Color.white, false, "")));
+		Chapters.Add("Fearless Ski", (new Chapter("Fearless Ski", 19, "Background_021", "Postcards/Postcard_SkiAlps", Color.white, false, "")));
         Chapters.Add("London", (new Chapter("London", 20, "Background_001", "Postcards/Postcard_London", Color.white, false, "")));
         
     }

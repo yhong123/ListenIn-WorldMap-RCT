@@ -284,6 +284,10 @@ public class CoreItemReader : ICsvReader<Challenge>
         long idcorrectfoil = 0;
         long.TryParse(sections[8 + additionalPointer], out idcorrectfoil);
         currChallenge.CorrectImageID = idcorrectfoil;
+        if (idcorrectfoil == 0)
+        {
+            Debug.LogError("CRITICAL: Unable to read target image number for challenge ID " + currChallenge.ChallengeID);
+        }
         currChallenge.Foils.Add(idcorrectfoil);
 
         for (int i = 0; i < 5; i++)

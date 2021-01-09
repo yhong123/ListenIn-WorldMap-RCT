@@ -199,14 +199,14 @@ public class QuestionaireManager : MonoBehaviour
         GameObject currQuestion = questionnaireStructure[currQuestionaireCount];
         if (currQuestion.tag == "QSlider")
         {
-            int counter = responses.Count;
-            responses.Add(string.Format(formatResponse, (counter+1).ToString(), currSliderValue.ToString()));
+            string counter = currQuestionaireCount > INDEXMIDQUESTIONNAIRE ? string.Concat((responses.Count + 1).ToString(), "_carer") : (responses.Count + 1).ToString();
+            responses.Add(string.Format(formatResponse, counter, currSliderValue.ToString()));
         }
         else if (currQuestion.tag == "QInput")
         {
             currResponse = inputField.text;
-            int counter = responses.Count;
-            responses.Add(string.Format(formatResponse, (counter + 1).ToString(), currResponse));
+            string counter = currQuestionaireCount > INDEXMIDQUESTIONNAIRE ? string.Concat((responses.Count+1).ToString(),"_carer") : (responses.Count+1).ToString();
+            responses.Add(string.Format(formatResponse, counter, currResponse));
         }
 
         currQuestionaireCount++;

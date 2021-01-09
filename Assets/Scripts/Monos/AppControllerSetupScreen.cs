@@ -125,7 +125,6 @@ public class AppControllerSetupScreen : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, GetProfileCallback);
-
         
     }
 
