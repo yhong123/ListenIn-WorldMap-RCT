@@ -157,7 +157,7 @@ public class StatePinball : State
 
         if (go == null)
         {
-            ListenIn.Logger.Instance.Log("Pinball gameobject not found", LoggerMessageType.Error);
+            Debug.LogError("Pinball gameobject not found in StatePinball");
             //Debug.LogError("Pinball state not found");
         }
 
@@ -166,7 +166,7 @@ public class StatePinball : State
         {
             //Getting level from resources
             string currLevel = String.Concat("LevelPrefabs/",MadLevel.currentLevelName);
-            ListenIn.Logger.Instance.Log(String.Format("StatePinball: loading {0}", currLevel), LoggerMessageType.Info);
+            Debug.Log(String.Format("StatePinball: loading {0}", currLevel));
             GameObject loadLevel = GameObject.Instantiate(Resources.Load(currLevel, typeof(GameObject)), Vector3.zero, Quaternion.identity) as GameObject;
             loadLevel.transform.SetParent(go.transform, true);
             loadLevel.transform.SetAsFirstSibling();
@@ -182,9 +182,7 @@ public class StatePinball : State
             //Should never be zero since tutorialis being removed
             if (ID == 0)
             {
-                ListenIn.Logger.Instance.Log("ID zero as tutorial level is deprecated", LoggerMessageType.Error);
-                //Debug.LogError("ID zero as tutorial level is deprecated");
-                //SetBucketPositions();
+                Debug.LogError("StatetPinball: ID zero as tutorial level is deprecated. Should not be accessed.");
             }
             else
             {
@@ -229,7 +227,7 @@ public class StatePinball : State
 
     }
 
-	public void InitLevelPinball()
+	public void InitLevelPinball(bool cheatOn)
 	{
         //Debug.Log("");
         UploadManager.Instance.ResetTimer(TimerType.Idle);
@@ -239,6 +237,8 @@ public class StatePinball : State
         m_PinballMono.BucketsHolder.SetActive(true);
         m_PinballMono.SetSpwanerTriggerState(true);
         m_PinballMono.SetCannonState(true);
+        if (cheatOn)
+            m_PinballMono.EnableCannonGraphics();
 
         rotatingCogs[] cogs = m_PinballMono.Cannon.GetComponentsInChildren<rotatingCogs>();
         if (cogs.Length != 0)
@@ -254,11 +254,11 @@ public class StatePinball : State
         if (lvlManager != null)
 		{
 			lvlManager.startingLevel = true;
-            ListenIn.Logger.Instance.Log(String.Format("StatePinball: InitLevelPinball() initializing {0} pinball level",lvlManager.name), LoggerMessageType.Info);
+            Debug.Log(String.Format("StatePinball: InitLevelPinball() initializing {0} pinball level",lvlManager.name));
         }
 		else
 		{
-            ListenIn.Logger.Instance.Log("StatePinball: InitLevelPinball() missing level manager", LoggerMessageType.Warning);
+            Debug.LogError("WARNING: StatePinball: InitLevelPinball() missing level manager.");
 		}
 		startGame = endGame = DateTime.UtcNow;
 	}
@@ -271,7 +271,7 @@ public class StatePinball : State
 
     public override void Exit()
     {
-        ListenIn.Logger.Instance.Log("StatePinball: Exit() exiting pinball level", LoggerMessageType.Info);
+        Debug.Log("StatePinball: Exit() exiting pinball level");
         //Debug.Log("Exiting Pinball state"); 
 
 		//preparing the scene by removing elements that will create problems.

@@ -89,13 +89,13 @@ public class ACT_UI : MonoBehaviour {
         yield return StartCoroutine(fastAnimationGOTranslate(todayIcon, 1.5f, new Vector3(-150,0,0)));
         yield return StartCoroutine(PrintText(todayText, "Today's score".ToCharArray(), 0.08f));
         yield return new WaitForSeconds(1.0f);
-        currScoreText.text = string.Format(formatCurrent, currScore.ToString());
+        currScoreText.text = string.Format(formatCurrent, ((int)Mathf.Ceil(currScore)).ToString());
         yield return null;
         yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(fastAnimationGOTranslate(lastIcon, 1.5f, new Vector3(150, 0, 0)));
         yield return StartCoroutine(PrintText(lastText, "Last score".ToCharArray(), 0.08f));
         yield return new WaitForSeconds(1.0f);
-        prevScoreText.text = firstTime ? "N/A" : string.Format(formatLast,previousScore.ToString());
+        prevScoreText.text = firstTime ? "N/A" : string.Format(formatLast, ((int)Mathf.Ceil(previousScore)).ToString());
 
         yield return new WaitForSeconds(3);
 
@@ -235,7 +235,7 @@ public class ACT_UI : MonoBehaviour {
         m_scoreText.text = string.Format("{0}/8", (step - 1).ToString());
 
         yield return new WaitForSeconds(1.0f);
-        m_baseText.text = "Please press PLAY to continue the game";
+        m_baseText.text = "Press PLAY to continue";
         CloseButton.interactable = true;
         InfoButton.interactable = true;
         yield return new WaitForEndOfFrame();

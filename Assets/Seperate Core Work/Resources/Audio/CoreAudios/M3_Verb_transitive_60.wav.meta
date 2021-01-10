@@ -1,8 +1,7 @@
 fileFormatVersion: 2
-guid: 522bea0fc787a0d4bb226c28b3aaa47e
-timeCreated: 1566952038
-licenseType: Free
+guid: c272886d537473449a7abb46258f1b66
 AudioImporter:
+  externalObjects: {}
   serializedVersion: 6
   defaultSettings:
     loadType: 0
@@ -16,6 +15,7 @@ AudioImporter:
   normalize: 1
   preloadAudioData: 1
   loadInBackground: 0
+  ambisonic: 0
   3D: 1
   userData: 
   assetBundleName: 

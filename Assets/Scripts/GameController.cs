@@ -8,13 +8,13 @@ public class GameController : Singleton<GameController> {
 
     //Insert FSM in this
 
-
-    //Andrea: This should be eliminated 
     private State[] m_States = new State[]{
         StateIdle.Instance,
         StateSplash.Instance,
         StateJigsawPuzzle.Instance,
+        //AndreaLIRO_TB: should look if this is actually used
         StateChapterSelect.Instance,
+
         StateChallenge.Instance,
         StateTutorialChallenge.Instance,
         StateInitializePinball.Instance,
@@ -51,7 +51,7 @@ public class GameController : Singleton<GameController> {
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            Debug.LogError(string.Format("ERROR while changing state from {0}: {1}", m_CurState.ToString(), ex.Message));
         }
 
     }
@@ -67,7 +67,7 @@ public class GameController : Singleton<GameController> {
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+            Debug.LogError(string.Format("ERROR while updating state {0}: {1}", m_CurState.ToString(), ex.Message));
         }
 
     }

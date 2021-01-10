@@ -8,7 +8,7 @@ public class LoginButtonTransitionGenre : LoginButtonTransition
 
     public override void OnPointerClick(PointerEventData eventData)
     {
-        RegistrationController.Instance.CurrentRegistrationStep = changeTo;
+        //RegistrationController.Instance.CurrentRegistrationStep = changeTo;
         RegistrationController.Instance.RegistrationGenre = genre;
     }
 }

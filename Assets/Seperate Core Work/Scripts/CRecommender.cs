@@ -253,7 +253,7 @@ class CRecommender
         }*/
 
         //m_strCurrentBlock_StartTime = System.DateTime.Now.ToString();
-        m_dtCurrentBlock_StartTime = System.DateTime.Now;
+        m_dtCurrentBlock_StartTime = System.DateTime.UtcNow;
 
         return m_lsCurrentBlock_ChallengeItemFeaturesIdx;
     }
@@ -304,7 +304,7 @@ class CRecommender
         }
 
         //m_strCurrentBlock_StartTime = System.DateTime.Now.ToString();
-        m_dtCurrentBlock_StartTime = System.DateTime.Now;
+        m_dtCurrentBlock_StartTime = System.DateTime.UtcNow;
 
         return m_lsCurrentBlock_ChallengeItemFeaturesIdx;
     }

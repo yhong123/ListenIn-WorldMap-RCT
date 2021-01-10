@@ -183,49 +183,8 @@ public class CoreItemReader : ICsvReader<Challenge>
         {
             if (item != String.Empty)
             {
-                Challenge currChallenge = new Challenge();
-                string[] sections = item.Replace("\r", String.Empty).Trim().Split(new char[] { ',' });                
-                
-                //ChallengeID
-                long id = long.MaxValue;
-                long.TryParse(sections[0], out id);
-                currChallenge.ChallengeID = id;
 
-                //Difficulty
-                int difficulty = 0;
-                int.TryParse(sections[1], out difficulty);
-                currChallenge.Difficulty = difficulty;
-
-                //Lexical Item
-                currChallenge.LexicalItem = sections[2];
-
-                //AudioFiles
-                int audionull = 0;
-                for (int i = 0; i < 5; i++)
-                {
-                    if (!int.TryParse(sections[2], out audionull))
-                    {
-                        currChallenge.FileAudioIDs.Add(sections[3 + i]);
-                    }
-                    else
-                    {
-                        currChallenge.FileAudioIDs.Add("0");
-                    }
-                }
-
-                //Images
-                id = 0;
-                long.TryParse(sections[8], out id);
-                currChallenge.CorrectImageID = id;
-                currChallenge.Foils.Add(id);
-
-                for (int i = 0; i < 5; i++)
-                {
-                    id = 0;
-                    long.TryParse(sections[9 + i], out id);
-                    currChallenge.Foils.Add(id);
-                }
-
+                Challenge currChallenge = new Challenge(PopulateChallenge(item));
                 currList.Add(currChallenge);
             }
         }
@@ -255,49 +214,7 @@ public class CoreItemReader : ICsvReader<Challenge>
         {
             if (item != String.Empty)
             {
-                Challenge currChallenge = new Challenge();
-                string[] sections = item.Replace("\r", String.Empty).Trim().Split(new char[] { ',' });
-
-                //ChallengeID
-                long id = long.MaxValue;
-                long.TryParse(sections[0], out id);
-                currChallenge.ChallengeID = id;
-
-                //Difficulty
-                int difficulty = 0;
-                int.TryParse(sections[1], out difficulty);
-                currChallenge.Difficulty = difficulty;
-
-                //Lexical Item
-                currChallenge.LexicalItem = sections[2];
-
-                //AudioFiles
-                int audionull = 0;
-                for (int i = 0; i < 5; i++)
-                {
-                    if (!int.TryParse(sections[2], out audionull))
-                    {
-                        currChallenge.FileAudioIDs.Add(sections[3 + i]);
-                    }
-                    else
-                    {
-                        currChallenge.FileAudioIDs.Add("0");
-                    }
-                }
-
-                //Images
-                id = 0;
-                long.TryParse(sections[8], out id);
-                currChallenge.CorrectImageID = id;
-                currChallenge.Foils.Add(id);
-
-                for (int i = 0; i < 5; i++)
-                {
-                    id = 0;
-                    long.TryParse(sections[9 + i], out id);
-                    currChallenge.Foils.Add(id);
-                }
-
+                Challenge currChallenge = new Challenge(PopulateChallenge(item));
                 currList.Add(currChallenge);
             }
         }
@@ -305,6 +222,83 @@ public class CoreItemReader : ICsvReader<Challenge>
         return currList;
 
     }
+
+    private Challenge PopulateChallenge(string item)
+    {
+        Challenge currChallenge = new Challenge();
+        string[] sections = item.Replace("\r", String.Empty).Trim().Split(new char[] { ',' });
+
+        //ChallengeID
+        long id = long.MaxValue;
+        long.TryParse(sections[0], out id);
+        currChallenge.ChallengeID = id;
+
+        //Difficulty
+        int difficulty = 0;
+        int.TryParse(sections[1], out difficulty);
+        currChallenge.Difficulty = difficulty;
+
+        //Lexical Item
+        currChallenge.LexicalItem = sections[2];
+
+        int additionalPointer = 0;
+        if (sections.Length > 15) 
+        {
+
+            //Presentation Number
+            int presentationNumber = 0;
+            int.TryParse(sections[3], out presentationNumber);
+            currChallenge.PresentationNumber = presentationNumber;
+
+            //Lexical Presentation Number
+            int lexicalPresentationNumber = 0;
+            int.TryParse(sections[4], out lexicalPresentationNumber);
+            currChallenge.LexicalPresentationNumber = lexicalPresentationNumber;
+
+            //Lexical Presentation Number
+            int basketNumber = 0;
+            int.TryParse(sections[5], out basketNumber);
+            currChallenge.BasketNumber = basketNumber;
+
+            //Addint the pointer for having the same parser depending if offseted information or not
+            //Andrea_LIRO: may consider to do different functions
+            additionalPointer = 3;
+        }
+
+        //AudioFiles
+        int audionull = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            //AndreaLIRO: I try to parse it as number and if it fails I save it as 0
+            if (!int.TryParse(sections[3 + additionalPointer + i], out audionull))
+            {
+                currChallenge.FileAudioIDs.Add(sections[3 + additionalPointer + i]);
+            }
+            else
+            {
+                currChallenge.FileAudioIDs.Add("0");
+            }
+        }
+
+        //Images
+        long idcorrectfoil = 0;
+        long.TryParse(sections[8 + additionalPointer], out idcorrectfoil);
+        currChallenge.CorrectImageID = idcorrectfoil;
+        if (idcorrectfoil == 0)
+        {
+            Debug.LogError("CRITICAL: Unable to read target image number for challenge ID " + currChallenge.ChallengeID);
+        }
+        currChallenge.Foils.Add(idcorrectfoil);
+
+        for (int i = 0; i < 5; i++)
+        {
+            long idfoil = 0;
+            long.TryParse(sections[9 + additionalPointer + i], out idfoil);
+            currChallenge.Foils.Add(idfoil);
+        }
+        return currChallenge;
+    }
+
 }
 
 public class CoreItemWriter : ICsvWriter<ChallengeResponse>

@@ -17,6 +17,7 @@ if($preparedStatement->rowCount() > 0)
 	$result["therapy_total_blocks"] . '+' .
 	$result["total_game_time"] . '+' .
 	$result["total_therapy_time"] . '+' .
+	$result["daily_therapy_time"] . '+' .
 	$result["act_current_block"] . '+' .
 	$result["act_total_blocks"] . '+' .
 	$result["practice_completed"] . '+' .
@@ -44,6 +45,7 @@ else
 		$result["therapy_total_blocks"] . '+' .
 		$result["total_game_time"] . '+' .
 		$result["total_therapy_time"] . '+' .
+		$result["daily_therapy_time"] . '+' .
 		$result["act_current_block"] . '+' .
 		$result["act_total_blocks"] . '+' .
 		$result["practice_completed"] . '+' .

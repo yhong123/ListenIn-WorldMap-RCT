@@ -8,7 +8,7 @@ public class LoginButtonTransitionCause : LoginButtonTransition
 
     public override void OnPointerClick(PointerEventData eventData)
     {
-        RegistrationController.Instance.CurrentRegistrationStep = changeTo;
+        //RegistrationController.Instance.CurrentRegistrationStep = changeTo;
         RegistrationController.Instance.RegistrationCause = cause;
     }
 }

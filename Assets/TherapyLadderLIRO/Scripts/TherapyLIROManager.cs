@@ -8,10 +8,34 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Runtime.Remoting.Messaging;
+using MadLevelManager;
 
 //public enum TherapyLadderStep { ACT1 = 0, OUT1 = 1, CORE1 =  2, SETA = 3, ACT2 = 4, OUT2 = 5, CORE2 = 6, SETB = 7};
 
-public enum TherapyLadderStep { ACT = 0, SART_PRACTICE = 2, SART_TEST = 3, BASKET = 4, CORE = 5, QUESTIONAIRE = 1};
+
+/// <summary>
+/// Final version of listen in will be as follow
+/// 1 REGISTRATION
+/// 2 ACT
+/// 3 SART
+/// 4 BASKET + THERAPY
+/// 5 ACT
+/// 6 SART
+/// 7 QUESTIONNAIRE PART 1 + 2 
+/// repeat from 2
+/// </summary>
+//
+public enum TherapyLadderStep { ACT_1_ = 0, SART_PRACTICE_1_ = 1, SART_TEST_1_ = 2, BASKET = 3, CORE = 4, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7, QUESTIONAIRE_1 = 8, QUESTIONAIRE_2 = 9 };
+
+//THESE ARE FOR DEBUGGING
+//BASKET FIRST
+//public enum TherapyLadderStep { ACT_1_ = 8, SART_PRACTICE_1_ = 9, SART_TEST_1_ = 2, BASKET = 0, CORE = 1, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7,  QUESTIONAIRE_1 = 3, QUESTIONAIRE_2 = 4 };
+//ACT FIRST
+//public enum TherapyLadderStep { ACT_1_ = 0, SART_PRACTICE_1_ = 1, SART_TEST_1_ = 2, BASKET = 8, CORE = 9, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7, QUESTIONAIRE_1 = 3, QUESTIONAIRE_2 = 4 };
+//SART FIRST
+//public enum TherapyLadderStep { ACT_1_ = 2, SART_PRACTICE_1_ = 0, SART_TEST_1_ = 1, BASKET = 8, CORE = 9, ACT_2_ = 5, SART_PRACTICE_2_ = 6, SART_TEST_2_ = 7, QUESTIONAIRE_1 = 3, QUESTIONAIRE_2 = 4 };
+
 
 public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
@@ -24,10 +48,15 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     [Header("Debug Settings")]
     public int m_maxACTChallenges = 1;
+    [Tooltip("You can change this to skip to different LIRO sections")]
+    public TherapyLadderStep m_DebugLiroStep = TherapyLadderStep.BASKET;
 
     private int m_currSectionCounter;
     public int SectionCounter { get { return m_currSectionCounter; } set { m_currSectionCounter = value; } }
     private static int m_numberSelectedPerLexicalItem = 15;
+    private int currentBasketFile = 0;
+    private int totalBasketFile = 0;
+
     #endregion
 
     #region Delegates
@@ -58,7 +87,69 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     protected override void Awake()
     {
     }
-    #endregion
+#if DEBUG_LIRO
+    public void ChangeLIROSectionButton(String currSection = null)
+    {
+        UserProfileDefault();
+        if (currSection != null)
+        {
+            m_UserProfileManager.LIROStep = (TherapyLadderStep)Enum.Parse(typeof(TherapyLadderStep), currSection);
+        }
+        else
+        {
+            //Taking from inspector
+            m_UserProfileManager.LIROStep = m_DebugLiroStep;
+        }
+        StartCoroutine(ChangeLIROSection());        
+    }
+
+    /// <summary>
+    /// Function to Debug sections within the editor
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ChangeLIROSection()
+    {
+        m_UserProfileManager.m_userProfile.isFirstInit = false;
+
+        int previousTherapyTime = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes;
+        int previousGameTherapyTime = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes;
+        int previousDailyTherapyTime = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes;
+
+        yield return SaveCurrentUserProfile();
+
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = previousTherapyTime;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes    = previousGameTherapyTime;
+        m_UserProfileManager.m_userProfile.m_cycleNumber                                  = 1;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes = previousDailyTherapyTime;
+        //ReloadLevel
+        MadLevel.LoadLevelByName("MainHUB");
+    }
+#endif
+#endregion
+
+    public void UserProfileDefault()
+    {
+        m_UserProfileManager.LIROStep = TherapyLadderStep.ACT_1_;
+        m_UserProfileManager.m_userProfile.isFirstInit = true; //This is to make the first initialization 
+        m_UserProfileManager.m_userProfile.isTutorialDone = false; //This is used to make sure the initial tutorial has been done
+        //m_UserProfileManager.m_userProfile.m_currIDUser = int.Parse(profileData[3]);
+        m_UserProfileManager.m_userProfile.m_cycleNumber = 0;
+
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = 0;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = 0;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes = 0;
+
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 0;
+
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = false;
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = false;
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = 0;
+
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 0;
+    }
 
     public bool SetUserProfile(string response)
     {
@@ -75,19 +166,48 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = int.Parse(profileData[6]);
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = int.Parse(profileData[7]);
 
-        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = int.Parse(profileData[8]); //It is a shortcut for when initializing the game for the first time.
-        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = int.Parse(profileData[9]);
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes = int.Parse(profileData[8]);
 
-        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = profileData[10] == "0";
-        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = profileData[11] == "0";
-        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[12]);
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = int.Parse(profileData[9]); //It is a shortcut for when initializing the game for the first time.
+        m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = int.Parse(profileData[10]);
 
-        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = profileData[13] == "0";
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = profileData[11] == "0";
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = profileData[12] == "0";
+        m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = int.Parse(profileData[13]);
+
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = int.Parse(profileData[14]);
         return true;
+    }
+
+    public bool SetUserBasketTrackingProfile(string response)
+    {
+        string[] profileData = response.Split('+');
+        for (int i = 0; i < 8; i++)
+        {
+            m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[i] = int.Parse(profileData[i]);
+        }
+        return true;
+    }
+
+    public IEnumerator SaveCurrentUserBasketTracking()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("Basket1", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[0]);
+        form.AddField("Basket2", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[1]);
+        form.AddField("Basket3", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[2]);
+        form.AddField("Basket4", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[3]);
+        form.AddField("Basket5", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[4]);
+        form.AddField("Basket6", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[5]);
+        form.AddField("Basket7", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[6]);
+        form.AddField("Basket8", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[7]);
+        NetworkManager.SendDataServer(form, NetworkUrl.SqlSetUserBasketTracking);
+        yield return null;
     }
 
     /// <summary>
     /// This function is called at initialiation to load the last saved information for the current user on the therapy ladder
+    /// AndreaLIRO: DEPRECATED???
     /// </summary>
     public IEnumerator LoadCurrentUserProfile()
     {
@@ -110,7 +230,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 0;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes = 0;
             m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes = 0;
-            
+            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes = 0;
+
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock = -1; //It is a shortcut for when initializing the game for the first time.
             m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks = 8;
 
@@ -118,8 +239,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = false;
             m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts = 0;
 
-            m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = false;
-
+            m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 0;
 
             //Wait for the data to be saved
             yield return StartCoroutine(SaveCurrentUserProfile());
@@ -162,12 +282,13 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         form.AddField("therapy_total_blocks", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks);
         form.AddField("total_game_time", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalGameMinutes);
         form.AddField("total_therapy_time", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes);
+        form.AddField("daily_therapy_time", m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes);
         form.AddField("act_current_block", m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock);
         form.AddField("act_total_blocks", m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_totalBlocks);
         form.AddField("practice_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted ? 1 : 0);
         form.AddField("test_completed", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted ? 1 : 0);
         form.AddField("attempts", m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.attempts);
-        form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted ? 1 : 0);
+        form.AddField("questionaire_completed", m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlSetGameUserProfile);
 
         try
@@ -194,9 +315,10 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
     }
 
-    #region API
+#region API
     public IEnumerator LIROInitializationACTPairChoose()
     {
+        //These two lists are used in the ACT only
         List<string> list_A = new List<string>();
         List<string> list_B = new List<string>();
 
@@ -206,7 +328,6 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         if (m_UserProfileManager.m_userProfile.isFirstInit)
         {
-            //AndreaLIRO: need to go on on this.
             //Loading list of ACT_A
             yield return StartCoroutine(LoadInitialACTFile(GlobalVars.LiroACT_A, value => list_A = value));
             //Loading list of ACT_B
@@ -216,13 +337,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             List<Challenge> basket_act_list = new List<Challenge>();
             List<Challenge> generated_basket_act = new List<Challenge>();
             List<string> currLines = new List<string>();
-            //Load ACT Basket here
+
             //Add code
             CoreItemReader cir = new CoreItemReader();
             string actbasketName = "ACT_basket";
             string actbasketPath= Path.Combine(GlobalVars.GetPathToLIROBaskets(), actbasketName);
 
-            //Loading all the basket challenges excluding the untrained items
+            //Loading all the basket challenges.
+            //These are items paired to the lexical items in set A and B and will be the one inserted in the therapy cycle (excluding the untrained lexical items)
             basket_act_list = cir.ParseCsv(actbasketPath, true).ToList();
 
             List<string> lexItems = basket_act_list.Select(x => x.LexicalItem).Distinct().ToList();
@@ -236,7 +358,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     found = true;
                 if (!found)
                 {
-                    Debug.Log(item);
+                    Debug.Log("< color = yellow > Warning act pair choose </ yellow >: no therapy cycle item for " + item);
                 }
             }
 
@@ -247,7 +369,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     found = true;
                 if (!found)
                 {
-                    Debug.Log(item);
+                    Debug.Log("< color = yellow > Warning act pair choose </ yellow >: no therapy cycle item for " + item);
                 }
             }
 
@@ -255,6 +377,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             string currentSelectedLexicalItem = String.Empty;
 
             int randomNumber = 0;
+            //List_A and List_B are matched by size
             for (int i = 0; i < list_A.Count; i++)
             {
                 //Reset
@@ -263,8 +386,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
                 //Choose random between 0 and 1
                 randomNumber = RandomGenerator.GetRandomInRange(0, 2);
-                currentSelectedChallenge = randomNumber == 0 ? list_A[i].Replace("\r", "").Trim() : list_B[i].Replace("\r", "").Trim();
+                currentSelectedChallenge = randomNumber == 0 ? list_A[i].Replace("\r", "").Trim() : list_B[i].Replace("\r", "").Trim(); //select by removing trailing \r
                 currentSelectedLexicalItem = currentSelectedChallenge.Split(new char[] { ',' })[1];
+                //Adding all the trials for that lexical item to the basket that goes into the therapy
                 generated_basket_act.AddRange(basket_act_list.Where(x => x.LexicalItem == currentSelectedLexicalItem));
 
                 personalized_List.Add(currentSelectedChallenge);
@@ -278,7 +402,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //#ERASE
 #endif
 
-            //SEND TO SERVER
+            //Sending to server the generated paired list
+            //AndreaLIRO_Q: what if this fail?
             byte[] dataAsBytes = personalized_List.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             WWWForm form = new WWWForm();
             form.AddField("id_user", NetworkManager.UserId);
@@ -288,7 +413,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             form.AddBinaryData("file_data", dataAsBytes, GlobalVars.LiroGeneratedACTFileName);
             NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
-            GlobalVars.LiroGenActFile = String.Join(", ", personalized_List.ToArray()); //SAVE FILE
+            GlobalVars.LiroGenActFile = String.Join(Environment.NewLine, personalized_List.ToArray()); //SAVE FILE
 
             //public static string LiroGeneratedACT = @"ACT/GEN_ACT";
 
@@ -318,7 +443,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //#ERASE
 #endif
 
-            //SEND TO SERVER
+            //Sending to server the generated act basket file to be used in therapy
             dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             form = new WWWForm();
             form.AddField("id_user", NetworkManager.UserId);
@@ -328,11 +453,12 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             form.AddBinaryData("file_data", dataAsBytes, GlobalVars.LiroGeneratedACTBasketFileName);
             NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
 
-            GlobalVars.LiroGenActBasketFile = String.Join(", ", currLines.ToArray()); //SAVE FILE
+            GlobalVars.LiroGenActBasketFile = String.Join(Environment.NewLine, currLines.ToArray()); //SAVE FILE
 
             //AndreaLIRO: add the file to be sent online
             m_UserProfileManager.m_userProfile.isFirstInit = false;
-
+            //AndreaLIRO: cycle number is 0 only at the beginning to do this operation. After this we can safely start the cycle.
+            m_UserProfileManager.m_userProfile.m_cycleNumber = 1;
             //Saving user profile info
             yield return StartCoroutine(SaveCurrentUserProfile());
         }
@@ -358,7 +484,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if(string.IsNullOrEmpty(response))
         {
             //CRITICAL ERROR
-            Debug.LogError("<color=red>SERVER ERROR; empty file</color>");
+            Debug.LogError("<color=red>SERVER ERROR; empty generated act file</color>");
         }
         GlobalVars.LiroGenActBasketFile = response;
     }
@@ -393,7 +519,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.CORE:
                 return m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock;
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 return m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
                 break;
             default:
@@ -429,10 +556,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         //************************************************************************************************************************
 
         //AndreaLIRO: Create an escape for when having finished the tutorial
+        //AndreaLIRO: There is no tutorial anymore
         //************************************************************************************************************************
         if (  m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock == -1
                 && m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock == -1
-                && (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.BASKET || m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.ACT))
+                && (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.BASKET || m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.ACT_1_ || m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.ACT_2_))
         {
             StartCoroutine(CreateCurrentSection());
             return;
@@ -448,16 +576,20 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.CORE:
                 advance = CheckTherapyCoreEscapeSection();
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 advance = CheckACTEscapeSection();
                 break;
-            case TherapyLadderStep.SART_PRACTICE:
+            case TherapyLadderStep.SART_PRACTICE_1_:
+            case TherapyLadderStep.SART_PRACTICE_2_:
                 advance = CheckSARTEscapeSection();
                 break;
-            case TherapyLadderStep.SART_TEST:
+            case TherapyLadderStep.SART_TEST_1_:
+            case TherapyLadderStep.SART_TEST_2_:
                 advance = CheckSARTTESTEscapeSection();
                 break;
-            case TherapyLadderStep.QUESTIONAIRE:
+            case TherapyLadderStep.QUESTIONAIRE_1:
+            case TherapyLadderStep.QUESTIONAIRE_2:
                 advance = CheckQuestionaireEscapeSection();
                 break;
             default:
@@ -527,7 +659,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// <returns></returns>
     private bool CheckQuestionaireEscapeSection()
     {
-        return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted;
+        if (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.QUESTIONAIRE_1)
+            return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage > 0;
+        else if (m_UserProfileManager.m_userProfile.m_LIROTherapyStep == TherapyLadderStep.QUESTIONAIRE_2)
+            return m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage == 2;
+        else return false;
     }
 
     /// <summary>
@@ -546,14 +682,18 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.CORE:
                 PrepareTherapyScreen();
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 PrepareACTScreen();
                 break;
-            case TherapyLadderStep.SART_PRACTICE:
-            case TherapyLadderStep.SART_TEST:            
+            case TherapyLadderStep.SART_PRACTICE_1_:
+            case TherapyLadderStep.SART_PRACTICE_2_:
+            case TherapyLadderStep.SART_TEST_1_:
+            case TherapyLadderStep.SART_TEST_2_:
                 PrepareSARTScreen();
                 break;
-            case TherapyLadderStep.QUESTIONAIRE:
+            case TherapyLadderStep.QUESTIONAIRE_1:
+            case TherapyLadderStep.QUESTIONAIRE_2:
                 PrepareQuestionaireScreen();
                 break;
             default:
@@ -571,10 +711,18 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         currStep = (currStep + 1) % size;
         m_UserProfileManager.LIROStep = (TherapyLadderStep)currStep;
+
+        //AndreaLIRO: increasing number of cycle
+        if (m_UserProfileManager.LIROStep == TherapyLadderStep.ACT_1_)
+        {
+            m_UserProfileManager.m_userProfile.m_cycleNumber++;
+        } 
+
     }
     public IEnumerator AddTherapyMinutes(int minutes)
     {
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalTherapyMinutes += minutes;
+        m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalDayTherapyMinutes += minutes;
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
     public IEnumerator AddGameMinutes(int minutes)
@@ -604,7 +752,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 CleanCurrentBlock(fileToDelete);
                 AdvanceBlock();
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 CleanCurrentBlock(fileToDelete);
                 AdvanceBlock();
                 break;
@@ -629,9 +778,17 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         }
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
-    public IEnumerator SaveCurrentQuestionaire(bool isCompleted)
+
+    public IEnumerator SaveHalfQuestionnaire(bool isCompleted)
     {
-        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = isCompleted;
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 1;
+        yield return StartCoroutine(SaveCurrentUserProfile());
+    }
+    public IEnumerator SaveSecondHalfQuestionaire(bool isSkipped)
+    {
+        m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 2;
+        if (isSkipped)
+            m_UserProfileManager.m_userProfile.m_LIROTherapyStep = TherapyLadderStep.QUESTIONAIRE_2;
         yield return StartCoroutine(SaveCurrentUserProfile());
     }
 
@@ -710,13 +867,15 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 yield return StartCoroutine(SaveCurrentUserProfile());
                 PrepareBasketSelectionScreen();
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currScore = 0;
                 yield return StartCoroutine(SaveCurrentUserProfile());
                 LoadingACTScreen(0);
                 yield return StartCoroutine(LoadACTFile());
                 break;
-            case TherapyLadderStep.SART_PRACTICE:
+            case TherapyLadderStep.SART_PRACTICE_1_:
+            case TherapyLadderStep.SART_PRACTICE_2_:
                 //AndreaLIRO: resetting completed state
                 m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.practiceCompleted = false;
                 m_UserProfileManager.m_userProfile.m_SartLiroUserProfile.testCompleted = false;
@@ -724,27 +883,26 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 yield return StartCoroutine(SaveCurrentUserProfile());
                 LoadingSARTSCreen();
                 break;
-            case TherapyLadderStep.SART_TEST:
+            case TherapyLadderStep.SART_TEST_1_:
+            case TherapyLadderStep.SART_TEST_2_:
                 LoadingSARTSCreen();
                 break;
-            case TherapyLadderStep.QUESTIONAIRE:
+            case TherapyLadderStep.QUESTIONAIRE_1:
                 //For questionaire only, if cycle == 0 skip
-                if (m_UserProfileManager.m_userProfile.m_cycleNumber == 0)
-                {
-                    GoToNextSection();
-                }
-                else
-                {
-                    m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionaireCompleted = false;
-                    yield return StartCoroutine(SaveCurrentUserProfile());
-                    LoadingQuestionaireScreen();
-                }
-
+                m_UserProfileManager.m_userProfile.m_QuestionaireUserProfile.questionnairStage = 0;
+                yield return StartCoroutine(SaveCurrentUserProfile());
+                LoadingQuestionaireScreen();
+                break;
+            case TherapyLadderStep.QUESTIONAIRE_2:
+                //For questionaire only, if cycle == 0 skip
+                LoadingQuestionaireScreen();
                 break;
             default:
-                Debug.LogError("This has not been found...");
+                Debug.LogError("TherapyLiroManager: Current step has not being created...");
                 break;
         }
+
+        VideoPlayerController.Instance.SetVideo(m_UserProfileManager.LIROStep);
 
         yield return null;
     }
@@ -953,10 +1111,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// <returns></returns>
     internal IEnumerator LoadTherapyFromBasketFiles(List<BasketUI> basketsInfos)
     {
-        //AndreaLIRO: increasing number of cycle
-        m_UserProfileManager.m_userProfile.m_cycleNumber++;
 
-        int currAmount = 1;
+#if DEBUG_LIRO_THERAPY
+        bool singleTherapyCicle = true;
+        bool blockSent = false;
+#endif
 
         basketsInfos.Shuffle();
 
@@ -967,34 +1126,49 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
         if(string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile))
         {
             //CRITICAL ERROR
-            Debug.LogError("<color=red>CRITICAL ERROR</color>");
+            Debug.LogError("<color=red>CRITICAL ERROR</color> generated basket with trained ACT items is not present");
             yield break;
         }
 
+        //******************************* BASKET WITH ACT ITEMS ****************************************************
         CoreItemReader cir = new CoreItemReader();
+        //This has been created at the first initialization of the user to create the list of trained lexical items
         List<Challenge> listTrainedItems = cir.ParseCsvFromContent(GlobalVars.LiroGenActBasketFile).ToList();
+        listTrainedItems = listTrainedItems.Select(x => { x.BasketNumber = 99; return x; }).ToList<Challenge>();
         List<Challenge> curr_Selected_BasketACT = new List<Challenge>();
+        //Extracting distinct lexical items
         List<string> lexicalItems = new List<string>();
         lexicalItems = listTrainedItems.Select(x => x.LexicalItem).Distinct().ToList();
         lexicalItems.Shuffle();
         int countLexicalItems = 0;
 
+        //******************************* BASKET ****************************************************
         string currBasketsPath;
+        //This is currently build for each of the basket
+        //Used for reading the basket
         List<Challenge> curr_basket_list_read = new List<Challenge>();
+        //Used to select items for each lexical item
         List<Challenge> curr_Selected_Challenges = new List<Challenge>();
+        //Used to extract distinct lexical items
         List<string> curr_basket_lexical_item_list = new List<string>();
+        //Used to write the list of challenges that create the therapy
         List<Challenge> curr_basket_list_write = new List<Challenge>();
 
         string coreFormat = String.Concat( "THERAPY_{0}_Cycle_{1}");
         string currFilename;
         int total_blocks = 1;
 
+        //AndreaLIRO_TB: do not have to clear this at every basket as the shuffle will be done at the end to distribute evenly the trials
+        curr_basket_list_write.Clear();
+        int countChallengesLexicalItem = 0;
+
+        yield return new WaitForEndOfFrame();
+
         for (int i = 0; i < basketsInfos.Count; i++)
         {
             curr_basket_list_read.Clear();
             curr_basket_lexical_item_list.Clear();
-            curr_basket_list_write.Clear();
-            
+                        
             yield return new WaitForEndOfFrame();
 
             cir = new CoreItemReader();
@@ -1003,20 +1177,14 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
             //Loading all the basket challenges excluding the untrained items
             curr_basket_list_read = cir.ParseCsv(currBasketsPath, true).ToList();
-            currAmount += 4;
-            if (m_onUpdateProgress != null)
-            {
-                m_onUpdateProgress(currAmount);
-            }
-            yield return new WaitForEndOfFrame();
+            curr_basket_list_read = curr_basket_list_read.Select(x => { x.BasketNumber = basketsInfos[i].basketId; return x; }).ToList<Challenge>();
 
-            //Geting current difficulty
+            //Getting current difficulty
             //int currDifficulty = basketsInfos[i].hardMode ? 3 : 1;
             try
             {
                 //select distinct lexical item for this batch
                 curr_basket_lexical_item_list = curr_basket_list_read.Select(x => x.LexicalItem).Distinct().ToList();
-                int countChallengesLexicalItem = 0;
                 int currentStep = 0;
                 //For each distinct lexical item choose a set number of random challenges
                 foreach (string lexical_item in curr_basket_lexical_item_list)
@@ -1027,26 +1195,35 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     if (basketsInfos[i].hardMode)
                     {
                         curr_Selected_Challenges.Clear();
+                        //Selecting hard challenges from current basket 
                         curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty > 1).ToList();
                         if (curr_Selected_Challenges != null || curr_Selected_Challenges.Count != 0)
                         {
                             curr_Selected_Challenges.Shuffle();
                             currentStep = 0;
-                            
-                            //Until reaching desired number for lexical item or finishing challenges for this difficulty
+
+                            //Until reaching desired number for lexical item or finishing challenges for this hard difficulty
                             while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem && currentStep < curr_Selected_Challenges.Count)
                             {
-                                curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                                Challenge ch = new Challenge(curr_Selected_Challenges[currentStep]);
+                                ch.BasketNumber = basketsInfos[i].basketId;
+                                curr_basket_list_write.Add(ch);
                                 //curr_challenges_lexical_item.RemoveAt(0);
                                 countChallengesLexicalItem++;
                                 currentStep++;
                             }
                         }
+                        else 
+                        {
+                            Debug.LogError(String.Format("Could not find easy challenges for {0}", lexical_item));
+                        }
                         curr_Selected_Challenges.Clear();
                     }
 
                     curr_Selected_Challenges.Clear();
+                    //Selecting easy challenges from the current basket
                     curr_Selected_Challenges = curr_basket_list_read.Where(x => x.LexicalItem == lexical_item && x.Difficulty == 1).ToList();
+                    curr_Selected_Challenges.Shuffle();
 
                     if (curr_Selected_Challenges != null && curr_Selected_Challenges.Count != 0)
                     {
@@ -1058,7 +1235,9 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                         //populating until reaching the final number of items
                         while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem)
                         {
-                            curr_basket_list_write.Add(curr_Selected_Challenges[currentStep]);
+                            Challenge ch = new Challenge(curr_Selected_Challenges[currentStep]);
+                            ch.BasketNumber = basketsInfos[i].basketId;
+                            curr_basket_list_write.Add(ch);
                             currentStep++;
                             //This should make sure that challenges are always cycled through the current list
                             currentStep = currentStep % curr_Selected_Challenges.Count;
@@ -1066,8 +1245,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                         }
                     }
                     else
-                    {
-                        Debug.LogError(String.Format("Could not find easy challenges for {0}", lexical_item));
+                    { 
+                        Debug.Log("<color=yellow>Therapy Warning</color> Could not find hard challenges for " + lexical_item);
                     }
                 }
             }
@@ -1075,65 +1254,87 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             {
                 Debug.LogError(ex.Message);
             }          
+           
+        }
 
-            currAmount += 6;
-            if (m_onUpdateProgress != null)
+        //At this point we have all the baskets.
+        //Repeating the same for the ACT trained items that are generated in a basket
+
+        foreach (string lexical_item in lexicalItems)
+        {
+            //Resetting challenges count
+            countChallengesLexicalItem = 0;
+            curr_Selected_Challenges.Clear();
+            curr_Selected_Challenges = listTrainedItems.Where(x => x.LexicalItem == lexical_item).ToList();
+            curr_Selected_Challenges.Shuffle();
+            int currentStep = 0;
+            if (curr_Selected_Challenges != null && curr_Selected_Challenges.Count != 0)
             {
-                m_onUpdateProgress(currAmount);
-            }
-            yield return new WaitForEndOfFrame();
+                curr_Selected_Challenges = curr_Selected_Challenges.OrderBy(y => RandomGenerator.GetRandom()).ToList();
 
-            int countACTBasketItemsInCurrentBasket = 0;
+                //Resetting counter to cycle through challenges
+                currentStep = 0;
 
-            //AndreaLIRO: adding trained items: may be adjusted when I have the final version
-            // numero di lexixal total per act * numero di trial per lexical / numero di basket + un buffer to make sure I train all of the items
-            while (countACTBasketItemsInCurrentBasket < ((lexicalItems.Count * m_numberSelectedPerLexicalItem)/ basketsInfos.Count) && listTrainedItems.Count > 0 && countLexicalItems < lexicalItems.Count)
-            {
-
-                curr_Selected_BasketACT = listTrainedItems.Where(x => x.LexicalItem == lexicalItems[countLexicalItems]).ToList();
-                curr_Selected_BasketACT.Shuffle();
-
-                for (int xdr = 0; xdr < m_numberSelectedPerLexicalItem; xdr++)
+                //populating until reaching the final number of items
+                while (countChallengesLexicalItem < m_numberSelectedPerLexicalItem)
                 {
-                    curr_basket_list_write.Add(curr_Selected_BasketACT[i % curr_Selected_BasketACT.Count]);
-                    countACTBasketItemsInCurrentBasket++;
+                    Challenge ch = new Challenge(curr_Selected_Challenges[currentStep]);
+                    ch.BasketNumber = 99;
+                    curr_basket_list_write.Add(ch);
+                    currentStep++;
+                    //This should make sure that challenges are always cycled through the current list
+                    currentStep = currentStep % curr_Selected_Challenges.Count;
+                    countChallengesLexicalItem++;
                 }
-
-                countLexicalItems++;
-                
+            }
+            else
+            {
+                Debug.Log("<color=yellow>Therapy Warning</color> Could not find act trained basket challenges for " + lexical_item);
             }
 
-            //IF LAST BASKET ADD REMAINING LEXICAL ITEMS
-            if(i == basketsInfos.Count - 1 && countLexicalItems < lexicalItems.Count)
+        }
+
+        //---------- GENERATION COMPLETE
+
+        //Shuffling challenges
+        curr_basket_list_write.Shuffle();
+
+        //Adding information about number presentation inside the current cycle
+        for (int i = 0; i < curr_basket_list_write.Count; i++)
+        {
+            Challenge c = new Challenge(curr_basket_list_write.ElementAt(i));
+            c.PresentationNumber = i+1;
+            curr_basket_list_write[i] = c;
+        }
+
+        //I am trynig to cheat here.
+        //curr_basket_list_write = curr_basket_list_write.OrderBy(x => x.PresentationNumber).ToList();
+
+        //Getting all distinct lexical item
+        curr_basket_lexical_item_list = curr_basket_list_write.Select(x => x.LexicalItem).Distinct().ToList();
+        foreach (string lexical_item in curr_basket_lexical_item_list)
+        {
+            int count = 1;
+            foreach (var item in curr_basket_list_write.Where(x => x.LexicalItem == lexical_item).OrderBy(x => x.PresentationNumber))
             {
-                while (countLexicalItems < lexicalItems.Count)
-                {
-                    curr_Selected_BasketACT = listTrainedItems.Where(x => x.LexicalItem == lexicalItems[countLexicalItems]).ToList();
-                    curr_Selected_BasketACT.Shuffle();
-                    for (int xdr = 0; xdr < m_numberSelectedPerLexicalItem; xdr++)
-                    {
-                        curr_basket_list_write.Add(curr_Selected_BasketACT[i % curr_Selected_BasketACT.Count]);
-                        countACTBasketItemsInCurrentBasket++;
-                    }
-
-                    countLexicalItems++;
-                }
-
+                item.LexicalPresentationNumber = count;
+                count++;
             }
+        }
 
+        totalBasketFile = curr_basket_list_write.Count / GlobalVars.ChallengeLength;
 
-            //---------- GENERATION COMPLETE
-            //Shuffling challenges
-            curr_basket_list_write.Shuffle();
-
-            List<string> currLines = new List<string>();
-            int challengeCounter = 0;
-            //Selected all the items for this basket, allocating them to blocks
-            for (int j = 0; j < curr_basket_list_write.Count; j++)
-            {
-                currLines.Add(String.Join(",", new string[] { curr_basket_list_write[j].ChallengeID.ToString(),
+        List<string> currLines = new List<string>();
+        int challengeCounter = 0;
+        //Selected all the items for this basket, allocating them to blocks
+        for (int j = 0; j < curr_basket_list_write.Count; j++)
+        {
+            currLines.Add(String.Join(",", new string[] { curr_basket_list_write[j].ChallengeID.ToString(),
                                                               curr_basket_list_write[j].Difficulty.ToString(),
                                                               curr_basket_list_write[j].LexicalItem.ToString(),
+                                                              curr_basket_list_write[j].PresentationNumber.ToString(),
+                                                              curr_basket_list_write[j].LexicalPresentationNumber.ToString(),
+                                                              curr_basket_list_write[j].BasketNumber.ToString(),
                                                               curr_basket_list_write[j].FileAudioIDs[0].ToString(),
                                                               curr_basket_list_write[j].FileAudioIDs[1].ToString(),
                                                               curr_basket_list_write[j].FileAudioIDs[2].ToString(),
@@ -1147,11 +1348,11 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                                                               curr_basket_list_write[j].Foils[5].ToString()
                 }));
 
-                challengeCounter++;
+            challengeCounter++;
 
-                if (challengeCounter == GlobalVars.ChallengeLength)
-                {
-                    currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+            if (challengeCounter == GlobalVars.ChallengeLength)
+            {
+                currFilename = String.Format(coreFormat, total_blocks+GlobalVars.TherapyFilesOffset, m_UserProfileManager.m_userProfile.m_cycleNumber); //Starting from 100 for naming convention
 
 #if SAVE_LOCALLY
                     //#ERASE
@@ -1159,25 +1360,39 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                     //#ERASE
 #endif
 
-                    //SEND TO SERVER
-                    byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
-                    WWWForm form = new WWWForm();
-                    form.AddField("id_user", NetworkManager.UserId);
-                    form.AddField("file_name", currFilename);
-                    form.AddField("file_size", dataAsBytes.Length);
-                    form.AddField("folder_name", GlobalVars.SectionFolderName);
-                    form.AddBinaryData("file_data", dataAsBytes, currFilename);
-                    NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
+                //Sending basket file to the server
+                //SEND TO SERVER
+                byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+                yield return new WaitForEndOfFrame();
 
-                    currLines.Clear();
-                    total_blocks++;
-                    challengeCounter = 0;
+                WWWForm form = new WWWForm();
+                form.AddField("id_user", NetworkManager.UserId);
+                form.AddField("file_name", currFilename);
+                form.AddField("file_size", dataAsBytes.Length);
+                form.AddField("folder_name", GlobalVars.SectionFolderName);
+                form.AddBinaryData("file_data", dataAsBytes, "temp");
+                
+#if DEBUG_LIRO_THERAPY
+                if (singleTherapyCicle && !blockSent)
+                {
+                    NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile, currFilename, currFilename, BasketUploadCallback);
+                    blockSent = true;
                 }
+#else
+                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile, currFilename, currFilename, BasketUploadCallback);
+
+#endif
+
+                currLines.Clear();
+                total_blocks++;
+                challengeCounter = 0;
+
             }
-            //Save the remaining in the last file
-            if (currLines.Count != 0)
-            {
-                currFilename = String.Format(coreFormat, total_blocks, m_UserProfileManager.m_userProfile.m_cycleNumber);
+        }
+        //Save the remaining in the last file
+        if (currLines.Count != 0)
+        {
+            currFilename = String.Format(coreFormat, total_blocks+ GlobalVars.TherapyFilesOffset, m_UserProfileManager.m_userProfile.m_cycleNumber);
 
 #if SAVE_LOCALLY
                 //#ERASE
@@ -1185,40 +1400,62 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 //#ERASE
 #endif
 
-                //SEND TO SERVER
-                byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
-                WWWForm form = new WWWForm();
-                form.AddField("id_user", NetworkManager.UserId);
-                form.AddField("file_name", currFilename);
-                form.AddField("file_size", dataAsBytes.Length);
-                form.AddField("folder_name", GlobalVars.SectionFolderName);
-                form.AddBinaryData("file_data", dataAsBytes, currFilename);
-                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile);
-
-                currLines.Clear();
-                total_blocks++;
-            }
-
-            currAmount += 11;
-            if (m_onUpdateProgress != null)
+            //SEND TO SERVER
+            byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("file_name", currFilename);
+            form.AddField("file_size", dataAsBytes.Length);
+            form.AddField("folder_name", GlobalVars.SectionFolderName);
+            form.AddBinaryData("file_data", dataAsBytes, "temp");
+            
+#if DEBUG_LIRO_THERAPY
+            if (singleTherapyCicle && !blockSent)
             {
-                m_onUpdateProgress(currAmount);
+                NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile, currFilename, currFilename, BasketUploadCallback);
+                blockSent = true;
             }
-            yield return new WaitForEndOfFrame();
+#else
+            NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlUploadFile, currFilename, currFilename, BasketUploadCallback);
+
+#endif
+            currLines.Clear();
+            total_blocks++;
+            totalBasketFile++;
         }
 
         //Updating UserProfile in the therapy section
+#if DEBUG_LIRO_THERAPY
+        if (singleTherapyCicle)
+        {
+            m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = 1;
+        }
+#else
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_totalBlocks = total_blocks - 1;
+
+#endif
         m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock = 1;
 
         yield return StartCoroutine(SaveCurrentUserProfile());
 
-        currAmount = 100;
-        if (m_onUpdateProgress != null)
+        //Andrea_LIRO: adding the tracking for the baskets counter
+        foreach (var bs in basketsInfos)
         {
-            m_onUpdateProgress(currAmount);
+            int currID = bs.basketId - 1;
+            m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[currID] += 1;
         }
 
+        yield return StartCoroutine(SaveCurrentUserBasketTracking());
+
+    }
+
+    private void BasketUploadCallback(string response)
+    {
+        currentBasketFile++;
+        if (m_onUpdateProgress != null)
+        {
+            m_onUpdateProgress((int)(100f * ((float)currentBasketFile / (float)totalBasketFile)));
+        }
     }
 
     public void CleanCurrentBlock(string fileToDelete = "")
@@ -1236,7 +1473,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
                 //ERASE
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 currBlock = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
                 fileName = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber);
                 //ERASE
@@ -1275,7 +1513,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             case TherapyLadderStep.CORE:
                 m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock++;
                 break;
-            case TherapyLadderStep.ACT:
+            case TherapyLadderStep.ACT_1_:
+            case TherapyLadderStep.ACT_2_:
                 m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock++;
                 break;
             default:

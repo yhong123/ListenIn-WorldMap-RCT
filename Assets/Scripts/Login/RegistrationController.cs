@@ -43,6 +43,7 @@ public enum RegistrationStep
 
 public class RegistrationController : MonoBehaviour
 {
+    public RegistrationStep InitialRegistrationStep;
     public Text CurrentShit;
     public static RegistrationController Instance;
 
@@ -67,7 +68,6 @@ public class RegistrationController : MonoBehaviour
 
     [SerializeField] private Image concentNext;
     public Toggle ConcentAcceptCurrent;
-    public List<string> ListOfConcentText;
     public Text ConcentText;
     private int currentConcentTextIndex = 0;
 
@@ -77,8 +77,8 @@ public class RegistrationController : MonoBehaviour
 
     //REGISTRATION VALUES
     [HideInInspector] public bool RegistrationHasConcent = false;
-    [HideInInspector] public string RegistrationGenre;
-    [HideInInspector] public string RegistrationCause;
+    [HideInInspector] public string RegistrationGenre = string.Empty;
+    [HideInInspector] public string RegistrationCause = string.Empty;
     public Dropdown MonthOfOnset;
     public Dropdown YearOfOnset;
     [HideInInspector] public bool RegistrationCanContact = false;
@@ -99,7 +99,7 @@ public class RegistrationController : MonoBehaviour
             SetCanvasGroupVisibility(item.RegistrationCanvas, false);
         }
 
-        SetCanvasGroupVisibility(ListOfRegistrationStepObject.Where(type => type.RegistrationStep == RegistrationStep.Splash).Single().RegistrationCanvas, true);
+        SetCanvasGroupVisibility(ListOfRegistrationStepObject.Where(type => type.RegistrationStep == InitialRegistrationStep).Single().RegistrationCanvas, true);
     }
 
     public void SetDateForStrokeToDefault()
@@ -115,21 +115,6 @@ public class RegistrationController : MonoBehaviour
         }
         currentConcentTextIndex = 0;
         noOnsetDate = false;
-    }
-
-    public void SetConcentText()
-    {
-        if (currentConcentTextIndex == ListOfConcentText.Count)
-        {
-            return;
-        }
-
-        DisableConcentNextButtonInteractable();
-        ConcentAcceptCurrent.isOn = false;
-
-        ConcentText.text = ListOfConcentText[currentConcentTextIndex];
-
-        currentConcentTextIndex++;
     }
 
 

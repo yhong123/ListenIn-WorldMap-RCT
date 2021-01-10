@@ -135,9 +135,9 @@ public class ButtonAudioAnimator : MonoBehaviour {
         if (isPlaying)
             return;
 
+        isPlaying = true;
         StopAllCoroutines();
         ResetValues();
-        isPlaying = true;
 
         AudioClipInfo aci;
         aci.isLoop = false;

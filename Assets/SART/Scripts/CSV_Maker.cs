@@ -15,7 +15,8 @@ public class CSV_Maker : MonoBehaviour {
     public string path { get
         {
             string folder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
-            string filename = String.Format("SART_{0}.csv", TherapyLIROManager.Instance.GetCurrentTherapyCycle());
+            TherapyLadderStep currSARTinCycle = TherapyLIROManager.Instance.GetUserProfile.LIROStep;
+            string filename = String.Format(GlobalVars.SARTStringFormat, currSARTinCycle.ToString(), TherapyLIROManager.Instance.GetCurrentTherapyCycle());
             return Path.Combine(folder, filename);
         }
     }
@@ -25,7 +26,8 @@ public class CSV_Maker : MonoBehaviour {
     {
         get
         {
-            return String.Format("SART_{0}.csv", TherapyLIROManager.Instance.GetCurrentTherapyCycle());
+            TherapyLadderStep currSARTinCycle = TherapyLIROManager.Instance.GetUserProfile.LIROStep;
+            return String.Format(GlobalVars.SARTStringFormat, currSARTinCycle.ToString(), TherapyLIROManager.Instance.GetCurrentTherapyCycle());
         }
     }
 	private bool created = false;

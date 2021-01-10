@@ -11,6 +11,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
 using System.Text;
+using ListenIn;
 
 public class AppControllerSetupScreen : MonoBehaviour
 {
@@ -32,12 +33,25 @@ public class AppControllerSetupScreen : MonoBehaviour
     private bool lockEmailSending = false;
     private int setupPorcentageProgress = 0;
 
-
     [SerializeField] private Text userID;
+
+    [SerializeField] private bool isDebug = false;
+
+    void Start()
+    {
+        if (isDebug) return;
+
+        StartSetup();
+    }
+
+    public void StartGameWithoutLogin()
+    {
+        NetworkManager.UserId = userID.text;
+        StartSetup();
+    }
 
     public void StartSetup()
     {
-        NetworkManager.UserId = userID.text;
         Debug.Log("USER ID: " + NetworkManager.UserId);
         m_playButton.interactable = false;
         m_playButton.gameObject.SetActive(false);
@@ -51,7 +65,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         catch (Exception ex)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
         }
     }
 
@@ -99,7 +113,7 @@ public class AppControllerSetupScreen : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
         }
         yield return new WaitForSeconds(2);
 
@@ -107,133 +121,152 @@ public class AppControllerSetupScreen : MonoBehaviour
         setupPorcentageProgress = 47;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
+        //AndreaLIRO_TB : This gets the user profile
         WWWForm form = new WWWForm();
         form.AddField("id_user", NetworkManager.UserId);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, GetProfileCallback);
-
-        GameStateSaver.Instance.DownloadGameProgress();
-        //yield return StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
-        //yield return new WaitForSeconds(2);
-        //try
-        //{
-        //    StartCoroutine(TherapyLIROManager.Instance.LoadCurrentUserProfile());
-        //}
-        //catch (Exception ex)
-        //{
-        //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
-        //}
+        
     }
 
     public void GetProfileCallback(string response)
     {
-        if(TherapyLIROManager.Instance.SetUserProfile(response))
+        if (TherapyLIROManager.Instance.SetUserProfile(response))
         {
-            StartCoroutine(InitializationACTPairChoose());
+            //AndreaLiro_TB : Getting the remaining part of the profile
+            WWWForm form = new WWWForm();
+            form.AddField("id_user", NetworkManager.UserId);
+            NetworkManager.SendDataServer(form, NetworkUrl.SqlGetUserBasketTracking, GetUserBasketTrackingCallback);
+        }
+        else
+        {
+            Debug.LogError("<color=red>Fatal Error: </color> Unable to retrieve USER ID profile : " + NetworkManager.UserId);
         }
     }
 
-    public IEnumerator InitializationACTPairChoose()
+    public void GetUserBasketTrackingCallback(string response)
     {
-        setupPorcentageProgress = 55;
-        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-        //AndreaLIRO: Checking first ever initialization for ACT pair randomization
-        yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
-
-        while(string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) && string.IsNullOrEmpty(GlobalVars.LiroGenActFile) && string.IsNullOrEmpty(GlobalVars.GameProgressFile)) //WAIT UNTIL THE FILES ARE LOADED
+        //AndreaLIRO: this is not fatal
+        if (TherapyLIROManager.Instance.SetUserBasketTrackingProfile(response))
         {
-            yield return null;
+            Debug.Log("Basket tracking correctly loaded");
         }
-        //try
-        //{
-        //    StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
-        //}
-        //catch (Exception ex)
-        //{
-        //    ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
-        //}
+        StartCoroutine(WaitForServerDataInitialization());
+    }
+    /// <summary>
+    /// Function being called during SetupScreen starting after login. The Initialization of ACT pairs is executed only if isFirstInit is true.
+    /// </summary>
+    /// <returns>Nothing</returns>
+    public IEnumerator WaitForServerDataInitialization()
+    {
+        setupPorcentageProgress = 50;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
+
+        try
+        {
+            //It is safe to initialize the logger here since the user has been successfully logged in from the server
+            ListenInLogger.Instance.WakeUp();
+            //CleaningUpOlderLogs();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
+        }
 
         //AndreaLIRO: Preparing the jigsaw pieces
-        setupPorcentageProgress = 77;
-        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {
             StateJigsawPuzzle.Instance.OnGameLoadedInitialization();
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
         }
 
-        try
+        yield return new WaitForEndOfFrame();
+
+        //IF IS FIRST INIT RESET GAME AND JIGSAW
+        if (TherapyLIROManager.Instance.GetUserProfile.m_userProfile.isFirstInit)
         {
-            if (GlobalVars.isProfileNewOrChanged)
-            {
-                GlobalVars.isProfileNewOrChanged = false;
-            }
-            GameStateSaver.Instance.ResetListenIn();
-
+            GameStateSaver.Instance.ResetLI();
         }
-        catch (Exception ex)
+        else
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            ///The progression on the world map
+            GameStateSaver.Instance.DownloadWorldMapProgress();
+            ///Jigsaw pieces information for each level
+            GameStateSaver.Instance.DownloadGameProgress();
         }
 
-        yield return new WaitForSeconds(2);
-
-        setupPorcentageProgress = 85;
-        //AndreaLIRO: Loading current world map configuration
+        setupPorcentageProgress = 56;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-        try
+        yield return new WaitForEndOfFrame();
+
+        //AndreaLIRO: Checking first ever initialization for ACT pair randomization
+        yield return StartCoroutine(TherapyLIROManager.Instance.LIROInitializationACTPairChoose());
+
+        setupPorcentageProgress = 75;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
+        yield return new WaitForEndOfFrame();
+
+        float currTime = Time.realtimeSinceStartup;
+        int countTime = 0; ;
+
+        //AndreaLIRO: need to wait until the files are loaded from the server before continuing with the progress
+        while (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile) || string.IsNullOrEmpty(GlobalVars.LiroGenActFile) || string.IsNullOrEmpty(GlobalVars.GameProgressFile) || string.IsNullOrEmpty(GlobalVars.GameWorldMapProgressFile))
         {
-            IMadLevelProfileBackend backend = MadLevelProfile.backend;
-            String profile = backend.LoadProfile(MadLevelProfile.DefaultProfile);
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetupScreen: SetupInitialization() loaded pinball level profile: {0}", profile), ListenIn.LoggerMessageType.Info);
+            if (currTime + 15f < Time.realtimeSinceStartup)
+            {
+                currTime = Time.realtimeSinceStartup;
+                Debug.LogError("Could not retrieve data from the server in Setup screen");
+                if (string.IsNullOrEmpty(GlobalVars.LiroGenActBasketFile))
+                    { Debug.LogError("Could not retrieve data for generated basket file"); }
+                if (string.IsNullOrEmpty(GlobalVars.LiroGenActFile))
+                    { Debug.LogError("Could not retrieve data for generated ACT file"); }
+                if (string.IsNullOrEmpty(GlobalVars.GameProgressFile))
+                    { Debug.LogError("Could not retrieve data for jigsaw game progress file"); }
+                if (string.IsNullOrEmpty(GlobalVars.GameWorldMapProgressFile))
+                    { Debug.LogError("Could not retrieve data for world map progress"); }
+                countTime++;
+                if (countTime >= 3) //45 seconds to get the files is more than enough
+                    break;
+            }                
+            yield return null;
         }
-        catch (System.Exception ex)
+
+        if (countTime == 3)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetupScreen: SetupInitialization() {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError("Unable to start ListenIn after login");
         }
+        else
+        {
+            Debug.Log("<color=green>Retrieved all data from server after login. Starting LI.</color>");
+            StartCoroutine(CompleteInitialization());
+        }        
+    }
+
+    public IEnumerator CompleteInitialization()
+    {
+        setupPorcentageProgress = 82;
+        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         yield return new WaitForEndOfFrame();
 
         setupPorcentageProgress = 92;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
         try
         {
+            //AndreaLIRO_TB: load must happen from the server
             GameStateSaver.Instance.LoadGameProgress();
         }
         catch (System.Exception ex)
         {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
+            Debug.LogError(String.Format("AppControllerSetup: {0}", ex.Message));
         }
         yield return new WaitForEndOfFrame();
-
-        setupPorcentageProgress = 95;
-        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-
-        //AndreaLIRO: Commenting out the last three log files
-        // yield return SendLogs();
-        yield return new WaitForEndOfFrame();
-
-        setupPorcentageProgress = 99;
-        m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
-
-        try
-        {
-            CleaningUpOlderLogs();
-        }
-        catch (System.Exception ex)
-        {
-            ListenIn.Logger.Instance.Log(String.Format("AppControllerSetup: {0}", ex.Message), ListenIn.LoggerMessageType.Error);
-        }
 
         setupPorcentageProgress = 100;
         m_textScreen.text = String.Format(m_textStringFormat, setupPorcentageProgress);
 
-        //m_playButton.interactable = true;
-        //m_playButton.gameObject.SetActive(true);
-        //switchPatient.gameObject.SetActive(true);
-        //GameStateSaver.Instance.SaveGameProgress();
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.0f);
         //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
         MadLevel.LoadLevelByName("MainHUB");
     }
@@ -241,7 +274,7 @@ public class AppControllerSetupScreen : MonoBehaviour
     private void CleaningUpOlderLogs()
     {
         //Andrea: need to implement this function
-        String path = ListenIn.Logger.Instance.GetLogPath;
+        String path = ListenInLogger.Instance.GetLogPath;
         if (!String.IsNullOrEmpty(path))
         {
             List<String> files = new DirectoryInfo(path).GetFiles().OrderBy(f => f.LastWriteTime).Select(x => x.FullName).ToList();
@@ -261,18 +294,6 @@ public class AppControllerSetupScreen : MonoBehaviour
             }
         }
     }
-
-    //private IEnumerator UploadProfileHistory()
-    //{
-    //    yield return StartCoroutine(DatabaseXML.Instance.UploadHistory2());
-    //}
-
-    //public void GoToWorldMap()
-    //{
-    //    //Debug.Log("PressedButton");
-    //    //DatabaseXML.Instance.OnSwitchedPatient -= UpdateFeedbackLog;
-    //    MadLevel.LoadLevelByName("MainHUB");
-    //}
 
     /// <summary>
     /// AndreaLIRO: must be changed to be consistent with new database
@@ -299,7 +320,7 @@ public class AppControllerSetupScreen : MonoBehaviour
 
         if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
         {
-            string path = ListenIn.Logger.Instance.GetLogPath;
+            string path = ListenInLogger.Instance.GetLogPath;
             if (!string.IsNullOrEmpty(path))
             {
                 var topFiles = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).Take(5).ToList();
@@ -343,92 +364,92 @@ public class AppControllerSetupScreen : MonoBehaviour
 
     }
 
-    private IEnumerator SendLogToEmail()
-    {
+    //private IEnumerator SendLogToEmail()
+    //{
 
-        lockEmailSending = true;
-        //http://answers.unity3d.com/questions/473469/email-a-file-from-editor-script.html
-        //For setting up accounts this must be turned on: https://www.google.com/settings/security/lesssecureapps
-        m_feedbackTextScreen.text = "Praparing email...";
+    //    lockEmailSending = true;
+    //    //http://answers.unity3d.com/questions/473469/email-a-file-from-editor-script.html
+    //    //For setting up accounts this must be turned on: https://www.google.com/settings/security/lesssecureapps
+    //    m_feedbackTextScreen.text = "Praparing email...";
 
-        yield return new WaitForEndOfFrame();
+    //    yield return new WaitForEndOfFrame();
 
-        if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
-        {
-            string path = ListenIn.Logger.Instance.GetLogPath;
-            if (!string.IsNullOrEmpty(path))
-            {
-                var topFiles = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).Take(3).Select(x => x.FullName).ToList();
+    //    if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+    //    {
+    //        string path = ListenIn.Logger.Instance.GetLogPath;
+    //        if (!string.IsNullOrEmpty(path))
+    //        {
+    //            var topFiles = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).Take(3).Select(x => x.FullName).ToList();
 
-                if (topFiles != null)
-                {
-                    string fromEmail = "listeninlog@gmail.com";
-                    string subject = "Patient id " + NetworkManager.UserId;
+    //            if (topFiles != null)
+    //            {
+    //                string fromEmail = "listeninlog@gmail.com";
+    //                string subject = "Patient id " + NetworkManager.UserId;
 
-                    using (MailMessage mailMessage = new MailMessage())
-                    {
-                        mailMessage.From = new MailAddress(fromEmail);
-                        mailMessage.To.Add("listeninlog@gmail.com");
-                        mailMessage.Subject = subject;// subject;
-                        mailMessage.Body = "Log created from application version " + Application.version;
+    //                using (MailMessage mailMessage = new MailMessage())
+    //                {
+    //                    mailMessage.From = new MailAddress(fromEmail);
+    //                    mailMessage.To.Add("listeninlog@gmail.com");
+    //                    mailMessage.Subject = subject;// subject;
+    //                    mailMessage.Body = "Log created from application version " + Application.version;
 
-                        for (int i = 0; i < topFiles.Count; i++)
-                        {
-                            //Adding attachments
-                            Attachment attachment;
-                            attachment = new System.Net.Mail.Attachment(topFiles[i]);
-                            mailMessage.Attachments.Add(attachment);
-                        }
+    //                    for (int i = 0; i < topFiles.Count; i++)
+    //                    {
+    //                        //Adding attachments
+    //                        Attachment attachment;
+    //                        attachment = new System.Net.Mail.Attachment(topFiles[i]);
+    //                        mailMessage.Attachments.Add(attachment);
+    //                    }
 
-                        {
-                            SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
-                            smtpServer.Port = 587;
-                            smtpServer.Credentials = new NetworkCredential("listeninlog@gmail.com", "listeninlogger");
-                            smtpServer.EnableSsl = true;
-                            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-                            {
-                                return true;
-                            };
+    //                    {
+    //                        SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+    //                        smtpServer.Port = 587;
+    //                        smtpServer.Credentials = new NetworkCredential("listeninlog@gmail.com", "listeninlogger");
+    //                        smtpServer.EnableSsl = true;
+    //                        ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+    //                        {
+    //                            return true;
+    //                        };
 
-                            yield return new WaitForEndOfFrame();
+    //                        yield return new WaitForEndOfFrame();
 
-                            try
-                            {
-                                smtpServer.Send(mailMessage);
-                                m_feedbackTextScreen.text = "Thanks for feedback!";
-                            }
-                            catch (System.Exception ex)
-                            {
-                                m_feedbackTextScreen.text = "Log not uploaded...";
-                                ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
-                            }
-                            finally
-                            {
-                                lockEmailSending = false;
-                            }
-                        }
-                    }
-                }
+    //                        try
+    //                        {
+    //                            smtpServer.Send(mailMessage);
+    //                            m_feedbackTextScreen.text = "Thanks for feedback!";
+    //                        }
+    //                        catch (System.Exception ex)
+    //                        {
+    //                            m_feedbackTextScreen.text = "Log not uploaded...";
+    //                            ListenIn.Logger.Instance.Log(ex.Message, ListenIn.LoggerMessageType.Error);
+    //                        }
+    //                        finally
+    //                        {
+    //                            lockEmailSending = false;
+    //                        }
+    //                    }
+    //                }
+    //            }
 
 
 
-                yield return new WaitForEndOfFrame();
+    //            yield return new WaitForEndOfFrame();
 
-            }
-            else
-            {
-                lockEmailSending = false;
-                m_feedbackTextScreen.text = "No internet detected...";
-            }
-            yield return null;
-        }
-    }
+    //        }
+    //        else
+    //        {
+    //            lockEmailSending = false;
+    //            m_feedbackTextScreen.text = "No internet detected...";
+    //        }
+    //        yield return null;
+    //    }
+    //}
 
     public void SendEmailButton()
     {
         if (!lockEmailSending)
         {
-            StartCoroutine(SendLogToEmail());
+            //StartCoroutine(SendLogToEmail());
         }
         else
         {

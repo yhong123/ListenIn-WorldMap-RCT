@@ -48,8 +48,6 @@ public class StateChallenge : State
         questions = 0;
         correctAnswers = 0;
 
-        UploadManager.Instance.ResetTimer(TimerType.Therapy);
-        UploadManager.Instance.SetTimerState(TimerType.Therapy, true);
     }
 
     // Update is called once per frame
@@ -80,7 +78,6 @@ public class StateChallenge : State
         StatePinball.Instance.initialize = false;
 		cheatActivated = false;
 
-        UploadManager.Instance.SetTimerState(TimerType.Therapy, false);
     }
 
     private int coins ;

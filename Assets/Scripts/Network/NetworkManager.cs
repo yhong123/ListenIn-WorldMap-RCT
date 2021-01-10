@@ -5,6 +5,9 @@ using System.Text;
 using System;
 using System.IO;
 using System.Linq;
+using UnityEngine.Networking;
+using System.Security.Cryptography.X509Certificates;
+using MadLevelManager;
 
 public class Tuple<T1, T2>
 {
@@ -161,15 +164,19 @@ public class NetworkManager : MonoBehaviour
                 if (HasInternet)
                 {
                     Debug.Log(DataToSend[0].First.ServerURL);
-                    using (WWW www = new WWW(DataToSend[0].First.ServerURL, DataToSend[0].First.DataForm))
+                    using (UnityWebRequest www = UnityWebRequest.Post(DataToSend[0].First.ServerURL, DataToSend[0].First.DataForm))
                     {
-                        yield return www;
-                        if (www.error != null)
+                        www.chunkedTransfer = true;
+                        www.certificateHandler = new AcceptAllCertificatesSignedWithASpecificPublicKey();
+
+                        yield return www.SendWebRequest();
+
+                        if (www.isNetworkError || www.isHttpError)
                         {
                             Debug.LogError("<color=red>SERVER ERROR</color> Couldn't post the event SendDataServer(): " + www.error);
                             remoteAttempts++;
                         }
-                        else if (www.text == "checksum_error")
+                        else if (www.downloadHandler.text == "checksum_error")
                         {
                             Debug.LogError("<color=red>SERVER ERROR</color> checksum failed, trying again... SendDataServer()");
                             remoteAttempts++;
@@ -179,15 +186,15 @@ public class NetworkManager : MonoBehaviour
                             remoteAttempts = 0;
                             Debug.Log("<color=green>SUCCESS: </color>SendDataServer()");
                             //CSV
-                            if (isLocal || !string.IsNullOrEmpty(DataToSend[0].Second.FileName))
-                            {
-                                AppendDataCSV(DataToSend[0].Second);
-                            }
+                            //if (isLocal || !string.IsNullOrEmpty(DataToSend[0].Second.FileName))
+                            //{
+                            //    AppendDataCSV(DataToSend[0].Second);
+                            //}
                             //CSV
                             if (DataToSend[0].First.callBackMethod != null)
                             {
                                 Debug.Log("DataToSend[0].callBackMethod: " + DataToSend[0].First.callBackMethod.Method.Name);
-                                DataToSend[0].First.callBackMethod(www.text);
+                                DataToSend[0].First.callBackMethod(www.downloadHandler.text);
                             }
 
                             DataToSend.RemoveAt(0);
@@ -429,4 +436,21 @@ public class NetworkManager : MonoBehaviour
         }
     }
     #endregion
+}
+
+public class AcceptAllCertificatesSignedWithASpecificPublicKey : CertificateHandler
+{
+    // Encoded RSAPublicKey
+    private static string PUB_KEY = "3082010A0282010100CAD7471DC02FD00C6578CCA7F9C94B951CE0DFD5B294248F61051E92B0E50D23E92B45BE603895E046C8178F87347F202578B229924FA5E38BF88CC0AE4FB913C87AC329A66A9E5C3E61FFF90176071698F36A5EC9F9A9BA892DC5323748189100062D7B7004071CC1E24A70C5201B73B64E8C8C7FFE01749439302D1F17303FDC2AC0F647E36684A5E4345D57E0CC8762E8B843FAD4D08CBE7D4108B08D23E2D784C749AEAD1E68E47B4726AD8B00E30D1893B78CE36221A9F04BD02A5CE5804A555124CB8671FBC80DA15854F9D8B96234E69E3A5C2CF943B6F6D610E0BBC78FD8F4A915FDF1EDA74389F085C41946DC4A3D11F24BD1BAC16055D4249B68810203010001";
+
+    protected override bool ValidateCertificate(byte[] certificateData)
+    {
+        X509Certificate2 certificate = new X509Certificate2(certificateData);
+        string pk = certificate.GetPublicKeyString();
+        if (pk.Equals(PUB_KEY))
+        {
+            return true;
+        }
+        return false;
+    }
 }

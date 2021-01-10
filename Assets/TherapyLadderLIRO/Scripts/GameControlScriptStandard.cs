@@ -106,9 +106,10 @@ public class GameControlScriptStandard : MonoBehaviour
     DateTime m_dtCurTrialStartTime;
     DateTime m_dtStartingBlock;
     DateTime m_dtEndingBlock;
-    double m_totalPlayedMinutes = 0;
+    float m_totalPlayedMinutes = 0;
 
-    private bool m_cheatOn = false;
+    [SerializeField]
+    private bool m_cheatOn = true;
 
     LayerMask currMask;
 
@@ -191,7 +192,7 @@ public class GameControlScriptStandard : MonoBehaviour
 
     private void LoadCurrentBlock()
     {
-        m_currBlockNumberFromManager = TherapyLIROManager.Instance.GetCurrentBlockNumber();
+        m_currBlockNumberFromManager = TherapyLIROManager.Instance.GetCurrentBlockNumber()+GlobalVars.TherapyFilesOffset;
         m_currCycleNumber = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
 
         string verga = String.Format(
@@ -212,55 +213,6 @@ public class GameControlScriptStandard : MonoBehaviour
         form.AddField("folder_name", GlobalVars.SectionFolderName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetCurrentBlockFile, LoadCurrentBlockCallback);
 
-        //bool error = false;
-        //try
-        //{
-        //    m_currBlockNumberFromManager = TherapyLIROManager.Instance.GetCurrentBlockNumber();
-        //    m_currCycleNumber = TherapyLIROManager.Instance.GetCurrentTherapyCycle();
-        //    m_currListOfChallenges = cir.ParseCsv(Path.Combine
-        //            (GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId),
-        //    String.Format(
-        //                    "THERAPY_{1}_Cycle_{2}", TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(), m_currBlockNumberFromManager, TherapyLIROManager.Instance.GetCurrentTherapyCycle()
-        //                )
-        //            )
-        //        ).ToList();
-        //}
-        //catch (Exception ex)
-        //{
-        //    error = true;
-        //    Debug.LogError("GCTACT: " + ex.Message);
-        //}
-
-        //if (error)
-        //{
-        //    try
-        //    {
-        //        error = false;
-        //        m_loadedFile = Directory.GetFiles(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId)).Where(x => Path.GetFileName(x).Contains("CORE")).OrderBy(x => Path.GetFileName(x)).FirstOrDefault();
-        //        if (m_loadedFile != null || m_loadedFile != String.Empty)
-        //        {
-        //            Debug.LogWarning("Loading therapy file from the folder, but found a mismatch between ");
-        //            m_currListOfChallenges = cir.ParseCsv(m_loadedFile).ToList();
-        //        }
-        //        else
-        //        {
-        //            error = true;
-        //            Debug.LogError("GCTACT: cannot load the current block... fatal error");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        error = true;
-        //        Debug.LogError("GCTACT: " + ex.Message);
-        //    }
-        //}
-
-        //if (!error)
-        //{
-        //    //AndreaLIRO: removed for debugging purposes
-        //    //RandomizeChallenges();
-        //}
-            
     }
 
     private void LoadCurrentBlockCallback(string response)
@@ -273,6 +225,8 @@ public class GameControlScriptStandard : MonoBehaviour
         else
         {
             m_currListOfChallenges = cir.ParseCsvFromContent(response).ToList();
+            UploadManager.Instance.ResetTimer(TimerType.Therapy);
+            UploadManager.Instance.SetTimerState(TimerType.Therapy, true);
             PrepareNextTrialLIRO();
         }
     }
@@ -294,6 +248,10 @@ public class GameControlScriptStandard : MonoBehaviour
         m_challengeResponse.m_challengeID = m_currChallenge.ChallengeID;
         m_challengeResponse.m_block = m_currBlockNumberFromManager;
         m_challengeResponse.m_cycle = m_currCycleNumber;
+        m_challengeResponse.m_presentationNumber = m_currChallenge.PresentationNumber;
+        m_challengeResponse.m_lexicalPresentationNumber = m_currChallenge.LexicalPresentationNumber;
+        m_challengeResponse.m_basketNumber = m_currChallenge.BasketNumber;
+        m_challengeResponse.m_accuracy = 1;
         RandomizeFoils(m_currChallenge);
         m_currAudio = GetRandomizedAudio(m_currChallenge);
         trialsCounter--;
@@ -349,14 +307,11 @@ public class GameControlScriptStandard : MonoBehaviour
                     m_arrStimulusGO[i].stimulusScript.SetStimulusImage("Images/CorePhotos/" + availableFoils[i].ToString());
                     m_arrStimulusGO[i].stimulusScript.m_registeredID = availableFoils[i];
                 }
-
-
             }
             catch (Exception ex)
             {
-                ListenIn.Logger.Instance.Log(String.Format("Challenge ID: {0}; Cannot load: {0}", m_currChallenge.ChallengeID.ToString(),availableFoils[i].ToString()), ListenIn.LoggerMessageType.Error);
+                Debug.LogError(String.Format("Challenge ID: {0}; Cannot load: {0}", m_currChallenge.ChallengeID.ToString(),availableFoils[i].ToString()));
             }
-            //m_arrStimulusGO [i].stimulusScript.SetStimulusImage ("Images/" + m_lsTrial [m_intCurIdx].m_lsStimulus[i].m_strImage);
 
         }
         ai.Play("Throw");
@@ -365,8 +320,8 @@ public class GameControlScriptStandard : MonoBehaviour
         PlayAudioLIRO(delay);
         ResetStimulThrowPos();
         // to keep track reaction time
-        m_dtCurTrialStartTime = DateTime.Now;
-        m_challengeResponse.m_dateTimeStart = DateTime.Now;
+        m_dtCurTrialStartTime = DateTime.UtcNow;
+        m_challengeResponse.m_dateTimeStart = DateTime.UtcNow;
 
     }
     private void CleanPreviousTrial()
@@ -435,7 +390,7 @@ public class GameControlScriptStandard : MonoBehaviour
             m_challengeResponse.m_dateTimeEnd = DateTime.UtcNow;
 
             int coinsEarned = 1;
-            if (m_challengeResponse.m_accuracy == 0)
+            if (m_challengeResponse.m_accuracy == 1)
                 coinsEarned++;
 
             StateChallenge.Instance.AddCoin(coinsEarned);
@@ -512,7 +467,9 @@ public class GameControlScriptStandard : MonoBehaviour
     private IEnumerator FinishTherapyBlock()
     {
         m_dtEndingBlock = DateTime.UtcNow;
-        m_totalPlayedMinutes = Mathf.CeilToInt((float)(m_dtEndingBlock - m_dtStartingBlock).TotalMinutes);
+        //m_totalPlayedMinutes = Mathf.CeilToInt((float)(m_dtEndingBlock - m_dtStartingBlock).TotalMinutes);
+        UploadManager.Instance.SetTimerState(TimerType.Therapy, false);
+        m_totalPlayedMinutes = (UploadManager.Instance.GetTimerState(TimerType.Therapy))/60.0f;
         yield return new WaitForSeconds(3);
         ai.Play("JumpIn");
         SaveCurrentBlockResponse();
@@ -538,8 +495,8 @@ public class GameControlScriptStandard : MonoBehaviour
         }
         m_responseList.Add(m_challengeResponse);
 
-        //AndreaLIRO: adding times
-        m_totalPlayedMinutes += (m_challengeResponse.m_dateTimeEnd - m_challengeResponse.m_dateTimeStart).TotalMinutes;
+        //AndreaLIRO: TIMERS are counted in UPLOAD MANAGER
+        //m_totalPlayedMinutes += (float)(m_challengeResponse.m_dateTimeEnd - m_challengeResponse.m_dateTimeStart).TotalMinutes;
     }
     private void SaveCurrentBlockResponse()
     {
@@ -554,6 +511,33 @@ public class GameControlScriptStandard : MonoBehaviour
 
         List<string> listString = new List<string>();
 
+        //Adding header
+        listString.Add(String.Join(",", new string[] {
+                
+                "ChallengeID",
+                "CycleNumber",
+                "Block",
+                "PresentationNumber",
+                "LexicalPresentationNumber",
+                "BasketNumber",
+
+                "DayStart",
+                "TimeStart",
+                //"DayEnd",
+                //"TimeEnd",
+
+                "Accuracy",
+                "SoundRepetition",
+
+                "IncorrectPicture1",
+                "IncorrectPicture2",
+                "IncorrectPicture3",
+                "IncorrectPicture4",
+                "IncorrectPicture5",
+
+        }));
+
+
         foreach (var item in m_responseList)
         {
             listString.Add(String.Join(",", new string[] {
@@ -561,11 +545,14 @@ public class GameControlScriptStandard : MonoBehaviour
                   item.m_challengeID.ToString(),
                   item.m_cycle.ToString(),
                   item.m_block.ToString(),
+                  item.m_presentationNumber.ToString(),
+                  item.m_lexicalPresentationNumber.ToString(),
+                  item.m_basketNumber.ToString(),
 
                   item.m_dateTimeStart.ToString("dd/MM/yyyy"),
                   item.m_dateTimeStart.ToString("HH:mm:ss"),
-                  item.m_dateTimeEnd.ToString("dd/MM/yyyy"),
-                  item.m_dateTimeEnd.ToString("HH:mm:ss"),
+                  //item.m_dateTimeEnd.ToString("dd/MM/yyyy"),
+                  //item.m_dateTimeEnd.ToString("HH:mm:ss"),
 
                   item.m_accuracy.ToString(),
                   item.m_repeat.ToString(),
@@ -647,7 +634,7 @@ public class GameControlScriptStandard : MonoBehaviour
         StateChallenge.Instance.cheatActivated = true;
         StatePinball.Instance.initialize = false;
         GameController.Instance.ChangeState(GameController.States.StatePinball);
-        StatePinball.Instance.InitLevelPinball();        
+        StatePinball.Instance.InitLevelPinball(true);        
     }
 
 #region Audio API
@@ -861,11 +848,10 @@ public class GameControlScriptStandard : MonoBehaviour
     void Update()
     {
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
         //AndreaLIRO: putting this on the GameControlScriptStandard to control normal process of closing the challenge therapy
-        if (Input.GetKeyDown(KeyCode.Space) && !m_cheatOn)
+        if (Input.GetKeyDown(KeyCode.Space) && m_cheatOn)
         {
-            m_cheatOn = true;
             StartCoroutine(DoCheatCodes());
         }
 #endif

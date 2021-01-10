@@ -11,6 +11,8 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 	public bool isDebugging = false;
 
     private float maxWidth;
+    [SerializeField]
+    private float OFFSET_FROM_CORNER = 0.3f;
     private int coinsEarned;
     private int totalNumberSpawned = 0;
 
@@ -35,6 +37,8 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 	public bool stopDropper = false;
 
     private bool previousDirection = false;
+
+    [SerializeField] private SpriteRenderer sprite;
 
     void Start()
     {
@@ -65,11 +69,11 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
         //gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, gameObject.transform.position + traslationTarget, Time.deltaTime);
         //gameObject.transform.Translate(traslationTarget * Time.deltaTime);
 
-        if (transform.position.x >= maxWidth)
+        if (transform.position.x >= (maxWidth - OFFSET_FROM_CORNER))
         {
             dirRight = false;
         }
-        if (transform.position.x <= -maxWidth)
+        if (transform.position.x <= -1*(maxWidth - OFFSET_FROM_CORNER))
         {
             dirRight = true;
         }
@@ -230,7 +234,7 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
         coinInstance.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         coinInstance.GetComponent<Rigidbody2D>().angularVelocity = 0.0f;
         coinInstance.GetComponent<Rigidbody2D>().AddForce(-Vector2.up * 10);
-        RaycastHit hit;
+        //RaycastHit hit;
         //if (Physics.Raycast(ray, out hit))
         //{
         //    GameObject coinInstance = null;
@@ -283,8 +287,15 @@ public class CoinSpawnerB2_Final : MonoBehaviour {
 
     public void AnimateEnterCannon()
     {
+        sprite.enabled = true;
         iTween.Init(this.gameObject);
         iTween.MoveTo(this.gameObject, iTween.Hash("path", enteringPositions, "time", 3.5, "easetype", iTween.EaseType.easeOutCubic, "oncomplete", "FinishedTransition"));
+    }
+
+    public void SetCannonSprite()
+    {
+        if (sprite != null)
+            sprite.enabled = true;
     }
 
     public void FinishedTransition()

@@ -128,7 +128,8 @@ public class SART_Test : MonoBehaviour {
 
             countHits = 0;
 
-            csvMaker.Write(blockType, previousBlock, previousTrial, isGo, presentationTime, firstHitTime, secondHitTime, isBeingHit);
+            //Andrea: +1 just for starting from 1 instead of 0
+            csvMaker.Write(blockType, previousBlock + 1, previousTrial + 1, isGo, presentationTime, firstHitTime, secondHitTime, isBeingHit);
 
             Reset();
             yield return new WaitForSeconds(doorCloseTime);
@@ -176,7 +177,7 @@ public class SART_Test : MonoBehaviour {
     {
         isButtonEnabled = false;
         isButtonPressed = true;
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.25f);
         isButtonEnabled = true;
     }
 
