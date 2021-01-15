@@ -91,7 +91,7 @@ public class SplashScreenController : MonoBehaviour {
 
     private void SwitchScene()
     {
-        MadLevel.LoadLevelByName("SetupScreenDebug");
+        MadLevel.LoadLevelByName("GoogleSignIn");
     }
 
     private void StopAnimation()

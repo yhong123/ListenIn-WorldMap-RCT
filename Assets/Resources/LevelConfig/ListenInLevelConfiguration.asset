@@ -387,12 +387,12 @@ MonoBehaviour:
     extensionGUID: 
     lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 19374a8a74b27fd499767e711d6c4b7e, type: 3}
-    _scenePath: Assets/Scenes/Login.unity
-    _sceneName: Login
+    _scenePath: Assets/Scenes/Registration.unity
+    _sceneName: Registration
     scene: 
     parent: {fileID: 11400000}
     order: 310
-    name: Login
+    name: Registration
     type: 0
     arguments: 
     groupId: 0
@@ -405,6 +405,18 @@ MonoBehaviour:
     parent: {fileID: 11400000}
     order: 320
     name: Questionaire
+    type: 0
+    arguments: 
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
+  - _sceneObject: {fileID: 102900000, guid: 6142b9891badc0544b906f2ee6e27f74, type: 3}
+    _scenePath: Assets/Scenes/GoogleSignIn.unity
+    _sceneName: GoogleSignIn
+    scene: 
+    parent: {fileID: 11400000}
+    order: 330
+    name: GoogleSignIn
     type: 0
     arguments: 
     groupId: 0

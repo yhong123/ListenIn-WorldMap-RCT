@@ -31,20 +31,7 @@ public static class Tuple
 
 public class NetworkManager : MonoBehaviour
 {
-    public static string UserId;
-
-    private int remoteAttempts = 0;
-    private bool isInit = false;
-    public static bool IsInitialInternetCheckDone = false;
-
-    [SerializeField] private FreezeGameplayController freezeGameplayController;
-
-    #region INTERNET CHECK
-    [SerializeField] private float timeToCheckInternet = 3f;
-    public static bool HasInternet = false;
-    public static bool IsDoneTestingInternet = false;
-    private float timeToCheckInternetCurrent = 0;
-    #endregion
+    public static string IdUser;
 
     #region CSV
     public static char LineSeparatorCSV = '\n';
@@ -116,35 +103,11 @@ public class NetworkManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         FilePathCSV = string.Concat(Application.persistentDataPath, FileNameSeparator, "files");
         ListOfFileNamesStatic = ListOfFileNames;
-
-        TestInternetConnection();
     }
 
-    private void Update()
+    private void Start()
     {
-        if (IsDoneTestingInternet)
-        {
-            if (timeToCheckInternetCurrent > timeToCheckInternet)
-            {
-                TestInternetConnection();
-                timeToCheckInternetCurrent = 0;
-            }
-
-            if (HasInternet)
-            {
-                if (!isInit)
-                {
-                    StartCoroutine(SendDataToServer());
-                    isInit = true;
-                }
-            }
-            else
-            {
-                //Debug.LogError("<color=red><b>NO INTERNET</b></color>");
-            }
-            freezeGameplayController.FreezeGameplay(HasInternet);
-            timeToCheckInternetCurrent += Time.unscaledDeltaTime;
-        }
+        StartCoroutine(SendDataToServer());
     }
 
     IEnumerator SendDataToServer()
@@ -158,73 +121,36 @@ public class NetworkManager : MonoBehaviour
             else
                 yield return new WaitForSeconds(1);
 
-
             if (DataToSend.Count != 0) //IF THERE IS DATA TO SEND
             {
-                if (HasInternet)
+                Debug.Log(DataToSend[0].First.ServerURL);
+                using (UnityWebRequest www = UnityWebRequest.Post(DataToSend[0].First.ServerURL, DataToSend[0].First.DataForm))
                 {
-                    Debug.Log(DataToSend[0].First.ServerURL);
-                    using (UnityWebRequest www = UnityWebRequest.Post(DataToSend[0].First.ServerURL, DataToSend[0].First.DataForm))
+                    www.chunkedTransfer = true;
+                    www.certificateHandler = new AcceptAllCertificatesSignedWithASpecificPublicKey();
+
+                    yield return www.SendWebRequest();
+
+                    if (www.isNetworkError || www.isHttpError)
                     {
-                        www.chunkedTransfer = true;
-                        www.certificateHandler = new AcceptAllCertificatesSignedWithASpecificPublicKey();
-
-                        yield return www.SendWebRequest();
-
-                        if (www.isNetworkError || www.isHttpError)
-                        {
-                            Debug.LogError("<color=red>SERVER ERROR</color> Couldn't post the event SendDataServer(): " + www.error);
-                            remoteAttempts++;
-                        }
-                        else if (www.downloadHandler.text == "checksum_error")
-                        {
-                            Debug.LogError("<color=red>SERVER ERROR</color> checksum failed, trying again... SendDataServer()");
-                            remoteAttempts++;
-                        }
-                        else
-                        {
-                            remoteAttempts = 0;
-                            Debug.Log("<color=green>SUCCESS: </color>SendDataServer()");
-                            //CSV
-                            //if (isLocal || !string.IsNullOrEmpty(DataToSend[0].Second.FileName))
-                            //{
-                            //    AppendDataCSV(DataToSend[0].Second);
-                            //}
-                            //CSV
-                            if (DataToSend[0].First.callBackMethod != null)
-                            {
-                                Debug.Log("DataToSend[0].callBackMethod: " + DataToSend[0].First.callBackMethod.Method.Name);
-                                DataToSend[0].First.callBackMethod(www.downloadHandler.text);
-                            }
-
-                            DataToSend.RemoveAt(0);
-                            Debug.Log("QUERY SUCCESSFUL AND REMOVED FROM QUEUE");
-                        }
-
-                        if (remoteAttempts >= 50 && HasInternet)
-                        {
-                            Debug.LogError("<color=red>SERVER ERROR - SWITCHING TO OFFLINE MODE AFTER 50 ATTEMPS</color>");
-                            HasInternet = false;
-                        }
+                        Debug.LogError("<color=red>SERVER ERROR</color> Couldn't post the event SendDataServer(): " + www.error);
                     }
-                }
-                else if (isLocal && !HasInternet) //DO NOT WORK????????????????????
-                {
-                    Debug.Log("<color=green>SUCCESS: </color>LocalDataServer()");
-                    //CSV
-                    //if (DataToSend[0].First.ServerURL == NetworkUrl.ServerUrlDataInput)
-                    //{
-                    //    AppendDataCSV(DataToSend[0].Second);
-                    //}
-                    //CSV
-                    if (DataToSend[0].First.callBackMethod != null)
+                    else if (www.downloadHandler.text == "checksum_error")
                     {
-                        string result = string.Empty;
-                        Debug.Log("DataToSend[0].callBackMethod: " + DataToSend[0].First.callBackMethod.Method.Name);
-                        DataToSend[0].First.callBackMethod(result);
+                        Debug.LogError("<color=red>SERVER ERROR</color> checksum failed, trying again... SendDataServer()");
                     }
-                    DataToSend.RemoveAt(0);
-                    Debug.Log("QUERY SUCCESSFUL AND REMOVED FROM QUEUE");
+                    else
+                    {
+                        Debug.Log("<color=green>SUCCESS: </color>SendDataServer()");
+                        if (DataToSend[0].First.callBackMethod != null)
+                        {
+                            Debug.Log("DataToSend[0].callBackMethod: " + DataToSend[0].First.callBackMethod.Method.Name);
+                            DataToSend[0].First.callBackMethod(www.downloadHandler.text);
+                        }
+
+                        DataToSend.RemoveAt(0);
+                        Debug.Log("QUERY SUCCESSFUL AND REMOVED FROM QUEUE");
+                    }
                 }
             }
         }
@@ -328,28 +254,6 @@ public class NetworkManager : MonoBehaviour
                 TherapyFile.Close();
             }
         }
-    }
-
-    private void TestInternetConnection()
-    {
-        //Debug.Log("<b>Testing Internet Connection</b>");
-        IsDoneTestingInternet = false;
-        switch (Application.internetReachability)
-        {
-            case NetworkReachability.ReachableViaLocalAreaNetwork:
-                IsDoneTestingInternet = true;
-                HasInternet = true;
-                break;
-            case NetworkReachability.ReachableViaCarrierDataNetwork:
-                IsDoneTestingInternet = true;
-                HasInternet = true;
-                break;
-            default:
-                IsDoneTestingInternet = true;
-                HasInternet = false;
-                break;
-        }
-        IsInitialInternetCheckDone = true;
     }
 
     public static string GenerateFormContent(params object[] dataContent)

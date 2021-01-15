@@ -8,6 +8,9 @@ public static class NetworkUrl
     private const string ServerDataUrl = "https://listeninsoftv.ucl.ac.uk/php/data/";
     private const string ServerLoginUrl = "https://listeninsoftv.ucl.ac.uk/php/login/";
 
+    public static string UrlSqlRegister = string.Concat(ServerLoginUrl, "register.php");
+    public static string UrlSqlLogin = string.Concat(ServerLoginUrl, "login.php");
+    public static string UrlSqlSubscriptionCheck = string.Concat(ServerLoginUrl, "check_subscription.php");
 
     public static string ServerUrlDataInput = string.Concat(ServerDataUrl, "data_input_no_header.php");
     public static string ServerUrlFileCheck = string.Concat(ServerDataUrl, "file_check.php");

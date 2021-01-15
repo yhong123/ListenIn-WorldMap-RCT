@@ -14,7 +14,7 @@ public class CSV_Maker : MonoBehaviour {
 	[HideInInspector]
     public string path { get
         {
-            string folder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
+            string folder = GlobalVars.GetPathToLIROOutput(NetworkManager.IdUser);
             TherapyLadderStep currSARTinCycle = TherapyLIROManager.Instance.GetUserProfile.LIROStep;
             string filename = String.Format(GlobalVars.SARTStringFormat, currSARTinCycle.ToString(), TherapyLIROManager.Instance.GetCurrentTherapyCycle());
             return Path.Combine(folder, filename);
@@ -104,7 +104,7 @@ public class CSV_Maker : MonoBehaviour {
             //SEND TO SERVER
             byte[] dataAsBytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
             WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("id_user", NetworkManager.IdUser);
             form.AddField("file_name", filenameSart);
             form.AddField("file_size", dataAsBytes.Length);
             form.AddField("folder_name", GlobalVars.OutputFolderName);

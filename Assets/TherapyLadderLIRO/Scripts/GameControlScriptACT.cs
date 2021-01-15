@@ -184,7 +184,7 @@ public class GameControlScriptACT : MonoBehaviour
     private void LoadCurrentBlock()
     {
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", String.Format(
                             "{0}_{1}_Cycle_{2}",
                             TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(),
@@ -428,7 +428,7 @@ public class GameControlScriptACT : MonoBehaviour
     {
         TherapyLadderStep currentACTSection = TherapyLIROManager.Instance.GetUserProfile.LIROStep;
         string filename = String.Format(GlobalVars.ACTStringFormat, currentACTSection.ToString(), m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
-        string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
+        string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.IdUser);
 
 #if SAVE_LOCALLY
         //#ERASE
@@ -457,7 +457,7 @@ public class GameControlScriptACT : MonoBehaviour
         //SEND TO SERVER
         byte[] dataAsBytes = listString.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", filename);
         form.AddField("file_size", dataAsBytes.Length);
         form.AddField("folder_name", GlobalVars.OutputFolderName);

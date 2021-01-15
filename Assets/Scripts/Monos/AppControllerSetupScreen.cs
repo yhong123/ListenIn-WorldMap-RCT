@@ -42,17 +42,19 @@ public class AppControllerSetupScreen : MonoBehaviour
         if (isDebug) return;
 
         StartSetup();
+
+        Utility.Instance.SetElementVisibility(AppManager.Instance.LoadingPanel, false);
     }
 
     public void StartGameWithoutLogin()
     {
-        NetworkManager.UserId = userID.text;
+        NetworkManager.IdUser = userID.text;
         StartSetup();
     }
 
     public void StartSetup()
     {
-        Debug.Log("USER ID: " + NetworkManager.UserId);
+        Debug.Log("USER ID: " + NetworkManager.IdUser);
         m_playButton.interactable = false;
         m_playButton.gameObject.SetActive(false);
         switchPatient.gameObject.SetActive(false);
@@ -123,7 +125,7 @@ public class AppControllerSetupScreen : MonoBehaviour
 
         //AndreaLIRO_TB : This gets the user profile
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         NetworkManager.SendDataServer(form, NetworkUrl.SqlGetGameUserProfile, GetProfileCallback);
         
     }
@@ -134,12 +136,12 @@ public class AppControllerSetupScreen : MonoBehaviour
         {
             //AndreaLiro_TB : Getting the remaining part of the profile
             WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("id_user", NetworkManager.IdUser);
             NetworkManager.SendDataServer(form, NetworkUrl.SqlGetUserBasketTracking, GetUserBasketTrackingCallback);
         }
         else
         {
-            Debug.LogError("<color=red>Fatal Error: </color> Unable to retrieve USER ID profile : " + NetworkManager.UserId);
+            Debug.LogError("<color=red>Fatal Error: </color> Unable to retrieve USER ID profile : " + NetworkManager.IdUser);
         }
     }
 
@@ -334,7 +336,7 @@ public class AppControllerSetupScreen : MonoBehaviour
                         logsFile = File.ReadAllBytes(singleFile.FullName);
 
                         WWWForm form = new WWWForm();
-                        form.AddField("patient_id", NetworkManager.UserId);
+                        form.AddField("patient_id", NetworkManager.IdUser);
                         form.AddField("file_log", "file_log");
                         form.AddBinaryData("file_log", logsFile, singleFile.Name);
 
