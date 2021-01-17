@@ -10,6 +10,7 @@ public class VideoPlayerController : MonoBehaviour
 {
     public static VideoPlayerController Instance;
 
+    [SerializeField] private CanvasGroup bgImage; 
     // ACT = 0, SART_PRACTICE = 2, SART_TEST = 3, BASKET = 4, CORE = 5, QUESTIONAIRE = 1 };
     [SerializeField] private List<VideoTherapy> listOfVideos;
     [SerializeField] private RawImage rawImage;
@@ -22,7 +23,7 @@ public class VideoPlayerController : MonoBehaviour
         {
             Instance = this;
         }
-
+        bgImage.alpha = 0f;
         videoPlayer.loopPointReached += VideoPlayer_loopPointReached;
         videoPlayer.prepareCompleted += VideoPlayer_prepareCompleted;
     }
@@ -37,13 +38,14 @@ public class VideoPlayerController : MonoBehaviour
         videoPlayerPanel.alpha = 1;
         videoPlayerPanel.interactable = true;
         videoPlayerPanel.blocksRaycasts = true;
+        bgImage.alpha = 1;
         rawImage.texture = source.texture;
         source.Play();
     }
 
     public void PlayVideo()
     {
-        videoPlayer.aspectRatio = VideoAspectRatio.Stretch;
+        videoPlayer.aspectRatio = VideoAspectRatio.NoScaling;
         videoPlayer.Prepare();
     }
 
@@ -53,6 +55,7 @@ public class VideoPlayerController : MonoBehaviour
         videoPlayerPanel.alpha = 0;
         videoPlayerPanel.interactable = false;
         videoPlayerPanel.blocksRaycasts = false;
+        bgImage.alpha = 0;
     }
 
     public void SetVideo(TherapyLadderStep therapyStep)

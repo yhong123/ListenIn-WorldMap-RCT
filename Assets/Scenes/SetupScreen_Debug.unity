@@ -964,6 +964,7 @@ GameObject:
   - component: {fileID: 1128322971}
   - component: {fileID: 1128322973}
   - component: {fileID: 1128322974}
+  - component: {fileID: 1128322975}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -1052,6 +1053,19 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &1128322975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1128322970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1254083943, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 1
+  m_AspectRatio: 1.6
 --- !u!1 &1357396784
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,6 +1346,7 @@ GameObject:
   - component: {fileID: 1831438541}
   - component: {fileID: 1831438540}
   - component: {fileID: 1831438539}
+  - component: {fileID: 1831438544}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1384,7 +1399,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.5
+  orthographic size: 6.6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1413,6 +1428,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1831438544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1831438538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af060c4e13adc3f408cc89d873235f06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ct: 0
+  _adjustMode: 1
+  _verticalSnapMode: 1
+  _horizontalSnapMode: 1
+  _mainAreaWidth: 1920
+  _mainAreaHeight: 1200
+  _verticalFOV: 60.000004
+  _horizontalFOV: 85.46106
+  _verticalSize: 5.5
+  _horizontalSize: 8.8
 --- !u!1 &1946556176
 GameObject:
   m_ObjectHideFlags: 0

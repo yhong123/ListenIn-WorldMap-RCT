@@ -120,6 +120,9 @@ public class DebugMenu : MonoBehaviour {
 
     public float offsetFromRightSide = 0.0f;
 
+    private float width = 250;
+    private float height = 100;
+
     private void Start()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE || DEBUG_LIRO
@@ -131,6 +134,9 @@ public class DebugMenu : MonoBehaviour {
             comboBoxList[i] = new GUIContent(enumvalues[i]);
         }
 
+        width = Screen.width / 10.0f;
+        height = Screen.height / 20.0f;
+
         listStyle.normal.textColor = Color.white;
         listStyle.onHover.textColor = Color.yellow;
         listStyle.hover.background = new Texture2D(2, 2);
@@ -139,16 +145,16 @@ public class DebugMenu : MonoBehaviour {
         listStyle.padding.top = 0; 
         listStyle.padding.bottom = 4;
 
-        comboBoxControl = new ComboBox(new Rect(Screen.width - 240 - offsetFromRightSide, 20, 100, 30), comboBoxList[0], comboBoxList, "button", "box", listStyle);
+        comboBoxControl = new ComboBox(new Rect(Screen.width - 2 * width - offsetFromRightSide, 20, width, height), comboBoxList[0], comboBoxList, "button", "box", listStyle);
 #endif
     }
 
     private void OnGUI()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE || DEBUG_LIRO
-        GUI.Box(new Rect(Screen.width - 250 - offsetFromRightSide, 10, 240, 50), "");
+        GUI.Box(new Rect(Screen.width - 2 * width - 25 - offsetFromRightSide, 10, 2 * width + 50, height + 20), "");
         comboBoxControl.Show();
-        if (GUI.Button(new Rect(Screen.width - 130 - offsetFromRightSide, 20, 110, 30), "Change"))
+        if (GUI.Button(new Rect(Screen.width - width - offsetFromRightSide, 20, width, height), "Change"))
         {
             TherapyLIROManager.Instance.ChangeLIROSectionButton(enumvalues[comboBoxControl.SelectedItemIndex]);
         }
