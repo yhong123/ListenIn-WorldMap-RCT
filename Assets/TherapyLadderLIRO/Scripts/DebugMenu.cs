@@ -62,7 +62,7 @@ public class ComboBox
                 break;
         }
 
-        if (GUI.Button(rect, buttonContent, buttonStyle))
+        if (GUI.Button(rect, buttonContent, listStyle))
         {
             if (useControlID == -1)
             {
@@ -80,8 +80,8 @@ public class ComboBox
 
         if (isClickedComboButton)
         {
-            Rect listRect = new Rect(rect.x, rect.y + listStyle.CalcHeight(listContent[0], 1.0f),
-                      rect.width, listStyle.CalcHeight(listContent[0], 1.0f) * listContent.Length);
+            Rect listRect = new Rect(rect.x, rect.y + listStyle.CalcHeight(listContent[0], 5.0f),
+                      rect.width, listStyle.CalcHeight(listContent[0], 200f) * listContent.Length);
 
             GUI.Box(listRect, "", boxStyle);
             int newSelectedItemIndex = GUI.SelectionGrid(listRect, selectedItemIndex, listContent, 1, listStyle);
@@ -144,6 +144,11 @@ public class DebugMenu : MonoBehaviour {
         listStyle.padding.right = 0;
         listStyle.padding.top = 0; 
         listStyle.padding.bottom = 4;
+        listStyle.fixedHeight = height * 0.8f;
+        listStyle.fixedWidth = width * 0.8f;
+        listStyle.stretchHeight = false;
+        listStyle.stretchWidth = false;
+        listStyle.fontSize = (int)(10.0f * width/height);
 
         comboBoxControl = new ComboBox(new Rect(Screen.width - 2 * width - offsetFromRightSide, 20, width, height), comboBoxList[0], comboBoxList, "button", "box", listStyle);
 #endif
@@ -154,7 +159,7 @@ public class DebugMenu : MonoBehaviour {
 #if UNITY_EDITOR || UNITY_STANDALONE || DEBUG_LIRO
         GUI.Box(new Rect(Screen.width - 2 * width - 25 - offsetFromRightSide, 10, 2 * width + 50, height + 20), "");
         comboBoxControl.Show();
-        if (GUI.Button(new Rect(Screen.width - width - offsetFromRightSide, 20, width, height), "Change"))
+        if (GUI.Button(new Rect(Screen.width - width - offsetFromRightSide, 20, width, height), "Change", listStyle))
         {
             TherapyLIROManager.Instance.ChangeLIROSectionButton(enumvalues[comboBoxControl.SelectedItemIndex]);
         }

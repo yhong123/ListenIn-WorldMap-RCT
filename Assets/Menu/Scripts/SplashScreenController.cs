@@ -7,6 +7,7 @@ using MadLevelManager;
 public class SplashScreenController : MonoBehaviour {
 
     [Header("Assign in inspector")]
+    public string levelToLoad = "Login";
     public List<Image> logos = new List<Image>();
     public float updateTimeForLogo = 3.0f;
     private int counter = 0;
@@ -91,7 +92,7 @@ public class SplashScreenController : MonoBehaviour {
 
     private void SwitchScene()
     {
-        MadLevel.LoadLevelByName("SetupScreenDebug");
+        MadLevel.LoadLevelByName(levelToLoad);
     }
 
     private void StopAnimation()
