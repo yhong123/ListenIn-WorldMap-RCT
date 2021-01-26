@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class IAPUserInterface : MonoBehaviour
 {
-	[SerializeField] private bool debugSubscribed;
 	[SerializeField] private CanvasGroup panelSubscription;
 	[SerializeField] private CanvasGroup panelSubscriptionBad;
 	[SerializeField] private CanvasGroup panelSubscriptionGood;
@@ -39,7 +38,7 @@ public class IAPUserInterface : MonoBehaviour
 
 	private void CheckSubscriptionCallback(string response)
 	{
-		if (response == "true" || IAPManager.Instance.GetIsSubscribed() || debugSubscribed)
+		if (response == "true" || IAPManager.Instance.GetIsSubscribed() || !AppManager.Instance.IsNeedSubscription)
 		{
 			return;
 		}

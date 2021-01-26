@@ -11,6 +11,8 @@ public class AppManager : MonoBehaviour
 
     public const string UserIdKey = "user_id";
 
+    public bool IsNeedSubscription;
+
     private void Awake()
     {
         if(Instance == null)

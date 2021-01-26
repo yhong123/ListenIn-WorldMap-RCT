@@ -94,17 +94,22 @@ public class SignInManager : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("id_user", idUser);
         NetworkManager.SendDataServer(form, NetworkUrl.UrlSqlLogin, CheckIdUserCallback);
+
+        AppManager.Instance.SaveUserTokenId(idUser);
     }
 
     private void CheckIdUserCallback(string response)
     {
-        if (response == "new_user")
+        string[] values = response.Split('+');
+        if (values[0] == "new_user")
         {
             SceneManager.LoadScene("Registration");
         }
-        else if (response == "exist")
+        else if (values[0] == "exist")
         {
             MadLevel.LoadLevelByName("Setup Screen");
         }
+
+        AppManager.Instance.IsNeedSubscription = values[1] == "1";
     }
 }
