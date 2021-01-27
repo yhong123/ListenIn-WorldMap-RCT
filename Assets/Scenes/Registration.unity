@@ -664,7 +664,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -33.6}
-  m_SizeDelta: {x: 1016.21, y: 1630}
+  m_SizeDelta: {x: 1016.21, y: 1872.22}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &41100539
 MonoBehaviour:
@@ -698,60 +698,66 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "<size=28><b>Electronic Information Sheet for Participants taking part in
-    theOnline phase of the Listen-In study\r</b></size>\n\n\u2022\tThe information
-    page will appear at the point where new users wish to register with the.\r\n\u2022\tAn
-    audio version with the identical information will be available with an easy to
-    see icon next to each paragraph.\r\n\n<b>Title of Project:</b> Listen-In: the
-    development and testing of a web-based therapy application for patients with impaired
-    speech comprehension caused by stroke.\r\n\n<b>Ethics approval:</b> This study
-    has been approved by the NRES Committee London- Hampstead Research Ethics Committee
-    REC number:15/LO/0569\r\nVersion:2\r\nDate: 11/05/2015\r\n\n<b>Chief Investigator:</b>
-    DrAlex Leff\r\nInstitute of Cognitive Neuroscience\r\nUniversity College London\r\n17
-    Queen Square\r\nLondon\t\r\nWC1N 3AR\r\nE: a.leff@ucl.ac.uk\r\n\r\n<b>Introduction\r</b>\nWe
-    would like to invite you to participate in this research project. You should only
-    participate if you want to; choosing not to take part will not disadvantage you
-    in any way. Before you decide whether you want to take part, it is important for
-    you to read the following information carefully and discuss it with others if
-    you wish. Ask us if there is anything that is not clear or you would like more
-    information. \r\n\n<b>Background\r</b>\nLanguage impairment (aphasia) is the second
-    most common major impairment after stroke, with a prevalence of ~250,000 in the
-    UK. Speech and Language therapy is available to alleviate this impairment.  Aphasia
-    may respond to therapy many months and years after the stroke occurs, but provision
-    of specialist therapy (speech and language therapy - SALT) is far below that needed
-    to provide optimal rehabilitation.\r\nWe are hoping to address this by targeting
-    a common symptom of post-stroke aphasia: <b>impaired speech comprehension</b>.
-    Listen-In  is designed to improve speech comprehension in patients with post-stroke
-    aphasia, who are in the chronic phase (>6 months post-stroke).\r\n\n<b>Aim\r</b>\nThe
-    aim of this study is see whether the Listen-In App improves aphasic patients\u2019
-    ability to comprehend speech.\r\n\n<b>What is Listen-In?\r</b>\nListen-In is an
-    electronic therapy App for patients with aphasia. It has three main components:\r\n1)<b>Baseline
-    tests</b>: These provide a basic language profile of each subject. It takes about
-    1 hour to complete these tests.\r\n2)<b>Therapy</b>: You will spend the vast majority
-    of your time on this. It consists of several therapy \u2018games\u2019 that adapt
-    to your abilities and treat different aspects of speech comprehension.\r\n3)<b>Outcome
-    measures</b>: After you have completed a certain amount of therapy, you will be
-    directed to test yourself to see if your language function has improved. These
-    tests are a mixture of impairment-based tests and questionnaires on your own view
-    of your language function.\r\n\n<b>What happens to my data?\r</b>\nWe would also
-    like to know if the rehabilitation is working for you. The most scientific way
-    to do this is for us to collect data on how you progress through the website and
-    your scores on the tests mentioned above. All data is collected and stored on
-    a secure UCL server in accordance with the Data Protection Act 1998. You will
-    be able to access all your own scores and see if the therapy is working for you.\r\n\n<b>How
-    often and how long do I practice for?\r</b>\nOur recent trial showed that people
-    need to practice for 85 hourson average to get a statistically significant benefit
-    from Listen-In. Some people need more time than others. We recommend practicing
-    with Listen-Infor between 30 and 60 minutes a day, although the best thing is
-    to go at your own pace. It is extremely unlikely that interacting with the App
-    will do you any harm, but if you find it uncomfortable in any way you should stop.
-    You can always try again later or for a shorter period of time.\r\n\n<b>You are
-    free to end you participation at any time\r</b>\nIt is up to you to decide whether
-    or not to take part. If you choose not to participate it will involve no penalty
-    or loss of benefits to which you are otherwise entitled. If you decide to take
-    part you will need to fill in the online consent form. If you decide to take part
-    you are still free to withdraw at any time and without giving a reason. If you
-    wish for your data to be deleted you can action this at any point.\r\n"
+  m_Text: "<b>Title of Project:</b> Listen-In: the development and testing of a web-based
+    therapy application for patients with impaired speech comprehension caused by
+    stroke.\r\n\r\n<b>Ethics approval:</b> This study has been approved by the NRES
+    Committee London- Hampstead Research Ethics Committee REC number:15/LO/0569\r\nVersion:4\r\nDate:
+    11/05/2015\r\n\r\n<b>Chief Investigator:</b> DrAlex Leff\r\nInstitute of Cognitive
+    Neuroscience\r\nUniversity College London\r\n17 Queen Square\r\nLondon\t\r\nWC1N
+    3AR\r\nE: a.leff@ucl.ac.uk\r\n\r\n<color=#158890FF><b>Introduction\r\n</b></color>\r\nWe
+    would like to invite you to <b>participate</b> in this <b>research project</b>.
+    You should only <b>participate</b> if <b>you want to</b>; choosing <b>not</b>
+    to take part will <b>not disadvantage you</b> in any way. Before you decide whether
+    you want to take part, it is important for you to <b>read the following information</b>
+    carefully and discuss it with others if you wish. <b>Ask us</b> if there is anything
+    that is not clear or you would like <b>more information</b>. \r\n\r\n<color=#158890FF><b>Background\r\n</b></color>\r\n<b>Language
+    impairment (aphasia)</b> is the second most common major impairment after stroke,
+    with a prevalence of <b>~250,000 in the UK</b>. <b>Speech and Language therapy</b>
+    is available to alleviate this impairment.  <b>Aphasia</b> may respond to therapy
+    <b>many months and years after the stroke occurs</b>, but <b>provision of specialist
+    therapy</b> is <b>far below</b> that needed to provide <b>optimal rehabilitation</b>.\r\nWe
+    are hoping to address this by <b>targeting a common symptom</b> of post-stroke
+    aphasia: <b>impaired speech comprehension</b>. Listen-In  is designed to <b>improve
+    spoken language comprehension</b> in patients with <b>post-stroke aphasia</b>,
+    who are in the chronic phase (more than 6 months after stroke).\r\n\r\n<color=#158890FF><b>Aim\r\n</b></color>\r\nThe
+    <b>aim</b> of this study is see whether the <b>Listen-In App improves</b> aphasic
+    patients\u2019 ability to <b>comprehend speech</b>.\r\n\r\n<color=#158890FF><b>What
+    is Listen-In?\r\n</b></color>\r\n<b>Listen-In</b> is an <b>electronic therapy
+    App</b> for persons with aphasia. It has three main components:\r\n1)<b>Two baseline
+    tests</b>. These probe <b>spoken word comprehension</b> and <b>attention</b> skills.
+    It takes about <b>1 hour</b> to complete.\r\n2)<b>Therapy</b>. You will spend
+    the majority of your time on this. Therapy consists of <b>spoken language comprehension
+    challenges</b>, and short games that provide regular breaks.\r\n3)<b>Outcome measures</b>.
+    <b>After</b> you have completed <b>once cycle of therapy</b>, you will be directed
+    to <b>test yourself</b> to see if your <b>spoken language comprehension</b> has
+    improved. This involves completing the same <b>two tests again</b>. There is also
+    a short <b>questionnaire</b>, to capture your <b>own view of your language skills</b>.\r\n\r\n<color=#158890FF><b>What
+    happens to my data?\r\n</b></color>\r\nWe would also like to know if the <b>Listen-In
+    app</b> is working for <b>you</b>. The most <b>scientific</b> way to do this is
+    for us to <b>collect data</b> on how you <b>progress</b> through the <b>app</b>
+    and your <b>scores</b> on the <b>tests</b> (mentioned above). <b>All data is collected
+    and stored on a secure UCL server</b> in accordance with the <b>Data Protection
+    Act 1998</b>. You will be <b>able to access your most recent spoken word comprehension
+    score</b> to see if the <b>therapy is working for you</b>.\r\n\r\n<color=#158890FF><b>How
+    often and how long do I practice for?\r\n</b></color>\r\nIn our <b>recent trial,
+    participants with aphasia played Listen-In for 85 hours</b> (on average). \r\nWe
+    <b>tested participants spoken word comprehension</b> skills before and after therapy.
+    \r\nThe <b>results</b> showed that participants <b>returned to \u2018normal\u2019
+    performance by 30%</b> (on average). (\u2018Normal\u2019 performance is the average
+    score by a group of same age adults without aphasia). <b>Some people need more
+    or less time</b> than others. \r\nWe recommend <b>practicing</b> with <b>Listen-In</b>
+    for between <b>20 and 40 minutes a day</b>, although the best thing is to go at
+    your <b>own pace</b>. \r\nIt is extremely <b>unlikely</b> that interacting with
+    the App will do you any <b>harm</b>, but if you find it <b>uncomfortable</b> in
+    any way you should <b>stop</b>. You can always try again later or for a shorter
+    period of time. \r\n\r\n<color=#158890FF><b>You are free to end you participation
+    at any time\r\n</b></color>\r\nIt is up to <b>you to decide</b> whether or not
+    to <b>take part</b>. If you choose <b>not to participate</b> it will involve <b>no
+    penalty or loss of benefits</b> to which you are otherwise entitled. If you <b>decide
+    to take part</b> you will need to fill in the <b>consent form</b> in the Listen-In
+    app. If you decide to take part you are still <b>free to withdraw at any time</b>
+    and without giving a reason. If you wish for <b>your data to be deleted</b> you
+    can action this at any point (see the <b>'About' page</b> in the <b>App</b>).\r\n"
 --- !u!222 &41100540
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4239,7 +4245,7 @@ RectTransform:
   - {fileID: 1205818612}
   - {fileID: 2017510703}
   m_Father: {fileID: 533796445}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -6526,6 +6532,7 @@ GameObject:
   - component: {fileID: 466746075}
   - component: {fileID: 466746074}
   - component: {fileID: 466746076}
+  - component: {fileID: 466746077}
   m_Layer: 5
   m_Name: Month
   m_TagString: Untagged
@@ -6545,6 +6552,7 @@ RectTransform:
   m_Children:
   - {fileID: 374237295}
   - {fileID: 1313531156}
+  - {fileID: 1620327812}
   - {fileID: 983759197}
   m_Father: {fileID: 2130480312}
   m_RootOrder: 6
@@ -6661,6 +6669,47 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Dropdown+DropdownEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &466746077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 466746072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1620327809}
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1630928402}
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1 &494042829
 GameObject:
   m_ObjectHideFlags: 0
@@ -6912,6 +6961,7 @@ GameObject:
   - component: {fileID: 533796448}
   - component: {fileID: 533796447}
   - component: {fileID: 533796446}
+  - component: {fileID: 533796449}
   m_Layer: 5
   m_Name: Year
   m_TagString: Untagged
@@ -6931,6 +6981,7 @@ RectTransform:
   m_Children:
   - {fileID: 580167218}
   - {fileID: 120904250}
+  - {fileID: 1630928403}
   - {fileID: 278557280}
   m_Father: {fileID: 2130480312}
   m_RootOrder: 7
@@ -7243,6 +7294,47 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 533796444}
   m_CullTransparentMesh: 0
+--- !u!114 &533796449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 533796444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1630928402}
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1620327809}
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1 &538818943
 GameObject:
   m_ObjectHideFlags: 0
@@ -7619,7 +7711,7 @@ RectTransform:
   m_Father: {fileID: 1597941494}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.629647}
+  m_AnchorMin: {x: 0, y: 0.66880584}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -7979,7 +8071,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 1620327809}
+        - m_Target: {fileID: 1667049755}
           m_MethodName: SetActive
           m_Mode: 6
           m_Arguments:
@@ -12037,7 +12129,7 @@ RectTransform:
   - {fileID: 642083582}
   - {fileID: 780396836}
   m_Father: {fileID: 466746073}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -13812,7 +13904,7 @@ MonoBehaviour:
     study</b></size>\r\nListen-In: the development and testing of a web-based therapy
     application for patients with impaired speech comprehension caused by stroke.\nName
     of Chief investigator: Dr Alex Leff\r\nREC Number: NRES Committee London- Hampstead
-    Research Ethics Committee REC number: 15/LO/0569 \r\nVersion: 3\r\nDate: 25/10/2015\r\n\t\r\n<b>Participant\u2019s
+    Research Ethics Committee REC number: 15/LO/0569 \r\nVersion: 4\nDate: 25/10/2015\r\n\t\r\n<b>Participant\u2019s
     Statement</b>\r\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t                                          \n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\tI
     am 18 years or older.\t\t\r\n\t\r\n\tI have read the information sheet and/or
     listened to the auditory version.\t\r\n\t\r\n\tI agree to participate in the study.\t\r\n\t\r\n\r\nI
@@ -19135,7 +19227,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1620327809}
+        - m_Target: {fileID: 1667049755}
           m_MethodName: SetActive
           m_Mode: 6
           m_Arguments:
@@ -19396,7 +19488,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Please <b>complete</b> the <b>form</b> below:'
+  m_Text: Now, please <b>complete</b> the <b>consent form</b>
 --- !u!222 &1527471387
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -19920,7 +20012,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 590368538}
   m_Direction: 2
   m_Value: 0.9999999
-  m_Size: 0.3703529
+  m_Size: 0.3311941
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -20965,7 +21057,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000029945793, y: 0.00008367787}
-  m_SizeDelta: {x: 0, y: 1700}
+  m_SizeDelta: {x: 0, y: 1901}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1620327809
 GameObject:
@@ -20978,7 +21070,7 @@ GameObject:
   - component: {fileID: 1620327811}
   - component: {fileID: 1620327810}
   m_Layer: 5
-  m_Name: FemaleHighlight
+  m_Name: MonthHighlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21026,16 +21118,85 @@ RectTransform:
   m_GameObject: {fileID: 1620327809}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.6350048, y: 2.6350048, z: 2.6350048}
+  m_LocalScale: {x: 2.6350152, y: 2.6350152, z: 2.6350152}
   m_Children: []
-  m_Father: {fileID: 1767887981}
+  m_Father: {fileID: 466746073}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.0000076293945}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 115.2, y: 41.9}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1630928402
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1630928403}
+  - component: {fileID: 1630928405}
+  - component: {fileID: 1630928404}
+  m_Layer: 5
+  m_Name: YearHighlight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1630928403
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1630928402}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.6350043, y: 2.6350043, z: 2.6350043}
+  m_Children: []
+  m_Father: {fileID: 533796445}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 75.7, y: 41.9}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1630928404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1630928402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.04705883, g: 0.6392157, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 21300000, guid: 46da2eeccbafbe54d8e8339e03fded43, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1630928405
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1630928402}
+  m_CullTransparentMesh: 0
 --- !u!1 &1639899156
 GameObject:
   m_ObjectHideFlags: 0
@@ -21379,6 +21540,75 @@ CanvasRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1666988250}
+  m_CullTransparentMesh: 0
+--- !u!1 &1667049755
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1667049756}
+  - component: {fileID: 1667049758}
+  - component: {fileID: 1667049757}
+  m_Layer: 5
+  m_Name: FemaleHighlight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1667049756
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1667049755}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.6349974, y: 2.6349974, z: 2.6349974}
+  m_Children: []
+  m_Father: {fileID: 1767887981}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1667049757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1667049755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.04705883, g: 0.6392157, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 21300000, guid: 46da2eeccbafbe54d8e8339e03fded43, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1667049758
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1667049755}
   m_CullTransparentMesh: 0
 --- !u!1 &1680487461
 GameObject:
@@ -22689,7 +22919,7 @@ RectTransform:
   m_Children:
   - {fileID: 1126282840}
   - {fileID: 1854794182}
-  - {fileID: 1620327812}
+  - {fileID: 1667049756}
   m_Father: {fileID: 875260583}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -22772,7 +23002,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1620327809}
+        - m_Target: {fileID: 1667049755}
           m_MethodName: SetActive
           m_Mode: 6
           m_Arguments:
@@ -25131,7 +25361,7 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: You <b>have chosen</b> to take part in the <color=#158890FF><b>research
-    study</b></color>?
+    study</b></color>
 --- !u!222 &1919962018
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -25818,9 +26048,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'What <b>month</b> and <b>year</b> did your <b>speech
-
-    comprehension difficulty</b> begin? '
+  m_Text: '<b>When</b> did your <b>speech comprehension difficulty begin</b>? '
 --- !u!222 &1991599241
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -27,8 +27,8 @@ MonoBehaviour:
     extensionGUID: 
     lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 19374a8a74b27fd499767e711d6c4b7e, type: 3}
-    _scenePath: Assets/Scenes/Login.unity
-    _sceneName: Login
+    _scenePath: Assets/Scenes/Registration.unity
+    _sceneName: Registration
     scene: 
     parent: {fileID: 11400000}
     order: 10
@@ -97,7 +97,7 @@ MonoBehaviour:
     arguments: Dodgeball
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -109,7 +109,7 @@ MonoBehaviour:
     arguments: Halloween
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -121,7 +121,7 @@ MonoBehaviour:
     arguments: Artic View
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -133,7 +133,7 @@ MonoBehaviour:
     arguments: Space Travel
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -145,7 +145,7 @@ MonoBehaviour:
     arguments: London
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -157,7 +157,7 @@ MonoBehaviour:
     arguments: Fearless Ski
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -169,7 +169,7 @@ MonoBehaviour:
     arguments: Great Coliseum
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -181,7 +181,7 @@ MonoBehaviour:
     arguments: Moscow
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -193,7 +193,7 @@ MonoBehaviour:
     arguments: Tibet
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -205,7 +205,7 @@ MonoBehaviour:
     arguments: Fuji Mountain
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -217,7 +217,7 @@ MonoBehaviour:
     arguments: Wonder Land
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -229,7 +229,7 @@ MonoBehaviour:
     arguments: Egypt
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -241,7 +241,7 @@ MonoBehaviour:
     arguments: Cheeky Jungle
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -253,7 +253,7 @@ MonoBehaviour:
     arguments: Underworld
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -265,7 +265,7 @@ MonoBehaviour:
     arguments: Cookie Monster
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -277,7 +277,7 @@ MonoBehaviour:
     arguments: Fun Fair
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -289,7 +289,7 @@ MonoBehaviour:
     arguments: Far Islands
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -301,7 +301,7 @@ MonoBehaviour:
     arguments: Candy Madness
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
@@ -313,7 +313,7 @@ MonoBehaviour:
     arguments: Tricky Lights
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 8db450a07db8c2543b97cd178e93144e, type: 3}
     _scenePath: Assets/Scenes/Demo.unity
     _sceneName: Demo
