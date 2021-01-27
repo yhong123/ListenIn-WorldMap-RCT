@@ -4667,7 +4667,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 1
   orthographic size: 5.5
   m_Depth: -1
@@ -7904,6 +7904,7 @@ GameObject:
   - component: {fileID: 1466789066}
   - component: {fileID: 1466789065}
   - component: {fileID: 1466789068}
+  - component: {fileID: 1466789069}
   m_Layer: 0
   m_Name: MainCanvas
   m_TagString: Untagged
@@ -7992,6 +7993,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1466789069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1466789064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1254083943, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 1
+  m_AspectRatio: 1.7
 --- !u!1 &1476923048
 GameObject:
   m_ObjectHideFlags: 0

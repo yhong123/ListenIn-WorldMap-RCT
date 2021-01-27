@@ -107,7 +107,7 @@ public class SignInManager : MonoBehaviour
         }
         else if (values[0] == "exist")
         {
-            MadLevel.LoadLevelByName("Setup Screen");
+            SceneManager.LoadScene("SetupScreen");
         }
 
         AppManager.Instance.IsNeedSubscription = values[1] == "1";
