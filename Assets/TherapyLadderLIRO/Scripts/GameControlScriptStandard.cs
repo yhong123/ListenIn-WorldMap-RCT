@@ -203,7 +203,7 @@ public class GameControlScriptStandard : MonoBehaviour
                         );
 
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", String.Format(
                             "THERAPY_{1}_Cycle_{2}",
                             TherapyLIROManager.Instance.GetCurrentLadderStep().ToString(),
@@ -501,7 +501,7 @@ public class GameControlScriptStandard : MonoBehaviour
     private void SaveCurrentBlockResponse()
     {
         string filename = String.Format("THERAPY_{0}_Cycle_{1}.csv", m_challengeResponse.m_block.ToString(), m_challengeResponse.m_cycle.ToString());
-        string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
+        string pathFolder = GlobalVars.GetPathToLIROOutput(NetworkManager.IdUser);
 
 #if SAVE_LOCALLY
         //#ERASE
@@ -569,7 +569,7 @@ public class GameControlScriptStandard : MonoBehaviour
         //SEND TO SERVER
         byte[] dataAsBytes = listString.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", filename);
         form.AddField("file_size", dataAsBytes.Length);
         form.AddField("folder_name", GlobalVars.OutputFolderName);

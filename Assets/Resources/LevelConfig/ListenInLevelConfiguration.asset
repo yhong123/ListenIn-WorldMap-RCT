@@ -26,12 +26,24 @@ MonoBehaviour:
     groupId: 0
     extensionGUID: 
     lockedByDefault: 1
+  - _sceneObject: {fileID: 102900000, guid: 19374a8a74b27fd499767e711d6c4b7e, type: 3}
+    _scenePath: Assets/Scenes/Registration.unity
+    _sceneName: Registration
+    scene: 
+    parent: {fileID: 11400000}
+    order: 10
+    name: Login
+    type: 0
+    arguments: 
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 494c12c371a599b40845e9987e648ba2, type: 3}
     _scenePath: Assets/Scenes/SetupScreen_Debug.unity
     _sceneName: SetupScreen_Debug
     scene: 
     parent: {fileID: 11400000}
-    order: 10
+    order: 20
     name: SetupScreenDebug
     type: 0
     arguments: 
@@ -43,7 +55,7 @@ MonoBehaviour:
     _sceneName: SetupScreen
     scene: 
     parent: {fileID: 11400000}
-    order: 20
+    order: 30
     name: Setup Screen
     type: 0
     arguments: 
@@ -55,7 +67,7 @@ MonoBehaviour:
     _sceneName: LevelSelectScene
     scene: 
     parent: {fileID: 11400000}
-    order: 30
+    order: 40
     name: World Map Select
     type: 0
     arguments: 
@@ -67,7 +79,7 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 40
+    order: 50
     name: Great Canyon
     type: 1
     arguments: Great Canyon
@@ -79,235 +91,235 @@ MonoBehaviour:
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
-    order: 50
+    order: 60
     name: Dodgeball
     type: 1
     arguments: Dodgeball
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
-  - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
-    _scenePath: Assets/Scenes/GameLoop.unity
-    _sceneName: GameLoop
-    scene: 
-    parent: {fileID: 11400000}
-    order: 60
-    name: Halloween
-    type: 1
-    arguments: Halloween
-    groupId: 0
-    extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 70
-    name: Artic View
+    name: Halloween
     type: 1
-    arguments: Artic View
+    arguments: Halloween
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 80
-    name: Space Travel
+    name: Artic View
     type: 1
-    arguments: Space Travel
+    arguments: Artic View
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 90
-    name: London
+    name: Space Travel
     type: 1
-    arguments: London
+    arguments: Space Travel
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 100
-    name: Fearless Ski
+    name: London
     type: 1
-    arguments: Fearless Ski
+    arguments: London
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 110
-    name: Great Coliseum
+    name: Fearless Ski
     type: 1
-    arguments: Great Coliseum
+    arguments: Fearless Ski
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 120
-    name: Moscow
+    name: Great Coliseum
     type: 1
-    arguments: Moscow
+    arguments: Great Coliseum
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 130
-    name: Tibet
+    name: Moscow
     type: 1
-    arguments: Tibet
+    arguments: Moscow
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 140
-    name: Fuji Mountain
+    name: Tibet
     type: 1
-    arguments: Fuji Mountain
+    arguments: Tibet
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 150
-    name: Wonder Land
+    name: Fuji Mountain
     type: 1
-    arguments: Wonder Land
+    arguments: Fuji Mountain
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 160
-    name: Egypt
+    name: Wonder Land
     type: 1
-    arguments: Egypt
+    arguments: Wonder Land
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 170
-    name: Cheeky Jungle
+    name: Egypt
     type: 1
-    arguments: Cheeky Jungle
+    arguments: Egypt
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 180
-    name: Underworld
+    name: Cheeky Jungle
     type: 1
-    arguments: Underworld
+    arguments: Cheeky Jungle
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 190
-    name: Cookie Monster
+    name: Underworld
     type: 1
-    arguments: Cookie Monster
+    arguments: Underworld
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 200
-    name: Fun Fair
+    name: Cookie Monster
     type: 1
-    arguments: Fun Fair
+    arguments: Cookie Monster
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 210
-    name: Far Islands
+    name: Fun Fair
     type: 1
-    arguments: Far Islands
+    arguments: Fun Fair
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 220
-    name: Candy Madness
+    name: Far Islands
     type: 1
-    arguments: Candy Madness
+    arguments: Far Islands
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
     _scenePath: Assets/Scenes/GameLoop.unity
     _sceneName: GameLoop
     scene: 
     parent: {fileID: 11400000}
     order: 230
+    name: Candy Madness
+    type: 1
+    arguments: Candy Madness
+    groupId: 0
+    extensionGUID: 
+    lockedByDefault: 1
+  - _sceneObject: {fileID: 102900000, guid: 4993528601a162947b242ae9ec0d1e85, type: 3}
+    _scenePath: Assets/Scenes/GameLoop.unity
+    _sceneName: GameLoop
+    scene: 
+    parent: {fileID: 11400000}
+    order: 240
     name: Tricky Lights
     type: 1
     arguments: Tricky Lights
     groupId: 0
     extensionGUID: 
-    lockedByDefault: 0
+    lockedByDefault: 1
   - _sceneObject: {fileID: 102900000, guid: 8db450a07db8c2543b97cd178e93144e, type: 3}
     _scenePath: Assets/Scenes/Demo.unity
     _sceneName: Demo
     scene: 
     parent: {fileID: 11400000}
-    order: 240
+    order: 250
     name: Demo Level
     type: 0
     arguments: 
@@ -319,7 +331,7 @@ MonoBehaviour:
     _sceneName: GameIntro
     scene: 
     parent: {fileID: 11400000}
-    order: 250
+    order: 260
     name: Game Intro
     type: 0
     arguments: 
@@ -331,7 +343,7 @@ MonoBehaviour:
     _sceneName: BasketSelection
     scene: 
     parent: {fileID: 11400000}
-    order: 260
+    order: 270
     name: Basket Selection
     type: 0
     arguments: 
@@ -343,7 +355,7 @@ MonoBehaviour:
     _sceneName: ACT
     scene: 
     parent: {fileID: 11400000}
-    order: 270
+    order: 280
     name: ACT
     type: 0
     arguments: 
@@ -355,7 +367,7 @@ MonoBehaviour:
     _sceneName: MainHUB
     scene: 
     parent: {fileID: 11400000}
-    order: 280
+    order: 290
     name: MainHUB
     type: 0
     arguments: 
@@ -367,7 +379,7 @@ MonoBehaviour:
     _sceneName: SART
     scene: 
     parent: {fileID: 11400000}
-    order: 290
+    order: 300
     name: SART
     type: 0
     arguments: 
@@ -379,20 +391,8 @@ MonoBehaviour:
     _sceneName: SART_Practice
     scene: 
     parent: {fileID: 11400000}
-    order: 300
-    name: SART_PRACTICE
-    type: 0
-    arguments: 
-    groupId: 0
-    extensionGUID: 
-    lockedByDefault: 1
-  - _sceneObject: {fileID: 102900000, guid: 19374a8a74b27fd499767e711d6c4b7e, type: 3}
-    _scenePath: Assets/Scenes/Login.unity
-    _sceneName: Login
-    scene: 
-    parent: {fileID: 11400000}
     order: 310
-    name: Login
+    name: SART_PRACTICE
     type: 0
     arguments: 
     groupId: 0

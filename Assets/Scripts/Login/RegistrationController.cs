@@ -96,10 +96,15 @@ public class RegistrationController : MonoBehaviour
 
         foreach (RegistrationStepObject item in ListOfRegistrationStepObject)
         {
+            if (item.RegistrationCanvas == null) continue;
             SetCanvasGroupVisibility(item.RegistrationCanvas, false);
         }
 
         SetCanvasGroupVisibility(ListOfRegistrationStepObject.Where(type => type.RegistrationStep == InitialRegistrationStep).Single().RegistrationCanvas, true);
+    }
+    private void Start()
+    {
+        Utility.Instance.SetElementVisibility(AppManager.Instance.LoadingPanel, false);
     }
 
     public void SetDateForStrokeToDefault()
@@ -151,6 +156,7 @@ public class RegistrationController : MonoBehaviour
 
     private void SetCanvasGroupVisibility(CanvasGroup panel, bool isVisible)
     {
+        if (panel == null) return;
         panel.blocksRaycasts = isVisible;
         panel.interactable = isVisible;
         panel.alpha = isVisible ? 1 : 0;

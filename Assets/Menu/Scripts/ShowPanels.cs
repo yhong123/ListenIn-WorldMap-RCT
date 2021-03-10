@@ -1,4 +1,4 @@
-﻿#define DEBUG
+﻿//#define DEBUG
 using UnityEngine;
 using System;
 using System.Collections;
@@ -196,11 +196,12 @@ public class ShowPanels : MonoBehaviour {
             menuPanel.SetActive(false);
             optionsTint.SetActive(false);
             locked = false;
-#if DEBUG
-            StatePinball.Instance.m_PinballMono.UnlockAndFinishPinballGame(true);
-#else
+//#if DEBUG
+//            StatePinball.Instance.m_PinballMono.UnlockAndFinishPinballGame(true);
+//#else
+//            StatePinball.Instance.m_PinballMono.UnlockAndFinishPinballGame(false);
+//#endif
             StatePinball.Instance.m_PinballMono.UnlockAndFinishPinballGame(false);
-#endif
 
         }
 

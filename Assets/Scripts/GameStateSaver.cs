@@ -44,7 +44,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
     public void DownloadGameProgress()
     {
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", FileName());
         form.AddField("folder_name", GlobalVars.GameProgressFolderName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetFile, DownloadGameProgressCallback);
@@ -69,7 +69,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
     public void DownloadWorldMapProgress()
     {
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", WorldMapProgressFileName());
         form.AddField("folder_name", GlobalVars.GameProgressFolderName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetFile, DownloadWorldMapProgressCallback);
@@ -177,7 +177,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 
         //SEND TO SERVER
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", FileName());
         form.AddField("file_size", Encoding.ASCII.GetBytes(gameProgress).Length);
         form.AddField("folder_name", GlobalVars.GameProgressFolderName);
@@ -191,7 +191,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 
         //SEND TO SERVER
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", WorldMapProgressFileName());
         form.AddField("file_size", Encoding.ASCII.GetBytes(currProgress).Length);
         form.AddField("folder_name", GlobalVars.GameProgressFolderName);
@@ -349,7 +349,7 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 
         //SEND TO SERVER
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", FileName());
         form.AddField("file_size", Encoding.ASCII.GetBytes(gameProgress).Length);
         form.AddField("folder_name", GlobalVars.GameProgressFolderName);
@@ -381,12 +381,12 @@ public class GameStateSaver : Singleton<GameStateSaver> {
 
     public string FileName()
     {
-        return String.Format("user_{0}_SavedState.xml", NetworkManager.UserId);
+        return String.Format("user_{0}_SavedState.xml", NetworkManager.IdUser);
     }
 
     public string WorldMapProgressFileName()
     {
-        return String.Format("user_{0}_WorldMap.xml", NetworkManager.UserId);
+        return String.Format("user_{0}_WorldMap.xml", NetworkManager.IdUser);
     }
 
 }

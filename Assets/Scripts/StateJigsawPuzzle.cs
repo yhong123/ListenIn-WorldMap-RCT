@@ -157,7 +157,7 @@ public class StateJigsawPuzzle : State
     {
         InitializeChapters();
         //LoadSavedJigsaw();
-        m_patientId = NetworkManager.UserId;
+        m_patientId = NetworkManager.IdUser;
         m_Init = true;
     }
 

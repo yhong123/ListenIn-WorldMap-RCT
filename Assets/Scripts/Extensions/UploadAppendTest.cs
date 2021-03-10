@@ -35,7 +35,7 @@ public class UploadAppendTest : MonoBehaviour {
             byte[] dataAsBytes = Encoding.ASCII.GetBytes(sb.ToString());
 
             WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("id_user", NetworkManager.IdUser);
             form.AddField("file_name", "Log");
             form.AddField("file_size", dataAsBytes.Length);
             form.AddField("folder_name", GlobalVars.LogFolderName);

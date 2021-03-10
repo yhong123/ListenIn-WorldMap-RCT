@@ -144,7 +144,7 @@ public class QuestionaireManager : MonoBehaviour
 
     private void SaveQuestionnaire()
     {
-        string directory = GlobalVars.GetPathToLIROOutput(NetworkManager.UserId);
+        string directory = GlobalVars.GetPathToLIROOutput(NetworkManager.IdUser);
         string filename = string.Format("Questionaire_Part_{0}_Cycle_{1}.txt", (currQuestionairePart + 1).ToString(), TherapyLIROManager.Instance.GetCurrentTherapyCycle());
         string fullPath = Path.Combine(directory, filename);
 
@@ -163,7 +163,7 @@ public class QuestionaireManager : MonoBehaviour
 
             //SEND TO SERVER
             WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("id_user", NetworkManager.IdUser);
             form.AddField("file_name", filename);
             form.AddField("file_size", Encoding.ASCII.GetBytes(sb.ToString()).Length);
             form.AddField("folder_name", GlobalVars.OutputFolderName);

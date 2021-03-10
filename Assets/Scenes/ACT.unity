@@ -10605,7 +10605,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 5}
+  m_Size: {x: 6, y: 6}
   m_EdgeRadius: 0
 --- !u!1 &540799832
 GameObject:
@@ -10699,7 +10699,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 5}
+  m_Size: {x: 6, y: 6}
   m_EdgeRadius: 0
 --- !u!1 &658991740
 GameObject:
@@ -10829,8 +10829,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 742574650}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.64, y: 0.27, z: 10}
-  m_LocalScale: {x: 2.6216793, y: 2.9, z: 2.6216795}
+  m_LocalPosition: {x: -1.76, y: -0.29, z: 10}
+  m_LocalScale: {x: 3, y: 3.3, z: 2.8}
   m_Children: []
   m_Father: {fileID: 961389482}
   m_RootOrder: 2
@@ -11732,7 +11732,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 5}
+  m_Size: {x: 6, y: 6}
   m_EdgeRadius: 0
 --- !u!1 &1132989526
 GameObject:
@@ -12460,7 +12460,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 5}
+  m_Size: {x: 6, y: 6}
   m_EdgeRadius: 0
 --- !u!1 &1401220468
 GameObject:
@@ -12706,7 +12706,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 5}
+  m_Size: {x: 6, y: 6}
   m_EdgeRadius: 0
 --- !u!1 &1467110559
 GameObject:
@@ -13399,7 +13399,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 5}
+  m_Size: {x: 6, y: 6}
   m_EdgeRadius: 0
 --- !u!1 &1892384654
 GameObject:
@@ -13665,9 +13665,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1995861967}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ebdb9c5e3d6f044782bf2a7b1a6cdcb, type: 3}
+  m_Script: {fileID: 11500000, guid: af060c4e13adc3f408cc89d873235f06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ct: 0
+  _adjustMode: 2
+  _verticalSnapMode: 1
+  _horizontalSnapMode: 1
+  _mainAreaWidth: 1.6
+  _mainAreaHeight: 1
+  _verticalFOV: 60.000004
+  _horizontalFOV: 85.46106
+  _verticalSize: 9.3
+  _horizontalSize: 14.88
 --- !u!1 &2004049213
 GameObject:
   m_ObjectHideFlags: 0

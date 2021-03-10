@@ -192,7 +192,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     public IEnumerator SaveCurrentUserBasketTracking()
     {
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("Basket1", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[0]);
         form.AddField("Basket2", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[1]);
         form.AddField("Basket3", (int)m_UserProfileManager.m_userProfile.m_BasketTracking.m_basketTrackingCounters[2]);
@@ -211,8 +211,8 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     /// </summary>
     public IEnumerator LoadCurrentUserProfile()
     {
-        string currUser = string.Format(GlobalVars.LiroProfileTemplate, NetworkManager.UserId);
-        string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(NetworkManager.UserId), currUser);
+        string currUser = string.Format(GlobalVars.LiroProfileTemplate, NetworkManager.IdUser);
+        string currFullPath = Path.Combine(GlobalVars.GetPathToLIROUserProfile(NetworkManager.IdUser), currUser);
 
         FileInfo info = new FileInfo(currFullPath);
 
@@ -273,7 +273,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     public IEnumerator SaveCurrentUserProfile()
     {
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("liro_step", (int)m_UserProfileManager.LIROStep);
         form.AddField("is_first_init", m_UserProfileManager.m_userProfile.isFirstInit ? 1 : 0);
         form.AddField("is_tutorial_done", m_UserProfileManager.m_userProfile.isTutorialDone ? 1 : 0);
@@ -406,7 +406,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //AndreaLIRO_Q: what if this fail?
             byte[] dataAsBytes = personalized_List.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("id_user", NetworkManager.IdUser);
             form.AddField("file_name", GlobalVars.LiroGeneratedACTFileName);
             form.AddField("file_size", dataAsBytes.Length);
             form.AddField("folder_name", GlobalVars.ActFolderName);
@@ -446,7 +446,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //Sending to server the generated act basket file to be used in therapy
             dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("id_user", NetworkManager.IdUser);
             form.AddField("file_name", GlobalVars.LiroGeneratedACTBasketFileName);
             form.AddField("file_size", dataAsBytes.Length);
             form.AddField("folder_name", GlobalVars.ActFolderName);
@@ -473,7 +473,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     private void GetActBasketFile()
     {
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", GlobalVars.LiroGeneratedACTBasketFileName);
         form.AddField("folder_name", GlobalVars.ActFolderName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetFile, GetActBasketFileCallback);
@@ -492,7 +492,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
     private void GetActFile()
     {
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("file_name", GlobalVars.LiroGeneratedACTFileName);
         form.AddField("folder_name", GlobalVars.ActFolderName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlGetFile, GetActFileCallback);
@@ -1017,7 +1017,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 //SEND TO SERVER
                 byte[] dataAsBytes = currBlockLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
                 WWWForm form = new WWWForm();
-                form.AddField("id_user", NetworkManager.UserId);
+                form.AddField("id_user", NetworkManager.IdUser);
                 form.AddField("file_name", currFilename);
                 form.AddField("file_size", dataAsBytes.Length);
                 form.AddField("folder_name", GlobalVars.SectionFolderName);
@@ -1050,7 +1050,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //SEND TO SERVER
             byte[] dataAsBytes = currBlockLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("id_user", NetworkManager.IdUser);
             form.AddField("file_name", currFilename);
             form.AddField("file_size", dataAsBytes.Length);
             form.AddField("folder_name", GlobalVars.SectionFolderName);
@@ -1366,7 +1366,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 yield return new WaitForEndOfFrame();
 
                 WWWForm form = new WWWForm();
-                form.AddField("id_user", NetworkManager.UserId);
+                form.AddField("id_user", NetworkManager.IdUser);
                 form.AddField("file_name", currFilename);
                 form.AddField("file_size", dataAsBytes.Length);
                 form.AddField("folder_name", GlobalVars.SectionFolderName);
@@ -1403,7 +1403,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
             //SEND TO SERVER
             byte[] dataAsBytes = currLines.SelectMany(s => System.Text.Encoding.UTF8.GetBytes(s + Environment.NewLine)).ToArray();
             WWWForm form = new WWWForm();
-            form.AddField("id_user", NetworkManager.UserId);
+            form.AddField("id_user", NetworkManager.IdUser);
             form.AddField("file_name", currFilename);
             form.AddField("file_size", dataAsBytes.Length);
             form.AddField("folder_name", GlobalVars.SectionFolderName);
@@ -1470,7 +1470,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 currBlock = m_UserProfileManager.m_userProfile.m_TherapyLiroUserProfile.m_currentBlock;
                 fileName = String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber);
                 //ERASE
-                fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
+                fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.IdUser), String.Format("THERAPY_{0}_Cycle_{1}", currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
                 //ERASE
                 break;
             case TherapyLadderStep.ACT_1_:
@@ -1478,7 +1478,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
                 currBlock = m_UserProfileManager.m_userProfile.m_ACTLiroUserProfile.m_currentBlock;
                 fileName = String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber);
                 //ERASE
-                fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.UserId), String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
+                fullPathFile = Path.Combine(GlobalVars.GetPathToLIROCurrentLadderSection(NetworkManager.IdUser), String.Format("{0}_{1}_Cycle_{2}", m_UserProfileManager.LIROStep.ToString(), currBlock, m_UserProfileManager.m_userProfile.m_cycleNumber));
                 //ERASE
                 break;
             default:
@@ -1487,7 +1487,7 @@ public class TherapyLIROManager : Singleton<TherapyLIROManager> {
 
         //create form
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("folder_name", GlobalVars.SectionFolderName);
         form.AddField("file_name", fileName);
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlDeleteFile);

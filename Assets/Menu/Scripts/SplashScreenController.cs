@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using MadLevelManager;
+using UnityEngine.SceneManagement;
 
 public class SplashScreenController : MonoBehaviour {
 
@@ -91,7 +92,7 @@ public class SplashScreenController : MonoBehaviour {
 
     private void SwitchScene()
     {
-        MadLevel.LoadLevelByName("SetupScreenDebug");
+        SceneManager.LoadScene("GoogleSignIn");
     }
 
     private void StopAnimation()
