@@ -151,7 +151,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.ucl.listenin
+    Android: com.ucl.li
     Standalone: unity.UCLNeurotherapeuticsGroup.LIRO_20
     Tizen: com.UCL_SOFTV.ListenIn
     iOS: com.UCL_SOFTV.ListenIn
@@ -247,8 +247,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 3
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/Pedro/Documents/Projects/SoftV/LI/Documentation/li.keystore
-  AndroidKeyaliasName: listenin
+  AndroidKeystoreName: C:/Users/Pedro/Documents/Projects/NeuroGames/Listenin/li.keystore
+  AndroidKeyaliasName: li
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0
   AndroidIsGame: 1

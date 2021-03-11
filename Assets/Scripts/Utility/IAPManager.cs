@@ -9,7 +9,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     private static IStoreController m_StoreController;          // The Unity Purchasing system.
     private IGooglePlayStoreExtensions m_GooglePlayStoreExtensions;
 
-    public static string kProductIDConsumable = "com.softv.li.p1";
+    public static string kProductIDConsumable = "com.ucl.li.p1";
 
     public static IAPManager Instance;
 
