@@ -8,9 +8,6 @@ using UnityEngine.UI;
 
 namespace ListenIn
 {
-    public enum LoggerMessageType { Info, Warning, Error };
-
-    struct MessageToLog { public string message; public LoggerMessageType messageType; public string logDate; }
 
     public class Logger : Singleton<Logger>
     {

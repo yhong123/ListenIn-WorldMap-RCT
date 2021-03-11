@@ -12,24 +12,19 @@ if($preparedStatement->rowCount() > 0)
 {
 	$result = $preparedStatement->fetch();
 
-	$subscription_time = date_create($result["date_creation"]);
+	$date_inserted = date_create($result["date_creation"]);
 
-	$time = s_datediff("d", $current_time, $subscription_time, true);
+	$time = s_datediff("d", $date_inserted, $current_time, true);
 	
+	//7 DAYS FREE TRIAL
+	$time = 7 - $time;
+	
+	//IS WITHIN FREE TRIAL?
 	if($time >= 0)
 	{
-		echo "true";
+		echo "true";  
 	}
-	else
-	{
-		echo "false";
-	}	
-	
-	//IF NOT SUBSCRIBED
-	if($result["date_subscription"] === NULL)
-	{
-		echo "false";
-	}
+	//IF NOT, CHECK IF IT IS SUBCRIBED
 	else
 	{
 		$date_subscription = date_create($result["date_subscription"]);
@@ -39,7 +34,7 @@ if($preparedStatement->rowCount() > 0)
 		//IS SUBSCRIBED?
 		if($time > 0)
 		{
-			echo "true";  
+			echo "true";
 		}
 		else
 		{

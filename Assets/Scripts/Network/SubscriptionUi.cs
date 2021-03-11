@@ -50,7 +50,7 @@ public class SubscriptionUi : MonoBehaviour
     public void RedeemCode(InputField input)
     {
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("code", input.text);
         
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlRedeemCode, "test", RedeemCodeCallback);
@@ -103,7 +103,7 @@ public class SubscriptionUi : MonoBehaviour
     public void ExtendSubscription(int period)
     {
         WWWForm form = new WWWForm();
-        form.AddField("id_user", NetworkManager.UserId);
+        form.AddField("id_user", NetworkManager.IdUser);
         form.AddField("period", period);
 
         NetworkManager.SendDataServer(form, NetworkUrl.ServerUrlExtendSubscription, "test", ExtendSubscription);
