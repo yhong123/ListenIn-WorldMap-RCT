@@ -542,8 +542,8 @@ MonoBehaviour:
   noGo: {fileID: 1955709645}
   counter: {fileID: 578571548}
   csvMaker: {fileID: 1727101506}
-  trialWaitTime: 1
-  doorCloseTime: 0.5
+  trialWaitTime: 0.3
+  doorCloseTime: 1.2
 --- !u!4 &1026008444
 Transform:
   m_ObjectHideFlags: 0

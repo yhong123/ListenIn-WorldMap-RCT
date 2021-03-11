@@ -1695,7 +1695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987215921d508a040b0042a59cd26946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip: {fileID: 32900000, guid: 1e9896302f1f5074da1572c5693e9582, type: 3}
+  clip: {fileID: 32900000, guid: 9ab5b14e458b21145974c04634d433c4, type: 3}
   rawImage: {fileID: 245131484}
   videoPlayer: {fileID: 245131483}
   videoPlayerPanel: {fileID: 245131482}
