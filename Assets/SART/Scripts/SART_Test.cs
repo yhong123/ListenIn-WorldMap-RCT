@@ -95,9 +95,10 @@ public class SART_Test : MonoBehaviour {
             secondHitTime = 0;
             isBeingHit = false;
             isButtonPressed = false;
+            bool isDoorClosed = false;
 
-
-            while (trialWaitTime - (Time.time - unityPresentationTime) > 0.0f)
+            //Entire duration of the trial
+            while ((trialWaitTime + doorCloseTime) - (Time.time - unityPresentationTime) > 0.0f)
             {
                 if (isButtonPressed)
                 {
@@ -118,6 +119,12 @@ public class SART_Test : MonoBehaviour {
                         countHits++;
                     }
                 }
+
+                if (!isDoorClosed && ((Time.time - unityPresentationTime) > trialWaitTime))
+                {
+                    isDoorClosed = true;
+                    Reset();
+                }
                 
                 yield return new WaitForEndOfFrame();
 
@@ -129,10 +136,10 @@ public class SART_Test : MonoBehaviour {
             countHits = 0;
 
             //Andrea: +1 just for starting from 1 instead of 0
-            csvMaker.Write(blockType, previousBlock + 1, previousTrial + 1, isGo, presentationTime, firstHitTime, secondHitTime, isBeingHit);
+            csvMaker.Write(blockType, blockToWrite + 1, trialNumberToWrite + 1, isGo, presentationTime, firstHitTime, secondHitTime, isBeingHit);
 
-            Reset();
-            yield return new WaitForSeconds(doorCloseTime);
+            //Reset();
+            yield return new WaitForEndOfFrame();
             isButtonPressed = false;
         }
 
