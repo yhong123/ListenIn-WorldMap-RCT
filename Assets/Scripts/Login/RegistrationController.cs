@@ -38,7 +38,8 @@ public enum RegistrationStep
     QuestionsComplete,
     Tests,
     TestsBrief,
-    TestsContinue
+    TestsContinue,
+    QuestionDoB
 }
 
 public class RegistrationController : MonoBehaviour
@@ -81,6 +82,8 @@ public class RegistrationController : MonoBehaviour
     [HideInInspector] public string RegistrationCause = string.Empty;
     public Dropdown MonthOfOnset;
     public Dropdown YearOfOnset;
+    public Dropdown MonthOfBirth;
+    public Dropdown YearOfBirth;
     [HideInInspector] public bool RegistrationCanContact = false;
     [HideInInspector] public bool RegistrationUnknownDateOfStroke = false;
     //REGISTRATION VALUES

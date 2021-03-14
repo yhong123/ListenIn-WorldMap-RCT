@@ -1599,7 +1599,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114999772633708984}
         m_MethodName: PurchaseSubscription
         m_Mode: 1
         m_Arguments:
@@ -1724,7 +1724,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114999772633708984}
         m_MethodName: SubmitPromoCode
         m_Mode: 1
         m_Arguments:
