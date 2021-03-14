@@ -17,9 +17,8 @@ public static class NetworkUrl
     public static string ServerUrlFileCheck = string.Concat(ServerDataUrl, "file_check.php");
     public static string ServerUrlFileConsistencyCheck = string.Concat(ServerDataUrl, "file_consistency_check.php");
     public static string ServerUrlSubscriptionCheck = string.Concat(ServerLoginUrl, "check_subscription.php");
-    public static string ServerUrlRedeemCode = string.Concat(ServerLoginUrl, "redeem_code.php");
     public static string ServerUrlExtendSubscription = string.Concat(ServerLoginUrl, "extend_subscription.php");
-
+    public static string ServerUrlSelectPromoCode = string.Concat(ServerLoginUrl, "select_promo_code.php");
 
     public static string SqlGetGameUserProfile = string.Concat(ServerGameUrl, "select_user_profile.php");
     public static string SqlSetGameUserProfile = string.Concat(ServerGameUrl, "update_user_profile.php");
@@ -32,4 +31,5 @@ public static class NetworkUrl
     public static string SqlGetUserBasketTracking = string.Concat(ServerGameUrl, "select_user_basket_tracking.php");
     public static string SqlSetUserBasketTracking = string.Concat(ServerGameUrl, "update_user_basket_tracking.php");
     public static string ServerUrlUploadLogFile = string.Concat(ServerGameUrl, "upload_log_file.php");
+
 }
